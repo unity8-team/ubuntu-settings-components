@@ -32,7 +32,7 @@ HeroMessageMenu {
     property bool activateEnabled: true
     property alias actionButtonText: actionButton.text
 
-    property bool replyEnabled: true
+    property alias replyEnabled: quickreply.replyEnabled
     property alias replyMessages: quickreply.messages
     property alias replyButtonText: quickreply.buttonText
 
@@ -125,7 +125,6 @@ HeroMessageMenu {
         height: 0
         opacity: 0.0
         enabled: false
-        replyEnabled: menu.replyEnabled
         messageMargins: __contentsMargins
 
         states: State {

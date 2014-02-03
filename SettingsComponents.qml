@@ -150,6 +150,15 @@ MainView {
                     text: "Access Point"
                 }
 
+                BluetoothMenu {
+                    text: "Bluetooth Device"
+                    iconSource: "image://theme/speaker"
+
+                    onTriggered: {
+                        selected = !selected;
+                    }
+                }
+
                 GroupedMessageMenu {
                     text: "Group Message"
                     count: "4"

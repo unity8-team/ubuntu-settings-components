@@ -27,7 +27,7 @@ Item {
     property alias buttonText: actionTextField.buttonText
     property real expandedHeight: childrenRect.height
     property alias messages : messagelistRepeater.model
-    property alias replyEnabled: actionTextField.activateEnabled
+    property bool replyEnabled: true
     property real messageMargins: units.gu(2)
 
     signal replied(var value)
@@ -143,6 +143,8 @@ Item {
 
         ActionTextField {
             id: actionTextField
+            placeholderText: "Reply"
+            activateEnabled: quickReply.replyEnabled && text != ""
 
             anchors.fill: parent
             anchors {
@@ -151,7 +153,6 @@ Item {
                 leftMargin: messageMargins
                 rightMargin: messageMargins
             }
-            activateEnabled: replyEnabled
 
             onActivated: {
                 quickReply.replied(value)

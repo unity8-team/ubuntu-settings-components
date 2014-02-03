@@ -245,7 +245,7 @@ Item {
             messageMenuSelected.selected = true;
             messageMenuSelected.replyEnabled = data.enabled
 
-            var replyText = UtilsJS.findChild(messageMenuSelected, "replyText");
+            var replyText = UtilsJS.findChild(messageMenuSelected, "textField");
             verify(replyText !== undefined, "Reply text not found");
             replyText.text = data.reply;
 
@@ -263,7 +263,7 @@ Item {
             messageMenuSelected.selected = true;
             messageMenuSelected.replyEnabled = true;
 
-            var replyText = UtilsJS.findChild(messageMenuSelected, "replyText");
+            var replyText = UtilsJS.findChild(messageMenuSelected, "textField");
             verify(replyText !== undefined, "Reply text not found");
             replyText.text = "reply1";
 

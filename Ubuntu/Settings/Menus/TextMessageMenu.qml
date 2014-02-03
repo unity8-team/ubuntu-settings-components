@@ -31,10 +31,12 @@ SimpleTextMessageMenu {
     signal replied(string value)
 
     footer: USC.ActionTextField {
+        id: actionTextField
         anchors.fill:  parent
+        placeholderText: "Reply"
 
-        activateEnabled: menu.replyEnabled
-        buttonText: menu.replyButtonText
+        activateEnabled: text != "" && replyEnabled
+        buttonText: replyButtonText
 
         onActivated: {
             menu.replied(value);

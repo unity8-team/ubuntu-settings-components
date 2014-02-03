@@ -22,16 +22,20 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 
 Item {
-    id: textField
-    property alias text: replyField.text
+    id: actionTextField
+    property alias text: textField.text
     property alias buttonText: sendButton.text
-    property bool activateEnabled: false
+    property alias placeholderText: textField.placeholderText
+    property alias activateEnabled: sendButton.enabled
+
+    property alias inputMask: textField.inputMask
+    property alias inputMethodHints: textField.inputMethodHints
 
     signal activated(var value)
 
     TextField {
-        id: replyField
-        objectName: "replyText"
+        id: textField
+        objectName: "textField"
 
         anchors {
             top: parent.top
@@ -40,7 +44,6 @@ Item {
             right: sendButton.left
             rightMargin: units.gu(1)
         }
-        placeholderText: "Reply"
         hasClearButton: false
 
         onEnabledChanged: {
@@ -61,11 +64,10 @@ Item {
             right: parent.right
         }
         width: units.gu(9)
-        enabled: replyField.text !== "" && textField.activateEnabled
         color: enabled ? "#c94212" : "#bababa"
 
         onClicked: {
-            textField.activated(replyField.text);
+            actionTextField.activated(textField.text);
         }
     }
 }

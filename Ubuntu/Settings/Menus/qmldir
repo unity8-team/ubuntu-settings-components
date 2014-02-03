@@ -1,6 +1,7 @@
 module Ubuntu.Settings.Menus
 
 AccessPointMenu 0.1 AccessPointMenu.qml
+BluetoothMenu 0.1 BluetoothMenu.qml
 ButtonMenu 0.1 ButtonMenu.qml
 CalendarMenu 0.1 CalendarMenu.qml
 CheckableMenu 0.1 CheckableMenu.qml

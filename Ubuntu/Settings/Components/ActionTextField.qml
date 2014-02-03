@@ -28,7 +28,6 @@ Item {
     property alias placeholderText: textField.placeholderText
     property alias activateEnabled: sendButton.enabled
 
-    property alias inputMask: textField.inputMask
     property alias inputMethodHints: textField.inputMethodHints
 
     signal activated(var value)

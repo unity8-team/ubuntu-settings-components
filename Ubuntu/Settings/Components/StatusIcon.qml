@@ -38,9 +38,6 @@ Item {
     */
     property alias keyColor: colorizedImage.keyColorIn
 
-    // FIXME: should only be "status", but overriding in settings app doesn't work.
-    property var sets: ["status","apps"]
-
     implicitWidth: image.width
 
     Image {
@@ -48,56 +45,9 @@ Item {
         objectName: "image"
         anchors { top: parent.top; bottom: parent.bottom }
         sourceSize.height: height
-
+        fillMode: Image.PreserveAspectFit
+        source: root.source
         visible: !colorizedImage.active
-
-        property string iconPath: "/usr/share/icons/suru/%1/scalable/%2.svg"
-        property var icons: {
-            if (String(root.source).match(/^image:\/\/theme/)) {
-                return String(root.source).replace("image://theme/", "").split(",");
-            } else return null;
-        }
-        property int fallback: 0
-        property int setFallback: 0
-
-        Component.onCompleted: updateSource()
-        onStatusChanged: if (status == Image.Error) bump();
-        onIconsChanged: reset()
-
-        Connections {
-            target: root
-            onSetsChanged: image.reset()
-        }
-
-        function reset() {
-            fallback = 0;
-            setFallback = 0;
-
-            updateSource();
-        }
-
-        function bump() {
-            if (icons === null) return;
-            if (fallback < icons.length - 1) fallback += 1;
-            else if (setFallback < root.sets.length - 1) {
-                setFallback += 1;
-                fallback = 0;
-            } else {
-                console.warn("Could not load StatusIcon with source \"%1\" and sets %2.".arg(root.source).arg(root.sets));
-                return;
-            }
-
-            updateSource();
-        }
-
-        function updateSource() {
-            if (icons === null) {
-                source = root.source;
-            } else {
-                source = (root.sets && root.sets.length > setFallback) && (icons && icons.length > fallback) ?
-                            iconPath.arg(root.sets[setFallback]).arg(icons[fallback]) : "";
-            }
-        }
     }
 
     ShaderEffect {

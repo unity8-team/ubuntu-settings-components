@@ -91,6 +91,8 @@ Item {
                 wrapMode: Text.WordWrap
                 elide: Text.ElideRight
                 fontSize: "small"
+                textFormat: Text.RichText
+                onLinkActivated: Qt.openUrlExternally(link)
 
                 Layout.fillWidth: true
             }

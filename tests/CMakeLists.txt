@@ -23,4 +23,5 @@ function(add_usc_qmltest PATH COMPONENT_NAME)
     )
 endfunction()
 
+add_subdirectory(imports)
 add_subdirectory(qmltests)

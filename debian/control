@@ -3,6 +3,7 @@ Section: misc
 Priority: optional
 Maintainer: Andrea Cimitan <andrea.cimitan@canonical.com>
 Build-Depends: cmake,
+               cmake-extras,
                debhelper (>= 9),
                pkg-config,
                qml-module-qtquick-layouts,

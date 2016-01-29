@@ -53,7 +53,7 @@ sleep 1
 
 cd -
 
-make -k xvfballtests
+make -k alltests
 
 cd -
 

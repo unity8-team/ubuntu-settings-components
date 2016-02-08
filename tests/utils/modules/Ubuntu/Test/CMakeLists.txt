@@ -14,8 +14,8 @@ target_link_libraries(UbuntuTestQml
     Qt5::Test
 )
 
-export_qmlfiles(Ubuntu.Test Ubuntu/Test)
-export_qmlplugin(Ubuntu.Test 0.1 Ubuntu/Test TARGETS UbuntuTestQml)
+export_qmlfiles(Ubuntu.Test Ubuntu/Test NO_INSTALL)
+export_qmlplugin(Ubuntu.Test 0.1 Ubuntu/Test TARGETS UbuntuTestQml NO_INSTALL)
 
 add_custom_target(UbuntuTest)
 add_dependencies(UbuntuTest UbuntuTestQml Ubuntu.Test-qmlfiles)

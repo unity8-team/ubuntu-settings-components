@@ -3,7 +3,7 @@ Section: misc
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Build-Depends: cmake,
-               cmake-extras,
+               cmake-extras (>= 0.6),
                debhelper (>= 9),
                pkg-config,
                python3:any,

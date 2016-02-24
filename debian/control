@@ -45,5 +45,6 @@ Depends: qml-module-qtquick-layouts,
          ${shlibs:Depends},
 Breaks: qtdeclarative5-ubuntu-settings-components (<< 0.7),
 Replaces: qtdeclarative5-ubuntu-settings-components (<< 0.7),
+Provides: qtdeclarative5-ubuntu-settings-components,
 Description: Ubuntu System Components
  Ubuntu system components for Unity

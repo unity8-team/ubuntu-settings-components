@@ -1,8 +1,12 @@
 ubuntu-settings-components (0.6+16.04.20160307.1-0ubuntu1) UNRELEASED; urgency=medium
 
+  [ Albert Astals Cid ]
   * Standarize QtQuick and Ubuntu.Components.Listitems imports
 
- -- Albert Astals Cid <albert.astals@canonical.com>  Mon, 07 Mar 2016 22:44:28 +0000
+  [ Nick Dedekind ]
+  * Fixed tests
+
+ -- Nick Dedekind <nick.dedekind@canonical.com>  Mon, 07 Mar 2016 22:44:35 +0000
 
 ubuntu-settings-components (0.6+16.04.20151102-0ubuntu1) xenial; urgency=medium
 

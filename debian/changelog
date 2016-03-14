@@ -1,10 +1,11 @@
-ubuntu-settings-components (0.7+16.04.20160314.1-0ubuntu1) UNRELEASED; urgency=medium
+ubuntu-settings-components (0.7+16.04.20160314.1-0ubuntu1) xenial; urgency=medium
 
+  [ jonas-drange ]
   * New plugins Ubuntu.Settings.Vpn, Ubuntu.Settings.Vpn.Openvpn and
     Ubuntu.Settings.Vpn.Pptp for creating, deleting and configuring VPN
     connections, implicitly using the Connectivity API
 
- -- jonas-drange <jonas.drange@canonical.com>  Mon, 14 Mar 2016 23:42:45 +0000
+ -- Robert Bruce Park <robert.park@canonical.com>  Mon, 14 Mar 2016 23:42:46 +0000
 
 ubuntu-settings-components (0.7+16.04.20160310.1-0ubuntu1) xenial; urgency=medium
 

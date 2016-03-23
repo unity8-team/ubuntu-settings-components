@@ -1,0 +1,29 @@
+ubuntu-settings-components
+--------------------------
+
+It's a set of components to be used for settings.
+
+The upstream project is hosted on launchpad:
+https://launchpad.net/ubuntu-settings-components
+
+Here is how the packages are organized:
+
+    ubuntu-settings-components:
+        The source package.
+
+    qtdeclarative5-ubuntu-settings-components:
+        The QML bindings that this project provides.
+
+        Note: if you update localized strings, you have to manually
+        update the POT-file by running `make pot_file` in the build
+        folder.
+
+See also:
+
+    Merge process checklist:
+        https://wiki.ubuntu.com/Process/Merges/Checklists/Ubuntu-Settings-Components
+
+    Testplan:
+        https://wiki.ubuntu.com/Process/Merges/TestPlans/Ubuntu-Settings-Components
+
+

@@ -1,3 +1,17 @@
+ubuntu-settings-components (0.7+16.04.20160506-0ubuntu1) xenial; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk.
+
+  [ Lukáš Tinkl ]
+  * Fix modem icons growing/shrinking with DGU (LP: #1577425)
+
+  [ Michał Sawicz, Nick Dedekind ]
+  * Fixed ModemInfoItem translation  to use ubuntu-settings-components
+    domain. (LP: #1560039)
+
+ -- Michał Sawicz <michal.sawicz@canonical.com>  Fri, 06 May 2016 13:46:25 +0000
+
 ubuntu-settings-components (0.7+16.04.20160427-0ubuntu1) xenial; urgency=medium
 
   [ CI Train Bot ]

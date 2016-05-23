@@ -1,3 +1,14 @@
+ubuntu-settings-components (0.7+16.04.20160523.1-0ubuntu1) xenial; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk.
+
+  [ jonas-drange ]
+  * components for allowing a user to manage fingerprints added qt svg
+    lib dep at 9724 bytes (LP: #1547040)
+
+ -- Jonas G. Drange <ci-train-bot@canonical.com>  Mon, 23 May 2016 14:23:08 +0000
+
 ubuntu-settings-components (0.7+16.04.20160427-0ubuntu1) xenial; urgency=medium
 
   [ CI Train Bot ]

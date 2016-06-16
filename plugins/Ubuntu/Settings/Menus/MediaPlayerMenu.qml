@@ -87,6 +87,18 @@ ListItem.Empty {
                     fillMode: Image.PreserveAspectFit
                     sourceSize: Qt.size(width, height)
                     anchors.centerIn: parent
+
+                    onStatusChanged: {
+                        // FIXME: This currently results in no other images being able to be set
+                        // for some reason. I believe there is a bug in indicator-sound as the
+                        // artUrl from media-hub is still set from media-hub but does not appear
+                        // to be reset by indicator-sound (or something else) as I see no evidence
+                        // of the albumArtImage.status changing in this case.
+                        if (albumArtImage.status === Image.Error) {
+                            console.debug("Hit an error while loading image, using fallback image")
+                            albumArtImage.source = "file:///usr/lib/arm-linux-gnueabihf/unity-scopes/mediascanner-music/album_missing.svg";
+                        }
+                    }
                 }
             }
 

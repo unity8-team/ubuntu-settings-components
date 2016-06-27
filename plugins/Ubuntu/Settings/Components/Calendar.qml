@@ -140,8 +140,10 @@ ListView {
     }
 
     LiveTimer {
-        frequency: LiveTimer.Minute
+        frequency: monthView.visible ? LiveTimer.Minute : LiveTimer.Disabled
+        onFrequencyChanged: trigger()
         onTrigger: {
+            Date.timeZoneUpdated();
             var today = new Cal.Day().fromDate((new Date()));
             if (!priv.today.equals(today)) {
                 priv.today = today;

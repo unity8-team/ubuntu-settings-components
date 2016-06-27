@@ -1,3 +1,13 @@
+ubuntu-settings-components (0.8+16.10.20160627.2-0ubuntu1) yakkety; urgency=medium
+
+  [ Lukáš Tinkl ]
+  * Fix an issue with "today" not updating when TZ does
+
+  [ Michael Zanetti ]
+  * remove some unneeded layouts (LP: #1585645)
+
+ -- Michał Sawicz <michal.sawicz@canonical.com>  Mon, 27 Jun 2016 18:12:21 +0000
+
 ubuntu-settings-components (0.8+16.10.20160620-0ubuntu1) yakkety; urgency=medium
 
   [ Jonas G. Drange ]

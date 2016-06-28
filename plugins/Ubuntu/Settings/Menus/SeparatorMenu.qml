@@ -16,9 +16,9 @@
  */
 
 import QtQuick 2.4
-import Ubuntu.Components.ListItems 1.3 as ListItem
+import Ubuntu.Components 1.3
 
-ListItem.Empty {
-    __height: units.gu(1)
-    highlightWhenPressed: false
+ListItem {
+  height: divider.visible ? divider.height : 0
+  highlightColor: "transparent"
 }

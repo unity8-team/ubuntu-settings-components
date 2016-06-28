@@ -23,6 +23,8 @@ import Ubuntu.Settings.Menus 0.1
 
 Item {
     property string title: "Settings Components"
+    width: units.gu(50)
+    height: units.gu(100)
 
     ListModel {
         id: mediaPlayerModel
@@ -60,6 +62,32 @@ Item {
 
             StandardMenu {
                 text: i18n.tr("Standard Menu\nLook at me, I'm a new line.")
+                onTriggered: console.log("Triggered")
+            }
+
+            StandardMenu {
+                id: dividerToggleMenu
+                text: i18n.tr("Toggle divider menu.")
+                showDivider: false
+
+                component: Component {
+                    Button {
+                        text: dividerToggleMenu.showDivider ? i18n.tr("Hide") : i18n.tr("Show")
+                        onClicked: dividerToggleMenu.showDivider = !dividerToggleMenu.showDivider
+                    }
+                }
+            }
+
+            StandardMenu {
+                text: i18n.tr("Removable menu.")
+                removable: true
+                onItemRemoved: console.log("Item removed");
+            }
+
+            StandardMenu {
+                text: i18n.tr("Dark Version")
+                backColor: theme.palette.normal.baseText
+                foregroundColor: theme.palette.normal.base
             }
 
             StandardMenu {
@@ -69,10 +97,12 @@ Item {
                 component: Component {
                     Button {
                         text: "Press Me"
+                        onClicked: print("Button pressed!")
                     }
                 }
-                backColor: Qt.rgba(1,1,1,0.1)
             }
+
+            SeparatorMenu {}
 
             SliderMenu {
                 id: slider
@@ -96,6 +126,8 @@ Item {
                 text: i18n.tr("ProgressValue")
                 value: slider.value
             }
+
+            SeparatorMenu {}
 
             ButtonMenu {
                 text: i18n.tr("Button")

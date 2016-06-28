@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -12,68 +12,97 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Author: Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItems
-import QtQuick.Layouts 1.1
 
-ListItems.Empty {
+ListItem {
     id: menu
 
-    property alias iconSource: iconVisual.source
-    property alias text: label.text
-    property alias iconColor: iconVisual.color
+    property string text
+    property bool highlightWhenPressed: true
+    property alias iconSource: itemLayoutIcon.source
+    property alias iconColor: itemLayoutIcon.color
+    property alias title: layoutItem.title
     property alias component: componentLoader.sourceComponent
-    property alias foregroundColor: label.color
-    property alias backColor: overlay.color
+    property color foregroundColor: theme.palette.normal.baseText
+    property alias backColor: menu.color
 
-    Rectangle {
-        id: overlay
-        color: "transparent"
-        visible: color !== "transparent"
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: parent.top
-        }
-        height: menu.height - menu.divider.height
+    // Can't create an alias for divider.visible here, see QTBUG-50407
+    // Thus this hack is needed not to override the default divider.visible value
+    property bool showDivider: false
+    Component.onCompleted: {
+        if (showDivider != divider.visible)
+            showDivider = divider.visible;
     }
+    onShowDividerChanged: divider.visible = showDivider
+    divider.visible: false
 
-    RowLayout {
-        anchors {
-            fill: parent
-            leftMargin: menu.__contentsMargins
-            rightMargin: menu.__contentsMargins
-        }
-        spacing: menu.__contentsMargins
+    height: layoutItem.height + (divider.visible ? divider.height : 0)
+    highlightColor: highlightWhenPressed ? theme.palette.highlighted.background : "transparent"
+
+    // These fields are for retro-compatibility with ListItem.Empty
+    signal triggered(var value)
+    onClicked: triggered(null)
+
+    property bool removable: false
+    property bool confirmRemoval: true
+    onConfirmRemovalChanged: console.error(menu+": confirmRemoval property is deprecated")
+    signal itemRemoved()
+
+    property bool selected: false
+    onSelectedChanged: console.error(menu+": selected property is deprecated")
+
+
+    ListItemLayout {
+        id: layoutItem
+        title.text: menu.text
+        title.color: menu.foregroundColor
+        title.opacity: enabled ? 1 : 0.5
 
         Icon {
-            id: iconVisual
-            visible: source != ""
+            id: itemLayoutIcon
+            width: units.gu(2)
             color: theme.palette.normal.backgroundText
-
-            readonly property real size: Math.min(units.gu(3), parent.height - menu.__contentsMargins)
-
-            Layout.preferredHeight: size
-            Layout.preferredWidth: size
-            Layout.alignment: Qt.AlignVCenter
-        }
-
-        Label {
-            id: label
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignVCenter
-
-            elide: Text.ElideRight
-            maximumLineCount: 1
+            SlotsLayout.position: SlotsLayout.Leading;
         }
 
         Loader {
             id: componentLoader
             asynchronous: false
             visible: status == Loader.Ready
+            SlotsLayout.position: SlotsLayout.Trailing
         }
     }
+
+    ListItemActions {
+        id: removeAction
+        actions: [
+            Action {
+                iconName: "delete"
+                onTriggered: removeItemAnimation.start();
+            }
+        ]
+
+        SequentialAnimation {
+            id: removeItemAnimation
+
+            running: false
+            UbuntuNumberAnimation {
+                target: menu
+                property: "height"
+                to: 0
+            }
+            ScriptAction {
+                script: {
+                    itemRemoved()
+                }
+            }
+        }
+    }
+
+    leadingActions: removable ? removeAction : null
 }

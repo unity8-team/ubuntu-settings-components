@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,81 +15,66 @@
  *
  * Authors:
  *      Renato Araujo Oliveira Filho <renato@canonical.com>
+ *      Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 
-ListItem.Empty {
+ListItem
+{
     id: menu
-    __height: units.gu(5.5)
-
+    property string text
     property bool active: false
     property bool secure: false
     property bool adHoc: false
     property int signalStrength: 0
-    property alias text: label.text
+    divider.visible: false
 
-    Icon {
-        id: iconSignal
-        objectName: "iconSignal"
+    signal triggered(var value)
+    onClicked: triggered(null)
+    height: layoutItem.height + (divider.visible ? divider.height : 0)
 
-        color: active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
+    ListItemLayout {
+        id: layoutItem
+        title.text: menu.text
 
-        width: height
-        height: Math.min(units.gu(3), parent.height - units.gu(1))
-        anchors {
-            left: parent.left
-            leftMargin: menu.__contentsMargins
-            verticalCenter: parent.verticalCenter
-        }
+        Icon {
+            id: iconSignal
+            objectName: "iconSignal"
+            width: height
+            height: Math.min(units.gu(3), parent.height - units.gu(1))
+            color: menu.active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
+            name: {
+                var imageName = "nm-signal-100"
 
-        name: {
-            var imageName = "nm-signal-100"
-
-            if (adHoc) {
-                imageName = "nm-adhoc";
-            } else if (signalStrength <= 0) {
-                imageName = "nm-signal-00";
-            } else if (signalStrength <= 25) {
-                imageName = "nm-signal-25";
-            } else if (signalStrength <= 50) {
-                imageName = "nm-signal-50";
-            } else if (signalStrength <= 75) {
-                imageName = "nm-signal-75";
+                if (adHoc) {
+                    imageName = "nm-adhoc";
+                } else if (signalStrength <= 0) {
+                    imageName = "nm-signal-00";
+                } else if (signalStrength <= 25) {
+                    imageName = "nm-signal-25";
+                } else if (signalStrength <= 50) {
+                    imageName = "nm-signal-50";
+                } else if (signalStrength <= 75) {
+                    imageName = "nm-signal-75";
+                }
+                return imageName;
             }
-            return imageName;
+
+            SlotsLayout.position: SlotsLayout.Leading
         }
-    }
 
-    Label {
-        id: label
-        anchors {
-            left: iconSignal.right
-            leftMargin: units.gu(1)
-            verticalCenter: parent.verticalCenter
-            right: iconSecure.visible ? iconSecure.left : parent.right
-            rightMargin: menu.__contentsMargins
-        }
-        elide: Text.ElideRight
-        color: active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
-    }
+        Icon {
+            id: iconSecure
+            objectName: "iconSecure"
+            visible: menu.secure
+            name: "network-secure"
+            color: menu.active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
+            width: height
+            height: Math.min(units.gu(3), parent.height - units.gu(1))
 
-    Icon {
-        id: iconSecure
-        objectName: "iconSecure"
-        visible: secure
-        name: "network-secure"
-
-        color: active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
-
-        width: height
-        height: Math.min(units.gu(3), parent.height - units.gu(1))
-        anchors {
-            right: parent.right
-            rightMargin: menu.__contentsMargins
-            verticalCenter: parent.verticalCenter
+            SlotsLayout.position: SlotsLayout.Trailing
         }
     }
 }

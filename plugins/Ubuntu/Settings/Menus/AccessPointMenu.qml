@@ -21,60 +21,42 @@
 import QtQuick 2.4
 import Ubuntu.Components 1.3
 
-ListItem
+BaseMenu
 {
-    id: menu
-    property string text
+    id: ap
     property bool active: false
     property bool secure: false
     property bool adHoc: false
     property int signalStrength: 0
     divider.visible: false
 
-    signal triggered(var value)
-    onClicked: triggered(null)
-    height: layoutItem.height + (divider.visible ? divider.height : 0)
+    icon.height: Math.min(units.gu(3), parent.height - units.gu(1))
+    icon.width: icon.height
+    icon.color: ap.active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
+    icon.name: {
+        var imageName = "nm-signal-100"
 
-    ListItemLayout {
-        id: layoutItem
-        title.text: menu.text
-
-        Icon {
-            id: iconSignal
-            objectName: "iconSignal"
-            width: height
-            height: Math.min(units.gu(3), parent.height - units.gu(1))
-            color: menu.active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
-            name: {
-                var imageName = "nm-signal-100"
-
-                if (adHoc) {
-                    imageName = "nm-adhoc";
-                } else if (signalStrength <= 0) {
-                    imageName = "nm-signal-00";
-                } else if (signalStrength <= 25) {
-                    imageName = "nm-signal-25";
-                } else if (signalStrength <= 50) {
-                    imageName = "nm-signal-50";
-                } else if (signalStrength <= 75) {
-                    imageName = "nm-signal-75";
-                }
-                return imageName;
-            }
-
-            SlotsLayout.position: SlotsLayout.Leading
+        if (adHoc) {
+            imageName = "nm-adhoc";
+        } else if (signalStrength <= 0) {
+            imageName = "nm-signal-00";
+        } else if (signalStrength <= 25) {
+            imageName = "nm-signal-25";
+        } else if (signalStrength <= 50) {
+            imageName = "nm-signal-50";
+        } else if (signalStrength <= 75) {
+            imageName = "nm-signal-75";
         }
+        return imageName;
+    }
 
-        Icon {
-            id: iconSecure
-            objectName: "iconSecure"
-            visible: menu.secure
-            name: "network-secure"
-            color: menu.active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
-            width: height
-            height: Math.min(units.gu(3), parent.height - units.gu(1))
-
-            SlotsLayout.position: SlotsLayout.Trailing
-        }
+    component: Icon {
+        id: iconSecure
+        objectName: "iconSecure"
+        visible: ap.secure
+        name: "network-secure"
+        color: ap.active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
+        width: height
+        height: Math.min(units.gu(3), ap.parent.height - units.gu(1))
     }
 }

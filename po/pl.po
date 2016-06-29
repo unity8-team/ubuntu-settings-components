@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: ubuntu-settings-components\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2016-06-20 15:57+0200\n"
-"PO-Revision-Date: 2016-06-08 11:11+0000\n"
+"PO-Revision-Date: 2016-06-28 12:30+0000\n"
 "Last-Translator: GTriderXC <gtriderxc@yahoo.com>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-06-26 05:58+0000\n"
-"X-Generator: Launchpad (build 18111)\n"
+"X-Launchpad-Export-Date: 2016-06-29 05:41+0000\n"
+"X-Generator: Launchpad (build 18115)\n"
 
 #: plugins/Ubuntu/Settings/Components/QuickReply.qml:63
 msgid "Quick reply with:"
@@ -192,7 +192,7 @@ msgstr "Port:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:187
 msgid "Use custom gateway port"
-msgstr ""
+msgstr "Użyj innego portu"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:215
 msgid "Protocol:"
@@ -338,7 +338,7 @@ msgstr "Wysyłanie pakietów echo PPP"
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:27
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:27
 msgid "You’re using this VPN for all Internet traffic."
-msgstr ""
+msgstr "Cały ruch internetowy odbywa się przez VPN."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:33
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:39
@@ -348,6 +348,8 @@ msgid ""
 "Your Wi-Fi/mobile provider can see when and how much you use the Internet, "
 "but not what for."
 msgstr ""
+"Operator sieci komórkowej lub właściciel Wi-Fi widzi kiedy się łączysz i jak "
+"dużo danych przesyłasz, ale nie wie z kim je wymieniasz."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:39
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:45

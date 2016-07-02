@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: ubuntu-settings-components\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2016-06-20 15:57+0200\n"
-"PO-Revision-Date: 2016-03-08 17:40+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2016-07-01 09:27+0000\n"
+"Last-Translator: Ian Li <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-06-26 05:58+0000\n"
-"X-Generator: Launchpad (build 18111)\n"
+"X-Launchpad-Export-Date: 2016-07-02 05:57+0000\n"
+"X-Generator: Launchpad (build 18115)\n"
 
 #: plugins/Ubuntu/Settings/Components/QuickReply.qml:63
 msgid "Quick reply with:"
@@ -38,7 +38,7 @@ msgstr ""
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:137
 #: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:148
 msgid "OK"
-msgstr ""
+msgstr "确定"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:32
 msgid "Fingerprint ID"
@@ -79,12 +79,12 @@ msgstr ""
 #: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:135
 #: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:104
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:318
 #: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:84
 msgid "Remove"
-msgstr ""
+msgstr "删除"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:332
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:102
@@ -124,28 +124,28 @@ msgstr ""
 #, qt-format
 msgctxt "%1=month name, %2=4-digit year"
 msgid "%1 %2"
-msgstr ""
+msgstr "%2 %1"
 
 #: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:100
 msgid "Roaming"
-msgstr ""
+msgstr "漫游"
 
 #: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:122
 msgid "Unlock SIM"
-msgstr ""
+msgstr "SIM卡解锁"
 
 #: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:30
 msgid "Call back"
-msgstr ""
+msgstr "回电"
 
 #: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:33
 #: plugins/Ubuntu/Settings/Menus/TextMessageMenu.qml:29
 msgid "Send"
-msgstr ""
+msgstr "发送"
 
 #: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:58
 msgid "Message"
-msgstr ""
+msgstr "信息"
 
 #: plugins/Ubuntu/Settings/Vpn/DialogFile.qml:170
 msgid "Accept"
@@ -153,25 +153,25 @@ msgstr ""
 
 #: plugins/Ubuntu/Settings/Vpn/FileSelector.qml:25
 msgid "Choose…"
-msgstr ""
+msgstr "选择..."
 
 #: plugins/Ubuntu/Settings/Vpn/FileSelector.qml:34
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:431
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:513
 msgid "None"
-msgstr ""
+msgstr "无"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:29
 msgid "Authentication type:"
-msgstr ""
+msgstr "认证类型："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:42
 msgid "Certificates (TLS)"
-msgstr ""
+msgstr "证书(TLS)"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:43
 msgid "Password"
-msgstr ""
+msgstr "密码"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:44
 msgid "Password with certificates (TLS)"
@@ -179,16 +179,16 @@ msgstr ""
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:45
 msgid "Static key"
-msgstr ""
+msgstr "静态密钥"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:123
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:114
 msgid "Server:"
-msgstr ""
+msgstr "服务器："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:137
 msgid "Port:"
-msgstr ""
+msgstr "端口："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:187
 msgid "Use custom gateway port"
@@ -196,47 +196,47 @@ msgstr ""
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:215
 msgid "Protocol:"
-msgstr ""
+msgstr "协议："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:304
 msgid "Username:"
-msgstr ""
+msgstr "用户名："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:319
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:165
 msgid "Password:"
-msgstr ""
+msgstr "密码："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:341
 msgid "Client certificate:"
-msgstr ""
+msgstr "客户端证书："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:349
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:396
 msgid "Choose Certificate…"
-msgstr ""
+msgstr "选择证书..."
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:356
 msgid "Private key:"
-msgstr ""
+msgstr "私钥："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:364
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:417
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:497
 msgid "Choose Key…"
-msgstr ""
+msgstr "选择密钥..."
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:371
 msgid "Key password:"
-msgstr ""
+msgstr "密钥密码："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:388
 msgid "CA certificate:"
-msgstr ""
+msgstr "CA 证书："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:409
 msgid "Static key:"
-msgstr ""
+msgstr "静态密钥："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:421
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:502
@@ -245,35 +245,35 @@ msgstr ""
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:439
 msgid "Remote IP:"
-msgstr ""
+msgstr "远程 IP："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:454
 msgid "Local IP:"
-msgstr ""
+msgstr "本地 IP："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:479
 msgid "Use additional TLS authentication:"
-msgstr ""
+msgstr "使用附加TLS认证："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:488
 msgid "TLS key:"
-msgstr ""
+msgstr "TLS密钥："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:530
 msgid "Verify peer certificate:"
-msgstr ""
+msgstr "验证对端证书："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:539
 msgid "Peer certificate TLS type:"
-msgstr ""
+msgstr "对端TLS证书类型："
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:547
 msgid "Server"
-msgstr ""
+msgstr "服务器"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:548
 msgid "Client"
-msgstr ""
+msgstr "客户端"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:558
 msgid "Cipher:"
@@ -281,59 +281,59 @@ msgstr ""
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:565
 msgid "Default"
-msgstr ""
+msgstr "默认"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:595
 msgid "Compress data"
-msgstr ""
+msgstr "压缩数据"
 
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:150
 msgid "User:"
-msgstr ""
+msgstr "用户："
 
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:180
 msgid "NT Domain:"
-msgstr ""
+msgstr "NT 域:"
 
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:192
 msgid "Authentication methods:"
-msgstr ""
+msgstr "认证方法："
 
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:292
 msgid "Use Point-to-Point encryption"
-msgstr ""
+msgstr "使用点对点加密"
 
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:301
 msgid "All Available (Default)"
-msgstr ""
+msgstr "全部可用(默认)"
 
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:302
 msgid "128-bit (most secure)"
-msgstr ""
+msgstr "128 位(最强)"
 
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:303
 msgid "40-bit (less secure)"
-msgstr ""
+msgstr "40 位(最弱)"
 
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:319
 msgid "Allow stateful encryption"
-msgstr ""
+msgstr "允许有状态的加密"
 
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:333
 msgid "Allow BSD data compression"
-msgstr ""
+msgstr "允许 BSD 数据压缩"
 
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:347
 msgid "Allow Deflate data compression"
-msgstr ""
+msgstr "允许 Deflate 数据压缩"
 
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:361
 msgid "Use TCP Header compression"
-msgstr ""
+msgstr "使用 TCP 头压缩"
 
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:375
 msgid "Send PPP echo packets"
-msgstr ""
+msgstr "发送 PPP 回响包"
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:27
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:27
@@ -355,7 +355,7 @@ msgstr ""
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:51
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SetUpUnused.qml:47
 msgid "The VPN provider can see or modify your Internet traffic."
-msgstr ""
+msgstr "VPN提供商能看见或修改您的互联网流量。"
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:45
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:51
@@ -379,18 +379,18 @@ msgstr ""
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:30
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NoCert.qml:27
 msgid "This VPN is not safe to use."
-msgstr ""
+msgstr "使用这个 VPN 不安全。"
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:36
 msgid ""
 "The server certificate is not valid. The VPN provider may be being "
 "impersonated."
-msgstr ""
+msgstr "服务器证书无效。VPN 提供商可能被冒充。"
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:46
 #, qt-format
 msgid "Details: %1"
-msgstr ""
+msgstr "详情：%1"
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:51
 msgid "The certificate was not found."
@@ -406,7 +406,7 @@ msgstr ""
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:60
 msgid "The certificate has expired."
-msgstr ""
+msgstr "证书已过期。"
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:63
 msgid "The certificate is blacklisted."

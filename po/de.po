@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: ubuntu-settings-components\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2016-06-20 15:57+0200\n"
-"PO-Revision-Date: 2016-07-02 00:07+0000\n"
-"Last-Translator: Matthias Seidel <matthias.seidel@hamburg.de>\n"
+"PO-Revision-Date: 2016-07-09 08:37+0000\n"
+"Last-Translator: schuko24 <gerdsaenger@t-online.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-07-03 05:37+0000\n"
+"X-Launchpad-Export-Date: 2016-07-10 05:35+0000\n"
 "X-Generator: Launchpad (build 18115)\n"
 
 #: plugins/Ubuntu/Settings/Components/QuickReply.qml:63
@@ -51,15 +51,15 @@ msgstr "Finger %1"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:187
 msgid "Passcode required"
-msgstr ""
+msgstr "PIN erforderlich"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:191
 msgid "You must set a passcode to use fingerprint ID"
-msgstr ""
+msgstr "Sie müssen eine PIN eingeben um die Fingerabdruckkennung zu nutzen"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:198
 msgid "Set Passcode…"
-msgstr ""
+msgstr "PIN festlegen …"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:274
 msgid "Add fingerprint"
@@ -90,11 +90,11 @@ msgstr "Entfernen"
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:332
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:102
 msgid "Sorry, the reader doesn’t seem to be working."
-msgstr ""
+msgstr "Entschuldigung, der Leser scheint nicht zu funktionieren."
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:60
 msgid "Swipe your finger repeatedly over the reader."
-msgstr ""
+msgstr "Wischen Sie Ihren Finger wiederholt über den Leser."
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:77
 msgid "Keep your finger on the reader for longer."
@@ -110,7 +110,7 @@ msgstr "Alles erledigt!"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:296
 msgid "Swipe your finger over the reader."
-msgstr ""
+msgstr "Wischen Sie Ihren Finger über den Leser."
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:310
 #, qt-format

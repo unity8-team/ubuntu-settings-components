@@ -57,7 +57,7 @@ Page {
             StateChangeScript {
                 script: statusLabel.setText(
                     i18n.dtr("ubuntu-settings-components",
-                             "Swipe your finger repeatedly over the reader.")
+                             "Tap your finger repeatedly on the reader.")
                 )
             }
             PropertyChanges {

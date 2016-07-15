@@ -166,6 +166,8 @@ Dialog {
                         id: fileLayout
 
                         title.text: fileName
+                        title.elide: Text.ElideMiddle
+                        title.wrapMode: Text.NoWrap
                         subtitle.text: fileIsDir ? "" : _formatter(fileSize)
 
                         Icon {

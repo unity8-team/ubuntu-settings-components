@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Canonical, Ltd.
+ * Copyright (C) 2016 Canonical, Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,21 +14,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// local
-#include "plugin.h"
-#include "serverpropertysynchroniser.h"
 #include "filepickerhelper.h"
 
-// Qt
-#include <QtQml/qqml.h>
+#include <QDir>
+#include <QDebug>
 
-static QObject* filepickerhelperProvider(QQmlEngine*, QJSEngine*)
+FilePickerHelper::FilePickerHelper(QObject* parent)
+    : QObject(parent)
 {
-    return new FilePickerHelper;
 }
 
-void UbuntuSettingsComponentsPlugin::registerTypes(const char *uri)
+QUrl FilePickerHelper::homeDirUrl()
 {
-    qmlRegisterType<ServerPropertySynchroniser>(uri, 0, 1, "ServerPropertySynchroniser");
-    qmlRegisterSingletonType<FilePickerHelper>(uri, 0, 1, "FilePickerHelper", filepickerhelperProvider);
+    return QUrl::fromLocalFile(QDir::homePath());
+}
+
+QString FilePickerHelper::pathFromUrl(const QUrl &url)
+{
+    return url.path();
+}
+
+QString FilePickerHelper::separator()
+{
+    return QDir::separator();
+}
+
+QString FilePickerHelper::rootPath()
+{
+    return QDir::rootPath();
+}
+
+QStringList FilePickerHelper::pathsFromUrl(const QUrl &url)
+{
+    QString path = url.path();
+    return path.split(QDir::separator(), QString::SkipEmptyParts);
 }

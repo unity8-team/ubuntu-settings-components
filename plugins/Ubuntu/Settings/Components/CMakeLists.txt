@@ -11,6 +11,7 @@ add_definitions(-DUBUNTUSETTINGSCOMPONENTS_LIBRARY)
 
 add_library(UbuntuSettingsComponentsQml MODULE
     plugin.cpp
+    filepickerhelper.cpp
     serverpropertysynchroniser.cpp
 )
 

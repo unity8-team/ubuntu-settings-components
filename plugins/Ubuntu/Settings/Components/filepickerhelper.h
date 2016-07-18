@@ -28,9 +28,9 @@ public:
     FilePickerHelper(QObject* parent = nullptr);
     Q_INVOKABLE static QUrl homeDirUrl();
     Q_INVOKABLE static QString rootPath();
-    Q_INVOKABLE static QString separator();
     Q_INVOKABLE static QString pathFromUrl(const QUrl &url);
     Q_INVOKABLE static QStringList pathsFromUrl(const QUrl &url);
+    Q_INVOKABLE static QString formatSize(const quint64 &size);
 };
 
 #endif // FILEPICKERHELPER_H

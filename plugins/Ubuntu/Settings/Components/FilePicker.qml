@@ -61,18 +61,6 @@ Dialog {
             FilePickerProperties.lastFolder
     }
 
-    // By Aliceljm [1].
-    // [1] http://stackoverflow.com/a/18650828/538866
-    property var _formatter: function formatBytes(bytes, decimals) {
-        if (typeof decimals === 'undefined') decimals = 0;
-        if(bytes == 0) return '0 B';
-        var k = 1000; // or 1024 for binary
-        var dm = decimals + 1 || 3;
-        var sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        var i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
-    }
-
     ColumnLayout {
         spacing: units.gu(1)
         anchors {
@@ -124,7 +112,7 @@ Dialog {
                                     "%1 (%2 file)",
                                     "%1 (%2 files)",
                                     fsModel.count
-                            ).arg(prettyTree.join(FilePickerHelper.separator()))
+                            ).arg(prettyTree.join("/"))
                              .arg(fsModel.count)
                 }
                 Layout.fillWidth: true
@@ -168,7 +156,8 @@ Dialog {
                         title.text: fileName
                         title.elide: Text.ElideMiddle
                         title.wrapMode: Text.NoWrap
-                        subtitle.text: fileIsDir ? "" : _formatter(fileSize)
+                        subtitle.text: fileIsDir ?
+                            "" : FilePickerHelper.formatSize(fileSize)
 
                         Icon {
                             name: fileIsDir ? "folder" : "empty"

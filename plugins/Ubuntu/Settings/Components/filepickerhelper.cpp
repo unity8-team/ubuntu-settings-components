@@ -16,6 +16,8 @@
 
 #include "filepickerhelper.h"
 
+#include <glib.h>
+
 #include <QDir>
 #include <QDebug>
 
@@ -34,11 +36,6 @@ QString FilePickerHelper::pathFromUrl(const QUrl &url)
     return url.path();
 }
 
-QString FilePickerHelper::separator()
-{
-    return QDir::separator();
-}
-
 QString FilePickerHelper::rootPath()
 {
     return QDir::rootPath();
@@ -48,4 +45,15 @@ QStringList FilePickerHelper::pathsFromUrl(const QUrl &url)
 {
     QString path = url.path();
     return path.split(QDir::separator(), QString::SkipEmptyParts);
+}
+
+QString FilePickerHelper::formatSize(const quint64 &size)
+{
+    guint64 g_size = size;
+
+    gchar * formatted_size = g_format_size (g_size);
+    QString q_formatted_size = QString::fromLocal8Bit(formatted_size);
+    g_free (formatted_size);
+
+    return q_formatted_size;
 }

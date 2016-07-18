@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Canonical, Ltd.
+ * Copyright (C) 2016 Canonical, Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,21 +14,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// local
-#include "plugin.h"
-#include "serverpropertysynchroniser.h"
-#include "filepickerhelper.h"
+#ifndef FILEPICKERHELPER_H
+#define FILEPICKERHELPER_H
 
-// Qt
-#include <QtQml/qqml.h>
+#include <QObject>
+#include <QUrl>
+#include <QStringList>
 
-static QObject* filepickerhelperProvider(QQmlEngine*, QJSEngine*)
+class FilePickerHelper : public QObject
 {
-    return new FilePickerHelper;
-}
+    Q_OBJECT
+public:
+    FilePickerHelper(QObject* parent = nullptr);
+    Q_INVOKABLE static QUrl homeDirUrl();
+    Q_INVOKABLE static QString rootPath();
+    Q_INVOKABLE static QString pathFromUrl(const QUrl &url);
+    Q_INVOKABLE static QStringList pathsFromUrl(const QUrl &url);
+    Q_INVOKABLE static QString formatSize(const quint64 &size);
+};
 
-void UbuntuSettingsComponentsPlugin::registerTypes(const char *uri)
-{
-    qmlRegisterType<ServerPropertySynchroniser>(uri, 0, 1, "ServerPropertySynchroniser");
-    qmlRegisterSingletonType<FilePickerHelper>(uri, 0, 1, "FilePickerHelper", filepickerhelperProvider);
-}
+#endif // FILEPICKERHELPER_H

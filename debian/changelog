@@ -1,9 +1,9 @@
-ubuntu-settings-components (0.9+16.10.20160627.2-0ubuntu1) UNRELEASED; urgency=medium
+ubuntu-settings-components (0.9+16.10.20160718.1-0ubuntu1) yakkety; urgency=medium
 
   [ Jonas G. Drange ] 
   * Create file picker component
 
- -- Jonas G. Drange <jonas.drange@canonical.com>  Fri, 15 Jul 2016 14:21:25 +0200
+ -- Jonas G. Drange <jonas.drange@canonical.com>  Mon, 18 Jul 2016 15:56:59 +0000
 
 ubuntu-settings-components (0.8+16.10.20160627.2-0ubuntu1) yakkety; urgency=medium
 

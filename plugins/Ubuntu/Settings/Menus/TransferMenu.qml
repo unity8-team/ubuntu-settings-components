@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Canonical Ltd.
+ * Copyright 2014-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -12,41 +12,35 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Author: Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 import Ubuntu.Settings.Components 0.1
 
-ListItem.Empty {
+ListItem {
     id: menu
 
     property alias iconSource: icon.source
     property alias text: label.text
     property alias stateText: stateLabel.text
     property alias progress: progressBar.value
+    property alias maximum: progressBar.maximumValue
     property bool active: false
 
-    property alias maximum: progressBar.maximumValue
+    height: slotsLayout.height + (divider.visible ? divider.height : 0)
 
-    __height: row.height + units.gu(2)
-
-    RowLayout {
-        id: row
-        anchors {
-            left: parent.left
-            right: parent.right
-            verticalCenter: parent.verticalCenter
-            leftMargin: menu.__contentsMargins
-            rightMargin: menu.__contentsMargins
-        }
-        spacing: units.gu(2)
+    SlotsLayout {
+        id: slotsLayout
+        objectName: "slotsLayout"
 
         UbuntuShapeForItem {
-            Layout.preferredWidth: units.gu(6)
-            Layout.preferredHeight: units.gu(6)
+            SlotsLayout.position: SlotsLayout.Leading
+            width: units.gu(6)
+            height: units.gu(6)
 
             image: icon
             Icon {
@@ -62,7 +56,7 @@ ListItem.Empty {
             }
         }
 
-        ColumnLayout {
+        mainSlot: ColumnLayout {
             spacing: units.gu(0.5)
 
             Label {

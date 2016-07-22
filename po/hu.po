@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: ubuntu-settings-components\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2016-06-20 15:57+0200\n"
-"PO-Revision-Date: 2016-07-19 08:08+0000\n"
+"PO-Revision-Date: 2016-07-21 07:58+0000\n"
 "Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-07-20 06:05+0000\n"
+"X-Launchpad-Export-Date: 2016-07-22 05:52+0000\n"
 "X-Generator: Launchpad (build 18147)\n"
 
 #: plugins/Ubuntu/Settings/Components/QuickReply.qml:63
@@ -348,8 +348,8 @@ msgid ""
 "Your Wi-Fi/mobile provider can see when and how much you use the Internet, "
 "but not what for."
 msgstr ""
-"A Wi-Fi/mobil internet szolgáltatója látja, hogy mikor és mennyit használja "
-"az internetet, de azt nem, hogy mire."
+"A Wi-Fi/mobilhálózat szolgáltatója látja, hogy mikor és mennyit használja az "
+"internetet, de azt nem, hogy mire."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:39
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:45
@@ -375,7 +375,7 @@ msgid ""
 "Your Wi-Fi/mobile provider can still see when and how much you use the "
 "Internet."
 msgstr ""
-"A Wi-Fi/mobil internet szolgáltatója még mindig látja, hogy mikor és mennyit "
+"A Wi-Fi/mobilhálózat szolgáltatója még mindig látja, hogy mikor és mennyit "
 "használja az internetet."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:39
@@ -395,7 +395,7 @@ msgid ""
 "The server certificate is not valid. The VPN provider may be being "
 "impersonated."
 msgstr ""
-"A kiszolgáló tanúsítványa nem érvényes. Lehet, hogy a VPN szolgáltatója "
+"A kiszolgáló tanúsítványa nem érvényes. Lehetséges, hogy a VPN szolgáltatója "
 "„megszemélyesítéses” támadás áldozat lett."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:46
@@ -427,13 +427,13 @@ msgstr "A tanúsítvány tiltólistán van."
 msgid ""
 "It does not provide a certificate. The VPN provider could be impersonated."
 msgstr ""
-"A kiszolgáló nem nyújt semmilyen tanúsítványt. Lehet, hogy a VPN "
+"A kiszolgáló nem nyújt semmilyen tanúsítványt. Lehetséges, hogy a VPN "
 "szolgáltatója „megszemélyesítéses” támadás áldozat lett."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:27
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:27
 msgid "This VPN configuration is not installed."
-msgstr "A VPN konfiguráció nincs telepítve."
+msgstr "Ez a VPN konfiguráció nincs telepítve."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:33
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:33
@@ -448,7 +448,7 @@ msgstr ""
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SetUpUnused.qml:27
 msgid "This VPN is set up, but not in use now."
-msgstr "A VPN be van állítva, de nincs használatban."
+msgstr "Ez a VPN konfigurálva van, de nincs használatban."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SetUpUnused.qml:33
 msgid "When you use it:"
@@ -456,19 +456,19 @@ msgstr "Ha használja:"
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SomeTraffic.qml:27
 msgid "You’re using this VPN for specific services."
-msgstr "A VPN-t csak néhány megadott szolgáltatásnál használja."
+msgstr "Ezt a VPN-t csak néhány megadott szolgáltatásnál használja."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SomeTraffic.qml:33
 msgid ""
 "Your traffic to these services is private to them and the VPN provider."
 msgstr ""
-"Az ezen szolgáltatások és az Ön között zajló forgalom csak Ön és a VPN "
-"szolgáltatója számára elérhető."
+"Az Ön és az ezen szolgáltatások között zajló forgalom csak Ön, illetve a VPN "
+"szolgáltatója számára érhető el."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SomeTraffic.qml:39
 msgid "Your Wi-Fi/mobile provider can track your use of any other services. "
 msgstr ""
-"A Wi-Fi/mobil internet szolgáltatója minden más szolgáltatás használatát "
+"A Wi-Fi/mobilhálózat szolgáltatója minden más szolgáltatás használatát "
 "nyomon tudja követni. "
 
 #: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:25

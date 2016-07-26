@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: ubuntu-settings-components\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2016-06-20 15:57+0200\n"
-"PO-Revision-Date: 2016-04-01 21:45+0000\n"
+"PO-Revision-Date: 2016-07-25 11:19+0000\n"
 "Last-Translator: P_E_T_O <Unknown>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-06-26 05:58+0000\n"
-"X-Generator: Launchpad (build 18111)\n"
+"X-Launchpad-Export-Date: 2016-07-26 05:37+0000\n"
+"X-Generator: Launchpad (build 18153)\n"
 
 #: plugins/Ubuntu/Settings/Components/QuickReply.qml:63
 msgid "Quick reply with:"
@@ -23,15 +23,15 @@ msgstr "Rýchla odpoveď s:"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:80
 msgid "Fingerprint Name"
-msgstr ""
+msgstr "Názov odtlačku prsta"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:107
 msgid "Delete Fingerprint"
-msgstr ""
+msgstr "Vymazať odtlačok prsta"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:124
 msgid "Sorry, the fingerprint could not be deleted."
-msgstr ""
+msgstr "Prepáčte, odtlačok prsta nemôže byť vymazaný."
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:129
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:337
@@ -42,36 +42,36 @@ msgstr "OK"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:32
 msgid "Fingerprint ID"
-msgstr ""
+msgstr "ID odtlačku prsta"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:93
 #, qt-format
 msgid "Finger %1"
-msgstr ""
+msgstr "Prst %1"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:187
 msgid "Passcode required"
-msgstr ""
+msgstr "Potrebné heslo"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:191
 msgid "You must set a passcode to use fingerprint ID"
-msgstr ""
+msgstr "Musíte nastaviť heslo pre používanie ID odtlačku prsta"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:198
 msgid "Set Passcode…"
-msgstr ""
+msgstr "Nastaviť heslo..."
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:274
 msgid "Add fingerprint"
-msgstr ""
+msgstr "Pridať odtlačok prsta"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:287
 msgid "Remove All…"
-msgstr ""
+msgstr "Vymazať všetko..."
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:302
 msgid "Are you sure you want to forget all stored fingerprints?"
-msgstr ""
+msgstr "Ste si istý, že chcete zahodiť všetky uložené odtlačky prsta?"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:311
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:357
@@ -101,11 +101,11 @@ msgstr ""
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:93
 msgid "Back"
-msgstr ""
+msgstr "Naspäť"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:130
 msgid "All done!"
-msgstr ""
+msgstr "Všetko hotové!"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:296
 msgid "Swipe your finger over the reader."
@@ -114,11 +114,11 @@ msgstr ""
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:310
 #, qt-format
 msgid "%1%"
-msgstr ""
+msgstr "%1%"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:382
 msgid "Next"
-msgstr ""
+msgstr "Nasledujúci"
 
 #: plugins/Ubuntu/Settings/Menus/CalendarMenu.qml:57
 #, qt-format
@@ -163,23 +163,23 @@ msgstr "Žiadne"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:29
 msgid "Authentication type:"
-msgstr ""
+msgstr "Typ autentifikácie:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:42
 msgid "Certificates (TLS)"
-msgstr ""
+msgstr "Certifikáty (TLS)"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:43
 msgid "Password"
-msgstr ""
+msgstr "Heslo"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:44
 msgid "Password with certificates (TLS)"
-msgstr ""
+msgstr "Heslo s certifikátmi (TLS)"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:45
 msgid "Static key"
-msgstr ""
+msgstr "Statický kľúč"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:123
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:114
@@ -200,7 +200,7 @@ msgstr "Protokol:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:304
 msgid "Username:"
-msgstr ""
+msgstr "Používateľské meno:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:319
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:165
@@ -236,7 +236,7 @@ msgstr "CA certifikát:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:409
 msgid "Static key:"
-msgstr ""
+msgstr "Statický kľúč:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:421
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:502
@@ -245,11 +245,11 @@ msgstr "Smer kľúča:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:439
 msgid "Remote IP:"
-msgstr ""
+msgstr "Vzdialená IP:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:454
 msgid "Local IP:"
-msgstr ""
+msgstr "Lokálna IP:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:479
 msgid "Use additional TLS authentication:"

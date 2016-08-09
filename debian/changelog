@@ -1,3 +1,10 @@
+ubuntu-settings-components (0.8+16.10.20160809-0ubuntu1) yakkety; urgency=medium
+
+  [ Albert Astals Cid ]
+  * Remove StatusIcon, we've moved to SDK Icon
+
+ -- Michał Sawicz <michal.sawicz@canonical.com>  Tue, 09 Aug 2016 23:00:43 +0000
+
 ubuntu-settings-components (0.8+16.10.20160713-0ubuntu1) yakkety; urgency=medium
 
   [ jonas-drange ]

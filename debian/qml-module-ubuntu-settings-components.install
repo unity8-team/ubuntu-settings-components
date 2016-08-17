@@ -2,4 +2,4 @@ usr/lib/*/qt5/qml/Ubuntu/Settings/Components
 usr/lib/*/qt5/qml/Ubuntu/Settings/Fingerprint
 usr/lib/*/qt5/qml/Ubuntu/Settings/Menus
 usr/lib/*/qt5/qml/Ubuntu/Settings/Vpn
-usr/locale
+usr/share/locale

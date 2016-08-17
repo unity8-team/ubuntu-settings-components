@@ -35,7 +35,6 @@ ListView {
     }
 
     Component.onCompleted: {
-        priv.ready = true;
         priv.__populateModel();
     }
 

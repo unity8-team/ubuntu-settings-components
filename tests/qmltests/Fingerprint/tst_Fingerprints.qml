@@ -41,7 +41,7 @@ Item {
     }
 
     UbuntuTestCase {
-        name: "FingerprintPanel"
+        name: "Fingerprints"
         when: windowShown
 
         property var fingerprintsInstance: null

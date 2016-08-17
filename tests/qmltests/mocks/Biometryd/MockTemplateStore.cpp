@@ -52,5 +52,3 @@ MockList* MockTemplateStore::list(MockUser* user)
     Q_UNUSED(user);
     return new MockList(this);
 }
-
-#include "MockTemplateStore.moc"

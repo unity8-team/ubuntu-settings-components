@@ -75,7 +75,7 @@ Item {
             return findInvisibleChild(fingerprintsInstance, "removalObserver");
         }
 
-        function getBrokenDialog() {
+        function getBrokenDialog() {
             return findChild(testRoot, "fingerprintReaderBrokenDialog");
         }
 
@@ -119,7 +119,7 @@ Item {
             // Halt testing until dialog has been destroyed.
             tryCompareFunction(function() {
                 return getBrokenDialog();
-            }, null);
+            }, undefined);
         }
 
         function test_noPasscode() {
@@ -209,7 +209,7 @@ Item {
             // to function.
             tryCompareFunction(function() {
                 return findChild(testRoot, "fingerprintRemoveAllDialog");
-            }, null);
+            }, undefined);
         }
 
         function test_enrollmentSucceeded() {

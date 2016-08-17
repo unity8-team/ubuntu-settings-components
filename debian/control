@@ -32,7 +32,7 @@ Section: oldlibs
 Depends: qml-module-ubuntu-settings-components,
          ${misc:Depends},
 Description: transitional dummy package for Ubuntu settings components
- Ubuntu settings components for Unity
+ Ubuntu settings components for Unity8
  .
  This is a transitional dummy package which can be safely removed.
 
@@ -51,4 +51,4 @@ Depends: gsettings-ubuntu-schemas (>= 0.0.7),
 Breaks: qtdeclarative5-ubuntu-settings-components (<< 0.9),
 Replaces: qtdeclarative5-ubuntu-settings-components (<< 0.9),
 Description: Ubuntu settings Components
- Ubuntu settings components for Unity
+ Ubuntu settings components for Unity8

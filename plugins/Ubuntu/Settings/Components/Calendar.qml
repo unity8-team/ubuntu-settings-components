@@ -23,7 +23,7 @@ ListView {
     id: monthView
 
     property bool collapsed: false
-    property var currentDate: new Date(priv.today.year, priv.today.month, 1)
+    property var currentDate: new Date(priv.selectedDay.year, priv.selectedDay.month, 1)
     property var firstDayOfWeek: Qt.locale(i18n.language).firstDayOfWeek
     property var maximumDate
     property var minimumDate
@@ -35,6 +35,7 @@ ListView {
     }
 
     Component.onCompleted: {
+        priv.ready = true;
         priv.__populateModel();
     }
 
@@ -88,7 +89,7 @@ ListView {
             return month;
         }
 
-        function __getRealMaximumMonth(date) {
+        function __getRealMaximumMonth(month) {
             if (maximumMonth !== undefined && maximumMonth < month) {
                 return maximumMonth;
             }
@@ -99,8 +100,8 @@ ListView {
             //  disable the onCurrentIndexChanged logic
             priv.ready = false;
 
-            var minimumMonth = __getRealMinimumMonth(currentMonth).addMonths(-2);
-            var maximumMonth = __getRealMinimumMonth(currentMonth).addMonths(2);
+            var minimumMonth = __getRealMinimumMonth(currentMonth.addMonths(-2));
+            var maximumMonth = __getRealMaximumMonth(currentMonth.addMonths(2));
 
             // Remove old minimum months
             while (calendarModel.count > 0 && new Cal.Month(calendarModel.get(0).month) < minimumMonth) {

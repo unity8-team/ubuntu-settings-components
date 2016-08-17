@@ -62,7 +62,7 @@ Item {
     }
 
     UbuntuTestCase {
-        name: "SetupUI"
+        name: "FingerprintSetup"
         when: windowShown
 
         property var setupInstance: null
@@ -113,7 +113,7 @@ Item {
         }
 
         function test_startedState() {
-            var targetText = i18n.dtr("ubuntu-settings-components", "Swipe your finger repeatedly over the reader.");
+            var targetText = i18n.dtr("ubuntu-settings-components", "Tap your finger repeatedly on the reader.");
             setupInstance.enrollmentProgressed(0.5, {});
             statusLabelSpy.wait();
             compare(getStatusLabel().text, targetText);

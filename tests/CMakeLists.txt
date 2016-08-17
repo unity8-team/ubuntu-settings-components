@@ -17,7 +17,7 @@ add_subdirectory(utils)
 function(add_usc_qmltest PATH COMPONENT_NAME)
     add_qml_test(${PATH} ${COMPONENT_NAME}
         DEPENDS UbuntuTest
-        IMPORT_PATHS ${CMAKE_BINARY_DIR}/tests/utils/modules
+        IMPORT_PATHS ${CMAKE_BINARY_DIR}/plugins ${CMAKE_BINARY_DIR}/tests/utils/modules
         TARGETS uitests
         ${ARGN}
     )

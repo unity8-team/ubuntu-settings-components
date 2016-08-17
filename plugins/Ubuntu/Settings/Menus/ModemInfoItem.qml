@@ -1,5 +1,5 @@
 /*
- * Copyright 2014,2015 Canonical Ltd.
+ * Copyright 2014-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -47,7 +47,7 @@ ListItem.Empty {
             opacity: menu.locked ? 0.6 : 1.0
         }
 
-        RowLayout {
+        Row {
             id: statusRow
             spacing: units.gu(1)
 
@@ -60,15 +60,15 @@ ListItem.Empty {
                 opacity: 0.6
             }
 
-            RowLayout {
-                spacing: 0.5
+            Row {
+                spacing: units.gu(0.5)
                 height: parent.height
                 Icon {
                     id: statusIcon
                     color: theme.palette.normal.backgroundText
 
-                    Layout.preferredHeight: parent.height
-                    Layout.preferredWidth: Layout.preferredHeight
+                    height: labelStatus.height
+                    width: height
 
                     visible: name !== ""
                 }
@@ -77,39 +77,35 @@ ListItem.Empty {
                     id: iconConnectivity
                     color: theme.palette.normal.backgroundText
 
-                    Layout.preferredHeight: parent.height
-                    Layout.preferredWidth: Layout.preferredHeight
+                    width: statusIcon.width // fix lp:1585645 by breaking the binding loop
+                    height: width
 
                     visible: name !== ""
                 }
             }
 
-            Item {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+            Row {
+                spacing: units.gu(0.5)
+                height: parent.height
 
-                RowLayout {
+                Label {
+                    id: labelRoaming
                     visible: menu.roaming
-                    anchors.fill: parent
+                    elide: Text.ElideRight
+                    fontSize: "x-small"
+                    text: i18n.dtr("ubuntu-settings-components", "Roaming")
+                    opacity: 0.6
+                }
 
-                    spacing: units.gu(0.5)
-                    Label {
-                        id: labelRoaming
-                        elide: Text.ElideRight
-                        fontSize: "x-small"
-                        text: i18n.tr("Roaming")
-                        opacity: 0.6
-                    }
+                Icon {
+                    id: iconRoaming
+                    color: theme.palette.normal.backgroundText
+                    visible: menu.roaming
 
-                    Icon {
-                        id: iconRoaming
-                        color: theme.palette.normal.backgroundText
+                    height: labelStatus.height
+                    width: height
 
-                        Layout.preferredHeight: parent.height
-                        Layout.preferredWidth: Layout.preferredHeight
-
-                        name: "network-cellular-roaming"
-                    }
+                    name: "network-cellular-roaming"
                 }
             }
         }
@@ -119,7 +115,7 @@ ListItem.Empty {
             objectName: "buttonUnlockSim"
             visible: menu.locked
 
-            text: i18n.tr("Unlock SIM")
+            text: i18n.dtr("ubuntu-settings-components", "Unlock SIM")
             Layout.preferredWidth: implicitWidth + units.gu(5)
 
             onTriggered: menu.unlock()

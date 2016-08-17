@@ -1,4 +1,4 @@
-Source: ubuntu-system-components
+Source: ubuntu-settings-components
 Section: misc
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
@@ -29,17 +29,20 @@ Package: qtdeclarative5-ubuntu-settings-components
 Architecture: any
 Multi-Arch: same
 Section: oldlibs
-Depends: qml-module-ubuntu-system-components, ${misc:Depends}
-Description: transitional dummy package for Ubuntu system components
- Ubuntu system components for Unity
+Depends: qml-module-ubuntu-settings-components, ${misc:Depends}
+Description: transitional dummy package for Ubuntu settings components
+ Ubuntu settings components for Unity
  .
  This is a transitional dummy package which can be safely removed.
 
-Package: qml-module-ubuntu-system-components
+Package: qml-module-ubuntu-settings-components
 Architecture: any
 Multi-Arch: same
 Pre-Depends: dpkg (>= 1.15.6~)
-Depends: qml-module-qtquick-layouts,
+Depends: gsettings-ubuntu-schemas (>= 0.0.7),
+         qml-module-biometryd,
+         qml-module-qtquick-layouts,
+         qtdeclarative5-gsettings1.0 (>=0.1+14.10.20140801.1),
          qtdeclarative5-ubuntu-ui-toolkit-plugin (>= 1.1) | qtdeclarative5-ubuntu-ui-toolkit-plugin-gles (>= 1.1),
          suru-icon-theme,
          ${misc:Depends},
@@ -47,5 +50,5 @@ Depends: qml-module-qtquick-layouts,
 Breaks: qtdeclarative5-ubuntu-settings-components (<< 0.7),
 Replaces: qtdeclarative5-ubuntu-settings-components (<< 0.7),
 Provides: qtdeclarative5-ubuntu-settings-components,
-Description: Ubuntu System Components
- Ubuntu system components for Unity
+Description: Ubuntu settings Components
+ Ubuntu settings components for Unity

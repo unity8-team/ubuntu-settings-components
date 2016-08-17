@@ -1,6 +1,7 @@
+add_subdirectory(mocks)
+
 add_usc_qmltest(Components Calendar)
 add_usc_qmltest(Components ServerPropertySynchroniser)
-add_usc_qmltest(Components StatusIcon)
 
 add_usc_qmltest(Menus AccessPointMenu)
 add_usc_qmltest(Menus ButtonMenu)
@@ -28,3 +29,8 @@ add_usc_qmltest(Vpn VpnOpenvpnEditor)
 add_usc_qmltest(Vpn VpnPptpEditor)
 add_usc_qmltest(Vpn VpnPreviewDialogCertificateChecks)
 add_usc_qmltest(Vpn VpnPreviewDialog ENVIRONMENT NO_SSL_CERTIFICATE_CHECK=1)
+
+add_usc_qmltest(Fingerprint Fingerprints IMPORT_PATHS ${CMAKE_CURRENT_BINARY_DIR}/mocks)
+add_usc_qmltest(Fingerprint FingerprintNames IMPORT_PATHS ${CMAKE_CURRENT_BINARY_DIR}/mocks)
+add_usc_qmltest(Fingerprint FingerprintSetup IMPORT_PATHS ${CMAKE_CURRENT_BINARY_DIR}/mocks)
+add_usc_qmltest(Fingerprint FingerprintVisual)

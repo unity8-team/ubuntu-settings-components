@@ -1,9 +1,13 @@
-ubuntu-settings-components (0.9-0ubuntu1) UNRELEASED; urgency=medium
+ubuntu-settings-components (0.9+16.10.20160818.1-0ubuntu1) yakkety; urgency=medium
 
+  [ Michał Sawicz ]
   * rename qtdeclarative5-ubuntu-settings-components to new naming scheme,
     qml-module-ubuntu-settings-components
 
- -- Michał Sawicz <michal.sawicz@canonical.com>  Fri, 29 Jan 2016 00:10:05 +0100
+  [ Nick Dedekind ]
+  * Fixes for calendar test failures.
+
+ -- Michał Sawicz <michal.sawicz@canonical.com>  Thu, 18 Aug 2016 10:54:07 +0000
 
 ubuntu-settings-components (0.8+16.10.20160809-0ubuntu1) yakkety; urgency=medium
 

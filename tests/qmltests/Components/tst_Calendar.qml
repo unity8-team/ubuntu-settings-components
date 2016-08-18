@@ -78,8 +78,9 @@ Rectangle {
 
         function test_selectedDate(data) {
             calendar.selectedDate = data.date;
-            compare(calendar.currentItem.monthStart.getYear(), data.date.getYear(), "Current year does no correspond to set date");
-            compare(calendar.currentItem.monthStart.getMonth(), data.date.getMonth(), "Current month does no correspond to set date");
+
+            compare(calendar.currentItem.monthStart.year, data.date.getFullYear(), "Current year does no correspond to set date");
+            compare(calendar.currentItem.monthStart.month, data.date.getMonth(), "Current month does no correspond to set date");
         }
 
         function test_firstDayOfWeek_data() {
@@ -96,7 +97,8 @@ Rectangle {
                 var dayColumn = findChild(calendar, "dayItem" + i);
                 verify(dayColumn);
 
-                compare(dayColumn.dayStart.getDay(), (data.firstDayOfWeek + i)%7, "Day column does not match expected for firstDayOfWeek");
+                var dayStart =  new Date(dayColumn.dayStart.year, dayColumn.dayStart.month, dayColumn.dayStart.day);
+                compare(dayStart.getDay(), (data.firstDayOfWeek + i)%7, "Day column does not match expected for firstDayOfWeek");
             }
         }
 

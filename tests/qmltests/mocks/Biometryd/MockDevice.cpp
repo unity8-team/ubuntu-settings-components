@@ -26,5 +26,3 @@ MockTemplateStore* MockDevice::templateStore()
 {
     return m_ts;
 }
-
-#include "MockDevice.moc"

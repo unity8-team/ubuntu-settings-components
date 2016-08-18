@@ -1,19 +1,21 @@
 Source: ubuntu-settings-components
 Section: misc
 Priority: optional
-Maintainer: Andrea Cimitan <andrea.cimitan@canonical.com>
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Build-Depends: cmake,
+               cmake-extras (>= 0.6),
                debhelper (>= 9),
                pkg-config,
+               python3:any,
+               qml-module-qt-labs-folderlistmodel,
                qml-module-qtquick-layouts,
-               qt5-default,
+               qml-module-qtquick2,
+               qml-module-qttest,
+               qml-module-ubuntu-components | qml-module-ubuntu-components-gles,
+               qml-module-ubuntu-thumbnailer0.1,
                qtbase5-private-dev,
                qtdeclarative5-dev,
                qtdeclarative5-dev-tools,
-               qtdeclarative5-qtquick2-plugin,
-               qtdeclarative5-quicklayouts-plugin,
-               qtdeclarative5-test-plugin,
-               qtdeclarative5-ubuntu-ui-toolkit-plugin (>= 1.1) | qtdeclarative5-ubuntu-ui-toolkit-plugin-gles (>= 1.1),
                suru-icon-theme,
 Standards-Version: 3.9.4
 Homepage: https://launchpad.net/ubuntu-settings-components
@@ -26,7 +28,18 @@ X-Ubuntu-Use-Langpack: yes
 Package: qtdeclarative5-ubuntu-settings-components
 Architecture: any
 Multi-Arch: same
-Pre-Depends: dpkg (>= 1.15.6~)
+Section: oldlibs
+Depends: qml-module-ubuntu-settings-components,
+         ${misc:Depends},
+Description: transitional dummy package for Ubuntu settings components
+ Ubuntu settings components for Unity8
+ .
+ This is a transitional dummy package which can be safely removed.
+
+Package: qml-module-ubuntu-settings-components
+Architecture: any
+Multi-Arch: same
+Pre-Depends: dpkg (>= 1.15.6~),
 Depends: gsettings-ubuntu-schemas (>= 0.0.7),
          qml-module-biometryd,
          qml-module-qtquick-layouts,
@@ -35,7 +48,7 @@ Depends: gsettings-ubuntu-schemas (>= 0.0.7),
          suru-icon-theme,
          ${misc:Depends},
          ${shlibs:Depends},
-Breaks: qtdeclarative5-ubuntu-settings-components-assets (<< 0.3),
-Replaces: qtdeclarative5-ubuntu-settings-components-assets (<< 0.3),
-Description: Ubuntu Settings Components
- Ubuntu settings components for Unity
+Breaks: qtdeclarative5-ubuntu-settings-components (<< 0.9),
+Replaces: qtdeclarative5-ubuntu-settings-components (<< 0.9),
+Description: Ubuntu settings Components
+ Ubuntu settings components for Unity8

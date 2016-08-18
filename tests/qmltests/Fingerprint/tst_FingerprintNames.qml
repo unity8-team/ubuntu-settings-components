@@ -60,7 +60,7 @@ Item {
     }
 
     UbuntuTestCase {
-        name: "TestOverview"
+        name: "FingerprintNames"
         when: windowShown
 
         property var pageInstance: null

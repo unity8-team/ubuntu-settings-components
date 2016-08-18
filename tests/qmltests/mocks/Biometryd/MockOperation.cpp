@@ -30,5 +30,3 @@ bool MockOperation::cancel()
 {
     return true;
 }
-
-#include "MockOperation.moc"

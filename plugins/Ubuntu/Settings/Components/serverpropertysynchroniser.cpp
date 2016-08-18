@@ -18,7 +18,6 @@
 
 #include <QQmlProperty>
 #include <QTimer>
-#include <QDebug>
 
 ServerPropertySynchroniser::ServerPropertySynchroniser(QObject* parent)
     : QObject(parent)

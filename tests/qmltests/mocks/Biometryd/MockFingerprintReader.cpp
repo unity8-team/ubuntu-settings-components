@@ -45,5 +45,3 @@ QString MockFingerprintReader::masks() const
 {
     return "masks";
 }
-
-#include "MockFingerprintReader.moc"

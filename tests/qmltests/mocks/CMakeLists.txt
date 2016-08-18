@@ -23,8 +23,8 @@ macro(add_usc_mock PLUGIN VERSION PATH)
             ${MOCK_UNPARSED_ARGUMENTS}
         )
     else()
-        export_qmlfiles(${PLUGIN} ${PATH} TARGET_PREFIX Mock ${MOCK_UNPARSED_ARGUMENTS})
-        export_qmlplugin(${PLUGIN} ${VERSION} ${PATH} TARGET_PREFIX Mock ${MOCK_UNPARSED_ARGUMENTS})
+        export_qmlfiles(${PLUGIN} ${PATH} TARGET_PREFIX Mock NO_INSTALL ${MOCK_UNPARSED_ARGUMENTS})
+        export_qmlplugin(${PLUGIN} ${VERSION} ${PATH} TARGET_PREFIX Mock NO_INSTALL ${MOCK_UNPARSED_ARGUMENTS})
     endif()
 endmacro()
 

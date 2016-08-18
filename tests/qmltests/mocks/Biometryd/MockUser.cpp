@@ -29,5 +29,3 @@ void MockUser::setUid(const int &uid)
 {
     m_uid = uid;
 }
-
-#include "MockUser.moc"

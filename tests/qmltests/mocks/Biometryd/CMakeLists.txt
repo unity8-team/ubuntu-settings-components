@@ -2,7 +2,7 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-set(MOCK_BIOMETRYD_SOURCES
+add_library(MockBiometryd MODULE
     plugin.cpp
     MockDevice.cpp
     MockFingerprintReader.cpp
@@ -13,8 +13,10 @@ set(MOCK_BIOMETRYD_SOURCES
     MockUser.cpp
 )
 
-add_library(MockBiometryd MODULE ${MOCK_BIOMETRYD_SOURCES})
-
-qt5_use_modules(MockBiometryd Qml Quick Core)
+target_link_libraries(MockBiometryd
+    Qt5::Core
+    Qt5::Qml
+    Qt5::Quick
+)
 
 add_usc_mock(Biometryd 0.0 Biometryd TARGETS MockBiometryd)

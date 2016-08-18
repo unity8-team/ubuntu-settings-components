@@ -1,3 +1,10 @@
+ubuntu-settings-components (0.9-0ubuntu1) UNRELEASED; urgency=medium
+
+  * rename qtdeclarative5-ubuntu-settings-components to new naming scheme,
+    qml-module-ubuntu-settings-components
+
+ -- Michał Sawicz <michal.sawicz@canonical.com>  Fri, 29 Jan 2016 00:10:05 +0100
+
 ubuntu-settings-components (0.8+16.10.20160809-0ubuntu1) yakkety; urgency=medium
 
   [ Albert Astals Cid ]

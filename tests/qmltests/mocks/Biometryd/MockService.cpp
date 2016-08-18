@@ -38,5 +38,3 @@ void MockService::setAvailable(const bool available)
     m_available = available;
     Q_EMIT (availableChanged(available));
 }
-
-#include "MockService.moc"

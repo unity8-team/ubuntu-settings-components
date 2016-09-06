@@ -28,6 +28,7 @@ Item {
     property var date1: new Date(2012, 2, 10)
     property var date2: new Date(2013, 5, 10)
     property var date3: new Date(2014, 6, 10)
+    property var date4: new Date(2016, 9, 30)
 
     Flickable {
         id: flickable
@@ -82,6 +83,13 @@ Item {
         function test_selectedDate() {
             calendar.selectedDate = date2
             compare(calendar.selectedDate, date2, "Cannot set selectedDate")
+        }
+
+        // regression test for https://bugs.launchpad.net/ubuntu/+source/ubuntu-settings-components/+bug/1620496
+        function test_double30thOctober() {
+            calendar.selectedDate = date4;
+            calendar.selectedDate = calendar.selectedDate.addDays(1);
+            verify(calendar.selectedDate.getDay() !== date4.getDay());
         }
     }
 }

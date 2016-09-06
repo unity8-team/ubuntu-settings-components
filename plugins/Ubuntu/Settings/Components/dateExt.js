@@ -8,9 +8,6 @@ function diffMonths(dateA, dateB) {
     return Math.max(months, 0);
 }
 
-Date.msPerDay = 86400e3
-Date.msPerWeek = Date.msPerDay * 7
-
 Date.leapYear = function(year) {
     return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
 }
@@ -29,9 +26,9 @@ Date.prototype.midnight = function() {
 }
 
 Date.prototype.addDays = function(days) {
-    var date = new Date(this)
-    date.setTime(date.getTime() + Date.msPerDay * days)
-    return date
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
 }
 
 Date.prototype.addMonths = function(months) {

@@ -29,6 +29,7 @@ Item {
     property var date2: new Date(2013, 5, 10)
     property var date3: new Date(2014, 6, 10)
     property var date4: new Date(2016, 9, 30)
+    property var date5: new Date(2016, 9, 31)
 
     Flickable {
         id: flickable
@@ -89,7 +90,7 @@ Item {
         function test_double30thOctober() {
             calendar.selectedDate = date4;
             calendar.selectedDate = calendar.selectedDate.addDays(1);
-            verify(calendar.selectedDate.getDay() !== date4.getDay());
+            compare(calendar.selectedDate, date5, "The next day after 2016-10-30 is not 2016-10-31");
         }
     }
 }

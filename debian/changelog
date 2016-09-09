@@ -1,3 +1,10 @@
+ubuntu-settings-components (0.9+16.10.20160909-0ubuntu1) yakkety; urgency=medium
+
+  [ Lukáš Tinkl ]
+  * Calculate the days to add for the next week correctly (LP: #1620496)
+
+ -- Michał Sawicz <michal.sawicz@canonical.com>  Fri, 09 Sep 2016 14:39:30 +0000
+
 ubuntu-settings-components (0.9+16.10.20160818.1-0ubuntu1) yakkety; urgency=medium
 
   [ Michał Sawicz ]

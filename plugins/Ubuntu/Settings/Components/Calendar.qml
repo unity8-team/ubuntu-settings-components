@@ -24,7 +24,7 @@ ListView {
 
     property bool collapsed: false
     property var currentDate: new Date(priv.selectedDay.year, priv.selectedDay.month, 1)
-    property var firstDayOfWeek: Qt.locale(i18n.language).firstDayOfWeek
+    property int firstDayOfWeek: Qt.locale(i18n.language).firstDayOfWeek
     property var maximumDate
     property var minimumDate
     property var selectedDate: new Date(priv.today.year, priv.today.month, priv.today.day)

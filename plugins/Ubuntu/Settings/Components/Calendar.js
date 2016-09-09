@@ -80,6 +80,7 @@ Day.prototype.weekStart = function(weekStartDay) {
         else day = day - 1
         n = n + 1
     }
+    if (n == 0) n+= 7; // never start in the upper left corner, add an extra week on top
     return this.addDays(-n)
 }
 

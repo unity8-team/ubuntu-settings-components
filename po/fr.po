@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: ubuntu-settings-components\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2016-06-20 15:57+0200\n"
-"PO-Revision-Date: 2016-03-22 19:05+0000\n"
-"Last-Translator: Jean-Marc <Unknown>\n"
+"PO-Revision-Date: 2016-09-08 11:40+0000\n"
+"Last-Translator: Nicolas Delvaux <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-06-26 05:58+0000\n"
-"X-Generator: Launchpad (build 18111)\n"
+"X-Launchpad-Export-Date: 2016-09-09 06:30+0000\n"
+"X-Generator: Launchpad (build 18184)\n"
 
 #: plugins/Ubuntu/Settings/Components/QuickReply.qml:63
 msgid "Quick reply with:"
@@ -23,55 +23,57 @@ msgstr "Réponse rapide avec :"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:80
 msgid "Fingerprint Name"
-msgstr ""
+msgstr "Nom de l'empreinte"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:107
 msgid "Delete Fingerprint"
-msgstr ""
+msgstr "Supprimer l'empreinte"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:124
 msgid "Sorry, the fingerprint could not be deleted."
-msgstr ""
+msgstr "Désolé, l'empreinte n'a pas pu être supprimée"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:129
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:337
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:137
 #: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:148
 msgid "OK"
-msgstr "Valider"
+msgstr "Ok"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:32
 msgid "Fingerprint ID"
-msgstr ""
+msgstr "Empreintes"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:93
 #, qt-format
 msgid "Finger %1"
-msgstr ""
+msgstr "Doigt %1"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:187
 msgid "Passcode required"
-msgstr ""
+msgstr "Mot de passe requis"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:191
 msgid "You must set a passcode to use fingerprint ID"
 msgstr ""
+"Vous devez configurer un mot de passe pour utiliser l'authentification par "
+"empreinte"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:198
 msgid "Set Passcode…"
-msgstr ""
+msgstr "Configurer un mot de passe…"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:274
 msgid "Add fingerprint"
-msgstr ""
+msgstr "Ajouter une empreinte"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:287
 msgid "Remove All…"
-msgstr ""
+msgstr "Tout effacer…"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:302
 msgid "Are you sure you want to forget all stored fingerprints?"
-msgstr ""
+msgstr "Voulez vous vraiment supprimer toutes les empreintes enregistrées ?"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:311
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:357
@@ -89,36 +91,36 @@ msgstr "Supprimer"
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:332
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:102
 msgid "Sorry, the reader doesn’t seem to be working."
-msgstr ""
+msgstr "Désolé, le lecteur semble ne pas fonctionner."
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:60
 msgid "Swipe your finger repeatedly over the reader."
-msgstr ""
+msgstr "Passez plusieurs fois votre doigt sur le lecteur."
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:77
 msgid "Keep your finger on the reader for longer."
-msgstr ""
+msgstr "Laissez votre doigt plus longtemps sur le lecteur."
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:93
 msgid "Back"
-msgstr ""
+msgstr "Précédent"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:130
 msgid "All done!"
-msgstr ""
+msgstr "Terminé !"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:296
 msgid "Swipe your finger over the reader."
-msgstr ""
+msgstr "Passez votre doigt sur le lecteur."
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:310
 #, qt-format
 msgid "%1%"
-msgstr ""
+msgstr "%1%"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:382
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 #: plugins/Ubuntu/Settings/Menus/CalendarMenu.qml:57
 #, qt-format
@@ -163,23 +165,23 @@ msgstr "Aucun"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:29
 msgid "Authentication type:"
-msgstr ""
+msgstr "Type d'authentification :"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:42
 msgid "Certificates (TLS)"
-msgstr ""
+msgstr "Certificats (TLS)"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:43
 msgid "Password"
-msgstr ""
+msgstr "Mot de passe"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:44
 msgid "Password with certificates (TLS)"
-msgstr ""
+msgstr "Mot de passe avec certificats (TLS)"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:45
 msgid "Static key"
-msgstr ""
+msgstr "Clé statique"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:123
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:114
@@ -200,7 +202,7 @@ msgstr "Protocole :"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:304
 msgid "Username:"
-msgstr ""
+msgstr "Nom d'utilisateur :"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:319
 #: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:165
@@ -236,7 +238,7 @@ msgstr "Certificat de l'AC :"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:409
 msgid "Static key:"
-msgstr ""
+msgstr "Clé statique :"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:421
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:502
@@ -245,11 +247,11 @@ msgstr "Direction de la clé :"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:439
 msgid "Remote IP:"
-msgstr ""
+msgstr "IP distante :"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:454
 msgid "Local IP:"
-msgstr ""
+msgstr "IP locale :"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:479
 msgid "Use additional TLS authentication:"
@@ -348,7 +350,7 @@ msgid ""
 "Your Wi-Fi/mobile provider can see when and how much you use the Internet, "
 "but not what for."
 msgstr ""
-"Votre opérateur Wi-Fi/mobile peut voir quand et quel quantité d'Internet "
+"Votre opérateur Wi-Fi/mobile peut voir quand et quelle quantité d'Internet "
 "vous utilisez, mais pas ce que vous en faites."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:39
@@ -374,14 +376,15 @@ msgid ""
 "Your Wi-Fi/mobile provider can still see when and how much you use the "
 "Internet."
 msgstr ""
-"Votre opérateur Wi-Fi/mobile peut toujours savoir quand et quel quantité "
+"Votre opérateur Wi-Fi/mobile peut toujours savoir quand et quelle quantité "
 "d'Internet vous utilisez."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:39
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:45
 msgid "The DNS provider can see which Web sites and other services you use."
 msgstr ""
-"L'opérateur du DNS peut voir quel sites Web et autres services vous utilisez."
+"L'opérateur du DNS peut voir quels sites Web et autres services vous "
+"utilisez."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:30
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NoCert.qml:27
@@ -425,7 +428,7 @@ msgstr "Le certificat est sur la liste noire."
 msgid ""
 "It does not provide a certificate. The VPN provider could be impersonated."
 msgstr ""
-"Il ne fournit pas un certificat. Quelqu'un se fait peut-être passer pour le "
+"Il ne fournit pas de certificat. Quelqu'un se fait peut-être passer pour le "
 "fournisseur du VPN."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:27
@@ -460,7 +463,8 @@ msgstr "Vous utilisez ce VPN pour des services spécifiques."
 msgid ""
 "Your traffic to these services is private to them and the VPN provider."
 msgstr ""
-"Votre trafic à ces services est privé pour eux et pour le fournisseur de VPN."
+"Votre trafic vers ces services est privé pour eux et pour le fournisseur de "
+"VPN."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SomeTraffic.qml:39
 msgid "Your Wi-Fi/mobile provider can track your use of any other services. "

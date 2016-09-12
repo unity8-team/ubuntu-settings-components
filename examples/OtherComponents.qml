@@ -212,10 +212,28 @@ Item {
             }
 
             ModemInfoItem {
+                simIdentifierText: "SIM 1"
                 statusText: "EE 4G"
                 statusIcon: "gsm-3g-full"
                 roaming: true
                 locked: false
+                onTriggered: roaming = !roaming
+            }
+
+            ModemInfoItem {
+                simIdentifierText: "SIM 2"
+                statusText: "Ubuntu 5G"
+                statusIcon: "gsm-3g-medium-secure"
+                roaming: false
+                locked: true
+                onUnlock: locked = false
+                onTriggered: {
+                    if (locked) {
+                        roaming = !roaming
+                    } else {
+                        locked = true
+                    }
+                }
             }
 
             GroupedMessageMenu {

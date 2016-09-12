@@ -257,35 +257,6 @@ Item {
                     }
                 }
             }
-
-            Row {
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
-
-                spacing: units.gu(1)
-
-                Label {
-                    text: "StatusIcon"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                StatusIcon {
-                    height: units.gu(5)
-                    source: "image://theme/gps"
-                }
-
-                StatusIcon {
-                    height: units.gu(5)
-                    source: "image://theme/battery-caution"
-                }
-
-                StatusIcon {
-                    height: units.gu(5)
-                    source: "image://theme/missing,gpm-battery-000-charging"
-                }
-            }
         }
     }
 }

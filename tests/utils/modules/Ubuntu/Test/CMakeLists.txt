@@ -1,27 +1,21 @@
-add_definitions(-DQT_NO_KEYWORDS)
+include_directories(
+    ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
+)
 
-set(UbuntuTestQML_SOURCES
+add_library(UbuntuTestQml MODULE
     testutil.cpp
     plugin.cpp
     TouchEventSequenceWrapper.cpp
 )
 
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
-    )
-
-add_library(UbuntuTestQml MODULE ${UbuntuTestQML_SOURCES})
-
-qt5_use_modules(UbuntuTestQml Core Quick Test)
-
-# copy qml files into build directory for shadow builds
-file(GLOB QML_JS_FILES *.js *.qml qmldir)
-
-add_custom_target(UbuntuTestQmlJsFiles ALL
-    COMMAND cp ${QML_JS_FILES} ${CMAKE_CURRENT_BINARY_DIR}
-    DEPENDS ${QML_JS_FILES}
+target_link_libraries(UbuntuTestQml
+    Qt5::Core
+    Qt5::Quick
+    Qt5::Test
 )
 
+export_qmlfiles(Ubuntu.Test Ubuntu/Test NO_INSTALL)
+export_qmlplugin(Ubuntu.Test 0.1 Ubuntu/Test TARGETS UbuntuTestQml NO_INSTALL)
+
 add_custom_target(UbuntuTest)
-add_dependencies(UbuntuTest UbuntuTestQml UbuntuTestQmlJsFiles)
+add_dependencies(UbuntuTest UbuntuTestQml Ubuntu.Test-qmlfiles)

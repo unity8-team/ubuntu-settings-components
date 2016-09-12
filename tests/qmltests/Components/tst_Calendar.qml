@@ -20,12 +20,15 @@ import QtQuick 2.4
 import QtTest 1.0
 import Ubuntu.Test 0.1
 import Ubuntu.Settings.Components 0.1
+import Ubuntu.Components 1.3
 
-Item {
+Rectangle {
     width: units.gu(42)
     height: units.gu(75)
 
-    Text {
+    color: theme.palette.normal.background
+
+    Label {
         id: label
         anchors {
             left: parent.left
@@ -44,8 +47,6 @@ Item {
             right: parent.right
             top: label.bottom
         }
-
-        selectedDate: new Date()
     }
 
     UbuntuTestCase {
@@ -77,8 +78,9 @@ Item {
 
         function test_selectedDate(data) {
             calendar.selectedDate = data.date;
-            compare(calendar.currentItem.monthStart.getYear(), data.date.getYear(), "Current year does no correspond to set date");
-            compare(calendar.currentItem.monthStart.getMonth(), data.date.getMonth(), "Current month does no correspond to set date");
+
+            compare(calendar.currentItem.monthStart.year, data.date.getFullYear(), "Current year does no correspond to set date");
+            compare(calendar.currentItem.monthStart.month, data.date.getMonth(), "Current month does no correspond to set date");
         }
 
         function test_firstDayOfWeek_data() {
@@ -95,7 +97,8 @@ Item {
                 var dayColumn = findChild(calendar, "dayItem" + i);
                 verify(dayColumn);
 
-                compare(dayColumn.dayStart.getDay(), (data.firstDayOfWeek + i)%7, "Day column does not match expected for firstDayOfWeek");
+                var dayStart =  new Date(dayColumn.dayStart.year, dayColumn.dayStart.month, dayColumn.dayStart.day);
+                compare(dayStart.getDay(), (data.firstDayOfWeek + i)%7, "Day column does not match expected for firstDayOfWeek");
             }
         }
 

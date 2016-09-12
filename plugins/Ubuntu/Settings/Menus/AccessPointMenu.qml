@@ -21,33 +21,30 @@
 import QtQuick 2.4
 import Ubuntu.Components 1.3
 
-BaseMenu
-{
+StandardMenu {
     id: ap
     property bool active: false
     property bool secure: false
     property bool adHoc: false
     property int signalStrength: 0
-    divider.visible: false
 
     icon.height: Math.min(units.gu(3), parent.height - units.gu(1))
     icon.width: icon.height
     icon.color: ap.active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
     icon.name: {
-        var imageName = "nm-signal-100"
-
         if (adHoc) {
-            imageName = "nm-adhoc";
+            return "nm-adhoc";
         } else if (signalStrength <= 0) {
-            imageName = "nm-signal-00";
+            return "nm-signal-00";
         } else if (signalStrength <= 25) {
-            imageName = "nm-signal-25";
+            return "nm-signal-25";
         } else if (signalStrength <= 50) {
-            imageName = "nm-signal-50";
+            return "nm-signal-50";
         } else if (signalStrength <= 75) {
-            imageName = "nm-signal-75";
+            return "nm-signal-75";
         }
-        return imageName;
+
+        return "nm-signal-100";
     }
 
     component: Icon {

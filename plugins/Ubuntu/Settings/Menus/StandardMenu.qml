@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 Canonical Ltd.
+ * Copyright 2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,11 +22,38 @@ import Ubuntu.Components 1.3
 BaseMenu {
     id: menu
 
-    property string iconSource
-    property string iconName
-    property color iconColor
+    property string text
+    property alias icon: itemLayoutIcon
+    property alias title: layoutItem.title
+    property alias component: componentLoader.sourceComponent
 
-    icon.source: iconSource
-    icon.color: iconColor
-    icon.width: units.gu(2)
+    property alias iconSource: itemLayoutIcon.source
+    property alias iconName: itemLayoutIcon.name
+    property alias iconColor: itemLayoutIcon.color
+
+    height: layoutItem.height + (divider.visible ? divider.height : 0)
+
+    ListItemLayout {
+        id: layoutItem
+        objectName: "layoutItem"
+        title.text: menu.text
+        title.color: menu.foregroundColor
+        title.opacity: enabled ? 1 : 0.5
+
+        Icon {
+            id: itemLayoutIcon
+            objectName: "itemLayoutIcon"
+            color: theme.palette.normal.backgroundText
+            width: units.gu(2)
+            SlotsLayout.position: SlotsLayout.Leading
+        }
+
+        Loader {
+            id: componentLoader
+            asynchronous: false
+            visible: status == Loader.Ready
+            SlotsLayout.position: SlotsLayout.Trailing
+        }
+    }
 }
+

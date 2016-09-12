@@ -22,11 +22,7 @@ import Ubuntu.Components 1.3
 ListItem {
     id: menu
 
-    property string text
     property bool highlightWhenPressed: true
-    property alias icon: itemLayoutIcon
-    property alias title: layoutItem.title
-    property alias component: componentLoader.sourceComponent
     property color foregroundColor: theme.palette.normal.baseText
     property alias backColor: menu.color
 
@@ -40,7 +36,6 @@ ListItem {
     onShowDividerChanged: divider.visible = showDivider
     divider.visible: false
 
-    height: layoutItem.height + (divider.visible ? divider.height : 0)
     highlightColor: highlightWhenPressed ? theme.palette.highlighted.background : "transparent"
 
     // These fields are for retro-compatibility with ListItem.Empty
@@ -54,29 +49,6 @@ ListItem {
 
     property bool selected: false
     onSelectedChanged: console.error(menu+": selected property is deprecated")
-
-
-    ListItemLayout {
-        id: layoutItem
-        objectName: "layoutItem"
-        title.text: menu.text
-        title.color: menu.foregroundColor
-        title.opacity: enabled ? 1 : 0.5
-
-        Icon {
-            id: itemLayoutIcon
-            objectName: "itemLayoutIcon"
-            color: theme.palette.normal.backgroundText
-            SlotsLayout.position: SlotsLayout.Leading
-        }
-
-        Loader {
-            id: componentLoader
-            asynchronous: false
-            visible: status == Loader.Ready
-            SlotsLayout.position: SlotsLayout.Trailing
-        }
-    }
 
     ListItemActions {
         id: removeAction

@@ -21,7 +21,7 @@ import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.3
 import Ubuntu.Settings.Components 0.1
 
-ListItem {
+BaseMenu {
     id: menu
 
     property alias iconSource: icon.source

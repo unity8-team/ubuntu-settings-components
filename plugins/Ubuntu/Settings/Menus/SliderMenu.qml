@@ -156,7 +156,7 @@ BaseMenu {
                 width: height
                 color: theme.palette.normal.backgroundText
 
-                MouseArea {
+                AbstractButton {
                     anchors.fill: parent
                     onClicked: slider.value = slider.minimumValue
                 }
@@ -174,7 +174,7 @@ BaseMenu {
                 width: height
                 color: theme.palette.normal.backgroundText
 
-                MouseArea {
+                AbstractButton {
                     anchors.fill: parent
                     onClicked: slider.value =  slider.maximumValue
                 }

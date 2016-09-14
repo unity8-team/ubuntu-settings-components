@@ -22,21 +22,18 @@ import Ubuntu.Components 1.3
 BaseLayoutMenu {
     id: menu
 
-    property string iconSource
-    property string iconName
-    property real iconSize: units.gu(3)
-    property color iconColor: theme.palette.normal.backgroundText
+    property alias iconSource: icon.source
+    property alias iconName: icon.name
+    property alias iconSize: icon.height
+    property alias iconColor: icon.color
     property alias component: menu.trailingComponent
-    property alias icon: menu.trailingComponentItem
 
-    leadingComponent: Icon {
-        id: itemLayoutIcon
-        objectName: "itemLayoutIcon"
-        source: !menu.iconSource && menu.iconName !== "" ? "image://theme/%1".arg(menu.iconName) : menu.iconSource
-        color: menu.iconColor
-        height: menu.iconSize
+    slots: Icon {
+        id: icon
+        objectName: "standardMenuIcon"
+        color: theme.palette.normal.backgroundText
+        height: units.gu(3)
         width: height
         SlotsLayout.position: SlotsLayout.Leading
     }
 }
-

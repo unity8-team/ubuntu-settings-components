@@ -24,10 +24,9 @@ BaseMenu {
 
     property string text
     property alias title: layoutItem.title
-    property alias leadingComponent: leadingComponentLoader.sourceComponent
-    property alias leadingComponentItem: leadingComponentLoader.item
     property alias trailingComponent: trailingComponentLoader.sourceComponent
     property alias trailingComponentItem: trailingComponentLoader.item
+    property alias slots: layoutItem.children
 
     height: layoutItem.height + (divider.visible ? divider.height : 0)
 
@@ -37,13 +36,6 @@ BaseMenu {
         title.text: menu.text
         title.color: menu.foregroundColor
         title.opacity: enabled ? 1 : 0.5
-
-        Loader {
-            id: leadingComponentLoader
-            asynchronous: false
-            visible: status == Loader.Ready
-            SlotsLayout.position: SlotsLayout.Leading
-        }
 
         Loader {
             id: trailingComponentLoader

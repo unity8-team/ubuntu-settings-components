@@ -24,18 +24,16 @@ import Ubuntu.Components 1.3
 BaseLayoutMenu {
     id: menu
 
-    property bool checked: false
+    property alias checked: checkbox.checked
 
-    leadingComponent: CheckBox {
+    onClicked: checked = !checked
+
+    slots: CheckBox {
         id: checkbox
         objectName: "checkbox"
         checked: menu.checked
 
         onCheckedChanged: menu.checked = checked
-
-        Connections {
-            target: menu
-            onClicked: checkbox.checked = !checkbox.checked
-        }
+        SlotsLayout.position: SlotsLayout.Leading
     }
 }

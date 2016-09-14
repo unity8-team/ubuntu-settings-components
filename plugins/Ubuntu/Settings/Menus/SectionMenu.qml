@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,27 +15,24 @@
  *
  * Authors:
  *      Renato Araujo Oliveira Filho <renato@canonical.com>
+ *      Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 
-ListItem.Header {
+StandardMenu {
     id: menuItem
-    property alias busy: indicator.running
-    __foregroundColor: theme.palette.normal.backgroundText
+    property bool busy
 
-    ActivityIndicator {
+    divider.visible: true
+    foregroundColor: theme.palette.normal.backgroundText
+
+    component: ActivityIndicator {
         id: indicator
         objectName: "indicator"
+        running: menuItem.busy
 
-        anchors {
-            margins: units.gu(0.5)
-            right: parent.right
-        }
-        height: parent.height - (anchors.margins * 2)
         width: height
-        anchors.verticalCenter: parent.verticalCenter
     }
 }

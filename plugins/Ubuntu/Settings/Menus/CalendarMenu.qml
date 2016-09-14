@@ -38,9 +38,7 @@ BaseMenu {
 
         mainSlot: Column {
             id: column
-
             spacing: units.gu(1)
-            height: childrenRect.height + units.gu(1.5)
 
             Label {
                 id: label

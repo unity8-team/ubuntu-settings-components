@@ -18,10 +18,9 @@
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 import Ubuntu.Settings.Components 0.1
 
-ListItem.Empty {
+BaseMenu {
     id: menu
 
     property alias collapsed: calendar.collapsed
@@ -31,40 +30,37 @@ ListItem.Empty {
     property alias minimumDate: calendar.minimumDate
     property alias selectedDate: calendar.selectedDate
 
-    __height: column.height
+    height: slotsLayout.height + (divider.visible ? divider.height : 0)
 
-    Column {
-        id: column
+    SlotsLayout {
+        id: slotsLayout
+        objectName: "slotsLayout"
 
-        height: childrenRect.height + units.gu(1.5)
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-            topMargin: units.gu(1)
-            leftMargin: menu.__contentsMargins
-            rightMargin: menu.__contentsMargins
-        }
-        spacing: units.gu(1)
+        mainSlot: Column {
+            id: column
 
-        Label {
-            id: label
-            anchors {
-                left: parent.left
-                right: parent.right
+            spacing: units.gu(1)
+            height: childrenRect.height + units.gu(1.5)
+
+            Label {
+                id: label
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+                fontSize: "large"
+                text: i18n.ctr("%1=month name, %2=4-digit year", "%1 %2")
+                        .arg(Qt.locale().standaloneMonthName(calendar.currentDate.getMonth(), Locale.LongFormat))
+                        .arg(calendar.currentDate.getFullYear())
             }
-            fontSize: "large"
-            text: i18n.ctr("%1=month name, %2=4-digit year", "%1 %2")
-                      .arg(Qt.locale().standaloneMonthName(calendar.currentDate.getMonth(), Locale.LongFormat))
-                      .arg(calendar.currentDate.getFullYear())
-        }
 
-        Calendar {
-            id: calendar
-            objectName: "calendar"
-            anchors {
-                left: parent.left
-                right: parent.right
+            Calendar {
+                id: calendar
+                objectName: "calendar"
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
             }
         }
     }

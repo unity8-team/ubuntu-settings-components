@@ -44,7 +44,7 @@ BaseMenu {
             id: itemLayoutIcon
             objectName: "itemLayoutIcon"
             color: theme.palette.normal.backgroundText
-            width: units.gu(2)
+            width: units.gu(3)
             SlotsLayout.position: SlotsLayout.Leading
         }
 

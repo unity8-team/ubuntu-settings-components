@@ -137,6 +137,8 @@ Item {
             CheckableMenu {
                 text: i18n.tr("Checkable")
                 checked: true
+                onCheckedChanged: print("Checked status is", checked);
+                onTriggered: print("Triggered", value)
             }
 
             SwitchMenu {

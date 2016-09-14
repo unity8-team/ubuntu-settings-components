@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,74 +15,27 @@
  *
  * Authors:
  *      Nick Dedekind <nick.dedekind@canonical.com>
+ *      Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
-import Ubuntu.Components 1.3 as Components
-import Ubuntu.Components.ListItems 1.3 as ListItem
+import Ubuntu.Components 1.3
 
-ListItem.Empty {
+BaseLayoutMenu {
     id: menu
 
-    property alias text: label.text
     property bool checked: false
 
-    onClicked: menu.checked = !menu.checked
-
-    Components.CheckBox {
+    leadingComponent: CheckBox {
         id: checkbox
         objectName: "checkbox"
-        property bool enableCheckConnection: true
+        checked: menu.checked
 
-        anchors {
-            left: parent.left
-            leftMargin: menu.__contentsMargins
-            verticalCenter: parent.verticalCenter
-        }
-
-        Component.onCompleted: {
-            checked = menu.checked;
-        }
-
-        // FIXME : create a bi-directional feedback component
-        onCheckedChanged: {
-            if (!enableCheckConnection) {
-                return;
-            }
-            var oldEnable = enableCheckConnection;
-            enableCheckConnection = false;
-
-            menu.checked = checked;
-            menu.triggered(menu.checked);
-
-            enableCheckConnection = oldEnable;
-        }
+        onCheckedChanged: menu.checked = checked
 
         Connections {
             target: menu
-            onCheckedChanged: {
-                if (!checkbox.enableCheckConnection) {
-                    return;
-                }
-                var oldEnable = checkbox.enableCheckConnection;
-                checkbox.enableCheckConnection = false;
-
-                checkbox.checked = menu.checked;
-
-                checkbox.enableCheckConnection = oldEnable;
-            }
+            onClicked: checkbox.checked = !checkbox.checked
         }
-    }
-
-    Components.Label {
-        id: label
-        anchors {
-            left: checkbox.right
-            leftMargin: menu.__contentsMargins
-            right: parent.right
-            rightMargin: menu.__contentsMargins
-            verticalCenter: parent.verticalCenter
-        }
-        elide: Text.ElideRight
     }
 }

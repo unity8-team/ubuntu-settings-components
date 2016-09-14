@@ -28,10 +28,9 @@ StandardMenu {
     property bool adHoc: false
     property int signalStrength: 0
 
-    icon.height: Math.min(units.gu(3), parent.height - units.gu(1))
-    icon.width: icon.height
-    icon.color: ap.active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
-    icon.name: {
+    iconSize: Math.min(units.gu(3), parent.height - units.gu(1))
+    iconColor: ap.active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
+    iconName: {
         if (adHoc) {
             return "nm-adhoc";
         } else if (signalStrength <= 0) {

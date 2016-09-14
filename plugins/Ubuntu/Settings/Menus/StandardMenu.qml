@@ -19,41 +19,24 @@
 import QtQuick 2.4
 import Ubuntu.Components 1.3
 
-BaseMenu {
+BaseLayoutMenu {
     id: menu
 
-    property string text
-    property alias icon: itemLayoutIcon
-    property alias title: layoutItem.title
-    property alias component: componentLoader.sourceComponent
+    property string iconSource
+    property string iconName
+    property real iconSize: units.gu(3)
+    property color iconColor: theme.palette.normal.backgroundText
+    property alias component: menu.trailingComponent
+    property alias icon: menu.trailingComponentItem
 
-    property alias iconSource: itemLayoutIcon.source
-    property alias iconName: itemLayoutIcon.name
-    property alias iconColor: itemLayoutIcon.color
-
-    height: layoutItem.height + (divider.visible ? divider.height : 0)
-
-    ListItemLayout {
-        id: layoutItem
-        objectName: "layoutItem"
-        title.text: menu.text
-        title.color: menu.foregroundColor
-        title.opacity: enabled ? 1 : 0.5
-
-        Icon {
-            id: itemLayoutIcon
-            objectName: "itemLayoutIcon"
-            color: theme.palette.normal.backgroundText
-            width: units.gu(3)
-            SlotsLayout.position: SlotsLayout.Leading
-        }
-
-        Loader {
-            id: componentLoader
-            asynchronous: false
-            visible: status == Loader.Ready
-            SlotsLayout.position: SlotsLayout.Trailing
-        }
+    leadingComponent: Icon {
+        id: itemLayoutIcon
+        objectName: "itemLayoutIcon"
+        source: !menu.iconSource && menu.iconName !== "" ? "image://theme/%1".arg(menu.iconName) : menu.iconSource
+        color: menu.iconColor
+        height: menu.iconSize
+        width: height
+        SlotsLayout.position: SlotsLayout.Leading
     }
 }
 

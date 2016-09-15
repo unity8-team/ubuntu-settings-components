@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,19 +14,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authored by Andrea Cimitan <andrea.cimitan@canonical.com>
+ *             Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 import QtQuick.Layouts 1.1
 import Ubuntu.Thumbnailer 0.1
 
-ListItem.Empty {
+BaseMenu {
     id: menu
 
     property bool showTrack: false
-    property alias playerName: playerNameLabel.text
+    property string playerName
     property alias playerIcon: playerIcon.source
 
     property alias albumArt: albumArtImage.source
@@ -34,91 +34,66 @@ ListItem.Empty {
     property alias artist: artistLabel.text
     property alias album: albumLabel.text
 
-    __height: column.height + units.gu(2)
-    Behavior on implicitHeight { UbuntuNumberAnimation {} }
+    highlightWhenPressed: false
+    height: (albumLayout.visible ? albumLayout.height : playerLayout.height) + (divider.visible ? divider.height : 0)
+    Behavior on height { UbuntuNumberAnimation {} }
 
-    Column {
-        id: column
-        anchors {
-            left: parent.left
-            right: parent.right
-            leftMargin: menu.__contentsMargins
-            rightMargin: menu.__contentsMargins
-            verticalCenter: parent.verticalCenter
+    ListItemLayout {
+        id: playerLayout
+        objectName: "playerLayout"
+        title.text: menu.playerName
+        title.color: menu.foregroundColor
+        title.opacity: enabled ? 1 : 0.5
+        visible: !albumLayout.visible
+
+        Image {
+            id: playerIcon
+            height: units.gu(5)
+            width: height
+            SlotsLayout.position: SlotsLayout.Leading
         }
+    }
 
-        RowLayout {
-            objectName: "player"
-            id: playerRow
-            spacing: menu.__contentsMargins
-            visible: !showTrack
-            anchors { left: parent.left; right: parent.right }
-
-            Image {
-                id: playerIcon
-                Layout.preferredHeight: units.gu(5)
-                Layout.preferredWidth: units.gu(5)
+    SlotsLayout {
+        id: albumLayout
+        visible: showTrack
+        mainSlot: Column {
+            Label {
+                id: songLabel
+                elide: Text.ElideRight
+                maximumLineCount: 1
+                visible: text !== ""
+                anchors { left: parent.left; right: parent.right }
             }
 
             Label {
-                id: playerNameLabel
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignVCenter
+                id: artistLabel
                 elide: Text.ElideRight
                 maximumLineCount: 1
+                visible: text !== ""
+                anchors { left: parent.left; right: parent.right }
+            }
+
+            Label {
+                id: albumLabel
+                elide: Text.ElideRight
+                maximumLineCount: 1
+                fontSize: "small"
+                visible: text !== ""
+                anchors { left: parent.left; right: parent.right }
             }
         }
 
-        RowLayout {
-            objectName: "albumArt"
-            id: trackRow
-            spacing: units.gu(2)
-            visible: showTrack
-            anchors { left: parent.left; right: parent.right }
+        UbuntuShape {
+            width: units.gu(8)
+            height: width
+            SlotsLayout.position: SlotsLayout.Leading
 
-            UbuntuShape {
-                Layout.preferredHeight: units.gu(8)
-                Layout.preferredWidth: units.gu(8)
-
-                image: Image {
-                    id: albumArtImage
-                    width: units.gu(8)
-                    height: width
-                    fillMode: Image.PreserveAspectFit
-                    sourceSize: Qt.size(width, height)
-                    anchors.centerIn: parent
-                }
-            }
-
-            Column {
-                Layout.alignment: Qt.AlignVCenter
-                Layout.fillWidth: true
-                spacing: units.gu(0.5)
-
-                Label {
-                    id: songLabel
-                    elide: Text.ElideRight
-                    maximumLineCount: 1
-                    visible: text !== ""
-                    anchors { left: parent.left; right: parent.right }
-                }
-
-                Label {
-                    id: artistLabel
-                    elide: Text.ElideRight
-                    maximumLineCount: 1
-                    visible: text !== ""
-                    anchors { left: parent.left; right: parent.right }
-                }
-
-                Label {
-                    id: albumLabel
-                    elide: Text.ElideRight
-                    maximumLineCount: 1
-                    fontSize: "small"
-                    visible: text !== ""
-                    anchors { left: parent.left; right: parent.right }
-                }
+            image: Image {
+                id: albumArtImage
+                fillMode: Image.PreserveAspectFit
+                sourceSize: Qt.size(width, height)
+                anchors.fill: parent
             }
         }
     }

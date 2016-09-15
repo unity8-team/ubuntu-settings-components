@@ -161,6 +161,7 @@ Item {
                 name: i18n.tr("Lola Chang")
                 iconSource: "image://theme/contact"
                 active: true
+                onTriggered: active = !active
             }
 
             MediaPlayerMenu {

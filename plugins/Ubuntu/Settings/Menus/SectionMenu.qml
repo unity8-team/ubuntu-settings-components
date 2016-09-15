@@ -23,15 +23,14 @@ import Ubuntu.Components 1.3
 
 StandardMenu {
     id: menuItem
-    property bool busy
+    property alias busy: indicator.running
 
     divider.visible: true
     foregroundColor: theme.palette.normal.backgroundText
 
-    component: ActivityIndicator {
+    slots: ActivityIndicator {
         id: indicator
         objectName: "indicator"
-        running: menuItem.busy
 
         width: height
     }

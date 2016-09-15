@@ -20,7 +20,7 @@
 import QtQuick 2.4
 import Ubuntu.Components 1.3
 
-StandardMenu {
+BaseLayoutMenu {
     id: menu
     property alias buttonText: button.text
 
@@ -31,6 +31,7 @@ StandardMenu {
             width: Math.max(units.gu(5), implicitWidth)
 
             onClicked: menu.clicked()
+            SlotsLayout.position: SlotsLayout.Leading
         }
     ]
 }

@@ -22,11 +22,11 @@ import Ubuntu.Components 1.3
 import QtQuick.Layouts 1.1
 import Ubuntu.Thumbnailer 0.1
 
-BaseMenu {
+BaseLayoutMenu {
     id: menu
 
     property bool showTrack: false
-    property string playerName
+    property alias playerName: menu.text
     property alias playerIcon: playerIcon.source
 
     property alias albumArt: albumArtImage.source
@@ -35,23 +35,15 @@ BaseMenu {
     property alias album: albumLabel.text
 
     highlightWhenPressed: false
-    height: (albumLayout.visible ? albumLayout.height : playerLayout.height) + (divider.visible ? divider.height : 0)
+    height: (albumLayout.visible ? albumLayout.height : layout.height) + (divider.visible ? divider.height : 0)
     Behavior on height { UbuntuNumberAnimation {} }
 
-    ListItemLayout {
-        id: playerLayout
-        objectName: "playerLayout"
-        title.text: menu.playerName
-        title.color: menu.foregroundColor
-        title.opacity: enabled ? 1 : 0.5
-        visible: !albumLayout.visible
-
-        Image {
-            id: playerIcon
-            height: units.gu(5)
-            width: height
-            SlotsLayout.position: SlotsLayout.Leading
-        }
+    layout.visible: !albumLayout.visible
+    slots: Image {
+        id: playerIcon
+        height: units.gu(5)
+        width: height
+        SlotsLayout.position: SlotsLayout.Leading
     }
 
     SlotsLayout {

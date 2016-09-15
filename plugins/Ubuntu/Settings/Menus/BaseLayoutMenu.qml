@@ -23,6 +23,7 @@ BaseMenu {
     id: menu
 
     property string text
+    property alias layout: layoutItem
     property alias title: layoutItem.title
     property alias slots: layoutItem.children
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,15 +16,15 @@
  * Authors:
  *      Renato Araujo Oliveira Filho <renato@canonical.com>
  *      Olivier Tilloy <olivier.tilloy@canonical.com>
+ *      Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 import Ubuntu.Settings.Components 0.1 as USC
 import QtQuick.Layouts 1.1
 
-ListItem.Empty {
+BaseMenu {
     id: menu
 
     property alias title: messageHeader.title
@@ -40,44 +40,37 @@ ListItem.Empty {
     property alias footer: footerLoader.sourceComponent
     property real _animationDuration: UbuntuAnimation.FastDuration
 
-    __height: layout.implicitHeight + units.gu(3)
+    height: layout.height + (divider.visible ? divider.height : 0)
     clip: heightAnimation.running
 
-    ColumnLayout {
+    SlotsLayout {
         id: layout
+        mainSlot: ColumnLayout {
+            spacing: units.gu(1.5)
 
-        anchors {
-            left: parent.left
-            right: parent.right
-            leftMargin: units.gu(2)
-            rightMargin: units.gu(2)
-            top: parent.top
-            topMargin: units.gu(1.5)
-        }
-        spacing: units.gu(1.5)
+            USC.MessageHeader {
+                id: messageHeader
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
 
-        USC.MessageHeader {
-            id: messageHeader
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignTop
+                avatar: menu.avatar != "" ? menu.avatar : "image://theme/contact"
+                icon: menu.icon != "" ? menu.icon : "image://theme/message"
 
-            avatar: menu.avatar != "" ? menu.avatar : "image://theme/contact"
-            icon: menu.icon != "" ? menu.icon : "image://theme/message"
+                state: menu.state
 
-            state: menu.state
-
-            onIconClicked:  {
-                menu.iconActivated();
+                onIconClicked:  {
+                    menu.iconActivated();
+                }
             }
-        }
 
-        Loader {
-            id: footerLoader
-            visible: menu.state === "expanded"
-            opacity: 0.0
-            asynchronous: false
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            Loader {
+                id: footerLoader
+                visible: menu.state === "expanded"
+                opacity: 0.0
+                asynchronous: false
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
         }
     }
 

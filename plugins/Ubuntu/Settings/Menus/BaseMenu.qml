@@ -32,6 +32,8 @@ ListItem {
     Component.onCompleted: {
         if (showDivider != divider.visible)
             showDivider = divider.visible;
+
+        onClicked.connect(onClickedCallback)
     }
     onShowDividerChanged: divider.visible = showDivider
     divider.visible: false
@@ -40,7 +42,7 @@ ListItem {
 
     // These fields are for retro-compatibility with ListItem.Empty
     signal triggered(var value)
-    onClicked: triggered(null)
+    function onClickedCallback() { triggered(null) }
 
     property bool removable: false
     property bool confirmRemoval: true

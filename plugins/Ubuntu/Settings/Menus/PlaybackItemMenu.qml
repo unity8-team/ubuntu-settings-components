@@ -43,67 +43,25 @@ BaseMenu {
             anchors.centerIn: parent
             spacing: units.gu(3)
 
-            Icon {
+            PlaybackButton {
                 objectName: "previousButton"
-
-                Layout.preferredWidth: units.gu(5)
-                Layout.preferredHeight: units.gu(5)
-
-                source: "image://theme/media-skip-backward"
-                color: {
-                    if (!enabled)
-                        return theme.palette.disabled.backgroundText;
-                    return prevMA.pressed ? theme.palette.highlighted.backgroundText : theme.palette.normal.backgroundText;
-                }
+                iconName: "media-skip-backward"
                 enabled: canGoPrevious
-
-                MouseArea {
-                    id: prevMA
-                    anchors.fill: parent
-                    onClicked: menu.previous()
-                }
+                onClicked: menu.previous()
             }
 
-            Icon {
+            PlaybackButton {
                 objectName: "playButton"
-
-                Layout.preferredWidth: units.gu(5)
-                Layout.preferredHeight: units.gu(5)
-
-                source: playing ? "image://theme/media-playback-pause" : "image://theme/media-playback-start"
-                color: {
-                    if (!enabled)
-                        return theme.palette.disabled.backgroundText;
-                    return playMA.pressed ? theme.palette.highlighted.backgroundText : theme.palette.normal.backgroundText;
-                }
+                iconName: playing ? "media-playback-pause" : "media-playback-start"
                 enabled: canPlay
-
-                MouseArea {
-                    id: playMA
-                    anchors.fill: parent
-                    onClicked: menu.play(!playing)
-                }
+                onClicked: menu.play(!playing)
             }
 
-            Icon {
+            PlaybackButton {
                 objectName: "nextButton"
-
-                Layout.preferredWidth: units.gu(5)
-                Layout.preferredHeight: units.gu(5)
-
-                source: "image://theme/media-skip-forward"
-                color: {
-                    if (!enabled)
-                        return theme.palette.disabled.backgroundText;
-                    return nextMA.pressed ? theme.palette.highlighted.backgroundText : theme.palette.normal.backgroundText;
-                }
+                iconName: "media-skip-forward"
                 enabled: canGoNext
-
-                MouseArea {
-                    id: nextMA
-                    anchors.fill: parent
-                    onClicked: menu.next()
-                }
+                onClicked: menu.next()
             }
         }
     }

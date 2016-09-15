@@ -36,6 +36,7 @@ BaseLayoutMenu {
 
     highlightWhenPressed: false
     height: (albumLayout.visible ? albumLayout.height : layout.height) + (divider.visible ? divider.height : 0)
+    Behavior on height { UbuntuNumberAnimation {} }
 
     layout.visible: !albumLayout.visible
     slots: Image {

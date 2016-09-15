@@ -24,9 +24,12 @@ BaseMenu {
 
     property string text
     property alias title: layoutItem.title
+    property alias slots: layoutItem.children
+
+    // These fields are for retro-compatibility with ListItem.Empty based MenuItems
     property alias trailingComponent: trailingComponentLoader.sourceComponent
     property alias trailingComponentItem: trailingComponentLoader.item
-    property alias slots: layoutItem.children
+    property alias component: menu.trailingComponent
 
     height: layoutItem.height + (divider.visible ? divider.height : 0)
 
@@ -45,4 +48,3 @@ BaseMenu {
         }
     }
 }
-

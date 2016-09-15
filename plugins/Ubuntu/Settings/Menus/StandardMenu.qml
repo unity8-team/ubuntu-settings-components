@@ -26,6 +26,7 @@ BaseLayoutMenu {
     property alias iconName: icon.name
     property alias iconSize: icon.height
     property alias iconColor: icon.color
+    property alias icon: icon
     property alias component: menu.trailingComponent
 
     slots: Icon {

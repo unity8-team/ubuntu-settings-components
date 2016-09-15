@@ -32,6 +32,8 @@ BaseMenu {
     property alias minIcon: leftButton.source
     property alias maxIcon: rightButton.source
 
+    // These fields are for retro-compatibility with ListItem.Empty
+    property string iconSource
 
     signal updated(real value)
 

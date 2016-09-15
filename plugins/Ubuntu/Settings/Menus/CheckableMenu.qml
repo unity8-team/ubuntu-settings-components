@@ -26,14 +26,16 @@ BaseLayoutMenu {
 
     property alias checked: checkbox.checked
 
-    onClicked: checked = !checked
+    Component.onCompleted: menu.onClicked.disconnect(onClickedCallback)
+    onClicked: {
+        checked = !checked
+        menu.triggered(checked)
+    }
 
     slots: CheckBox {
         id: checkbox
         objectName: "checkbox"
-        checked: menu.checked
-
-        onCheckedChanged: menu.checked = checked
+        onClicked: menu.triggered(checked)
         SlotsLayout.position: SlotsLayout.Leading
     }
 }

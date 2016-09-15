@@ -25,46 +25,17 @@ StandardMenu {
 
     property alias checked: switcher.checked
 
-    onClicked: menu.checked = !menu.checked
+    Component.onCompleted: menu.onClicked.disconnect(onClickedCallback)
+    onClicked: {
+        checked = !checked
+        menu.triggered(checked)
+    }
 
     slots: [
         Switch {
             id: switcher
             objectName: "switcher"
-            property bool enableCheckConnection: true
-
-            Component.onCompleted: {
-                checked = menu.checked;
-            }
-
-            // FIXME : create a bi-directional feedback component
-            onCheckedChanged: {
-                if (!enableCheckConnection) {
-                    return;
-                }
-                var oldEnable = enableCheckConnection;
-                enableCheckConnection = false;
-
-                menu.checked = checked;
-                menu.triggered(menu.checked);
-
-                enableCheckConnection = oldEnable;
-            }
-
-            Connections {
-                target: menu
-                onCheckedChanged: {
-                    if (!switcher.enableCheckConnection) {
-                        return;
-                    }
-                    var oldEnable = switcher.enableCheckConnection;
-                    switcher.enableCheckConnection = false;
-
-                    switcher.checked = menu.checked;
-
-                    switcher.enableCheckConnection = oldEnable;
-                }
-            }
+            onClicked: menu.triggered(checked)
         }
     ]
 }

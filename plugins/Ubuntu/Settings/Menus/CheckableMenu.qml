@@ -36,8 +36,7 @@ BaseLayoutMenu {
         id: checkbox
         objectName: "checkbox"
         onClicked: menu.triggered(checked)
-        SlotsLayout.padding.leading: SlotsLayout.padding.leading + units.gu(0.5)
-        SlotsLayout.padding.trailing: units.gu(1.5)
+        SlotsLayout.padding.trailing: units.gu(2.0)
         SlotsLayout.position: SlotsLayout.Leading
     }
 }

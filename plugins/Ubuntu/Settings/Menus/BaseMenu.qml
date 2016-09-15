@@ -39,6 +39,7 @@ ListItem {
     divider.visible: false
 
     highlightColor: highlightWhenPressed ? theme.palette.highlighted.background : "transparent"
+    Behavior on height { UbuntuNumberAnimation {} }
 
     // These fields are for retro-compatibility with ListItem.Empty
     signal triggered(var value)

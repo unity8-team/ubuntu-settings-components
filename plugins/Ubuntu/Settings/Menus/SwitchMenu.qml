@@ -1,5 +1,4 @@
-/*
- * Copyright 2013 Canonical Ltd.
+/* Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,6 +14,7 @@
  *
  * Authors:
  *      Nick Dedekind <nick.dedekind@canonical.com>
+ *      Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
@@ -23,11 +23,11 @@ import Ubuntu.Components 1.3
 StandardMenu {
     id: menu
 
-    property bool checked: false
+    property alias checked: switcher.checked
 
     onClicked: menu.checked = !menu.checked
 
-    component: Component {
+    slots: [
         Switch {
             id: switcher
             objectName: "switcher"
@@ -66,5 +66,5 @@ StandardMenu {
                 }
             }
         }
-    }
+    ]
 }

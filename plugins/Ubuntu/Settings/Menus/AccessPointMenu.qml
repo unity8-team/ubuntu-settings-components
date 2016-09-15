@@ -24,9 +24,9 @@ import Ubuntu.Components 1.3
 StandardMenu {
     id: ap
     property bool active: false
-    property bool secure: false
     property bool adHoc: false
     property int signalStrength: 0
+    property alias secure: iconSecure.visible
 
     iconSize: Math.min(units.gu(3), parent.height - units.gu(1))
     iconColor: ap.active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
@@ -46,10 +46,10 @@ StandardMenu {
         return "nm-signal-100";
     }
 
-    component: Icon {
+    slots: Icon {
         id: iconSecure
         objectName: "iconSecure"
-        visible: ap.secure
+        visible: false
         name: "network-secure"
         color: ap.active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
         width: height

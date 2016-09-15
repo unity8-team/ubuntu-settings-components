@@ -70,12 +70,12 @@ Item {
                 text: i18n.tr("Toggle divider menu.")
                 showDivider: false
 
-                component: Component {
+                slots: [
                     Button {
                         text: dividerToggleMenu.showDivider ? i18n.tr("Hide") : i18n.tr("Show")
                         onClicked: dividerToggleMenu.showDivider = !dividerToggleMenu.showDivider
                     }
-                }
+                ]
             }
 
             StandardMenu {
@@ -91,9 +91,9 @@ Item {
             }
 
             StandardMenu {
-                iconSource: "image://theme/calendar"
+                iconName: "calendar"
                 iconColor: "red"
-                text: i18n.tr("Standard Menu")
+                text: i18n.tr("Standard Menu with Component")
                 component: Component {
                     Button {
                         text: "Press Me"
@@ -144,6 +144,8 @@ Item {
             SwitchMenu {
                 text: i18n.tr("Switch")
                 checked: true
+                onCheckedChanged: print("Checked status is", checked);
+                onTriggered: print("Triggered", value)
             }
 
             SectionMenu {

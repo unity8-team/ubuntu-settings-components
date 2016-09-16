@@ -68,6 +68,11 @@ BaseMenu {
                 visible: menu.state === "expanded"
                 opacity: 0.0
                 asynchronous: false
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration:  _animationDuration
+                    }
+                }
                 Layout.fillWidth: true
                 Layout.fillHeight: true
             }
@@ -92,11 +97,10 @@ BaseMenu {
             target: footerLoader
             opacity: 1.0
         }
-    }
 
-    transitions: Transition {
-        ParallelAnimation {
-            PropertyAnimation { target: footerLoader; property: "opacity"; duration:  _animationDuration }
+        PropertyChanges {
+            target: menu
+            color: highlightColor
         }
     }
 

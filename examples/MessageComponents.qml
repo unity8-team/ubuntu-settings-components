@@ -46,6 +46,14 @@ Item {
             avatar: "artwork/beach.jpg"
         }
         ListElement {
+            type: "simple"
+            title: "Simple Text Message with Unknown Time"
+            body: "Going short, coming from the Void"
+            time: ""
+            icon: "image://theme/message"
+            avatar: "artwork/farm.jpg"
+        }
+        ListElement {
             type: "snap"
             title: "Snap Decision"
             body: "My mother says I'm handsome!"

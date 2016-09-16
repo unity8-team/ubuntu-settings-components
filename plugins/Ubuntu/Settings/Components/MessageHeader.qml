@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,7 @@
  * Authors:
  *      Renato Araujo Oliveira Filho <renato@canonical.com>
  *      Olivier Tilloy <olivier.tilloy@canonical.com>
+ *      Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
@@ -33,24 +34,22 @@ Item {
 
     signal iconClicked()
 
-    implicitHeight: layout.height
+    height: slotsLayout.height
 
     function shakeIcon() {
         shake.restart();
     }
 
-    RowLayout {
-        id: layout
-        anchors {
-            left: parent.left
-            right: parent.right
-            rightMargin: units.gu(4)
-        }
-        spacing: units.gu(2)
+    SlotsLayout {
+        id: slotsLayout
+        padding { top: 0; leading: 0; trailing: 0; bottom: 0 }
 
         UbuntuShapeForItem {
-            Layout.preferredWidth: units.gu(6)
-            Layout.preferredHeight: units.gu(6)
+            width: units.gu(6)
+            height: width
+
+            SlotsLayout.position: SlotsLayout.Leading
+            SlotsLayout.padding { top: 0; leading: 0; trailing: 0; bottom: 0 }
 
             image: avatarImage
             Icon {
@@ -66,7 +65,9 @@ Item {
             }
         }
 
-        ColumnLayout {
+        mainSlot: Column {
+            spacing: units.gu(0.5)
+
             Label {
                 id: titleText
                 objectName: "title"
@@ -75,12 +76,15 @@ Item {
                 elide: Text.ElideRight
                 font.weight: Font.DemiBold
                 fontSize: "medium"
+                anchors { left: parent.left; }
 
-                Layout.fillWidth: true
-                // calculate width with regard to the time's incursion into this layout's space.
-                Layout.maximumWidth: layout.width - timeLayout.width - units.gu(4)
+                // XXX: We need to resize the title not to cover the time
+                width: {
+                    if (parent.width && timeText.width > iconImage.width)
+                        return parent.width + iconImage.width - timeText.width;
+                    return parent.width
+                }
             }
-            spacing: units.gu(0.5)
 
             Label {
                 id: bodyText
@@ -90,33 +94,20 @@ Item {
                 wrapMode: Text.WordWrap
                 elide: Text.ElideRight
                 fontSize: "small"
-
-                Layout.fillWidth: true
+                anchors { left: parent.left; right: parent.right }
             }
         }
-    }
-
-    ColumnLayout {
-        id: timeLayout
-        anchors.right: parent.right
-
-        Label {
-            id: timeText
-            objectName: "time"
-            anchors.right: parent.right
-
-            fontSize: "x-small"
-            maximumLineCount: 1
-        }
-        spacing: units.gu(0.5)
 
         Icon {
             id: iconImage
             objectName: "icon"
-            Layout.preferredHeight: units.gu(3)
-            Layout.preferredWidth: units.gu(3)
-            Layout.alignment: Qt.AlignRight
             color: theme.palette.normal.backgroundText
+            width: units.gu(3)
+            height: width
+            SlotsLayout.position: SlotsLayout.Trailing
+            SlotsLayout.padding { top: 0; leading: 0; trailing: 0; bottom: 0 }
+            SlotsLayout.overrideVerticalPositioning: true
+            anchors.verticalCenter: parent.verticalCenter
 
             MouseArea {
                 anchors.fill: parent
@@ -129,5 +120,14 @@ Item {
                 SpringAnimation { target: iconImage; property: "rotation"; from: -20; to: 0; mass: 0.5; spring: 15; damping: 0.1 }
             }
         }
+    }
+
+    Label {
+        id: timeText
+        objectName: "time"
+        anchors.right: parent.right
+
+        fontSize: "x-small"
+        maximumLineCount: 1
     }
 }

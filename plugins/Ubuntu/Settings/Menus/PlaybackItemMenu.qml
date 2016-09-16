@@ -33,10 +33,11 @@ BaseMenu {
     signal previous()
 
     highlightWhenPressed: false
-    height: layout.implicitHeight + (divider.visible ? divider.height : 0)
+    height: layout.height + (divider.visible ? divider.height : 0)
 
     SlotsLayout {
         id: layout
+        objectName: "playbackMenuLayout"
 
         Row {
             anchors.centerIn: parent

@@ -56,14 +56,13 @@ BaseMenu {
             }
         }
 
-        mainSlot: ColumnLayout {
+        mainSlot: Column {
             spacing: units.gu(0.5)
 
             Label {
                 id: label
                 objectName: "text"
-                Layout.fillWidth: true
-
+                anchors { left: parent.left; right: parent.right }
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 font.weight: Font.DemiBold
@@ -72,20 +71,18 @@ BaseMenu {
             ProgressBar {
                 id: progressBar
                 objectName: "progress"
+                anchors { left: parent.left; right: parent.right }
                 visible: menu.active
                 value: 0.0
                 showProgressPercentage: false
-
-                Layout.preferredHeight: units.gu(1)
-                Layout.fillWidth: true
+                height: units.gu(1)
             }
 
             Label {
                 id: stateLabel
                 objectName: "stateText"
-                Layout.fillWidth: true
+                anchors { left: parent.left; right: parent.right }
                 visible: menu.active
-
                 fontSize: "x-small"
                 elide: Text.ElideRight
                 maximumLineCount: 1

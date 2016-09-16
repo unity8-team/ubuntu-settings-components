@@ -41,7 +41,10 @@ MainView {
     }
 
     Page {
-        title: listView.currentItem ? listView.currentItem.item.title : "Components"
+        header: PageHeader {
+            title: listView.currentItem ? listView.currentItem.item.title : "Components"
+        }
+
         clip: true
 
         ListView {
@@ -61,6 +64,5 @@ MainView {
                 source: model.source
             }
         }
-
     }
 }

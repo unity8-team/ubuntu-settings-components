@@ -22,7 +22,6 @@
 import QtQuick 2.4
 import Ubuntu.Components 1.3
 import Ubuntu.Settings.Components 0.1 as USC
-import QtQuick.Layouts 1.1
 
 BaseMenu {
     id: menu
@@ -37,44 +36,40 @@ BaseMenu {
     signal iconActivated
     signal dismissed
 
-    property alias footer: footerLoader.sourceComponent
+    property alias footer: footerContainer.children
     property real _animationDuration: UbuntuAnimation.FastDuration
 
     height: layout.height + (divider.visible ? divider.height : 0)
     clip: heightAnimation.running
 
-    SlotsLayout {
+    Column {
         id: layout
-        mainSlot: ColumnLayout {
-            spacing: units.gu(1.5)
+        anchors { right: parent.right; left: parent.left }
 
-            USC.MessageHeader {
-                id: messageHeader
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignTop
+        USC.MessageHeader {
+            id: messageHeader
 
-                avatar: menu.avatar != "" ? menu.avatar : "image://theme/contact"
-                icon: menu.icon != "" ? menu.icon : "image://theme/message"
+            avatar: menu.avatar != "" ? menu.avatar : "image://theme/contact"
+            icon: menu.icon != "" ? menu.icon : "image://theme/message"
+            state: menu.state
 
-                state: menu.state
-
-                onIconClicked:  {
-                    menu.iconActivated();
-                }
+            onIconClicked:  {
+                menu.iconActivated();
             }
+        }
 
-            Loader {
-                id: footerLoader
-                visible: menu.state === "expanded"
-                opacity: 0.0
-                asynchronous: false
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration:  _animationDuration
-                    }
+        Item {
+            id: footerContainer
+            anchors { right: parent.right; left: parent.left }
+            width: childrenRect.width
+            height: childrenRect.height
+            visible: menu.state === "expanded"
+            opacity: 0
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration:  _animationDuration
                 }
-                Layout.fillWidth: true
-                Layout.fillHeight: true
             }
         }
     }
@@ -87,14 +82,14 @@ BaseMenu {
         }
     }
 
-    onTriggered: if (!footer || !selected) messageHeader.shakeIcon();
+    onTriggered: if (!selected) messageHeader.shakeIcon();
 
     states: State {
         name: "expanded"
-        when: selected && footerLoader.status == Loader.Ready
+        when: selected
 
         PropertyChanges {
-            target: footerLoader
+            target: footerContainer
             opacity: 1.0
         }
 

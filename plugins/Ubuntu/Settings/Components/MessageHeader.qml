@@ -21,7 +21,6 @@
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import QtQuick.Layouts 1.1
 
 Item {
     id: messageHeader
@@ -35,6 +34,7 @@ Item {
     signal iconClicked()
 
     height: slotsLayout.height
+    anchors { right: parent.right; left: parent.left }
 
     function shakeIcon() {
         shake.restart();
@@ -42,14 +42,12 @@ Item {
 
     SlotsLayout {
         id: slotsLayout
-        padding { top: 0; leading: 0; trailing: 0; bottom: 0 }
 
         UbuntuShapeForItem {
             width: units.gu(6)
             height: width
 
             SlotsLayout.position: SlotsLayout.Leading
-            SlotsLayout.padding { top: 0; leading: 0; trailing: 0; bottom: 0 }
 
             image: avatarImage
             Icon {
@@ -105,7 +103,6 @@ Item {
             width: units.gu(3)
             height: width
             SlotsLayout.position: SlotsLayout.Trailing
-            SlotsLayout.padding { top: 0; leading: 0; trailing: 0; bottom: 0 }
             SlotsLayout.overrideVerticalPositioning: true
             anchors.verticalCenter: parent.verticalCenter
 
@@ -125,7 +122,12 @@ Item {
     Label {
         id: timeText
         objectName: "time"
-        anchors.right: parent.right
+        anchors {
+            top: parent.top
+            right: parent.right
+            topMargin: slotsLayout.padding.top
+            rightMargin: slotsLayout.padding.trailing
+        }
 
         fontSize: "x-small"
         maximumLineCount: 1

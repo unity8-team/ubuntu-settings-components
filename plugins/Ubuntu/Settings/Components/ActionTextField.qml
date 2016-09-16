@@ -31,17 +31,17 @@ Item {
 
     signal activated(var value)
 
-    implicitHeight: layout.implicitHeight
+    height: layout.height
+    anchors { right: parent.right; left: parent.left }
 
     SlotsLayout {
         id: layout
-        padding { leading: 0; trailing: 0; bottom: 0 }
+        padding.top: 0
 
         mainSlot: TextArea {
             id: replyField
             objectName: "replyText"
             autoSize: true
-            SlotsLayout.padding { leading: 0; top: 0; bottom: 0 }
 
             onEnabledChanged: {
                 //Make sure that the component lost focus when enabled = false,
@@ -55,7 +55,7 @@ Item {
         Button {
             id: sendButton
             objectName: "sendButton"
-            enabled: (replyField.text !== "" || replyField.inputMethodComposing) && textField.activateEnabled
+            enabled: (replyField.text.length > 0 || replyField.inputMethodComposing) && textField.activateEnabled
             color: enabled ? theme.palette.normal.positive : theme.palette.disabled.positive
 
             onClicked: {
@@ -63,7 +63,6 @@ Item {
                 textField.activated(replyField.text);
             }
 
-            SlotsLayout.padding { top: 0; leading: 0; trailing: 0; bottom: 0}
             SlotsLayout.position: SlotsLayout.Trailing
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,11 +16,11 @@
  * Authors:
  *      Renato Araujo Oliveira Filho <renato@canonical.com>
  *      Olivier Tilloy <olivier.tilloy@canonical.com>
+ *      Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import QtQuick.Layouts 1.1
 
 Item {
     id: textField
@@ -33,19 +33,15 @@ Item {
 
     implicitHeight: layout.implicitHeight
 
-    Row {
+    SlotsLayout {
         id: layout
-        anchors {
-            left: parent.left
-            right: parent.right
-        }
-        spacing: units.gu(1)
+        padding { leading: 0; trailing: 0; bottom: 0 }
 
-        TextArea {
+        mainSlot: TextArea {
             id: replyField
             objectName: "replyText"
             autoSize: true
-            width: parent.width - layout.spacing - sendButton.width
+            SlotsLayout.padding { leading: 0; top: 0; bottom: 0 }
 
             onEnabledChanged: {
                 //Make sure that the component lost focus when enabled = false,
@@ -59,7 +55,6 @@ Item {
         Button {
             id: sendButton
             objectName: "sendButton"
-            Layout.preferredWidth: units.gu(9)
             enabled: (replyField.text !== "" || replyField.inputMethodComposing) && textField.activateEnabled
             color: enabled ? theme.palette.normal.positive : theme.palette.disabled.positive
 
@@ -67,6 +62,9 @@ Item {
                 Qt.inputMethod.commit();
                 textField.activated(replyField.text);
             }
+
+            SlotsLayout.padding { top: 0; leading: 0; trailing: 0; bottom: 0}
+            SlotsLayout.position: SlotsLayout.Trailing
         }
     }
 }

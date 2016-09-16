@@ -26,8 +26,8 @@ MainView {
     // Note! applicationName needs to match the .desktop filename
     applicationName: "SettingsComponents"
 
-    width: units.gu(42)
-    height: units.gu(75)
+    width: units.gu(50)
+    height: units.gu(100)
 
     Component.onCompleted: {
         theme.name = "Ubuntu.Components.Themes.SuruDark"

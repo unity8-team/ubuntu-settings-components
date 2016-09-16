@@ -23,8 +23,6 @@ import Ubuntu.Settings.Menus 0.1
 
 Item {
     property string title: "Settings Components"
-    width: units.gu(50)
-    height: units.gu(100)
 
     ListModel {
         id: mediaPlayerModel
@@ -85,7 +83,7 @@ Item {
             }
 
             StandardMenu {
-                text: i18n.tr("Dark Version")
+                text: i18n.tr("Inverted colors Version")
                 backColor: theme.palette.normal.baseText
                 foregroundColor: theme.palette.normal.base
             }

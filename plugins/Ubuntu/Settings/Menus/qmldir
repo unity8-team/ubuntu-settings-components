@@ -3,6 +3,8 @@ plugin UbuntuSettingsMenusQml
 typeinfo Menus.qmltypes
 
 AccessPointMenu 0.1 AccessPointMenu.qml
+BaseMenu 0.1 BaseMenu.qml
+BaseLayoutMenu 0.1 BaseLayoutMenu.qml
 ButtonMenu 0.1 ButtonMenu.qml
 CalendarMenu 0.1 CalendarMenu.qml
 CheckableMenu 0.1 CheckableMenu.qml

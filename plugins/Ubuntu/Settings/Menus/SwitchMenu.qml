@@ -25,8 +25,7 @@ StandardMenu {
 
     property alias checked: switcher.checked
 
-    Component.onCompleted: menu.onClicked.disconnect(onClickedCallback)
-    onClicked: {
+    function onClickedCallback() {
         checked = !checked
         menu.triggered(checked)
     }

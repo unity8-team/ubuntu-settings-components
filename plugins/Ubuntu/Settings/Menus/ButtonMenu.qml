@@ -31,7 +31,6 @@ BaseLayoutMenu {
             width: Math.max(units.gu(5), implicitWidth)
 
             onClicked: menu.clicked()
-            SlotsLayout.position: SlotsLayout.Leading
         }
     ]
 }

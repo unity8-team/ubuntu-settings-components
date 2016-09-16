@@ -35,7 +35,7 @@ BaseMenu {
 
     SlotsLayout {
         id: slotsLayout
-        objectName: "slotsLayout"
+        objectName: "transferMenuSlotsLayout"
 
         UbuntuShapeForItem {
             SlotsLayout.position: SlotsLayout.Leading

@@ -34,7 +34,7 @@ BaseMenu {
 
     SlotsLayout {
         id: slotsLayout
-        objectName: "slotsLayout"
+        objectName: "calenderMenuSlotsLayout"
 
         mainSlot: Column {
             id: column

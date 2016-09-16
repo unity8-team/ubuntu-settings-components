@@ -115,7 +115,7 @@ BaseMenu {
 
         SlotsLayout {
             id: slotsLayout
-            objectName: "slotsLayout"
+            objectName: "sliderMenuSlotsLayout"
 
             mainSlot: Slider {
                 id: slider

@@ -35,7 +35,7 @@ BaseMenu {
 
     SlotsLayout {
         id: slotsLayout
-        objectName: "slotsLayout"
+        objectName: "menuItemInfoSlotsLayout"
 
         mainSlot: ColumnLayout {
             spacing: units.gu(0.5)

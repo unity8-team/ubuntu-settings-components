@@ -36,7 +36,7 @@ BaseMenu {
 
     ListItemLayout {
         id: layoutItem
-        objectName: "layoutItem"
+        objectName: "menuLayoutItem"
         title.text: menu.text
         title.color: menu.foregroundColor
         title.opacity: enabled ? 1 : 0.5

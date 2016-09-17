@@ -225,8 +225,8 @@ Item {
             var removeAction = findChild(messageMenuRemovable, "removeAction");
             verify(removeAction !== undefined);
             verify(removeAction.visible)
-            wait(1000)
-            mouseClick(messageMenuRemovable, 5)
+            wait(300)
+            mouseClick(messageMenuRemovable, 5, messageMenuRemovable.height / 2)
             tryCompareFunction(function() { return signalSpyDismiss.count > 0; }, true);
         }
 
@@ -306,13 +306,13 @@ Item {
             var messageButton = findChild(messageMenuSelected, "messageButton");
             verify(messageButton !== undefined, "Message button not found");
             waitForRendering(messageButton)
-            mouseClick(messageButton);
+            mouseClick(messageButton, messageButton.width / 2, messageButton.height / 2);
 
             var sendButton = findChild(messageMenuSelected, "sendButton");
             verify(sendButton !== undefined, "Send button not found");
             waitForRendering(sendButton)
 
-            mouseClick(sendButton);
+            mouseClick(sendButton, messageButton.width / 2, messageButton.height / 2);
             compare(signalSpyReply.count > 0, true);
             compare(textMessageReply, "reply1", "Text message did not reply with correct text.");
         }
@@ -335,7 +335,7 @@ Item {
             var messageButton = findChild(messageMenuSelected, "messageButton");
             verify(messageButton !== undefined, "Message button not found");
             waitForRendering(messageButton)
-            mouseClick(messageButton)
+            mouseClick(messageButton, messageButton.width / 2, messageButton.height / 2);
 
             mouseClick(replyText, replyText.width / 2, replyText.height / 2);
             compare(replyText.focus, true, "Reply text should have focus after mouse click");

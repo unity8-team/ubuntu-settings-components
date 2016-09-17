@@ -89,8 +89,8 @@ Item {
             var removeAction = findChild(messageMenu2, "removeAction");
             verify(removeAction !== undefined);
             verify(removeAction.visible)
-            wait(1000)
-            mouseClick(messageMenu2, 5);
+            wait(300)
+            mouseClick(messageMenu2, 5, messageMenu2.height / 2);
             tryCompareFunction(function() { return signalSpyDismiss.count > 0; }, true);
         }
     }

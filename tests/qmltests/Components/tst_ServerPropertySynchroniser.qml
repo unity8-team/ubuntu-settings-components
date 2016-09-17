@@ -194,7 +194,7 @@ Item {
             height: childrenRect.height
             anchors.left: parent.left
             anchors.right: parent.right
-
+//FIXME
             USM.AccessPointMenu {
                 id: apMenu
                 width: units.gu(30)
@@ -388,7 +388,7 @@ Item {
         }
 
         function test_user_trigger() {
-            apMenu.trigger();
+            apMenu.triggered(null);
 
             compare(apSyncActivatedSpy.count, 1, "Triggering should have caused signal to be emitted");
             tryCompare(apBackend, "active", true);

@@ -37,12 +37,15 @@ BaseMenu {
         id: slotsLayout
         objectName: "transferMenuSlotsLayout"
 
-        UbuntuShapeForItem {
+        UbuntuShape {
             SlotsLayout.position: SlotsLayout.Leading
             width: units.gu(6)
-            height: units.gu(6)
+            height: width
 
-            image: icon
+            source: ShaderEffectSource {
+                sourceItem: icon
+                hideSource: true
+            }
             Icon {
                 id: icon
                 objectName: "icon"

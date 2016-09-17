@@ -43,13 +43,16 @@ Item {
     SlotsLayout {
         id: slotsLayout
 
-        UbuntuShapeForItem {
+        UbuntuShape {
             width: units.gu(6)
             height: width
 
             SlotsLayout.position: SlotsLayout.Leading
 
-            image: avatarImage
+            source: ShaderEffectSource {
+                sourceItem: avatarImage
+                hideSource: true
+            }
             Icon {
                 id: avatarImage
                 objectName: "avatar"

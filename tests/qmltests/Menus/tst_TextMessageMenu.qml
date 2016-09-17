@@ -268,6 +268,7 @@ Item {
 
             var sendButton = findChild(messageMenuSelected, "sendButton");
             verify(sendButton !== undefined, "Send button not found");
+            waitForRendering(sendButton)
 
             mouseClick(sendButton, sendButton.width / 2, sendButton.height / 2);
             compare(signalSpyReply.count > 0, true);

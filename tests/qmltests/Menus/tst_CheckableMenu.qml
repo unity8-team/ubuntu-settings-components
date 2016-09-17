@@ -74,12 +74,12 @@ Item {
             verify(checkbox !== undefined);
 
             mouseClick(checkMenu, checkbox.width / 2, checkbox.height / 2);
-            compare(signalSpyTriggered.count > 0, true, "signal checked not triggered on checkbox click");
+            compare(signalSpyTriggered.count == 1, true, "signal checked not triggered on checkbox click");
         }
 
         function test_clickCheckMenu() {
             mouseClick(checkMenu, checkMenu.width / 2, checkMenu.height / 2);
-            compare(signalSpyTriggered.count > 0, true, "signal checked not triggered on checkMenu click");
+            compare(signalSpyTriggered.count == 1, true, "signal checked not triggered on checkMenu click");
         }
     }
 }

@@ -53,8 +53,8 @@ Item {
 
     SignalSpy {
         id: signalSpyTriggered
-        signalName: "triggered"
         target: switchMenu
+        signalName: "triggered"
     }
 
     UbuntuTestCase {
@@ -78,12 +78,12 @@ Item {
         function test_clickSwitchBox() {
             var switcher = findChild(switchMenu, "switcher");
             mouseClick(switchMenu, switcher.width / 2, switcher.height / 2);
-            compare(signalSpyTriggered.count == 1, true, "signal checked not triggered on switcher click");
+            compare(signalSpyTriggered.count, 1, "signal checked not triggered on switcher click");
         }
 
         function test_clickSwitchMenu() {
             mouseClick(switchMenu, switchMenu.width / 2, switchMenu.height / 2);
-            compare(signalSpyTriggered.count == 1, true, "signal checked not triggered on switchMenu click");
+            compare(signalSpyTriggered.count, 1, "signal checked not triggered on switchMenu click");
         }
     }
 }

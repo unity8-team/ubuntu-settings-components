@@ -305,10 +305,12 @@ Item {
 
             var messageButton = findChild(messageMenuSelected, "messageButton");
             verify(messageButton !== undefined, "Message button not found");
-            mouseClick(messageButton, messageButton.width / 2, messageButton.height / 2);
+            waitForRendering(messageButton)
+            mouseClick(messageButton);
 
             var sendButton = findChild(messageMenuSelected, "sendButton");
             verify(sendButton !== undefined, "Send button not found");
+            waitForRendering(sendButton)
 
             mouseClick(sendButton);
             compare(signalSpyReply.count > 0, true);
@@ -332,7 +334,8 @@ Item {
 
             var messageButton = findChild(messageMenuSelected, "messageButton");
             verify(messageButton !== undefined, "Message button not found");
-            mouseClick(messageButton, messageButton.width / 2, messageButton.height / 2);
+            waitForRendering(messageButton)
+            mouseClick(messageButton)
 
             mouseClick(replyText, replyText.width / 2, replyText.height / 2);
             compare(replyText.focus, true, "Reply text should have focus after mouse click");

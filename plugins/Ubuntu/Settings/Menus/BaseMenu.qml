@@ -32,17 +32,16 @@ ListItem {
     Component.onCompleted: {
         if (showDivider != divider.visible)
             showDivider = divider.visible;
-
-        onClicked.connect(onClickedCallback)
     }
     onShowDividerChanged: divider.visible = showDivider
     divider.visible: false
 
     highlightColor: highlightWhenPressed ? theme.palette.highlighted.background : "transparent"
 
-    // These fields are for retro-compatibility with ListItem.Empty
+    // This is for retro-compatibility with ListItem.Empty, adding support to override the callback
     signal triggered(var value)
     function onClickedCallback() { triggered(null) }
+    onClicked: onClickedCallback()
 
     property bool removable: false
     property bool confirmRemoval: true

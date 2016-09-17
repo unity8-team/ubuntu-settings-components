@@ -57,7 +57,10 @@ Item {
 
         function init() {
             checkMenu.checked = false;
-            signalSpyTriggered.clear();
+        }
+
+        function cleanup() {
+            signalSpyTriggered.clear()
         }
 
         function test_checkChanged() {
@@ -72,14 +75,37 @@ Item {
         function test_clickCheckBox() {
             var checkbox = findChild(checkMenu, "checkbox");
             verify(checkbox !== undefined);
-
             mouseClick(checkMenu, checkbox.width / 2, checkbox.height / 2);
             compare(signalSpyTriggered.count, 1, "signal checked not triggered on checkbox click");
+            compare(signalSpyTriggered.signalArguments[0][0], true, "triggered signal argument non valid checkMenu click");
+            compare(checkMenu.checked, true)
+        }
+
+        function test_clickCheckedCheckBox() {
+            test_clickCheckBox()
+            cleanup()
+            var checkbox = findChild(checkMenu, "checkbox");
+            verify(checkbox !== undefined);
+            mouseClick(checkMenu, checkbox.width / 2, checkbox.height / 2);
+            compare(signalSpyTriggered.count, 1, "signal checked not triggered on checkbox click");
+            compare(signalSpyTriggered.signalArguments[0][0], false, "triggered signal argument non valid checkMenu click");
+            compare(checkMenu.checked, false)
         }
 
         function test_clickCheckMenu() {
             mouseClick(checkMenu, checkMenu.width / 2, checkMenu.height / 2);
             compare(signalSpyTriggered.count, 1, "signal checked not triggered on checkMenu click");
+            compare(signalSpyTriggered.signalArguments[0][0], true, "triggered signal argument non valid checkMenu click");
+            compare(checkMenu.checked, true)
+        }
+
+        function test_clickCheckedCheckMenu() {
+            test_clickCheckMenu()
+            cleanup()
+            mouseClick(checkMenu, checkMenu.width / 2, checkMenu.height / 2);
+            compare(signalSpyTriggered.count, 1, "signal checked not triggered on checkMenu click");
+            compare(signalSpyTriggered.signalArguments[0][0], false, "triggered signal argument non valid checkMenu click");
+            compare(checkMenu.checked, false)
         }
     }
 }

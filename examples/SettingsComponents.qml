@@ -41,7 +41,9 @@ MainView {
     }
 
     Page {
+        id: page
         header: PageHeader {
+            id: header
             title: listView.currentItem ? listView.currentItem.item.title : "Components"
         }
 
@@ -51,6 +53,7 @@ MainView {
             id: listView
             model: pages
             anchors.fill: parent
+            anchors.topMargin: header.height
 
             orientation: ListView.Horizontal
             snapMode: ListView.SnapOneItem

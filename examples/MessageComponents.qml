@@ -122,6 +122,10 @@ Item {
                     onTriggered: {
                         selected = !selected;
                     }
+
+                    onReplied: {
+                        print("Got reply: '" + value + "'")
+                    }
                 }
             }
         }

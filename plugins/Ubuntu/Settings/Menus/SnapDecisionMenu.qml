@@ -32,7 +32,7 @@ SimpleMessageMenu {
     property alias replyEnabled: reply.activateEnabled
     property alias replyButtonText: reply.buttonText
     property alias replyHintText: reply.textHint
-    property bool replyExpanded: false
+    property alias replyExpanded: reply.visible
 
     signal actionActivated
     signal replied(string value)
@@ -87,7 +87,8 @@ SimpleMessageMenu {
             USC.ActionTextField {
                 id: reply
 
-                visible: menu.replyExpanded
+                visible: false
+                activateEnabled: true
                 buttonText: i18n.dtr("ubuntu-settings-components", "Send")
 
                 onActivated: {

@@ -56,6 +56,7 @@ ListItem {
         id: removeAction
         actions: [
             Action {
+                objectName: "removeAction"
                 iconName: "delete"
                 onTriggered: removeItemAnimation.start();
             }

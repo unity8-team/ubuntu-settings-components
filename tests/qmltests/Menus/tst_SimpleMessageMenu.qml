@@ -166,12 +166,18 @@ Item {
         }
 
         function test_dismiss() {
+            verify(findChild(messageMenuRemovable, "removeAction") === undefined);
             mouseFlick(messageMenuRemovable,
                        messageMenuRemovable.width / 2,
                        messageMenuRemovable.height / 2,
                        messageMenuRemovable.width,
                        messageMenuRemovable.height / 2,
                        true, true, units.gu(1), 10);
+            var removeAction = findChild(messageMenuRemovable, "removeAction");
+            verify(removeAction !== undefined);
+            verify(removeAction.visible)
+            wait(300)
+            mouseClick(messageMenuRemovable, 5)
             tryCompareFunction(function() { return signalSpyDismiss.count > 0; }, true);
         }
     }

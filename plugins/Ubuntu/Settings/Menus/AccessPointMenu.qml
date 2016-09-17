@@ -28,6 +28,7 @@ StandardMenu {
     property int signalStrength: 0
     property alias secure: iconSecure.visible
 
+    icon.objectName: "iconSignal"
     iconSize: Math.min(units.gu(3), parent.height - units.gu(1))
     iconColor: ap.active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
     iconName: {

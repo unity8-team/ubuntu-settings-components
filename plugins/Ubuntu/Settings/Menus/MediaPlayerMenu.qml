@@ -38,6 +38,8 @@ BaseLayoutMenu {
     Behavior on height { UbuntuNumberAnimation {} }
 
     layout.visible: !albumLayout.visible
+    layout.objectName: "player"
+
     slots: Image {
         id: playerIcon
         height: units.gu(5)
@@ -47,6 +49,7 @@ BaseLayoutMenu {
 
     SlotsLayout {
         id: albumLayout
+        objectName: "albumArt"
         visible: showTrack
         mainSlot: Column {
             Label {

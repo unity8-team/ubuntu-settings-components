@@ -24,6 +24,9 @@ import Ubuntu.Settings.Menus 0.1
 Item {
     property string title: "Settings Components"
 
+    width: parent.width ? parent.width : units.gu(42)
+    height: parent.width ? parent.height : units.gu(75)
+
     ListModel {
         id: mediaPlayerModel
         ListElement { song: "You're The First, The Last, My Everything"; artist: "Barry White"; album: "Hot Soul"; albumArt: "artwork/beach.jpg"}

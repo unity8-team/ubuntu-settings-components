@@ -26,28 +26,18 @@ Item {
     height: units.gu(75)
 
     Flickable {
-        id: flickable
-
         anchors.fill: parent
-        contentWidth: column.width
-        contentHeight: column.height
 
-        Item {
-            id: column
+        SwitchMenu {
+            id: switchMenu
+            text: i18n.tr("Switch")
+        }
 
-            width: flickable.width
-            height: childrenRect.height
-
-            SwitchMenu {
-                id: switchMenu
-                text: i18n.tr("Switch")
-            }
-            SwitchMenu {
-                id: switchMenu2
-                text: i18n.tr("Switch")
-                checked: true
-                anchors.top: switchMenu.bottom
-            }
+        SwitchMenu {
+            id: switchMenu2
+            text: i18n.tr("Switch")
+            checked: true
+            anchors.top: switchMenu.bottom
         }
     }
 

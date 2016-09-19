@@ -25,23 +25,12 @@ Item {
     width: units.gu(42)
     height: units.gu(75)
 
-    Flickable {
-        id: flickable
-
+    ListView {
         anchors.fill: parent
-        contentWidth: column.width
-        contentHeight: column.height
 
-        Item {
-            id: column
-
-            width: flickable.width
-            height: childrenRect.height
-
-            CheckableMenu {
-                id: checkMenu
-                text: i18n.tr("Check")
-            }
+        CheckableMenu {
+            id: checkMenu
+            text: i18n.tr("Check")
         }
     }
 

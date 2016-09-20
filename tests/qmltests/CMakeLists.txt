@@ -1,5 +1,6 @@
 add_subdirectory(mocks)
 
+add_usc_qmltest(Components ActionTextField)
 add_usc_qmltest(Components Calendar)
 add_usc_qmltest(Components ServerPropertySynchroniser)
 

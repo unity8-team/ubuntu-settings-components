@@ -29,12 +29,14 @@ ListItem {
     // Can't create an alias for divider.visible here, see QTBUG-50407
     // Thus this hack is needed not to override the default divider.visible value
     property bool showDivider: false
+    divider.visible: false
     Component.onCompleted: {
         if (showDivider != divider.visible)
             showDivider = divider.visible;
+
+        divider.visible = Qt.binding(function() { return showDivider })
+        showDivider = Qt.binding(function() { return divider.visible })
     }
-    onShowDividerChanged: divider.visible = showDivider
-    divider.visible: false
 
     highlightColor: highlightWhenPressed ? theme.palette.highlighted.background : "transparent"
 

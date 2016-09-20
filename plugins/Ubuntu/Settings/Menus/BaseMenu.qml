@@ -48,9 +48,6 @@ ListItem {
     onConfirmRemovalChanged: console.error(menu+": confirmRemoval property is deprecated")
     signal itemRemoved()
 
-    property bool selected: false
-    onSelectedChanged: console.error(menu+": selected property is deprecated")
-
     ListItemActions {
         id: removeAction
         actions: [

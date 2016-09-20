@@ -224,9 +224,8 @@ Item {
                        true, true, units.gu(1), 10);
             var removeAction = findChild(messageMenuRemovable, "removeAction");
             verify(removeAction !== undefined);
-            verify(removeAction.visible)
-            wait(300)
-            mouseClick(messageMenuRemovable, 5, messageMenuRemovable.height / 2)
+            tryCompare(removeAction, "visible", true)
+            mouseClick(removeAction, removeAction.width/2, removeAction.height/2)
             tryCompareFunction(function() { return signalSpyDismiss.count > 0; }, true);
         }
 

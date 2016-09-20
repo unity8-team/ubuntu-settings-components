@@ -5,6 +5,7 @@ add_usc_qmltest(Components Calendar)
 add_usc_qmltest(Components ServerPropertySynchroniser)
 
 add_usc_qmltest(Menus AccessPointMenu)
+add_usc_qmltest(Menus BaseMenu)
 add_usc_qmltest(Menus ButtonMenu)
 add_usc_qmltest(Menus CalendarMenu)
 add_usc_qmltest(Menus CheckableMenu)

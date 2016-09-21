@@ -23,12 +23,11 @@ import Ubuntu.Components 1.3
 StandardMenu {
     id: menu
 
-    property string time
+    property alias time: dateLabel.text
     property alias eventColor: menu.iconColor
 
     iconName: "calendar"
-    trailingComponent: Label {
+    slots: Label {
         id: dateLabel
-        text: menu.time
     }
 }

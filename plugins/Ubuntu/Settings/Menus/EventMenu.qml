@@ -26,6 +26,8 @@ StandardMenu {
     property alias time: dateLabel.text
     property alias eventColor: menu.iconColor
 
+    title.opacity: enabled ? 1 : 0.5
+
     iconName: "calendar"
     slots: Label {
         id: dateLabel

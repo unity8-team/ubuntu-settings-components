@@ -39,7 +39,6 @@ BaseMenu {
         objectName: "menuLayoutItem"
         title.text: menu.text
         title.color: menu.foregroundColor
-        title.opacity: enabled ? 1 : 0.5
 
         Loader {
             id: trailingComponentLoader

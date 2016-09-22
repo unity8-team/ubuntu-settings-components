@@ -89,6 +89,7 @@ Item {
                 text: i18n.tr("Inverted colors Version")
                 backColor: theme.palette.normal.baseText
                 foregroundColor: theme.palette.normal.base
+                highlightColor: theme.palette.highlighted.backgroundText
             }
 
             StandardMenu {

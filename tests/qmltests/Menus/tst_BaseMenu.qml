@@ -69,7 +69,7 @@ Item {
         function test_dontHighlightWhenPressed() {
             baseMenu.highlightWhenPressed = false;
             mousePress(baseMenu, baseMenu.width/2, baseMenu.height/2)
-            compare(Qt.colorEqual(baseMenu.highlightColor, "transparent"), true)
+            compare(Qt.colorEqual(baseMenu.highlightColor, baseMenu.backColor), true)
             mouseRelease(baseMenu)
         }
 

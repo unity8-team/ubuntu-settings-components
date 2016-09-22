@@ -38,7 +38,7 @@ ListItem {
         showDivider = Qt.binding(function() { return divider.visible })
     }
 
-    highlightColor: highlightWhenPressed ? theme.palette.highlighted.background : "transparent"
+    highlightColor: highlightWhenPressed ? theme.palette.highlighted.background : backColor
 
     // This is for retro-compatibility with ListItem.Empty, adding support to override the callback
     signal triggered(var value)

@@ -1,3 +1,12 @@
+ubuntu-settings-components (0.9+16.10.20160927-0ubuntu1) yakkety; urgency=medium
+
+  [ Łukasz 'sil2100' Zemczak ]
+  * Do not depend on qtdeclarative5-ubuntu-ui-toolkit-plugin* as these
+    are transitional packages. Use qml-module-ubuntu-components*
+    instead. This should fix issues with i386 image builds.
+
+ -- Łukasz Zemczak <lukasz.zemczak@canonical.com>  Tue, 27 Sep 2016 07:27:21 +0000
+
 ubuntu-settings-components (0.9+16.10.20160909-0ubuntu1) yakkety; urgency=medium
 
   [ Lukáš Tinkl ]

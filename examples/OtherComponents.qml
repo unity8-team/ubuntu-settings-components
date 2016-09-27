@@ -69,12 +69,11 @@ Item {
             StandardMenu {
                 id: dividerToggleMenu
                 text: i18n.tr("Toggle divider menu.")
-                showDivider: false
 
                 slots: [
                     Button {
-                        text: dividerToggleMenu.showDivider ? i18n.tr("Hide") : i18n.tr("Show")
-                        onClicked: dividerToggleMenu.showDivider = !dividerToggleMenu.showDivider
+                        text: dividerToggleMenu.divider.visible ? i18n.tr("Hide") : i18n.tr("Show")
+                        onClicked: dividerToggleMenu.divider.visible = !dividerToggleMenu.divider.visible
                     }
                 ]
             }

@@ -45,8 +45,9 @@ BaseMenu {
                 id: labelSimIdentifier
                 elide: Text.ElideRight
                 visible: text !== ""
-                font.bold: true
                 opacity: menu.locked ? 0.6 : 1.0
+                font.bold: true
+                font.pixelSize: menuStyle.fontSize
             }
 
             Row {
@@ -58,6 +59,7 @@ BaseMenu {
                     id: labelStatus
                     elide: Text.ElideRight
                     opacity: 0.6
+                    font.pixelSize: menuStyle.fontSize
                 }
 
                 Row {

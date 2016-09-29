@@ -31,5 +31,6 @@ StandardMenu {
     iconName: "calendar"
     slots: Label {
         id: dateLabel
+        font.pixelSize: menuStyle.fontSize
     }
 }

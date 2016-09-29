@@ -39,6 +39,7 @@ BaseMenu {
         objectName: "menuLayoutItem"
         title.text: menu.text
         title.color: menu.foregroundColor
+        title.font.pixelSize: menuStyle.fontSize
 
         padding {
             top: menuStyle.padding.top

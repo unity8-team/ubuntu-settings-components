@@ -84,7 +84,7 @@ Item {
                 maximumLineCount: 1
                 elide: Text.ElideRight
                 font.weight: Font.DemiBold
-                fontSize: "medium"
+                font.pixelSize: menuStyle.fontSize
                 anchors { left: parent.left; }
 
                 // XXX: We need to resize the title not to cover the time

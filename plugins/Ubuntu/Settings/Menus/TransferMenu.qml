@@ -70,6 +70,7 @@ BaseMenu {
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 font.weight: Font.DemiBold
+                font.pixelSize: menuStyle.fontSize
             }
 
             ProgressBar {

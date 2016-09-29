@@ -58,6 +58,7 @@ BaseLayoutMenu {
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 visible: text !== ""
+                font.pixelSize: menuStyle.fontSize
                 anchors { left: parent.left; right: parent.right }
             }
 
@@ -66,6 +67,7 @@ BaseLayoutMenu {
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 visible: text !== ""
+                font.pixelSize: menuStyle.fontSize
                 anchors { left: parent.left; right: parent.right }
             }
 

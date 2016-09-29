@@ -263,6 +263,7 @@ Item {
                     TimeZoneMenu {
                         city: model.city
                         time: model.time
+                        pointerMode: page.pointerMode
                     }
                 }
             }

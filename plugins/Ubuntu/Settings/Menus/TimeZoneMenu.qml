@@ -28,5 +28,6 @@ StandardMenu {
     slots: Label {
         id: timeLabel
         objectName: "timeLabel"
+        font.pixelSize: menuStyle.fontSize
     }
 }

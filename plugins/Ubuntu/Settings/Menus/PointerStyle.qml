@@ -27,4 +27,6 @@ BaseStyle {
         leading: units.gu(3)
         trailing: units.gu(2)
     }
+
+    fontSize: units.gu(1.7)
 }

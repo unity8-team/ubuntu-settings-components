@@ -30,4 +30,6 @@ BaseStyle {
         leading: __reference_layout.padding.leading
         trailing: __reference_layout.padding.trailing
     }
+
+    fontSize: units.gu(2)
 }

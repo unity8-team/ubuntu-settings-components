@@ -26,8 +26,13 @@ ListItem {
     property color foregroundColor: theme.palette.normal.baseText
     property alias backColor: menu.color
 
-    highlightColor: highlightWhenPressed ? theme.palette.highlighted.background : backColor
     divider.visible: false
+    highlightColor: theme.palette.highlighted.background
+
+    Binding on highlightColor {
+        when: !highlightWhenPressed
+        value: backColor
+    }
 
     // This is for retro-compatibility with ListItem.Empty, adding support to override the callback
     signal triggered(var value)

@@ -22,9 +22,11 @@ import Ubuntu.Components 1.3
 ListItem {
     id: menu
 
+    property bool pointerMode: true
     property bool highlightWhenPressed: true
     property color foregroundColor: theme.palette.normal.baseText
     property alias backColor: menu.color
+    property alias menuStyle: styleLoader.item
 
     divider.visible: false
     highlightColor: theme.palette.highlighted.background
@@ -72,4 +74,21 @@ ListItem {
     }
 
     leadingActions: removable ? removeAction : null
+
+    Loader {
+        id: styleLoader
+
+        Component {
+            id: touchStyle
+            TouchStyle {}
+        }
+
+        Component {
+            id: pointerStyle
+            PointerStyle {}
+        }
+
+        asynchronous: false
+        sourceComponent: menu.pointerMode ? pointerStyle : touchStyle
+    }
 }

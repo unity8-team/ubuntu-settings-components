@@ -40,6 +40,13 @@ BaseMenu {
         title.text: menu.text
         title.color: menu.foregroundColor
 
+        padding {
+            top: menuStyle.padding.top
+            bottom: menuStyle.padding.bottom
+            leading: menuStyle.padding.leading
+            trailing: menuStyle.padding.trailing
+        }
+
         Loader {
             id: trailingComponentLoader
             asynchronous: false

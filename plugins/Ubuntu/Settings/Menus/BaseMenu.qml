@@ -25,8 +25,8 @@ ListItem {
     property bool pointerMode: true
     property bool highlightWhenPressed: true
     property color foregroundColor: theme.palette.normal.baseText
-    property BaseStyle menuStyle: TouchStyle {}
     property alias backColor: menu.color
+    property alias menuStyle: styleLoader.item
 
     divider.visible: false
     highlightColor: theme.palette.highlighted.background
@@ -75,13 +75,20 @@ ListItem {
 
     leadingActions: removable ? removeAction : null
 
-    Binding on menuStyle {
-        when: pointerMode
-        value: PointerStyle {}
-    }
+    Loader {
+        id: styleLoader
 
-    Binding on menuStyle {
-        when: !pointerMode
-        value: TouchStyle {}
+        Component {
+            id: touchStyle
+            TouchStyle {}
+        }
+
+        Component {
+            id: pointerStyle
+            PointerStyle {}
+        }
+
+        asynchronous: false
+        sourceComponent: menu.pointerMode ? pointerStyle : touchStyle
     }
 }

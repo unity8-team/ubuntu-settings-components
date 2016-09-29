@@ -22,7 +22,9 @@ import Ubuntu.Settings.Components 0.1
 import Ubuntu.Settings.Menus 0.1
 
 Item {
+    id: page
     property string title: "Transfer Components"
+    property bool pointerMode: false
 
     width: units.gu(42)
     height: units.gu(75)
@@ -78,6 +80,7 @@ Item {
                 progress: model.progress
                 iconSource: model.image
                 active: model.active
+                pointerMode: page.pointerMode
             }
         }
     }

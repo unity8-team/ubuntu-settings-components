@@ -29,6 +29,8 @@ MainView {
     width: units.gu(50)
     height: units.gu(100)
 
+    property bool pointerMode: true
+
     Component.onCompleted: {
         theme.name = "Ubuntu.Components.Themes.SuruDark"
     }
@@ -45,6 +47,14 @@ MainView {
         header: PageHeader {
             id: header
             title: listView.currentItem ? listView.currentItem.item.title : "Components"
+
+            leadingActionBar.actions: [
+                Action {
+                    iconName: mainView.pointerMode ? "input-mouse-symbolic" : "input-touchpad-symbolic"
+                    text: mainView.pointerMode ? "Pointer mode" : "Touch mode"
+                    onTriggered: mainView.pointerMode = !mainView.pointerMode
+                }
+            ]
         }
 
         clip: true
@@ -65,6 +75,11 @@ MainView {
                 height: ListView.view.height
 
                 source: model.source
+                onStatusChanged: {
+                    if (status == Loader.Ready) {
+                        item.pointerMode = Qt.binding(function() { return mainView.pointerMode })
+                    }
+                }
             }
         }
     }

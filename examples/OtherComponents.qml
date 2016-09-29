@@ -22,7 +22,9 @@ import Ubuntu.Settings.Components 0.1
 import Ubuntu.Settings.Menus 0.1
 
 Item {
+    id: page
     property string title: "Settings Components"
+    property bool pointerMode: false
 
     width: parent && parent.width ? parent.width : units.gu(42)
     height: parent && parent.width ? parent.height : units.gu(75)
@@ -74,6 +76,7 @@ Item {
                     Button {
                         text: dividerToggleMenu.divider.visible ? i18n.tr("Hide") : i18n.tr("Show")
                         onClicked: dividerToggleMenu.divider.visible = !dividerToggleMenu.divider.visible
+                        color: theme.palette.normal.foreground
                     }
                 ]
             }
@@ -99,6 +102,7 @@ Item {
                     Button {
                         text: "Press Me"
                         onClicked: print("Button pressed!")
+                        color: theme.palette.normal.foreground
                     }
                 }
             }
@@ -278,6 +282,15 @@ Item {
                         eventColor: model.eventColor
                         time: model.time
                         enabled: false
+                        pointerMode: page.pointerMode
+                    }
+                }
+            }
+
+            Component.onCompleted: {
+                for (var i = 0; i < children.length; ++i) {
+                    if (children[i].pointerMode !== undefined) {
+                        children[i].pointerMode = Qt.binding(function() { return page.pointerMode })
                     }
                 }
             }

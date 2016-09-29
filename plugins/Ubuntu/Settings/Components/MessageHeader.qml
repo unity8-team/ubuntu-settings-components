@@ -30,6 +30,7 @@ Item {
     property alias title: titleText.text
     property alias time: timeText.text
     property alias body: bodyText.text
+    property QtObject menuStyle
 
     signal iconClicked()
 
@@ -42,6 +43,13 @@ Item {
 
     SlotsLayout {
         id: slotsLayout
+
+        padding {
+            top: menuStyle.padding.top
+            bottom: menuStyle.padding.bottom
+            leading: menuStyle.padding.leading
+            trailing: menuStyle.padding.trailing
+        }
 
         UbuntuShape {
             width: units.gu(6)

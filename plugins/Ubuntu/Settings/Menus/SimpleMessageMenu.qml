@@ -52,6 +52,7 @@ BaseMenu {
             avatar: menu.avatar != "" ? menu.avatar : "image://theme/contact"
             icon: menu.icon != "" ? menu.icon : "image://theme/message"
             state: menu.state
+            menuStyle: menu.menuStyle
 
             onIconClicked:  {
                 menu.iconActivated();

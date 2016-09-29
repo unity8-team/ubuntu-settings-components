@@ -23,6 +23,7 @@ import Ubuntu.Components 1.3
 StandardMenu {
     id: menu
     property alias buttonText: button.text
+    signal buttonClicked()
 
     slots: [
         Button {
@@ -31,7 +32,10 @@ StandardMenu {
             width: Math.max(units.gu(5), implicitWidth)
             color: theme.palette.normal.foreground
 
-            onClicked: menu.clicked()
+            onClicked: {
+                menu.buttonClicked()
+                menu.clicked()
+            }
         }
     ]
 }

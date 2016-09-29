@@ -47,10 +47,11 @@ BaseLayoutMenu {
         SlotsLayout.position: SlotsLayout.Leading
     }
 
-    SlotsLayout {
+    StyledSlotsLayout {
         id: albumLayout
         objectName: "albumArt"
         visible: showTrack
+        style: menuStyle
         mainSlot: Column {
             Label {
                 id: songLabel

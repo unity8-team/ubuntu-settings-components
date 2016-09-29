@@ -103,7 +103,7 @@ BaseMenu {
     Column {
         id: column
         anchors.fill: parent
-        anchors.topMargin: units.gu(0.5)
+        anchors.topMargin: menuStyle.padding.top
         spacing: -units.gu(1.5)
 
         Label {
@@ -113,9 +113,10 @@ BaseMenu {
                     leftButton.x : rightButton.x + rightButton.width - width
         }
 
-        SlotsLayout {
+        StyledSlotsLayout {
             id: slotsLayout
             objectName: "sliderMenuSlotsLayout"
+            style: menuStyle
 
             mainSlot: Slider {
                 id: slider

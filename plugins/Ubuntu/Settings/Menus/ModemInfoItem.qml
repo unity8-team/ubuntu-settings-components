@@ -33,9 +33,10 @@ BaseMenu {
 
     height: slotsLayout.height + (divider.visible ? divider.height : 0)
 
-    SlotsLayout {
+    StyledSlotsLayout {
         id: slotsLayout
         objectName: "menuItemInfoSlotsLayout"
+        style: menuStyle
 
         mainSlot: ColumnLayout {
             spacing: units.gu(0.5)

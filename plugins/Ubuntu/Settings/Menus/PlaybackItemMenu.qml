@@ -35,9 +35,10 @@ BaseMenu {
     highlightWhenPressed: false
     height: layout.height + (divider.visible ? divider.height : 0)
 
-    SlotsLayout {
+    StyledSlotsLayout {
         id: layout
         objectName: "playbackMenuLayout"
+        style: menuStyle
 
         Row {
             anchors.centerIn: parent

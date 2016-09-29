@@ -33,9 +33,10 @@ BaseMenu {
 
     height: slotsLayout.height + (divider.visible ? divider.height : 0)
 
-    SlotsLayout {
+    StyledSlotsLayout {
         id: slotsLayout
         objectName: "transferMenuSlotsLayout"
+        style: menuStyle
 
         UbuntuShape {
             SlotsLayout.position: SlotsLayout.Leading

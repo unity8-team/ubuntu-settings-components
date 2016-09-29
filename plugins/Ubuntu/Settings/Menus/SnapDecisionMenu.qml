@@ -50,8 +50,9 @@ SimpleMessageMenu {
                 right: parent.right
             }
 
-            SlotsLayout {
+            StyledSlotsLayout {
                 id: slotsLayout
+                style: menuStyle
                 padding.top: 0
 
                 mainSlot: Row {

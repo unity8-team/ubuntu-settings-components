@@ -32,9 +32,10 @@ BaseMenu {
 
     height: slotsLayout.height + (divider.visible ? divider.height : 0)
 
-    SlotsLayout {
+    StyledSlotsLayout {
         id: slotsLayout
         objectName: "calenderMenuSlotsLayout"
+        style: menuStyle
 
         mainSlot: Column {
             id: column

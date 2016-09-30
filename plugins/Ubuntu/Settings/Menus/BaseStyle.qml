@@ -20,5 +20,7 @@ import QtQuick 2.4
 
 QtObject {
     readonly property MenuPaddings padding: MenuPaddings {}
+    readonly property real subtitleFontSize: units.gu(1.4)
+
     property real fontSize
 }

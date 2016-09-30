@@ -87,8 +87,8 @@ BaseMenu {
                 id: stateLabel
                 objectName: "stateText"
                 anchors { left: parent.left; right: parent.right }
+                font.pixelSize: menuStyle.subtitleFontSize
                 visible: menu.active
-                fontSize: "x-small"
                 elide: Text.ElideRight
                 maximumLineCount: 1
             }

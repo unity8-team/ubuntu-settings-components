@@ -94,8 +94,8 @@ BaseMenu {
                         id: labelRoaming
                         visible: menu.roaming
                         elide: Text.ElideRight
-                        fontSize: "x-small"
                         text: i18n.dtr("ubuntu-settings-components", "Roaming")
+                        font.pixelSize: menuStyle.subtitleFontSize
                         opacity: 0.6
                     }
 

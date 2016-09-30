@@ -75,8 +75,8 @@ BaseLayoutMenu {
                 id: albumLabel
                 elide: Text.ElideRight
                 maximumLineCount: 1
-                fontSize: "small"
                 visible: text !== ""
+                font.pixelSize: menuStyle.subtitleFontSize
                 anchors { left: parent.left; right: parent.right }
             }
         }

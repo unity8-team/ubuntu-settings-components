@@ -52,7 +52,7 @@ Item {
         }
 
         UbuntuShape {
-            width: units.gu(6)
+            width: menuStyle.avatarSize
             height: width
 
             SlotsLayout.position: SlotsLayout.Leading

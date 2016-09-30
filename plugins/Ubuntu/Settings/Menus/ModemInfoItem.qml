@@ -69,7 +69,7 @@ BaseMenu {
                         id: statusIcon
                         color: theme.palette.normal.backgroundText
 
-                        height: labelStatus.height
+                        height: menuStyle.iconSize
                         width: height
 
                         visible: name !== ""
@@ -79,7 +79,7 @@ BaseMenu {
                         id: iconConnectivity
                         color: theme.palette.normal.backgroundText
 
-                        width: statusIcon.width // fix lp:1585645 by breaking the binding loop
+                        width: menuStyle.iconSize
                         height: width
 
                         visible: name !== ""
@@ -104,7 +104,7 @@ BaseMenu {
                         color: theme.palette.normal.backgroundText
                         visible: menu.roaming
 
-                        height: labelStatus.height
+                        height: menuStyle.iconSize
                         width: height
 
                         name: "network-cellular-roaming"

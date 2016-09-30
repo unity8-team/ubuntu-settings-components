@@ -40,7 +40,7 @@ StandardMenu {
             Icon {
                 id: checkMark
                 name: "tick"
-                height: units.gu(2)
+                height: menuStyle.iconSize
                 width: height
                 anchors.centerIn: parent
             }

@@ -29,4 +29,5 @@ BaseStyle {
     }
 
     fontSize: units.gu(1.7)
+    iconSize: units.gu(2)
 }

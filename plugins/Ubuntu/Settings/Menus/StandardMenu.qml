@@ -33,7 +33,7 @@ BaseLayoutMenu {
         objectName: "standardMenuIcon"
         color: theme.palette.normal.backgroundText
         visible: source != ""
-        height: units.gu(3)
+        height: menuStyle.iconSize
         width: height
         SlotsLayout.position: SlotsLayout.Leading
     }

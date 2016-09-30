@@ -153,7 +153,7 @@ BaseMenu {
                 id: leftButton
                 objectName: "leftButton"
                 visible: source !== ""
-                height: slider.height - units.gu(2)
+                height: menuStyle.iconSize
                 width: height
                 color: theme.palette.normal.backgroundText
 
@@ -171,7 +171,7 @@ BaseMenu {
                 id: rightButton
                 objectName: "rightButton"
                 visible: source !== ""
-                height: slider.height - units.gu(2)
+                height: menuStyle.iconSize
                 width: height
                 color: theme.palette.normal.backgroundText
 

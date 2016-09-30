@@ -23,4 +23,5 @@ QtObject {
     readonly property real subtitleFontSize: units.gu(1.4)
 
     property real fontSize
+    property real iconSize
 }

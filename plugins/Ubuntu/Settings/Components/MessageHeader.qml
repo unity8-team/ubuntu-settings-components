@@ -102,7 +102,7 @@ Item {
                 maximumLineCount: 3
                 wrapMode: Text.WordWrap
                 elide: Text.ElideRight
-                fontSize: "small"
+                font.pixelSize: menuStyle.subtitleFontSize
                 anchors { left: parent.left; right: parent.right }
             }
         }

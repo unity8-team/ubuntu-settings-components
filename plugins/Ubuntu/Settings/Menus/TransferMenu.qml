@@ -40,7 +40,7 @@ BaseMenu {
 
         UbuntuShape {
             SlotsLayout.position: SlotsLayout.Leading
-            width: units.gu(6)
+            width: menuStyle.avatarSize
             height: width
 
             source: ShaderEffectSource {

@@ -42,7 +42,7 @@ BaseLayoutMenu {
 
     slots: Image {
         id: playerIcon
-        height: units.gu(5)
+        height: menuStyle.avatarSize
         width: height
         SlotsLayout.position: SlotsLayout.Leading
     }
@@ -82,7 +82,7 @@ BaseLayoutMenu {
         }
 
         UbuntuShape {
-            width: units.gu(8)
+            width: units.gu(7)
             height: width
             SlotsLayout.position: SlotsLayout.Leading
 

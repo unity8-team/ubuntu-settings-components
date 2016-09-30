@@ -42,12 +42,13 @@ BaseMenu {
 
         Row {
             anchors.centerIn: parent
-            spacing: units.gu(3)
+            spacing: units.gu(pointerMode ? 2 : 2.5)
 
             PlaybackButton {
                 objectName: "previousButton"
                 iconName: "media-skip-backward"
                 enabled: canGoPrevious
+                anchors.verticalCenter: parent.verticalCenter
                 onClicked: menu.previous()
             }
 
@@ -55,6 +56,8 @@ BaseMenu {
                 objectName: "playButton"
                 iconName: playing ? "media-playback-pause" : "media-playback-start"
                 enabled: canPlay
+                size: menuStyle.avatarSize
+                anchors.verticalCenter: parent.verticalCenter
                 onClicked: menu.play(!playing)
             }
 
@@ -62,6 +65,7 @@ BaseMenu {
                 objectName: "nextButton"
                 iconName: "media-skip-forward"
                 enabled: canGoNext
+                anchors.verticalCenter: parent.verticalCenter
                 onClicked: menu.next()
             }
         }

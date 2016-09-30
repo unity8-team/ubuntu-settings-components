@@ -67,7 +67,7 @@ BaseMenu {
                     height: parent.height
                     Icon {
                         id: statusIcon
-                        color: theme.palette.normal.backgroundText
+                        color: menuStyle.iconColor
 
                         height: menuStyle.iconSize
                         width: height
@@ -77,7 +77,7 @@ BaseMenu {
 
                     Icon {
                         id: iconConnectivity
-                        color: theme.palette.normal.backgroundText
+                        color: menuStyle.iconColor
 
                         width: menuStyle.iconSize
                         height: width
@@ -101,7 +101,7 @@ BaseMenu {
 
                     Icon {
                         id: iconRoaming
-                        color: theme.palette.normal.backgroundText
+                        color: menuStyle.iconColor
                         visible: menu.roaming
 
                         height: menuStyle.iconSize

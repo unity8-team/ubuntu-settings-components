@@ -29,7 +29,7 @@ StandardMenu {
     property alias secure: iconSecure.visible
 
     icon.objectName: "iconSignal"
-    iconColor: ap.active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
+    iconColor: ap.active ? theme.palette.normal.positive : menuStyle.iconColor
     iconName: {
         if (adHoc) {
             return "nm-adhoc";
@@ -51,7 +51,7 @@ StandardMenu {
         objectName: "iconSecure"
         visible: false
         name: "network-secure"
-        color: ap.active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
+        color: ap.active ? theme.palette.normal.positive : menuStyle.iconColor
         width: height
         height: menuStyle.iconSize
     }

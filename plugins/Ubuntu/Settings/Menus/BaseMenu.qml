@@ -24,12 +24,12 @@ ListItem {
 
     property bool pointerMode: true
     property bool highlightWhenPressed: true
-    property color foregroundColor: theme.palette.normal.baseText
-    property alias backColor: menu.color
     property alias menuStyle: styleLoader.item
+    property alias backColor: menu.color
+    property color foregroundColor: menuStyle.backgroundColor
 
     divider.visible: false
-    highlightColor: theme.palette.highlighted.background
+    highlightColor: menuStyle.highlightColor
 
     Binding on highlightColor {
         when: !highlightWhenPressed

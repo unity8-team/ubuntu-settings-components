@@ -31,7 +31,7 @@ BaseLayoutMenu {
     slots: Icon {
         id: icon
         objectName: "standardMenuIcon"
-        color: theme.palette.normal.backgroundText
+        color: menuStyle.iconColor
         visible: source != ""
         height: menuStyle.iconSize
         width: height

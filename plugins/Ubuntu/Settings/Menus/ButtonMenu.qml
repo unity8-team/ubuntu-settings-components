@@ -30,7 +30,7 @@ StandardMenu {
             id: button
             objectName: "button"
             width: Math.max(units.gu(5), implicitWidth)
-            color: theme.palette.normal.foreground
+            color: menuStyle.buttonColor
 
             onClicked: {
                 menu.buttonClicked()

@@ -34,7 +34,7 @@ StandardMenu {
             implicitHeight: checkMark.height + units.gu(1)
             radius: width / 2
             antialiasing: true
-            color: theme.palette.normal.backgroundText
+            color: menuStyle.iconColor
             visible: false
 
             Icon {

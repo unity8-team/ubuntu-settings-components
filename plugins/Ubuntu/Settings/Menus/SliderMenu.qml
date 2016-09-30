@@ -155,7 +155,7 @@ BaseMenu {
                 visible: source !== ""
                 height: menuStyle.iconSize
                 width: height
-                color: theme.palette.normal.backgroundText
+                color: menuStyle.iconColor
 
                 AbstractButton {
                     anchors.fill: parent
@@ -173,7 +173,7 @@ BaseMenu {
                 visible: source !== ""
                 height: menuStyle.iconSize
                 width: height
-                color: theme.palette.normal.backgroundText
+                color: menuStyle.iconColor
 
                 AbstractButton {
                     anchors.fill: parent

@@ -53,7 +53,7 @@ BaseMenu {
 
                 color: {
                     if (String(source).match(/^image:\/\/theme/)) {
-                        return theme.palette.normal.backgroundText;
+                        return menuStyle.iconColor;
                     }
                     return Qt.rgba(0.0, 0.0, 0.0, 0.0);
                 }

@@ -1,6 +1,6 @@
 ubuntu-settings-components (0.10) UNRELEASED; urgency=medium
 
-  * Menus: rewrite components using ListItemLayout's and SlotsLayout'ss
+  * Menus: rewrite components using ListItemLayout's and SlotsLayout's
   * Bump revision to 0.10, as per Components removal
 
  -- Marco Trevisan (Treviño) <marco@ubuntu.com>  Fri, 30 Sep 2016 17:03:17 +0200

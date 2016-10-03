@@ -98,12 +98,10 @@ Item {
                 iconName: "calendar"
                 iconColor: "red"
                 text: i18n.tr("Standard Menu with Component")
-                component: Component {
-                    Button {
-                        text: "Press Me"
-                        onClicked: print("Button pressed!")
-                        color: theme.palette.normal.foreground
-                    }
+                slots: Button {
+                    text: "Press Me"
+                    onClicked: print("Button pressed!")
+                    color: theme.palette.normal.foreground
                 }
             }
 

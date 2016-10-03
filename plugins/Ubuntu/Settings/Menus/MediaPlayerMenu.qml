@@ -34,8 +34,8 @@ BaseLayoutMenu {
     property alias album: albumLabel.text
 
     highlightWhenPressed: false
-    implicitHeight: (albumLayout.visible ? albumLayout.height : layout.height) + (divider.visible ? divider.height : 0)
-    Behavior on implicitHeight { UbuntuNumberAnimation {} }
+    menuHeight: albumLayout.visible ? albumLayout.height : layout.height
+    Behavior on menuHeight { UbuntuNumberAnimation {} }
 
     layout.visible: !albumLayout.visible
     layout.objectName: "player"

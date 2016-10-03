@@ -39,7 +39,7 @@ BaseMenu {
     property alias footer: footerContainer.children
     property real _animationDuration: UbuntuAnimation.FastDuration
 
-    implicitHeight: layout.height + (divider.visible ? divider.height : 0)
+    menuHeight: layout.height
     clip: heightAnimation.running
 
     Column {

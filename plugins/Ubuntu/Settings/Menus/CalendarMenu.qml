@@ -30,7 +30,7 @@ BaseMenu {
     property alias minimumDate: calendar.minimumDate
     property alias selectedDate: calendar.selectedDate
 
-    implicitHeight: slotsLayout.height + (divider.visible ? divider.height : 0)
+    menuHeight: slotsLayout.height
 
     StyledSlotsLayout {
         id: slotsLayout

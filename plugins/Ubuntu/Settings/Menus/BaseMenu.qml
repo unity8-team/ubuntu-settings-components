@@ -25,6 +25,7 @@ ListItem {
 
     property bool pointerMode: true
     property bool highlightWhenPressed: true
+    property real menuHeight: 0
     property BaseStyle menuStyle: pointerMode ? PointerStyle : TouchStyle
     property alias backColor: menu.color
     property color foregroundColor: menuStyle.backgroundColor
@@ -40,6 +41,7 @@ ListItem {
     signal itemRemoved()
 
     divider.visible: false
+    implicitHeight: menuHeight + (divider.visible ? divider.height : 0)
 
     Binding on highlightColor {
         when: !highlightWhenPressed

@@ -27,7 +27,7 @@ BaseMenu {
     property alias title: layoutItem.title
     property alias slots: layoutItem.children
 
-    implicitHeight: layoutItem.height + (divider.visible ? divider.height : 0)
+    menuHeight: layoutItem.height
 
     ListItemLayout {
         id: layoutItem

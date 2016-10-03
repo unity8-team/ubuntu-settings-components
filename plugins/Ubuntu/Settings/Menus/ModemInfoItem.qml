@@ -31,7 +31,7 @@ BaseMenu {
     property bool roaming: false
     signal unlock
 
-    implicitHeight: slotsLayout.height + (divider.visible ? divider.height : 0)
+    menuHeight: slotsLayout.height
 
     StyledSlotsLayout {
         id: slotsLayout

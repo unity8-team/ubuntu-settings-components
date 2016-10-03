@@ -18,13 +18,14 @@
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
+import Ubuntu.Settings.Menus 0.1 as Menus
 
 ListItem {
     id: menu
 
     property bool pointerMode: true
     property bool highlightWhenPressed: true
-    property alias menuStyle: styleLoader.item
+    property BaseStyle menuStyle: pointerMode ? Menus.PointerStyle : Menus.TouchStyle
     property alias backColor: menu.color
     property color foregroundColor: menuStyle.backgroundColor
 
@@ -78,21 +79,4 @@ ListItem {
     }
 
     leadingActions: removable ? removeAction : null
-
-    Loader {
-        id: styleLoader
-
-        Component {
-            id: touchStyle
-            TouchStyle {}
-        }
-
-        Component {
-            id: pointerStyle
-            PointerStyle {}
-        }
-
-        asynchronous: false
-        sourceComponent: menu.pointerMode ? pointerStyle : touchStyle
-    }
 }

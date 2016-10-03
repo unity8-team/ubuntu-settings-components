@@ -16,6 +16,7 @@
  * Author: Marco Trevisan <marco.trevisan@canonical.com>
  */
 
+pragma Singleton
 import QtQuick 2.4
 import Ubuntu.Components 1.3
 

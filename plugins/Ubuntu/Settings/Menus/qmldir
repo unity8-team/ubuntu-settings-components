@@ -26,3 +26,6 @@ TextMessageMenu 0.1 TextMessageMenu.qml
 TimeZoneMenu 0.1 TimeZoneMenu.qml
 TransferMenu 0.1 TransferMenu.qml
 UserSessionMenu 0.1 UserSessionMenu.qml
+
+singleton PointerStyle 0.1 PointerStyle.qml
+singleton TouchStyle 0.1 TouchStyle.qml

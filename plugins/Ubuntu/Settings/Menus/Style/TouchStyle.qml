@@ -32,6 +32,7 @@ BaseStyle {
         trailing: __reference_layout.padding.trailing
     }
 
+    minimumHeight: units.gu(5.9)
     fontSize: units.gu(2)
     iconSize: units.gu(2.5)
 }

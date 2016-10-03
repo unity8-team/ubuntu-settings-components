@@ -27,6 +27,7 @@ QtObject {
     readonly property color iconColor: theme.palette.normal.backgroundText
     readonly property color buttonColor: theme.palette.normal.foreground
 
+    property real minimumHeight
     property real fontSize
     property real iconSize
 }

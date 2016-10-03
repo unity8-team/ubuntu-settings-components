@@ -44,7 +44,7 @@ ListItem {
 
     Binding on implicitHeight {
         when: menuHeight >= 0
-        value: menuHeight + (divider.visible ? divider.height : 0)
+        value: Math.max(menuStyle.minimumHeight, menuHeight) + (divider.visible ? divider.height : 0)
     }
 
     Binding on highlightColor {

@@ -116,6 +116,7 @@ BaseMenu {
                 id: buttonUnlock
                 objectName: "buttonUnlockSim"
                 visible: menu.locked
+                color: menuStyle.buttonColor
 
                 text: i18n.dtr("ubuntu-settings-components", "Unlock SIM")
                 Layout.preferredWidth: implicitWidth + units.gu(5)

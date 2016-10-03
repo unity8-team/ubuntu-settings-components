@@ -53,8 +53,14 @@ Item {
     }
 
     SignalSpy {
-        id: signalSpy
+        id: menuItemClickSpy
         signalName: "clicked"
+        target: buttonMenu
+    }
+
+    SignalSpy {
+        id: buttonClickSpy
+        signalName: "buttonClicked"
         target: buttonMenu
     }
 
@@ -62,15 +68,30 @@ Item {
         name: "ButtonMenu"
         when: windowShown
 
-        function test_click() {
-            signalSpy.clear();
+        property var button
+        property var button2
 
-            var button = findChild(buttonMenu, "button");
-            var button2 = findChild(buttonMenu2, "button");
+        function init() {
+            menuItemClickSpy.clear()
+            buttonClickSpy.clear()
+
+            button = findChild(buttonMenu, "button");
+            button2 = findChild(buttonMenu2, "button");
+
             verify(button !== undefined);
+            verify(button2 !== undefined);
+        }
 
+        function test_click() {
             mouseClick(button, button.width / 2, button.height / 2);
-            compare(signalSpy.count > 0, true, "signal clicked not triggered");
+            compare(menuItemClickSpy.count, 1, "signal clicked not triggered");
+            compare(buttonClickSpy.count, 1, "button signal clicked not triggered");
+        }
+
+        function test_clickOnItem() {
+            mouseClick(buttonMenu, 1, button.height / 2);
+            compare(menuItemClickSpy.count, 1, "signal clicked not triggered");
+            compare(buttonClickSpy.count, 0, "button signal clicked triggered");
         }
     }
 }

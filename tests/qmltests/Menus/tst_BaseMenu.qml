@@ -38,11 +38,6 @@ Item {
         }
 
         BaseMenu {
-            id: legacyDividerMenu
-            showDivider: true
-        }
-
-        BaseMenu {
             id: clickOverride
             property bool clicked: false
             function onClickedCallback() { clicked = true }
@@ -81,39 +76,23 @@ Item {
         }
 
         function test_showDivider() {
-            compare(baseMenu.showDivider, false)
             compare(baseMenu.divider.visible, false)
 
-            baseMenu.showDivider = true
-            compare(baseMenu.showDivider, true)
+            baseMenu.divider.visible = true
             compare(baseMenu.divider.visible, true)
 
-            baseMenu.showDivider = false
+            baseMenu.divider.visible = false
             compare(baseMenu.divider.visible, false)
-            compare(baseMenu.showDivider, false)
         }
 
         function test_hideDivider() {
-            compare(dividerMenu.showDivider, true)
             compare(dividerMenu.divider.visible, true)
 
-            dividerMenu.showDivider = false
-            compare(dividerMenu.showDivider, false)
+            dividerMenu.divider.visible = false
             compare(dividerMenu.divider.visible, false)
 
-            dividerMenu.showDivider = true
+            dividerMenu.divider.visible = true
             compare(dividerMenu.divider.visible, true)
-            compare(dividerMenu.showDivider, true)
-        }
-
-        function test_hideDividerLegacy() {
-            legacyDividerMenu.showDivider = false
-            compare(legacyDividerMenu.showDivider, false)
-            compare(legacyDividerMenu.divider.visible, false)
-
-            legacyDividerMenu.showDivider = true
-            compare(legacyDividerMenu.divider.visible, true)
-            compare(legacyDividerMenu.showDivider, true)
         }
 
         function test_clickEvent() {

@@ -31,7 +31,7 @@ BaseMenu {
     property alias maximum: progressBar.maximumValue
     property bool active: false
 
-    height: slotsLayout.height + (divider.visible ? divider.height : 0)
+    implicitHeight: slotsLayout.height + (divider.visible ? divider.height : 0)
 
     StyledSlotsLayout {
         id: slotsLayout

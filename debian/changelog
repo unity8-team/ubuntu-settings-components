@@ -1,3 +1,26 @@
+ubuntu-settings-components (0.10) UNRELEASED; urgency=medium
+
+  * Menus: rewrite components using ListItemLayout's and SlotsLayout'ss
+  * Bump revision to 0.10, as per Components removal
+
+ -- Marco Trevisan (Treviño) <marco@ubuntu.com>  Fri, 30 Sep 2016 17:03:17 +0200
+
+ubuntu-settings-components (0.9+16.10.20160927-0ubuntu1) yakkety; urgency=medium
+
+  [ Łukasz 'sil2100' Zemczak ]
+  * Do not depend on qtdeclarative5-ubuntu-ui-toolkit-plugin* as these
+    are transitional packages. Use qml-module-ubuntu-components*
+    instead. This should fix issues with i386 image builds.
+
+ -- Łukasz Zemczak <lukasz.zemczak@canonical.com>  Tue, 27 Sep 2016 07:27:21 +0000
+
+ubuntu-settings-components (0.9+16.10.20160909-0ubuntu1) yakkety; urgency=medium
+
+  [ Lukáš Tinkl ]
+  * Calculate the days to add for the next week correctly (LP: #1620496)
+
+ -- Michał Sawicz <michal.sawicz@canonical.com>  Fri, 09 Sep 2016 14:39:30 +0000
+
 ubuntu-settings-components (0.9+16.10.20160818.1-0ubuntu1) yakkety; urgency=medium
 
   [ Michał Sawicz ]

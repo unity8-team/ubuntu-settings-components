@@ -94,7 +94,7 @@ BaseMenu {
         }
     }
 
-    height: slotsLayout.height + (divider.visible ? divider.height : 0)
+    implicitHeight: slotsLayout.height + (divider.visible ? divider.height : 0)
     highlightWhenPressed: false
 
     Column {

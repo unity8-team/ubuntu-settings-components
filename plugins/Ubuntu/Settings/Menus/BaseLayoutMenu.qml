@@ -32,7 +32,7 @@ BaseMenu {
     property alias trailingComponentItem: trailingComponentLoader.item
     property alias component: menu.trailingComponent
 
-    height: layoutItem.height + (divider.visible ? divider.height : 0)
+    implicitHeight: layoutItem.height + (divider.visible ? divider.height : 0)
 
     ListItemLayout {
         id: layoutItem

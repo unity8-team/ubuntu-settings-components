@@ -58,6 +58,11 @@ Item {
             id: touchModeMenu
             pointerMode: false
         }
+
+        BaseMenu {
+            id: menuHeightMenu
+            menuHeight: units.gu(10)
+        }
     }
 
     SignalSpy {
@@ -104,6 +109,20 @@ Item {
 
             dividerMenu.divider.visible = true
             compare(dividerMenu.divider.visible, true)
+        }
+
+        function test_noMenuHeight() {
+            compare(baseMenu.implicitHeight > baseMenu.menuHeight, true)
+        }
+
+        function test_dividerMenuHeight() {
+            menuHeightMenu.divider.visible = true
+            compare(menuHeightMenu.implicitHeight, menuHeightMenu.menuHeight + dividerMenu.divider.height)
+        }
+
+        function test_noDividerMenuHeight() {
+            menuHeightMenu.divider.visible = false
+            compare(menuHeightMenu.implicitHeight, menuHeightMenu.menuHeight)
         }
 
         function test_clickEvent() {

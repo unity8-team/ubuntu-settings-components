@@ -20,6 +20,7 @@ import QtQuick 2.4
 import QtTest 1.0
 import Ubuntu.Test 0.1
 import Ubuntu.Settings.Menus 0.1
+import Ubuntu.Settings.Menus.Style 0.1
 
 Item {
     width: units.gu(42)
@@ -47,6 +48,16 @@ Item {
             id: removableMenu
             removable: true
         }
+
+        BaseMenu {
+            id: pointerModeMenu
+            pointerMode: true
+        }
+
+        BaseMenu {
+            id: touchModeMenu
+            pointerMode: false
+        }
     }
 
     SignalSpy {
@@ -71,7 +82,7 @@ Item {
         function test_doHighlightWhenPressed() {
             baseMenu.highlightWhenPressed = true;
             mousePress(baseMenu, baseMenu.width/2, baseMenu.height/2)
-            compare(Qt.colorEqual(baseMenu.highlightColor, theme.palette.highlighted.background), true)
+            compare(Qt.colorEqual(baseMenu.highlightColor, baseMenu.menuStyle.highlightColor), true)
             mouseRelease(baseMenu)
         }
 
@@ -156,6 +167,14 @@ Item {
             tryCompare(removeAction, "visible", true)
             mouseClick(removeAction, removeAction.width/2, removeAction.height/2)
             tryCompare(signalSpy, "count", 1)
+        }
+
+        function test_pointerMode() {
+            compare(pointerModeMenu.menuStyle, PointerStyle, "menuStyle doesn't match Pointer")
+        }
+
+        function test_touchMode() {
+            compare(touchModeMenu.menuStyle, TouchStyle, "menuStyle doesn't match Touch")
         }
     }
 }

@@ -28,6 +28,16 @@ ListItem {
     property alias backColor: menu.color
     property color foregroundColor: menuStyle.backgroundColor
 
+    // This is for retro-compatibility with ListItem.Empty, adding support to override the callback
+    signal triggered(var value)
+    function onClickedCallback() { triggered(null) }
+    onClicked: onClickedCallback()
+
+    property bool removable: false
+    property bool confirmRemoval: true
+    onConfirmRemovalChanged: console.error(menu+": confirmRemoval property is deprecated")
+    signal itemRemoved()
+
     divider.visible: false
 
     Binding on highlightColor {
@@ -39,16 +49,6 @@ ListItem {
         when: highlightWhenPressed && menuStyle
         value: menuStyle.highlightColor
     }
-
-    // This is for retro-compatibility with ListItem.Empty, adding support to override the callback
-    signal triggered(var value)
-    function onClickedCallback() { triggered(null) }
-    onClicked: onClickedCallback()
-
-    property bool removable: false
-    property bool confirmRemoval: true
-    onConfirmRemovalChanged: console.error(menu+": confirmRemoval property is deprecated")
-    signal itemRemoved()
 
     ListItemActions {
         id: removeAction

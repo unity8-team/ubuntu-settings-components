@@ -29,11 +29,15 @@ ListItem {
     property color foregroundColor: menuStyle.backgroundColor
 
     divider.visible: false
-    highlightColor: menuStyle.highlightColor
 
     Binding on highlightColor {
         when: !highlightWhenPressed
         value: backColor
+    }
+
+    Binding on highlightColor {
+        when: highlightWhenPressed && menuStyle
+        value: menuStyle.highlightColor
     }
 
     // This is for retro-compatibility with ListItem.Empty, adding support to override the callback

@@ -23,7 +23,7 @@ import Ubuntu.Settings.Menus.Style 0.1
 ListItem {
     id: menu
 
-    property bool pointerMode: true
+    property bool pointerMode: false
     property bool highlightWhenPressed: true
     property real menuHeight: -1
     property BaseStyle menuStyle: pointerMode ? PointerStyle : TouchStyle

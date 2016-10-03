@@ -30,4 +30,6 @@ QtObject {
     property real minimumHeight
     property real fontSize
     property real iconSize
+    property real buttonFontSize
+    property real buttonHeight
 }

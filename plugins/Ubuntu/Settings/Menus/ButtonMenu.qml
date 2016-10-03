@@ -29,8 +29,9 @@ StandardMenu {
         Button {
             id: button
             objectName: "button"
-            width: Math.max(units.gu(5), implicitWidth)
             color: menuStyle.buttonColor
+            height: menuStyle.buttonHeight
+            font.pixelSize: menuStyle.buttonFontSize
 
             onClicked: {
                 menu.buttonClicked()

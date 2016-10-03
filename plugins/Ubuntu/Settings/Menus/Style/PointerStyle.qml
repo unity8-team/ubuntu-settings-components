@@ -32,4 +32,6 @@ BaseStyle {
     minimumHeight: units.gu(3.9)
     fontSize: units.gu(1.7)
     iconSize: units.gu(2)
+    buttonFontSize: units.gu(1.4)
+    buttonHeight: units.gu(2)
 }

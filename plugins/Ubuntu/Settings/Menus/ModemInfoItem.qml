@@ -119,7 +119,10 @@ BaseMenu {
                 color: menuStyle.buttonColor
 
                 text: i18n.dtr("ubuntu-settings-components", "Unlock SIM")
+                font.pixelSize: menuStyle.buttonFontSize
                 Layout.preferredWidth: implicitWidth + units.gu(5)
+                Layout.preferredHeight: menuStyle.buttonHeight
+                height: menuStyle.buttonHeight
 
                 onTriggered: menu.unlock()
             }

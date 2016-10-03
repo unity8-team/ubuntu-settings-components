@@ -68,17 +68,10 @@ Item {
                 onTriggered: console.log("Triggered")
             }
 
-            StandardMenu {
-                id: dividerToggleMenu
+            ButtonMenu {
                 text: i18n.tr("Toggle divider menu.")
-
-                slots: [
-                    Button {
-                        text: dividerToggleMenu.divider.visible ? i18n.tr("Hide") : i18n.tr("Show")
-                        onClicked: dividerToggleMenu.divider.visible = !dividerToggleMenu.divider.visible
-                        color: theme.palette.normal.foreground
-                    }
-                ]
+                buttonText: divider.visible ? i18n.tr("Hide") : i18n.tr("Show")
+                onButtonClicked: divider.visible = !divider.visible
             }
 
             StandardMenu {

@@ -40,7 +40,7 @@ SimpleMessageMenu {
     footer: Item {
         id: buttons
 
-        height: layout.height
+        implicitHeight: layout.height
         anchors { right: parent.right; left: parent.left }
 
         Column {

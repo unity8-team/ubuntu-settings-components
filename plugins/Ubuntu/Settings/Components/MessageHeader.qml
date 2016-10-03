@@ -33,7 +33,7 @@ Item {
 
     signal iconClicked()
 
-    height: slotsLayout.height
+    implicitHeight: slotsLayout.height
     anchors { right: parent.right; left: parent.left }
 
     function shakeIcon() {

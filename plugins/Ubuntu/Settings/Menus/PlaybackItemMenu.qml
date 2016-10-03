@@ -33,7 +33,7 @@ BaseMenu {
     signal previous()
 
     highlightWhenPressed: false
-    height: layout.height + (divider.visible ? divider.height : 0)
+    implicitHeight: layout.height + (divider.visible ? divider.height : 0)
 
     SlotsLayout {
         id: layout

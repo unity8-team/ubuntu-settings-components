@@ -29,9 +29,9 @@ BaseLayoutMenu {
     property alias playerIcon: playerIcon.source
 
     property alias albumArt: albumArtImage.source
-    property alias song: songLabel.text
-    property alias artist: artistLabel.text
-    property alias album: albumLabel.text
+    property string song
+    property string artist
+    property string album
 
     highlightWhenPressed: false
     implicitHeight: (albumLayout.visible ? albumLayout.height : layout.height) + (divider.visible ? divider.height : 0)
@@ -47,36 +47,13 @@ BaseLayoutMenu {
         SlotsLayout.position: SlotsLayout.Leading
     }
 
-    SlotsLayout {
+    ListItemLayout {
         id: albumLayout
         objectName: "albumArt"
         visible: showTrack
-        mainSlot: Column {
-            Label {
-                id: songLabel
-                elide: Text.ElideRight
-                maximumLineCount: 1
-                visible: text !== ""
-                anchors { left: parent.left; right: parent.right }
-            }
-
-            Label {
-                id: artistLabel
-                elide: Text.ElideRight
-                maximumLineCount: 1
-                visible: text !== ""
-                anchors { left: parent.left; right: parent.right }
-            }
-
-            Label {
-                id: albumLabel
-                elide: Text.ElideRight
-                maximumLineCount: 1
-                fontSize: "small"
-                visible: text !== ""
-                anchors { left: parent.left; right: parent.right }
-            }
-        }
+        title.text: menu.song
+        subtitle.text: menu.artist
+        summary.text: menu.album
 
         UbuntuShape {
             width: units.gu(8)

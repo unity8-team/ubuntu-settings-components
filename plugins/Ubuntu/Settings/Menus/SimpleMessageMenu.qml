@@ -26,9 +26,9 @@ import Ubuntu.Settings.Components 0.1 as USC
 BaseMenu {
     id: menu
 
-    property alias title: messageHeader.title
+    property string title
+    property string body
     property alias time: messageHeader.time
-    property alias body: messageHeader.body
 
     property url avatar
     property url icon
@@ -39,7 +39,7 @@ BaseMenu {
     property alias footer: footerContainer.children
     property real _animationDuration: UbuntuAnimation.FastDuration
 
-    implicitHeight: layout.height + (divider.visible ? divider.height : 0)
+    height: layout.height + (divider.visible ? divider.height : 0)
     clip: heightAnimation.running
 
     Column {
@@ -52,6 +52,8 @@ BaseMenu {
             avatar: menu.avatar != "" ? menu.avatar : "image://theme/contact"
             icon: menu.icon != "" ? menu.icon : "image://theme/message"
             state: menu.state
+            title.text: menu.title
+            body.text: menu.body
 
             onIconClicked:  {
                 menu.iconActivated();
@@ -74,7 +76,7 @@ BaseMenu {
         }
     }
 
-    Behavior on implicitHeight {
+    Behavior on height {
         NumberAnimation {
             id: heightAnimation
             duration: _animationDuration

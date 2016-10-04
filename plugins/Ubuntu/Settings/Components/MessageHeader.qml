@@ -68,7 +68,7 @@ Item {
         title.objectName: "title"
         title.text: messageHeader.title
         title.font.weight: Font.DemiBold
-        title.rightPadding: timeText.width > iconImage.width ? timeText.width - iconImage.width : 0
+        title.anchors.rightMargin: timeText.width > iconImage.width ? timeText.width - iconImage.width : 0
 
         summary.objectName: "body"
         summary.text: messageHeader.body

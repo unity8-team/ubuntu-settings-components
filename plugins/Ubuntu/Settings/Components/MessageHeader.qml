@@ -93,7 +93,7 @@ Item {
                 value: itemLayout.verticalCenter
             }
 
-            MouseArea {
+            AbstractButton {
                 anchors.fill: parent
                 onClicked: messageHeader.iconClicked()
             }

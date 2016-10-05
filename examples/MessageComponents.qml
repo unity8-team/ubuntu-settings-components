@@ -88,6 +88,10 @@ Item {
                     body: model.body
                     time: model.time
                     removable: true
+
+                    onIconActivated: {
+                        print("Icon Activated")
+                    }
                 }
             }
 
@@ -101,6 +105,10 @@ Item {
                     time: model.time
                     removable: true
                     replyHintText: "Reply"
+
+                    onIconActivated: {
+                        print("Icon Activated")
+                    }
 
                     onTriggered: {
                         selected = !selected;
@@ -118,6 +126,10 @@ Item {
                     time: model.time
                     removable: true
                     replyHintText: "Reply"
+
+                    onIconActivated: {
+                        print("Icon Activated")
+                    }
 
                     onTriggered: {
                         selected = !selected;

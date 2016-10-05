@@ -84,7 +84,16 @@ Item {
             height: width
             SlotsLayout.position: SlotsLayout.Trailing
             SlotsLayout.overrideVerticalPositioning: true
-            anchors.verticalCenter: parent.verticalCenter
+
+            Binding on y {
+                when: timeText.text.length
+                value: itemLayout.summary.y + itemLayout.summary.baselineOffset
+            }
+
+            Binding on anchors.verticalCenter {
+                when: !timeText.text.length
+                value: itemLayout.verticalCenter
+            }
 
             MouseArea {
                 anchors.fill: parent

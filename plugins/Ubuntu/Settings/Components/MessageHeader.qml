@@ -85,7 +85,7 @@ Item {
 
             Binding on y {
                 when: timeText.text.length
-                value: itemLayout.summary.y + itemLayout.summary.baselineOffset
+                value: itemLayout.title.y + itemLayout.title.baselineOffset + itemLayout.title.height
             }
 
             Binding on anchors.verticalCenter {

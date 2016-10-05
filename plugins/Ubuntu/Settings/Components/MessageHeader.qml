@@ -66,12 +66,10 @@ Item {
         }
 
         title.objectName: "title"
-        title.text: messageHeader.title
         title.font.weight: Font.DemiBold
         title.anchors.rightMargin: timeText.width > iconImage.width ? timeText.width - iconImage.width : 0
 
         summary.objectName: "body"
-        summary.text: messageHeader.body
         summary.maximumLineCount: 3
         summary.wrapMode: Text.WordWrap
         summary.elide: Text.ElideRight

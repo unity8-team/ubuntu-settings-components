@@ -54,14 +54,14 @@ Item {
 
     SignalSpy {
         id: menuItemClickSpy
-        signalName: "clicked"
         target: buttonMenu
+        signalName: "clicked"
     }
 
     SignalSpy {
         id: buttonClickSpy
-        signalName: "buttonClicked"
         target: buttonMenu
+        signalName: "buttonClicked"
     }
 
     UbuntuTestCase {

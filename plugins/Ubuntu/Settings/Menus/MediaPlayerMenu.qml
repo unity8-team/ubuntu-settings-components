@@ -29,9 +29,9 @@ BaseLayoutMenu {
     property alias playerIcon: playerIcon.source
 
     property alias albumArt: albumArtImage.source
-    property alias song: songLabel.text
-    property alias artist: artistLabel.text
-    property alias album: albumLabel.text
+    property string song
+    property string artist
+    property string album
 
     highlightWhenPressed: false
     menuHeight: albumLayout.visible ? albumLayout.height : layout.height
@@ -47,39 +47,24 @@ BaseLayoutMenu {
         SlotsLayout.position: SlotsLayout.Leading
     }
 
-    StyledSlotsLayout {
+    ListItemLayout {
         id: albumLayout
         objectName: "albumArt"
         visible: showTrack
-        style: menuStyle
-        mainSlot: Column {
-            Label {
-                id: songLabel
-                elide: Text.ElideRight
-                maximumLineCount: 1
-                visible: text !== ""
-                font.pixelSize: menuStyle.fontSize
-                anchors { left: parent.left; right: parent.right }
-            }
 
-            Label {
-                id: artistLabel
-                elide: Text.ElideRight
-                maximumLineCount: 1
-                visible: text !== ""
-                font.pixelSize: menuStyle.fontSize
-                anchors { left: parent.left; right: parent.right }
-            }
-
-            Label {
-                id: albumLabel
-                elide: Text.ElideRight
-                maximumLineCount: 1
-                visible: text !== ""
-                font.pixelSize: menuStyle.subtitleFontSize
-                anchors { left: parent.left; right: parent.right }
-            }
+        padding {
+            top: menuStyle.padding.top
+            bottom: menuStyle.padding.bottom
+            leading: menuStyle.padding.leading
+            trailing: menuStyle.padding.trailing
         }
+
+        title.text: menu.song
+        title.font.pixelSize: menuStyle.fontSize
+        subtitle.text: menu.artist
+        subtitle.font.pixelSize: menuStyle.fontSize
+        summary.text: menu.album
+        summary.font.pixelSize: menuStyle.subtitleFontSize
 
         UbuntuShape {
             width: units.gu(7)

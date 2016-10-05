@@ -27,22 +27,22 @@ Item {
 
     property alias avatar: avatarImage.source
     property alias icon: iconImage.source
-    property alias title: titleText.text
     property alias time: timeText.text
-    property alias body: bodyText.text
+    property alias title: itemLayout.title
+    property alias body: itemLayout.summary
     property QtObject menuStyle
 
     signal iconClicked()
 
-    implicitHeight: slotsLayout.height
+    implicitHeight: itemLayout.height
     anchors { right: parent.right; left: parent.left }
 
     function shakeIcon() {
         shake.restart();
     }
 
-    SlotsLayout {
-        id: slotsLayout
+    ListItemLayout {
+        id: itemLayout
 
         padding {
             top: menuStyle.padding.top
@@ -64,48 +64,32 @@ Item {
             Icon {
                 id: avatarImage
                 objectName: "avatar"
+                color: Qt.rgba(0.0, 0.0, 0.0, 0.0)
 
-                color: {
-                    if (String(source).match(/^image:\/\/theme/)) {
-                        return theme.palette.normal.backgroundText;
-                    }
-                    return Qt.rgba(0.0, 0.0, 0.0, 0.0);
+                Binding on color {
+                    when: String(avatarImage.source).match(/^image:\/\/theme/)
+                    value: theme.palette.normal.backgroundText
                 }
             }
         }
 
-        mainSlot: Column {
-            spacing: units.gu(0.5)
-
-            Label {
-                id: titleText
-                objectName: "title"
-
-                maximumLineCount: 1
-                elide: Text.ElideRight
-                font.weight: Font.DemiBold
-                font.pixelSize: menuStyle.fontSize
-                anchors { left: parent.left; }
-
-                // XXX: We need to resize the title not to cover the time
-                width: {
-                    if (parent.width && timeText.width > iconImage.width)
-                        return parent.width + iconImage.width - timeText.width;
-                    return parent.width
-                }
-            }
-
-            Label {
-                id: bodyText
-                objectName: "body"
-
-                maximumLineCount: 3
-                wrapMode: Text.WordWrap
-                elide: Text.ElideRight
-                font.pixelSize: menuStyle.subtitleFontSize
-                anchors { left: parent.left; right: parent.right }
-            }
+        padding {
+            top: menuStyle.padding.top
+            bottom: menuStyle.padding.bottom
+            leading: menuStyle.padding.leading
+            trailing: menuStyle.padding.trailing
         }
+
+        title.objectName: "title"
+        title.font.weight: Font.DemiBold
+        title.font.pixelSize: menuStyle.fontSize
+        title.anchors.rightMargin: timeText.width > iconImage.width ? timeText.width - iconImage.width : 0
+
+        summary.objectName: "body"
+        summary.maximumLineCount: 3
+        summary.wrapMode: Text.WordWrap
+        summary.elide: Text.ElideRight
+        summary.font.pixelSize: menuStyle.subtitleFontSize
 
         Icon {
             id: iconImage
@@ -115,7 +99,16 @@ Item {
             height: width
             SlotsLayout.position: SlotsLayout.Trailing
             SlotsLayout.overrideVerticalPositioning: true
-            anchors.verticalCenter: parent.verticalCenter
+
+            Binding on y {
+                when: timeText.text.length
+                value: itemLayout.title.y + itemLayout.title.baselineOffset + itemLayout.title.height
+            }
+
+            Binding on anchors.verticalCenter {
+                when: !timeText.text.length
+                value: itemLayout.verticalCenter
+            }
 
             MouseArea {
                 anchors.fill: parent
@@ -136,8 +129,8 @@ Item {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: slotsLayout.padding.top
-            rightMargin: slotsLayout.padding.trailing
+            topMargin: itemLayout.padding.top
+            rightMargin: itemLayout.padding.trailing
         }
 
         fontSize: "x-small"

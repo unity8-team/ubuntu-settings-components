@@ -25,6 +25,8 @@ BaseMenu {
     property string text
     property alias layout: layoutItem
     property alias title: layoutItem.title
+    property alias subtitle: layoutItem.subtitle
+    property alias summary: layoutItem.summary
     property alias slots: layoutItem.children
 
     menuHeight: layoutItem.height

@@ -26,9 +26,9 @@ import Ubuntu.Settings.Components 0.1 as USC
 BaseMenu {
     id: menu
 
-    property alias title: messageHeader.title
+    property string title
+    property string body
     property alias time: messageHeader.time
-    property alias body: messageHeader.body
 
     property url avatar
     property url icon
@@ -53,6 +53,8 @@ BaseMenu {
             icon: menu.icon != "" ? menu.icon : "image://theme/message"
             state: menu.state
             menuStyle: menu.menuStyle
+            title.text: menu.title
+            body.text: menu.body
 
             onIconClicked:  {
                 menu.iconActivated();

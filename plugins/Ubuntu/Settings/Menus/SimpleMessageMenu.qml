@@ -77,7 +77,7 @@ BaseMenu {
         }
     }
 
-    Behavior on implicitHeight {
+    Behavior on menuHeight {
         NumberAnimation {
             id: heightAnimation
             duration: _animationDuration

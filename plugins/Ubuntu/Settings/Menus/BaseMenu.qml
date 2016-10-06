@@ -28,7 +28,7 @@ ListItem {
     property real menuHeight: -1
     property BaseStyle menuStyle: pointerMode ? PointerStyle : TouchStyle
     property alias backColor: menu.color
-    property color foregroundColor: menuStyle.backgroundColor
+    property color foregroundColor: menuStyle.foregroundColor
 
     // This is for retro-compatibility with ListItem.Empty, adding support to override the callback
     signal triggered(var value)

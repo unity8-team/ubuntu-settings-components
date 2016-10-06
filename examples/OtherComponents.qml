@@ -24,6 +24,9 @@ import Ubuntu.Settings.Menus 0.1
 Item {
     property string title: "Settings Components"
 
+    width: parent && parent.width ? parent.width : units.gu(42)
+    height: parent && parent.width ? parent.height : units.gu(75)
+
     ListModel {
         id: mediaPlayerModel
         ListElement { song: "You're The First, The Last, My Everything"; artist: "Barry White"; album: "Hot Soul"; albumArt: "artwork/beach.jpg"}
@@ -60,19 +63,48 @@ Item {
 
             StandardMenu {
                 text: i18n.tr("Standard Menu\nLook at me, I'm a new line.")
+                onTriggered: console.log("Triggered")
             }
 
             StandardMenu {
-                iconSource: "image://theme/calendar"
+                id: dividerToggleMenu
+                text: i18n.tr("Toggle divider menu.")
+                showDivider: false
+
+                slots: [
+                    Button {
+                        text: dividerToggleMenu.showDivider ? i18n.tr("Hide") : i18n.tr("Show")
+                        onClicked: dividerToggleMenu.showDivider = !dividerToggleMenu.showDivider
+                    }
+                ]
+            }
+
+            StandardMenu {
+                text: i18n.tr("Removable menu.")
+                removable: true
+                onItemRemoved: console.log("Item removed");
+            }
+
+            StandardMenu {
+                text: i18n.tr("Inverted colors Version")
+                backColor: theme.palette.normal.baseText
+                foregroundColor: theme.palette.normal.base
+                highlightColor: theme.palette.highlighted.backgroundText
+            }
+
+            StandardMenu {
+                iconName: "calendar"
                 iconColor: "red"
-                text: i18n.tr("Standard Menu")
+                text: i18n.tr("Standard Menu with Component")
                 component: Component {
                     Button {
                         text: "Press Me"
+                        onClicked: print("Button pressed!")
                     }
                 }
-                backColor: Qt.rgba(1,1,1,0.1)
             }
+
+            SeparatorMenu {}
 
             SliderMenu {
                 id: slider
@@ -97,6 +129,8 @@ Item {
                 value: slider.value
             }
 
+            SeparatorMenu {}
+
             ButtonMenu {
                 text: i18n.tr("Button")
                 buttonText: i18n.tr("Hello world!")
@@ -105,11 +139,15 @@ Item {
             CheckableMenu {
                 text: i18n.tr("Checkable")
                 checked: true
+                onCheckedChanged: print("Checked status is", checked);
+                onTriggered: print("Triggered", value)
             }
 
             SwitchMenu {
                 text: i18n.tr("Switch")
                 checked: true
+                onCheckedChanged: print("Checked status is", checked);
+                onTriggered: print("Triggered", value)
             }
 
             SectionMenu {
@@ -127,6 +165,7 @@ Item {
                 name: i18n.tr("Lola Chang")
                 iconSource: "image://theme/contact"
                 active: true
+                onTriggered: active = !active
             }
 
             MediaPlayerMenu {
@@ -180,10 +219,28 @@ Item {
             }
 
             ModemInfoItem {
+                simIdentifierText: "SIM 1"
                 statusText: "EE 4G"
                 statusIcon: "gsm-3g-full"
                 roaming: true
                 locked: false
+                onTriggered: roaming = !roaming
+            }
+
+            ModemInfoItem {
+                simIdentifierText: "SIM 2"
+                statusText: "Ubuntu 5G"
+                statusIcon: "gsm-3g-medium-secure"
+                roaming: false
+                locked: true
+                onUnlock: locked = false
+                onTriggered: {
+                    if (locked) {
+                        roaming = !roaming
+                    } else {
+                        locked = true
+                    }
+                }
             }
 
             GroupedMessageMenu {

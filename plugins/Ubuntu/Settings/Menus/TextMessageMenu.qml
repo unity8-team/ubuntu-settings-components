@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,7 @@
  * Authors:
  *      Renato Araujo Oliveira Filho <renato@canonical.com>
  *      Olivier Tilloy <olivier.tilloy@canonical.com>
+ *      Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
@@ -25,16 +26,16 @@ import Ubuntu.Settings.Components 0.1 as USC
 SimpleMessageMenu {
     id: menu
 
-    property bool replyEnabled: true
-    property string replyButtonText: i18n.dtr("ubuntu-settings-components", "Send")
-    property string replyHintText
+    property alias replyEnabled: actionTextField.activateEnabled
+    property alias replyButtonText: actionTextField.buttonText
+    property alias replyHintText: actionTextField.textHint
 
     signal replied(string value)
 
     footer: USC.ActionTextField {
-        activateEnabled: menu.replyEnabled
-        buttonText: menu.replyButtonText
-        textHint: menu.replyHintText
+        id: actionTextField
+        activateEnabled: true
+        buttonText: i18n.dtr("ubuntu-settings-components", "Send")
 
         onActivated: {
             menu.replied(value);

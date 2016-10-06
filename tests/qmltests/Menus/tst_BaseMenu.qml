@@ -112,17 +112,17 @@ Item {
         }
 
         function test_noMenuHeight() {
-            compare(baseMenu.implicitHeight > baseMenu.menuHeight, true)
+            compare(baseMenu.height > baseMenu.menuHeight, true)
         }
 
         function test_dividerMenuHeight() {
             menuHeightMenu.divider.visible = true
-            compare(menuHeightMenu.implicitHeight, menuHeightMenu.menuHeight + dividerMenu.divider.height)
+            compare(menuHeightMenu.height, menuHeightMenu.menuHeight + dividerMenu.divider.height)
         }
 
         function test_noDividerMenuHeight() {
             menuHeightMenu.divider.visible = false
-            compare(menuHeightMenu.implicitHeight, menuHeightMenu.menuHeight)
+            compare(menuHeightMenu.height, menuHeightMenu.menuHeight)
         }
 
         function test_clickEvent() {

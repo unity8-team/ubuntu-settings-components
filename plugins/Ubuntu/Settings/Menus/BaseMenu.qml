@@ -42,7 +42,8 @@ ListItem {
 
     divider.visible: false
 
-    Binding on implicitHeight {
+    // FIXME: this is should use implicitHeight, but we can't yet due to lp:1630683
+    Binding on height {
         when: menuHeight >= 0
         value: Math.max(menuStyle.minimumHeight, menuHeight) + (divider.visible ? divider.height : 0)
     }

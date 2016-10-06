@@ -91,6 +91,10 @@ Item {
                     time: model.time
                     removable: true
                     pointerMode: page.pointerMode
+
+                    onIconActivated: {
+                        print("Icon Activated")
+                    }
                 }
             }
 
@@ -105,6 +109,10 @@ Item {
                     pointerMode: page.pointerMode
                     removable: true
                     replyHintText: "Reply"
+
+                    onIconActivated: {
+                        print("Icon Activated")
+                    }
 
                     onTriggered: {
                         selected = !selected;
@@ -123,6 +131,10 @@ Item {
                     pointerMode: page.pointerMode
                     removable: true
                     replyHintText: "Reply"
+
+                    onIconActivated: {
+                        print("Icon Activated")
+                    }
 
                     onTriggered: {
                         selected = !selected;

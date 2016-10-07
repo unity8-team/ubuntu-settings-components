@@ -59,15 +59,6 @@ Rectangle {
             calendar.minimumDate = undefined;
         }
 
-        function test_collapsed() {
-            calendar.collapsed = true;
-            compare(calendar.interactive, false, "Calendar should not be interactive");
-            var collapsedHeight = calendar.height;
-            calendar.collapsed = false;
-            verify(calendar.height > collapsedHeight * 4 && calendar.height < collapsedHeight * 6, "Height did not expand properly");
-            compare(calendar.interactive, true, "Calendar should be interactive");
-        }
-
         function test_selectedDate_data() {
             return [
                 { date: new Date(2010, 4, 10) },

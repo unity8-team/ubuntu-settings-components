@@ -57,7 +57,6 @@ ListView {
         property bool ready: false
         property bool userSelected: false
         property var today: new Cal.Day().fromDate((new Date()))
-        property real weekDaysWidth: 0
         property real weekDaysHeight: 0
         readonly property real squareUnit: units.gu(3)
         readonly property int days: 7
@@ -159,7 +158,7 @@ ListView {
         }
     }
 
-    implicitWidth: Math.max(priv.weekDaysWidth, priv.squareUnit * priv.days)
+    implicitWidth: priv.squareUnit * priv.days
     implicitHeight: priv.squareUnit * priv.weeks + priv.weekDaysHeight
     interactive: true
     clip: true
@@ -206,16 +205,6 @@ ListView {
                 objectName: "weekDay"
                 color: theme.palette.highlighted.base
                 onHeightChanged: priv.weekDaysHeight = Math.max(height, priv.weekDaysHeight)
-                onWidthChanged: {
-                    var W = 0
-                    for (var i = 0; i < parent.children.length; ++i) {
-                        var item = parent.children[i]
-                        if (item.objectName === objectName) {
-                            W += item.width
-                        }
-                    }
-                    priv.weekDaysWidth = W
-                }
             }
         }
 

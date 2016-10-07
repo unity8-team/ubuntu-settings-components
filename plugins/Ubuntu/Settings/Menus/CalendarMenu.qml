@@ -23,7 +23,6 @@ import Ubuntu.Settings.Components 0.1
 BaseMenu {
     id: menu
 
-    property alias collapsed: calendar.collapsed
     property alias currentDate: calendar.currentDate
     property alias firstDayOfWeek: calendar.firstDayOfWeek
     property alias maximumDate: calendar.maximumDate

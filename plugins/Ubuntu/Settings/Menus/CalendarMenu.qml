@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,7 +13,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Authored by Andrea Cimitan <andrea.cimitan@canonical.com>
+ * Authors:
+ *      Andrea Cimitan <andrea.cimitan@canonical.com>
+ *      Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
@@ -29,35 +31,71 @@ BaseMenu {
     property alias minimumDate: calendar.minimumDate
     property alias selectedDate: calendar.selectedDate
 
-    menuHeight: slotsLayout.height
+    menuHeight: layout.height
+    highlightWhenPressed: false
 
-    StyledSlotsLayout {
-        id: slotsLayout
-        objectName: "calenderMenuSlotsLayout"
-        style: menuStyle
+    Column {
+        id: layout
 
-        mainSlot: Column {
-            id: column
-            spacing: units.gu(1)
+        anchors {
+            left: parent.left
+            right: parent.right
+        }
 
-            Label {
-                id: label
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
-                fontSize: "large"
-                text: i18n.ctr("%1=month name, %2=4-digit year", "%1 %2")
-                        .arg(Qt.locale().standaloneMonthName(calendar.currentDate.getMonth(), Locale.LongFormat))
-                        .arg(calendar.currentDate.getFullYear())
+        ListItemLayout {
+            id: monthLayout
+            padding {
+                top: menuStyle.padding.top
+                bottom: menuStyle.padding.bottom
+                leading: menuStyle.padding.leading
+                trailing: menuStyle.padding.trailing
             }
 
-            Calendar {
-                id: calendar
-                objectName: "calendar"
-                anchors {
-                    left: parent.left
-                    right: parent.right
+            title.horizontalAlignment: Text.AlignHCenter
+            title.font.pixelSize: menuStyle.fontSize
+            title.text: i18n.ctr("%1=month name, %2=4-digit year", "%1 %2")
+                            .arg(Qt.locale().standaloneMonthName(calendar.currentDate.getMonth(), Locale.LongFormat))
+                            .arg(calendar.currentDate.getFullYear())
+
+            Icon {
+                name: "go-previous"
+                width: menuStyle.iconSize
+                height: menuStyle.iconSize
+                SlotsLayout.position: SlotsLayout.Leading
+
+                AbstractButton {
+                    anchors.fill: parent
+                    onClicked: calendar.decrementCurrentIndex()
+                }
+            }
+
+            Icon {
+                name: "go-next"
+                width: menuStyle.iconSize
+                height: menuStyle.iconSize
+                SlotsLayout.position: SlotsLayout.Trailing
+
+                AbstractButton {
+                    anchors.fill: parent
+                    onClicked: calendar.incrementCurrentIndex()
+                }
+            }
+        }
+
+        StyledSlotsLayout {
+            id: slotsLayout
+            objectName: "calenderMenuSlotsLayout"
+            style: menuStyle
+
+            mainSlot: Column {
+                Calendar {
+                    id: calendar
+                    objectName: "calendar"
+                    interactive: !pointerMode
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
                 }
             }
         }

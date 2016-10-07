@@ -44,6 +44,8 @@ BaseMenu {
 
         ListItemLayout {
             id: monthLayout
+            objectName: "monthLayout"
+
             padding {
                 top: menuStyle.padding.top
                 bottom: menuStyle.padding.bottom
@@ -58,6 +60,7 @@ BaseMenu {
                             .arg(calendar.currentDate.getFullYear())
 
             Icon {
+                objectName: "goPreviousMonth"
                 name: "go-previous"
                 width: menuStyle.iconSize
                 height: menuStyle.iconSize
@@ -70,6 +73,7 @@ BaseMenu {
             }
 
             Icon {
+                objectName: "goNextMonth"
                 name: "go-next"
                 width: menuStyle.iconSize
                 height: menuStyle.iconSize

@@ -57,8 +57,9 @@ Item {
         property var calendar: findChild(calendarMenu, "calendar")
 
         function test_interactive_data() {
-            return [ {tag: "pointer", pointer: true, expected: false },
-                     {tag: "touch", pointer: false, expected: true }
+            return [
+                        {tag: "pointer", pointer: true, expected: false },
+                        {tag: "touch", pointer: false, expected: true }
             ]
         }
 
@@ -97,6 +98,36 @@ Item {
             calendar.selectedDate = date4;
             calendar.selectedDate = calendar.selectedDate.addDays(1);
             compare(calendar.selectedDate, date5, "The next day after 2016-10-30 is not 2016-10-31");
+        }
+
+        function test_SwitchMonth_data() {
+            var tests = []
+
+            for (var i = 1; i <= 15; ++i) {
+                tests.push({tag: "previous "+i, buttonName: "goPreviousMonth", delta: -i })
+                tests.push({tag: "next "+i, buttonName: "goNextMonth", delta: i })
+            }
+
+            return tests
+        }
+
+        function test_SwitchMonth(data) {
+            var button = findChild(calendarMenu, data.buttonName);
+            var monthLayout = findChild(calendarMenu, "monthLayout")
+            verify(button)
+            verify(monthLayout)
+
+            var previousDate = calendar.selectedDate
+            var oldMonth = calendar.currentDate.getMonth()
+
+            for (var i = 0; i < Math.abs(data.delta); ++i)
+                mouseClick(button, button.width / 2, button.height / 2)
+
+            var expected = (oldMonth+data.delta % 12) % 12
+            compare(calendar.currentDate.getMonth(), expected < 0 ? (12 + expected) % 12 : expected)
+            compare(monthLayout.title.text, i18n.ctr("%1=month name, %2=4-digit year", "%1 %2")
+                                                .arg(Qt.locale().standaloneMonthName(calendar.currentDate.getMonth(), Locale.LongFormat))
+                                                .arg(calendar.currentDate.getFullYear()))
         }
     }
 }

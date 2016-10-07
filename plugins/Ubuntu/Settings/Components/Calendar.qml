@@ -216,7 +216,7 @@ ListView {
 
                 property int weekday: (index % priv.days + firstDayOfWeek) % priv.days
                 property var dayStart: gridStart.addDays(index)
-                property bool isCurrent: priv.userSelected && dayStart.equals(priv.selectedDay)
+                property bool isSelected: priv.userSelected && dayStart.equals(priv.selectedDay)
                 property bool isCurrentMonth: (monthStart < dayStart || monthStart.equals(dayStart))  && dayStart < monthEnd
                 property bool isWeekend: weekday == 0 || weekday == 6
                 property bool isToday: dayStart.equals(priv.today)
@@ -226,13 +226,21 @@ ListView {
                 width: priv.squareUnit
                 height: priv.squareUnit
 
-                Rectangle {
+                UbuntuShape {
                     anchors.fill: parent
-                    border.color: dayNumber.color
-                    border.width: units.gu(0.12)
-                    color: "transparent"
-                    radius: units.gu(0.4)
                     visible: isToday
+                    aspect: UbuntuShape.Flat
+                    radius: "small"
+                    color: dayNumber.color
+
+                    UbuntuShape {
+                        radius: parent.radius
+                        aspect: parent.aspect
+                        backgroundColor: theme.palette.normal.background
+
+                        anchors.fill: parent
+                        anchors.margins: units.gu(0.1)
+                    }
                 }
 
                 Label {
@@ -240,10 +248,10 @@ ListView {
                     anchors.centerIn: parent
                     text: dayStart.day > 9 ? dayStart.day : "0" + dayStart.day
                     textSize: Label.Medium
-                    color: isCurrent ? theme.palette.normal.positionText : theme.palette.normal.backgroundText
+                    color: isSelected ? theme.palette.normal.positionText : theme.palette.normal.backgroundText
 
                     Binding on color {
-                        when: isCurrentMonth && isWeekend && !isCurrent
+                        when: isCurrentMonth && isWeekend && !isSelected
                         value: theme.palette.normal.backgroundTertiaryText
                     }
 

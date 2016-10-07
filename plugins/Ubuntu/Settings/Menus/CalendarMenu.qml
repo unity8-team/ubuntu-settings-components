@@ -64,6 +64,7 @@ BaseMenu {
                 name: "go-previous"
                 width: menuStyle.iconSize
                 height: menuStyle.iconSize
+                color: menuStyle.iconColor
                 SlotsLayout.position: SlotsLayout.Leading
 
                 AbstractButton {
@@ -77,6 +78,7 @@ BaseMenu {
                 name: "go-next"
                 width: menuStyle.iconSize
                 height: menuStyle.iconSize
+                color: menuStyle.iconColor
                 SlotsLayout.position: SlotsLayout.Trailing
 
                 AbstractButton {

@@ -56,9 +56,15 @@ Item {
 
         property var calendar: findChild(calendarMenu, "calendar")
 
-        function test_collapsed() {
-            calendarMenu.collapsed = true
-            compare(calendar.collapsed, true, "Cannot set collapsed")
+        function test_interactive_data() {
+            return [ {tag: "pointer", pointer: true, expected: false },
+                     {tag: "touch", pointer: false, expected: true }
+            ]
+        }
+
+        function test_interactive(data) {
+            calendarMenu.pointerMode = data.pointer
+            compare(calendar.interactive, data.expected, "Cannot use interactive")
         }
 
         function test_currentDate() {

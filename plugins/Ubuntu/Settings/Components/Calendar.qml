@@ -57,6 +57,7 @@ ListView {
         property bool ready: false
         property bool userSelected: false
         property var today: new Cal.Day().fromDate((new Date()))
+        property real weekDaysHeight: 0
         readonly property real squareUnit: units.gu(3)
         readonly property int days: 7
         readonly property int weeks: 6
@@ -158,7 +159,7 @@ ListView {
     }
 
     implicitWidth: priv.squareUnit * priv.days
-    implicitHeight: priv.squareUnit * (priv.weeks + 1)
+    implicitHeight: priv.squareUnit * priv.weeks + priv.weekDaysHeight
     interactive: true
     clip: true
     cacheBuffer: Math.max((width+1) * 3, 0) // one page left, one page right
@@ -187,7 +188,7 @@ ListView {
         columnSpacing: (calendar.width - (priv.squareUnit * columns)) / (columns - 1)
 
         rows: priv.weeks + 1 /* the weekDays header */
-        rowSpacing: (calendar.height - (priv.squareUnit * rows)) / (rows - 1)
+        rowSpacing: (calendar.height - (priv.squareUnit * priv.weeks) - priv.weekDaysHeight) / (rows - 1)
 
         verticalItemAlignment: Grid.AlignVCenter
         horizontalItemAlignment: Grid.AlignHCenter
@@ -203,6 +204,7 @@ ListView {
                 // FIXME: There's no good palette that covers both
                 //        Ambiance (Ash) and Suru (Silk)
                 color: theme.palette.highlighted.base
+                onHeightChanged: priv.weekDaysHeight = Math.max(height, priv.weekDaysHeight)
             }
         }
 

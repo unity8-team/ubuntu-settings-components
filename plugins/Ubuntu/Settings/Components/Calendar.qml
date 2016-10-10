@@ -26,11 +26,11 @@ import "Calendar.js" as Cal
 ListView {
     id: calendar
 
-    property var currentDate: new Date(priv.selectedDay.year, priv.selectedDay.month, 1)
+    property var currentDate: new Date(priv.today.year, priv.today.month, priv.today.day)
     property int firstDayOfWeek: Qt.locale(i18n.language).firstDayOfWeek
     property var maximumDate
     property var minimumDate
-    property var selectedDate: new Date(priv.today.year, priv.today.month, priv.today.day)
+    property var selectedDate: currentDate
 
     function reset() {
         if (!priv.ready) return;
@@ -45,6 +45,11 @@ ListView {
         if (!priv.ready) return;
 
         currentDate = new Date(currentItem.month.year, currentItem.month.month, 1);
+    }
+
+    onSelectedDateChanged: {
+        if (currentDate != selectedDate)
+            currentDate = selectedDate
     }
 
     ListModel {
@@ -71,10 +76,6 @@ ListView {
         property var maximumDay: maximumDate ? new Cal.Day().fromDate(maximumDate) : undefined
 
         onCurrentMonthChanged: {
-            if (!ready) return
-            __populateModel();
-        }
-        onSelectedDayChanged: {
             if (!ready) return
             __populateModel();
         }
@@ -178,11 +179,10 @@ ListView {
     delegate: Grid {
         id: monthGrid
 
-        property int currentWeekRow: Math.floor((priv.selectedDay - gridStart) / priv.days)
-        property var gridStart: monthStart.weekStart(firstDayOfWeek)
-        property var monthEnd: monthStart.addMonths(1)
-        property var monthStart: new Cal.Day(model.month.year, model.month.month, 1)
         property var month: new Cal.Month(model.month)
+        property var monthStart: new Cal.Day(model.month.year, model.month.month, 1)
+        property var monthEnd: monthStart.addMonths(1)
+        property var gridStart: monthStart.weekStart(firstDayOfWeek)
 
         columns: priv.days
         columnSpacing: (calendar.width - calendar.implicitWidth) / (columns - 1)

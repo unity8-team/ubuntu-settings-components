@@ -151,9 +151,20 @@ Item {
 
             SeparatorMenu {}
 
-            CalendarMenu {
-                id: calendar
+            RadioMenu {
+                id: applesRadio
+                text: i18n.tr("Apples")
+                checked: true
+                onTriggered: orangesRadio.checked = !checked
             }
+
+            RadioMenu {
+                id: orangesRadio
+                text: i18n.tr("Oranges")
+                onTriggered: applesRadio.checked = !checked
+            }
+
+            CalendarMenu {}
 
             UserSessionMenu {
                 name: i18n.tr("Lola Chang")

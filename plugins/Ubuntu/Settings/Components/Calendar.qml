@@ -270,8 +270,12 @@ ListView {
 
                     onClicked: {
                         if (isWithinBounds) {
-                            calendar.selectedDate = new Date(dayStart.year, dayStart.month, dayStart.day)
-                            priv.userSelected = true
+                            if (!isSelected) {
+                                calendar.selectedDate = new Date(dayStart.year, dayStart.month, dayStart.day)
+                                priv.userSelected = true
+                            } else if (priv.userSelected) {
+                                priv.userSelected = false
+                            }
                         }
                     }
                 }

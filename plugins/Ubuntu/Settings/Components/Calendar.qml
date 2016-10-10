@@ -146,7 +146,7 @@ ListView {
     }
 
     LiveTimer {
-        frequency: calendar.visible ? LiveTimer.Hour : LiveTimer.Disabled
+        frequency: calendar.visible ? LiveTimer.Minute : LiveTimer.Disabled
         onFrequencyChanged: trigger()
         onTrigger: {
             Date.timeZoneUpdated(); // FIXME remove when fixed in UITK

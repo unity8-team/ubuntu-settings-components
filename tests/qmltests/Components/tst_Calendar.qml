@@ -117,5 +117,18 @@ Rectangle {
             calendar.maximumDate = data.maxDate;
             compare(calendar.count, data.count, "The number of months should have changed");
         }
+
+        function test_selectedDateUpdatesCurrent_data() {
+            return [
+                { date: new Date(2010, 4, 10) },
+                { date: new Date() },
+                { date: new Date(2020, 10, 31)},
+            ];
+        }
+
+        function test_selectedDateUpdatesCurrent(data) {
+            calendar.selectedDate = data.date
+            compare(calendar.currentDate, data.date)
+        }
     }
 }

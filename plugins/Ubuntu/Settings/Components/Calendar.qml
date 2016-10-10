@@ -26,7 +26,7 @@ import "Calendar.js" as Cal
 ListView {
     id: calendar
 
-    property var currentDate: new Date(priv.today.year, priv.today.month, priv.today.day)
+    property var currentDate: new Date(priv.today.year, priv.today.month, 1)
     property int firstDayOfWeek: Qt.locale(i18n.language).firstDayOfWeek
     property var maximumDate
     property var minimumDate

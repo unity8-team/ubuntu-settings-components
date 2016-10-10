@@ -117,17 +117,15 @@ Item {
             verify(button)
             verify(monthLayout)
 
-            var previousDate = calendar.selectedDate
-            var oldMonth = calendar.currentDate.getMonth()
+            var expected = calendar.currentDate.addMonths(data.delta)
 
             for (var i = 0; i < Math.abs(data.delta); ++i)
                 mouseClick(button, button.width / 2, button.height / 2)
 
-            var expected = (oldMonth+data.delta % 12) % 12
-            compare(calendar.currentDate.getMonth(), expected < 0 ? (12 + expected) % 12 : expected)
+            compare(calendar.currentDate, expected)
             compare(monthLayout.title.text, i18n.ctr("%1=month name, %2=4-digit year", "%1 %2")
-                                                .arg(Qt.locale().standaloneMonthName(calendar.currentDate.getMonth(), Locale.LongFormat))
-                                                .arg(calendar.currentDate.getFullYear()))
+                                                .arg(Qt.locale().standaloneMonthName(expected.getMonth(), Locale.LongFormat))
+                                                .arg(expected.getFullYear()))
         }
     }
 }

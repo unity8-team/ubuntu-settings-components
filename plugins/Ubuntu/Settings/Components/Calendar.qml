@@ -198,7 +198,7 @@ ListView {
             model: priv.days
 
             delegate: Label {
-                text: Qt.locale(i18n.language).dayName((modelData + firstDayOfWeek) % priv.days, Locale.ShortFormat).toUpperCase()
+                text: Qt.locale(i18n.language).standaloneDayName((modelData + firstDayOfWeek) % priv.days, Locale.ShortFormat).toUpperCase()
                 textSize: Label.XSmall
                 // FIXME: There's no good palette that covers both
                 //        Ambiance (Ash) and Suru (Silk)

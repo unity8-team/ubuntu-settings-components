@@ -22,16 +22,23 @@ import Ubuntu.Components 1.3
 
 StandardMenu {
     id: menu
-    property alias buttonText: button.text
+    property alias buttonText: buttonLabel.text
     signal buttonClicked()
 
     slots: [
         Button {
-            id: button
             objectName: "button"
             color: menuStyle.buttonColor
+            width: Math.max(units.gu(menu.pointerMode ? 5 : 8), buttonLabel.paintedWidth + units.gu(4))
             height: menuStyle.buttonHeight
-            font.pixelSize: menuStyle.buttonFontSize
+
+            Label {
+                id: buttonLabel
+                font.pixelSize: menuStyle.buttonFontSize
+                color: theme.palette.normal.foregroundText
+                anchors.centerIn: parent
+                scale: parent.pressed ? 0.98 : 1
+            }
 
             onClicked: {
                 menu.buttonClicked()

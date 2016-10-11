@@ -55,6 +55,7 @@ BaseMenu {
 
             title.horizontalAlignment: Text.AlignHCenter
             title.font.pixelSize: menuStyle.fontSize
+            title.color: menuStyle.foregroundColor
             title.text: i18n.ctr("%1=month name, %2=4-digit year", "%1 %2")
                             .arg(Qt.locale().standaloneMonthName(calendar.currentDate.getMonth(), Locale.LongFormat))
                             .arg(calendar.currentDate.getFullYear())

@@ -106,6 +106,7 @@ BaseMenu {
         Label {
             id: label
             visible: text != ""
+            color: menu.foregroundColor
             font.pixelSize: menuStyle.fontSize
             x: Qt.application.layoutDirection == Qt.LeftToRight ?
                     leftButton.x : rightButton.x + rightButton.width - width

@@ -46,6 +46,7 @@ BaseMenu {
                 elide: Text.ElideRight
                 visible: text !== ""
                 opacity: menu.locked ? 0.6 : 1.0
+                color: menu.foregroundColor
                 font.bold: true
                 font.pixelSize: menuStyle.fontSize
             }
@@ -59,6 +60,7 @@ BaseMenu {
                     id: labelStatus
                     elide: Text.ElideRight
                     opacity: 0.6
+                    color: menu.foregroundColor
                     font.pixelSize: menuStyle.fontSize
                 }
 
@@ -96,6 +98,7 @@ BaseMenu {
                         elide: Text.ElideRight
                         text: i18n.dtr("ubuntu-settings-components", "Roaming")
                         font.pixelSize: menuStyle.subtitleFontSize
+                        color: menu.foregroundColor
                         opacity: 0.6
                     }
 

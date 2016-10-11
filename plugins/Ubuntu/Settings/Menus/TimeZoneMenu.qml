@@ -28,6 +28,7 @@ StandardMenu {
     slots: Label {
         id: timeLabel
         objectName: "timeLabel"
+        color: timeZoneMenu.foregroundColor
         font.pixelSize: menuStyle.fontSize
     }
 }

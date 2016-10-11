@@ -23,7 +23,7 @@ import Ubuntu.Components 1.3
 BaseLayoutMenu {
     id: menu
 
-    property alias checked: radio.visible
+    property alias checked: bullet.visible
 
     function onClickedCallback() {
         checked = true
@@ -59,8 +59,8 @@ BaseLayoutMenu {
         }
 
         Rectangle {
-            id: radio
-            objectName: "radio"
+            id: bullet
+            objectName: "bullet"
             anchors.centerIn: parent
             visible: false
             width: visible ? units.gu(0.8) : 0

@@ -31,9 +31,32 @@ BaseLayoutMenu {
     }
 
     slots: Item {
+        id: container
         width: menuStyle.iconSize
         height: width
+        anchors.verticalCenter: parent.verticalCenter
+        SlotsLayout.overrideVerticalPositioning: true
         SlotsLayout.position: SlotsLayout.Leading
+
+        states: State {
+           name: "pointer";
+           when: menu.pointerMode
+
+           PropertyChanges {
+                target: menu.layout
+                padding.leading: 0
+           }
+           PropertyChanges {
+                target: container
+                width: menuStyle.padding.leading + units.gu(1)
+                SlotsLayout.padding.leading: 0
+                SlotsLayout.padding.trailing: 0
+           }
+           PropertyChanges {
+                target: menu.layout.mainSlot
+                SlotsLayout.padding.leading: 0
+           }
+        }
 
         Rectangle {
             id: radio

@@ -18,15 +18,16 @@
 
 pragma Singleton
 import QtQuick 2.4
+import Ubuntu.Components 1.3
 
 BaseStyle {
     id: style
 
     padding {
-        top: units.gu(1)
-        bottom: units.gu(0.9)
-        leading: units.gu(3)
-        trailing: units.gu(2)
+        top: units.gu(1) - SlotsLayout.padding.top
+        bottom: units.gu(0.9) - SlotsLayout.padding.bottom
+        leading: units.gu(3) - SlotsLayout.padding.leading
+        trailing: units.gu(2) - SlotsLayout.padding.trailing
     }
 
     minimumHeight: units.gu(3.9)

@@ -63,10 +63,13 @@ BaseLayoutMenu {
             objectName: "radio"
             anchors.centerIn: parent
             visible: false
-            width: units.gu(0.8)
+            width: visible ? units.gu(0.8) : 0
             height: width
             radius: width/2
             color: menu.foregroundColor
+            opacity: visible ? 1.0 : 0.0
+            Behavior on opacity { UbuntuNumberAnimation {} }
+            Behavior on width { UbuntuNumberAnimation {} }
         }
     }
 }

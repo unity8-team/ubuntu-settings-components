@@ -66,7 +66,7 @@ BaseLayoutMenu {
             width: units.gu(0.8)
             height: width
             radius: width/2
-            color: menuStyle.foregroundColor
+            color: menu.foregroundColor
         }
     }
 }

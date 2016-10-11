@@ -69,6 +69,7 @@ BaseMenu {
                 anchors { left: parent.left; right: parent.right }
                 elide: Text.ElideRight
                 maximumLineCount: 1
+                color: menu.foregroundColor
                 font.weight: Font.DemiBold
                 font.pixelSize: menuStyle.fontSize
             }
@@ -88,6 +89,7 @@ BaseMenu {
                 objectName: "stateText"
                 anchors { left: parent.left; right: parent.right }
                 font.pixelSize: menuStyle.subtitleFontSize
+                color: menu.foregroundColor
                 visible: menu.active
                 elide: Text.ElideRight
                 maximumLineCount: 1

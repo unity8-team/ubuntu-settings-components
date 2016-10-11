@@ -61,7 +61,9 @@ BaseLayoutMenu {
 
         title.text: menu.song
         title.font.pixelSize: menuStyle.fontSize
+        title.color: menu.foregroundColor
         subtitle.text: menu.artist
+        subtitle.color: menu.foregroundColor
         subtitle.font.pixelSize: menuStyle.fontSize
         summary.text: menu.album
         summary.font.pixelSize: menuStyle.subtitleFontSize

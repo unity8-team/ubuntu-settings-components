@@ -22,9 +22,9 @@ QtObject {
     readonly property MenuPaddings padding: MenuPaddings {}
     readonly property real subtitleFontSize: units.gu(1.4)
     readonly property real avatarSize: units.gu(4)
-    readonly property color foregroundColor: theme.palette.normal.baseText
+    readonly property color foregroundColor: theme.palette.normal.backgroundText
     readonly property color highlightColor: theme.palette.highlighted.background
-    readonly property color iconColor: theme.palette.normal.backgroundText
+    readonly property color iconColor: foregroundColor
     readonly property color buttonColor: theme.palette.normal.foreground
 
     property real minimumHeight

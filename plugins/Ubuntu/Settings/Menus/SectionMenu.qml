@@ -24,9 +24,7 @@ import Ubuntu.Components 1.3
 StandardMenu {
     id: menuItem
     property alias busy: indicator.running
-
     divider.visible: true
-    foregroundColor: theme.palette.normal.backgroundText
 
     slots: ActivityIndicator {
         id: indicator

@@ -269,6 +269,7 @@ ListView {
                 }
 
                 UbuntuShape {
+                    objectName: "eventMarker"+index
                     aspect: UbuntuShape.Flat
                     radius: "small"
                     color: theme.palette.selected.baseText

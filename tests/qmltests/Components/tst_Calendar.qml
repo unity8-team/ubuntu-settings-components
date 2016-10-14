@@ -130,5 +130,32 @@ Rectangle {
             calendar.selectedDate = data.date
             compare(calendar.currentDate, data.date)
         }
+
+        function test_eventsMarker_data()
+        {
+            var values = []
+            for (var i = 0; i < 20; ++i) {
+                values.push({tag: "eventDay "+i+": "+(i % 2 != 0), idx: i, dayEvent: (i % 2 != 0)})
+            }
+
+            return values
+        }
+
+        function test_eventsMarker(data) {
+            var eventMarker = findChild(calendar, "eventMarker"+data.idx)
+            verify(eventMarker)
+
+            var expected = data.dayEvent
+
+            if (data.dayEvent) {
+                var dayItem = findChild(calendar, "dayItem"+data.idx)
+                verify(dayItem)
+
+                calendar.eventDays = [dayItem.dayStart.day]
+                expected = dayItem.isCurrentMonth
+            }
+
+            compare(eventMarker.visible, expected)
+        }
     }
 }

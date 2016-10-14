@@ -31,6 +31,7 @@ ListView {
     property var maximumDate
     property var minimumDate
     property var selectedDate: currentDate
+    property var eventDays: new Array()
 
     function reset() {
         if (!priv.ready) return;
@@ -220,6 +221,7 @@ ListView {
                 property bool isCurrentMonth: (monthStart < dayStart || monthStart.equals(dayStart))  && dayStart < monthEnd
                 property bool isWeekend: weekday == 0 || weekday == 6
                 property bool isToday: dayStart.equals(priv.today)
+                property bool hasEvent: isCurrentMonth && eventDays.indexOf(dayStart.day) != -1
                 property bool isWithinBounds: (priv.minimumDay === undefined || dayStart >= priv.minimumDay) &&
                                               (priv.maximumDay === undefined || dayStart <= priv.maximumDay)
 
@@ -236,6 +238,7 @@ ListView {
                     UbuntuShape {
                         // XXX: since we can't just colorize the shape border
                         //      we need another one to fill the center with bg color
+                        id: currentDayShape
                         radius: parent.radius
                         aspect: parent.aspect
                         backgroundColor: theme.palette.normal.background
@@ -265,6 +268,18 @@ ListView {
                     }
                 }
 
+                UbuntuShape {
+                    aspect: UbuntuShape.Flat
+                    radius: "small"
+                    color: theme.palette.selected.baseText
+                    width: units.gu(0.5)
+                    height: width
+                    visible: hasEvent
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: currentDayShape.anchors.margins + units.gu(0.1)
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+
                 AbstractButton {
                     anchors.fill: parent
 
@@ -274,6 +289,7 @@ ListView {
                                 calendar.selectedDate = new Date(dayStart.year, dayStart.month, dayStart.day)
                                 priv.userSelected = true
                             } else if (priv.userSelected) {
+                                calendar.selectedDate = new Date(dayStart.year, dayStart.month)
                                 priv.userSelected = false
                             }
                         }

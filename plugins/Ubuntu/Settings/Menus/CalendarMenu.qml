@@ -30,6 +30,7 @@ BaseMenu {
     property alias maximumDate: calendar.maximumDate
     property alias minimumDate: calendar.minimumDate
     property alias selectedDate: calendar.selectedDate
+    property alias eventDays: calendar.eventDays
 
     menuHeight: layout.height
     highlightWhenPressed: false

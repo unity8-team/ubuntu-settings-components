@@ -273,11 +273,10 @@ ListView {
                     aspect: UbuntuShape.Flat
                     radius: "small"
                     color: theme.palette.selected.baseText
-                    width: units.gu(0.5)
+                    width: units.gu(0.4)
                     height: width
                     visible: hasEvent
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: currentDayShape.anchors.margins + units.gu(0.1)
+                    y: dayNumber.height + (parent.height - dayNumber.height - height) / 2
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
 

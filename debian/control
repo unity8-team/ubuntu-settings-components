@@ -5,6 +5,7 @@ Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Build-Depends: cmake,
                cmake-extras (>= 0.6),
                debhelper (>= 9),
+               libglib2.0-dev (>= 2.37.92),
                pkg-config,
                python3:any,
                qml-module-qt-labs-folderlistmodel,

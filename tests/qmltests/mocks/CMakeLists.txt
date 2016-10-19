@@ -30,3 +30,4 @@ endmacro()
 
 add_subdirectory(Biometryd)
 add_subdirectory(GSettings.1.0)
+add_subdirectory(Qt)

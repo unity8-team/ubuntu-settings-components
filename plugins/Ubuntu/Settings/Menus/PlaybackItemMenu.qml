@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,18 +14,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authored by Nick Dedekind <nick.dedekind@gmail.com>
+ *             Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
-import QtQuick.Layouts 1.1
 
-ListItem.Empty {
+BaseMenu {
     id: menu
 
     property bool playing: false
-
     property bool canPlay: false
     property bool canGoNext: false
     property bool canGoPrevious: false
@@ -35,72 +33,34 @@ ListItem.Empty {
     signal previous()
 
     highlightWhenPressed: false
-    implicitHeight: layout.implicitHeight + units.gu(2)
+    implicitHeight: layout.height + (divider.visible ? divider.height : 0)
 
-    RowLayout {
+    SlotsLayout {
         id: layout
-        anchors.centerIn: parent
-        spacing: units.gu(3)
+        objectName: "playbackMenuLayout"
 
-        Icon {
-            objectName: "previousButton"
+        Row {
+            anchors.centerIn: parent
+            spacing: units.gu(3)
 
-            Layout.preferredWidth: units.gu(5)
-            Layout.preferredHeight: units.gu(5)
-
-            source: "image://theme/media-skip-backward"
-            color: {
-                if (!enabled)
-                    return theme.palette.disabled.backgroundText;
-                return prevMA.pressed ? theme.palette.highlighted.backgroundText : theme.palette.normal.backgroundText;
-            }
-            enabled: canGoPrevious
-
-            MouseArea {
-                id: prevMA
-                anchors.fill: parent
+            PlaybackButton {
+                objectName: "previousButton"
+                iconName: "media-skip-backward"
+                enabled: canGoPrevious
                 onClicked: menu.previous()
             }
-        }
 
-        Icon {
-            objectName: "playButton"
-
-            Layout.preferredWidth: units.gu(5)
-            Layout.preferredHeight: units.gu(5)
-
-            source: playing ? "image://theme/media-playback-pause" : "image://theme/media-playback-start"
-            color: {
-                if (!enabled)
-                    return theme.palette.disabled.backgroundText;
-                return playMA.pressed ? theme.palette.highlighted.backgroundText : theme.palette.normal.backgroundText;
-            }
-            enabled: canPlay
-
-            MouseArea {
-                id: playMA
-                anchors.fill: parent
+            PlaybackButton {
+                objectName: "playButton"
+                iconName: playing ? "media-playback-pause" : "media-playback-start"
+                enabled: canPlay
                 onClicked: menu.play(!playing)
             }
-        }
 
-        Icon {
-            objectName: "nextButton"
-
-            Layout.preferredWidth: units.gu(5)
-            Layout.preferredHeight: units.gu(5)
-
-            source: "image://theme/media-skip-forward"
-            color: {
-                if (!enabled)
-                    return theme.palette.disabled.backgroundText;
-                return nextMA.pressed ? theme.palette.highlighted.backgroundText : theme.palette.normal.backgroundText;
-            }
-            enabled: canGoNext
-
-            MouseArea {
-                id: nextMA
-                anchors.fill: parent
+            PlaybackButton {
+                objectName: "nextButton"
+                iconName: "media-skip-forward"
+                enabled: canGoNext
                 onClicked: menu.next()
             }
         }

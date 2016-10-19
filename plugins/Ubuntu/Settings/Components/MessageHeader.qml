@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,109 +16,84 @@
  * Authors:
  *      Renato Araujo Oliveira Filho <renato@canonical.com>
  *      Olivier Tilloy <olivier.tilloy@canonical.com>
+ *      Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import QtQuick.Layouts 1.1
 
 Item {
     id: messageHeader
 
     property alias avatar: avatarImage.source
     property alias icon: iconImage.source
-    property alias title: titleText.text
     property alias time: timeText.text
-    property alias body: bodyText.text
+    property alias title: itemLayout.title
+    property alias body: itemLayout.summary
 
     signal iconClicked()
 
-    implicitHeight: layout.height
+    implicitHeight: itemLayout.height
+    anchors { right: parent.right; left: parent.left }
 
     function shakeIcon() {
         shake.restart();
     }
 
-    RowLayout {
-        id: layout
-        anchors {
-            left: parent.left
-            right: parent.right
-            rightMargin: units.gu(4)
-        }
-        spacing: units.gu(2)
+    ListItemLayout {
+        id: itemLayout
 
-        UbuntuShapeForItem {
-            Layout.preferredWidth: units.gu(6)
-            Layout.preferredHeight: units.gu(6)
+        UbuntuShape {
+            width: units.gu(6)
+            height: width
 
-            image: avatarImage
+            SlotsLayout.position: SlotsLayout.Leading
+
+            source: ShaderEffectSource {
+                sourceItem: avatarImage
+                hideSource: true
+            }
             Icon {
                 id: avatarImage
                 objectName: "avatar"
+                color: Qt.rgba(0.0, 0.0, 0.0, 0.0)
 
-                color: {
-                    if (String(source).match(/^image:\/\/theme/)) {
-                        return theme.palette.normal.backgroundText;
-                    }
-                    return Qt.rgba(0.0, 0.0, 0.0, 0.0);
+                Binding on color {
+                    when: String(avatarImage.source).match(/^image:\/\/theme/)
+                    value: theme.palette.normal.backgroundText
                 }
             }
         }
 
-        ColumnLayout {
-            Label {
-                id: titleText
-                objectName: "title"
+        title.objectName: "title"
+        title.font.weight: Font.DemiBold
+        title.anchors.rightMargin: timeText.width > iconImage.width ? timeText.width - iconImage.width : 0
 
-                maximumLineCount: 1
-                elide: Text.ElideRight
-                font.weight: Font.DemiBold
-                fontSize: "medium"
-
-                Layout.fillWidth: true
-                // calculate width with regard to the time's incursion into this layout's space.
-                Layout.maximumWidth: layout.width - timeLayout.width - units.gu(4)
-            }
-            spacing: units.gu(0.5)
-
-            Label {
-                id: bodyText
-                objectName: "body"
-
-                maximumLineCount: 3
-                wrapMode: Text.WordWrap
-                elide: Text.ElideRight
-                fontSize: "small"
-
-                Layout.fillWidth: true
-            }
-        }
-    }
-
-    ColumnLayout {
-        id: timeLayout
-        anchors.right: parent.right
-
-        Label {
-            id: timeText
-            objectName: "time"
-            anchors.right: parent.right
-
-            fontSize: "x-small"
-            maximumLineCount: 1
-        }
-        spacing: units.gu(0.5)
+        summary.objectName: "body"
+        summary.maximumLineCount: 3
+        summary.wrapMode: Text.WordWrap
+        summary.elide: Text.ElideRight
 
         Icon {
             id: iconImage
             objectName: "icon"
-            Layout.preferredHeight: units.gu(3)
-            Layout.preferredWidth: units.gu(3)
-            Layout.alignment: Qt.AlignRight
             color: theme.palette.normal.backgroundText
+            width: units.gu(3)
+            height: width
+            SlotsLayout.position: SlotsLayout.Trailing
+            SlotsLayout.overrideVerticalPositioning: true
 
-            MouseArea {
+            Binding on y {
+                when: timeText.text.length
+                value: timeText.y + timeText.height + units.gu(0.1)
+            }
+
+            Binding on anchors.verticalCenter {
+                when: !timeText.text.length
+                value: itemLayout.verticalCenter
+            }
+
+            AbstractButton {
                 anchors.fill: parent
                 onClicked: messageHeader.iconClicked()
             }
@@ -129,5 +104,19 @@ Item {
                 SpringAnimation { target: iconImage; property: "rotation"; from: -20; to: 0; mass: 0.5; spring: 15; damping: 0.1 }
             }
         }
+    }
+
+    Label {
+        id: timeText
+        objectName: "time"
+        anchors {
+            top: parent.top
+            right: parent.right
+            topMargin: itemLayout.padding.top
+            rightMargin: itemLayout.padding.trailing
+        }
+
+        fontSize: "x-small"
+        maximumLineCount: 1
     }
 }

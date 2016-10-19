@@ -26,35 +26,25 @@ Item {
     height: units.gu(75)
 
     Flickable {
-        id: flickable
-
         anchors.fill: parent
-        contentWidth: column.width
-        contentHeight: column.height
 
-        Item {
-            id: column
+        SwitchMenu {
+            id: switchMenu
+            text: i18n.tr("Switch")
+        }
 
-            width: flickable.width
-            height: childrenRect.height
-
-            SwitchMenu {
-                id: switchMenu
-                text: i18n.tr("Switch")
-            }
-            SwitchMenu {
-                id: switchMenu2
-                text: i18n.tr("Switch")
-                checked: true
-                anchors.top: switchMenu.bottom
-            }
+        SwitchMenu {
+            id: switchMenu2
+            text: i18n.tr("Switch")
+            checked: true
+            anchors.top: switchMenu.bottom
         }
     }
 
     SignalSpy {
         id: signalSpyTriggered
-        signalName: "triggered"
         target: switchMenu
+        signalName: "triggered"
     }
 
     UbuntuTestCase {
@@ -63,27 +53,55 @@ Item {
 
         function init() {
             switchMenu.checked = false;
-            signalSpyTriggered.clear();
         }
 
-        function test_checkChanged() {
+        function cleanup() {
+            signalSpyTriggered.clear()
+        }
+
+        function test_switchChanged() {
             var switcher = findChild(switchMenu, "switcher");
             verify(switcher !== undefined);
 
-            compare(switcher.checked, false, "Checkbox should initially be unchecked");
+            compare(switcher.checked, false, "switcher should initially be unchecked");
             switchMenu.checked = true;
-            compare(switcher.checked, true, "Checkbox should be checked");
+            compare(switcher.checked, true, "switcher should be checked");
         }
 
-        function test_clickSwitchBox() {
+        function test_clickSwitcher() {
             var switcher = findChild(switchMenu, "switcher");
+            verify(switcher !== undefined);
             mouseClick(switchMenu, switcher.width / 2, switcher.height / 2);
-            compare(signalSpyTriggered.count > 0, true, "signal checked not triggered on switcher click");
+            compare(signalSpyTriggered.count, 1, "signal checked not triggered on switcher click");
+            compare(signalSpyTriggered.signalArguments[0][0], true, "triggered signal argument non valid SwitchMenu click");
+            compare(switchMenu.checked, true)
+        }
+
+        function test_clickCheckedSwitcher() {
+            test_clickSwitcher()
+            cleanup()
+            var switcher = findChild(switchMenu, "switcher");
+            verify(switcher !== undefined);
+            mouseClick(switchMenu, switcher.width / 2, switcher.height / 2);
+            compare(signalSpyTriggered.count, 1, "signal checked not triggered on switcher click");
+            compare(signalSpyTriggered.signalArguments[0][0], false, "triggered signal argument non valid SwitchMenu click");
+            compare(switchMenu.checked, false)
         }
 
         function test_clickSwitchMenu() {
             mouseClick(switchMenu, switchMenu.width / 2, switchMenu.height / 2);
-            compare(signalSpyTriggered.count > 0, true, "signal checked not triggered on switchMenu click");
+            compare(signalSpyTriggered.count, 1, "signal checked not triggered on SwitchMenu click");
+            compare(signalSpyTriggered.signalArguments[0][0], true, "triggered signal argument non valid SwitchMenu click");
+            compare(switchMenu.checked, true)
+        }
+
+        function test_clickCheckedSwitchMenu() {
+            test_clickSwitchMenu()
+            cleanup()
+            mouseClick(switchMenu, switchMenu.width / 2, switchMenu.height / 2);
+            compare(signalSpyTriggered.count, 1, "signal checked not triggered on SwitchMenu click");
+            compare(signalSpyTriggered.signalArguments[0][0], false, "triggered signal argument non valid SwitchMenu click");
+            compare(switchMenu.checked, false)
         }
     }
 }

@@ -5,5 +5,4 @@ typeinfo Components.qmltypes
 ActionTextField 0.1 ActionTextField.qml
 Calendar 0.1 Calendar.qml
 MessageHeader 0.1 MessageHeader.qml
-QuickReply 0.1 QuickReply.qml
 UbuntuShapeForItem 0.1 UbuntuShapeForItem.qml

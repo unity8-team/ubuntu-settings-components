@@ -18,19 +18,15 @@
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 
 StandardMenu {
     id: timeZoneMenu
 
     property alias city: timeZoneMenu.text
-    property string time
+    property alias time: timeLabel.text
 
-    component: Component {
-        Label {
-            id: timeLabel
-            objectName: "timeLabel"
-            text: time
-        }
+    slots: Label {
+        id: timeLabel
+        objectName: "timeLabel"
     }
 }

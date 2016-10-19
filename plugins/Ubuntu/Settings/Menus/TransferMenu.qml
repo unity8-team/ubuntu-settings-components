@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Canonical Ltd.
+ * Copyright 2014-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -12,43 +12,40 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Author: Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 import Ubuntu.Settings.Components 0.1
 
-ListItem.Empty {
+BaseMenu {
     id: menu
 
     property alias iconSource: icon.source
     property alias text: label.text
     property alias stateText: stateLabel.text
     property alias progress: progressBar.value
+    property alias maximum: progressBar.maximumValue
     property bool active: false
 
-    property alias maximum: progressBar.maximumValue
+    implicitHeight: slotsLayout.height + (divider.visible ? divider.height : 0)
 
-    __height: row.height + units.gu(2)
+    SlotsLayout {
+        id: slotsLayout
+        objectName: "transferMenuSlotsLayout"
 
-    RowLayout {
-        id: row
-        anchors {
-            left: parent.left
-            right: parent.right
-            verticalCenter: parent.verticalCenter
-            leftMargin: menu.__contentsMargins
-            rightMargin: menu.__contentsMargins
-        }
-        spacing: units.gu(2)
+        UbuntuShape {
+            SlotsLayout.position: SlotsLayout.Leading
+            width: units.gu(6)
+            height: width
 
-        UbuntuShapeForItem {
-            Layout.preferredWidth: units.gu(6)
-            Layout.preferredHeight: units.gu(6)
-
-            image: icon
+            source: ShaderEffectSource {
+                sourceItem: icon
+                hideSource: true
+            }
             Icon {
                 id: icon
                 objectName: "icon"
@@ -62,14 +59,13 @@ ListItem.Empty {
             }
         }
 
-        ColumnLayout {
+        mainSlot: Column {
             spacing: units.gu(0.5)
 
             Label {
                 id: label
                 objectName: "text"
-                Layout.fillWidth: true
-
+                anchors { left: parent.left; right: parent.right }
                 elide: Text.ElideRight
                 maximumLineCount: 1
                 font.weight: Font.DemiBold
@@ -78,20 +74,18 @@ ListItem.Empty {
             ProgressBar {
                 id: progressBar
                 objectName: "progress"
+                anchors { left: parent.left; right: parent.right }
                 visible: menu.active
                 value: 0.0
                 showProgressPercentage: false
-
-                Layout.preferredHeight: units.gu(1)
-                Layout.fillWidth: true
+                height: units.gu(1)
             }
 
             Label {
                 id: stateLabel
                 objectName: "stateText"
-                Layout.fillWidth: true
+                anchors { left: parent.left; right: parent.right }
                 visible: menu.active
-
                 fontSize: "x-small"
                 elide: Text.ElideRight
                 maximumLineCount: 1

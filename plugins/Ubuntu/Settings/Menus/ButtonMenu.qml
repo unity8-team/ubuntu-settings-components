@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authored by Andrea Cimitan <andrea.cimitan@canonical.com>
+ *             Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
@@ -21,16 +22,15 @@ import Ubuntu.Components 1.3
 
 StandardMenu {
     id: menu
-    property string buttonText
+    property alias buttonText: button.text
 
-    component: Component {
+    slots: [
         Button {
             id: button
             objectName: "button"
-            text: menu.buttonText
             width: Math.max(units.gu(5), implicitWidth)
 
             onClicked: menu.clicked()
         }
-    }
+    ]
 }

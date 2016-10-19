@@ -1,9 +1,51 @@
+ubuntu-settings-components (0.9+16.10.20160927-0ubuntu1) yakkety; urgency=medium
+
+  [ Łukasz 'sil2100' Zemczak ]
+  * Do not depend on qtdeclarative5-ubuntu-ui-toolkit-plugin* as these
+    are transitional packages. Use qml-module-ubuntu-components*
+    instead. This should fix issues with i386 image builds.
+
+ -- Łukasz Zemczak <lukasz.zemczak@canonical.com>  Tue, 27 Sep 2016 07:27:21 +0000
+
+ubuntu-settings-components (0.9+16.10.20160909-0ubuntu1) yakkety; urgency=medium
+
+  [ Lukáš Tinkl ]
+  * Calculate the days to add for the next week correctly (LP: #1620496)
+
+ -- Michał Sawicz <michal.sawicz@canonical.com>  Fri, 09 Sep 2016 14:39:30 +0000
+
+ubuntu-settings-components (0.9+16.10.20160818.1-0ubuntu1) yakkety; urgency=medium
+
+  [ Michał Sawicz ]
+  * rename qtdeclarative5-ubuntu-settings-components to new naming scheme,
+    qml-module-ubuntu-settings-components
+
+  [ Nick Dedekind ]
+  * Fixes for calendar test failures.
+
+ -- Michał Sawicz <michal.sawicz@canonical.com>  Thu, 18 Aug 2016 10:54:07 +0000
+
 ubuntu-settings-components (0.9+16.10.20160627.2-0ubuntu1) UNRELEASED; urgency=medium
 
   [ Jonas G. Drange ] 
   * Create file picker component
 
  -- Jonas G. Drange <jonas.drange@canonical.com>  Fri, 15 Jul 2016 14:21:25 +0200
+
+ubuntu-settings-components (0.8+16.10.20160809-0ubuntu1) yakkety; urgency=medium
+
+  [ Albert Astals Cid ]
+  * Remove StatusIcon, we've moved to SDK Icon
+
+ -- Michał Sawicz <michal.sawicz@canonical.com>  Tue, 09 Aug 2016 23:00:43 +0000
+
+ubuntu-settings-components (0.8+16.10.20160713-0ubuntu1) yakkety; urgency=medium
+
+  [ jonas-drange ]
+  * swap swipe with tap when asking the user to enroll a fingerprint
+    (LP: #1602828)
+
+ -- Jonas G. Drange <jonas.drange@canonical.com>  Wed, 13 Jul 2016 19:55:21 +0000
 
 ubuntu-settings-components (0.8+16.10.20160627.2-0ubuntu1) yakkety; urgency=medium
 

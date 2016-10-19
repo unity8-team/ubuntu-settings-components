@@ -173,8 +173,9 @@ Item {
                        messageMenuRemovable.width,
                        messageMenuRemovable.height / 2,
                        true, true, units.gu(1), 10);
+            tryCompareFunction(function() { return findChild(messageMenuRemovable, "removeAction") !== undefined }, true);
             var removeAction = findChild(messageMenuRemovable, "removeAction");
-            verify(removeAction !== undefined);
+            verify(removeAction)
             tryCompare(removeAction, "visible", true)
             mouseClick(removeAction, removeAction.width/2, removeAction.height/2)
             tryCompareFunction(function() { return signalSpyDismiss.count > 0; }, true);

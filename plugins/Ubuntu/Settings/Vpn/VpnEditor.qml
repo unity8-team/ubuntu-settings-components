@@ -67,13 +67,6 @@ Page {
         leadingActionBar.actions: []
     }
 
-    Component {
-        id: fileDialogComponent
-        DialogFile {
-            id: fileDialog
-        }
-    }
-
     Flickable {
         id: scrollWidget
         anchors {

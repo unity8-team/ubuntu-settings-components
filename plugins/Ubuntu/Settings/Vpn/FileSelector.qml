@@ -19,6 +19,7 @@ import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.3
 import Ubuntu.Components.Popups 1.3
 import Ubuntu.Components.ListItems 1.3 as ListItems
+import Ubuntu.Settings.Components 0.1
 
 ListItems.ItemSelector {
     property string path
@@ -47,7 +48,7 @@ ListItems.ItemSelector {
     }
 
     function createDialog() {
-        __dialog = PopupUtils.open(fileDialogComponent)
+        __dialog = PopupUtils.open(filePickerComponent)
         __dialog.accept.connect(pathAccepted)
         __dialog.reject.connect(pathRejected)
     }
@@ -90,5 +91,10 @@ ListItems.ItemSelector {
         } else {
             path = model[index];
         }
+    }
+
+    Component {
+        id: filePickerComponent
+        FilePicker {}
     }
 }

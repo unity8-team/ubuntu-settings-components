@@ -26,8 +26,8 @@ MainView {
     // Note! applicationName needs to match the .desktop filename
     applicationName: "SettingsComponents"
 
-    width: units.gu(42)
-    height: units.gu(75)
+    width: units.gu(50)
+    height: units.gu(100)
 
     Component.onCompleted: {
         theme.name = "Ubuntu.Components.Themes.SuruDark"
@@ -41,13 +41,19 @@ MainView {
     }
 
     Page {
-        title: listView.currentItem ? listView.currentItem.item.title : "Components"
+        id: page
+        header: PageHeader {
+            id: header
+            title: listView.currentItem ? listView.currentItem.item.title : "Components"
+        }
+
         clip: true
 
         ListView {
             id: listView
             model: pages
             anchors.fill: parent
+            anchors.topMargin: header.height
 
             orientation: ListView.Horizontal
             snapMode: ListView.SnapOneItem
@@ -61,6 +67,5 @@ MainView {
                 source: model.source
             }
         }
-
     }
 }

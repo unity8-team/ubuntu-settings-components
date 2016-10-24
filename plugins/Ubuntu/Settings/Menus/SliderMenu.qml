@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,22 +14,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authored by Andrea Cimitan <andrea.cimitan@canonical.com>
+ *             Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 
-ListItem.Empty {
+BaseMenu {
     id: menu
 
     property alias minimumValue: slider.minimumValue
     property alias maximumValue: slider.maximumValue
     property alias live: slider.live
+    property alias text: label.text
     property double value: 0.0
 
     property alias minIcon: leftButton.source
     property alias maxIcon: rightButton.source
+
+    // These fields are for retro-compatibility with ListItem.Empty
+    property string iconSource
 
     signal updated(real value)
 
@@ -93,64 +97,29 @@ ListItem.Empty {
         }
     }
 
-    implicitHeight: column.height + units.gu(1.5)
+    implicitHeight: slotsLayout.height + (divider.visible ? divider.height : 0)
+    highlightWhenPressed: false
 
     Column {
         id: column
-        anchors {
-            verticalCenter: parent.verticalCenter
-            left: parent.left
-            right: parent.right
-            leftMargin: menu.__contentsMargins
-            rightMargin: menu.__contentsMargins
-        }
-        height: childrenRect.height
-        spacing: units.gu(0.5)
+        anchors.fill: parent
+        anchors.topMargin: units.gu(0.5)
+        spacing: -units.gu(1.5)
 
         Label {
             id: label
-            text: menu.text
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
             visible: text != ""
+            x: Qt.application.layoutDirection == Qt.LeftToRight ?
+                    leftButton.x : rightButton.x + rightButton.width - width
         }
 
-        Item {
-            id: row
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-            height: slider.height
+        SlotsLayout {
+            id: slotsLayout
+            objectName: "sliderMenuSlotsLayout"
 
-            Icon {
-                id: leftButton
-                objectName: "leftButton"
-                visible: source != ""
-                anchors.left: row.left
-                anchors.verticalCenter: row.verticalCenter
-                height: slider.height - units.gu(2)
-                width: height
-                color: theme.palette.normal.backgroundText
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: slider.value = slider.minimumValue
-                }
-
-            }
-
-            Slider {
+            mainSlot: Slider {
                 id: slider
                 objectName: "slider"
-                anchors {
-                    left: leftButton.visible ? leftButton.right : row.left
-                    right: rightButton.visible ? rightButton.left : row.right
-                    leftMargin: leftButton.visible ? units.gu(0.5) : 0
-                    rightMargin: rightButton.visible ? units.gu(0.5) : 0
-                }
                 live: true
 
                 Component.onCompleted: {
@@ -182,19 +151,39 @@ ListItem.Empty {
             }
 
             Icon {
-                id: rightButton
-                objectName: "rightButton"
-                visible: source != ""
-                anchors.right: row.right
-                anchors.verticalCenter: row.verticalCenter
+                id: leftButton
+                objectName: "leftButton"
+                visible: source !== ""
                 height: slider.height - units.gu(2)
                 width: height
                 color: theme.palette.normal.backgroundText
 
-                MouseArea {
+                AbstractButton {
+                    anchors.fill: parent
+                    onClicked: slider.value = slider.minimumValue
+                }
+
+                SlotsLayout.position: SlotsLayout.Leading
+                SlotsLayout.overrideVerticalPositioning: true
+                anchors.verticalCenter: slider.verticalCenter
+            }
+
+            Icon {
+                id: rightButton
+                objectName: "rightButton"
+                visible: source !== ""
+                height: slider.height - units.gu(2)
+                width: height
+                color: theme.palette.normal.backgroundText
+
+                AbstractButton {
                     anchors.fill: parent
                     onClicked: slider.value =  slider.maximumValue
                 }
+
+                SlotsLayout.position: SlotsLayout.Trailing
+                SlotsLayout.overrideVerticalPositioning: true
+                anchors.verticalCenter: slider.verticalCenter
             }
         }
     }

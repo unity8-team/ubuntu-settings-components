@@ -215,12 +215,17 @@ Item {
         }
 
         function test_dismiss() {
+            verify(findChild(messageMenuRemovable, "removeAction") === undefined);
             mouseFlick(messageMenuRemovable,
                        messageMenuRemovable.width / 2,
                        messageMenuRemovable.height / 2,
                        messageMenuRemovable.width,
                        messageMenuRemovable.height / 2,
                        true, true, units.gu(1), 10);
+            var removeAction = findChild(messageMenuRemovable, "removeAction");
+            verify(removeAction !== undefined);
+            tryCompare(removeAction, "visible", true)
+            mouseClick(removeAction, removeAction.width/2, removeAction.height/2)
             tryCompareFunction(function() { return signalSpyDismiss.count > 0; }, true);
         }
 
@@ -299,12 +304,14 @@ Item {
 
             var messageButton = findChild(messageMenuSelected, "messageButton");
             verify(messageButton !== undefined, "Message button not found");
+            waitForRendering(messageButton)
             mouseClick(messageButton, messageButton.width / 2, messageButton.height / 2);
 
             var sendButton = findChild(messageMenuSelected, "sendButton");
             verify(sendButton !== undefined, "Send button not found");
+            waitForRendering(sendButton)
 
-            mouseClick(sendButton, sendButton.width / 2, sendButton.height / 2);
+            mouseClick(sendButton, messageButton.width / 2, messageButton.height / 2);
             compare(signalSpyReply.count > 0, true);
             compare(textMessageReply, "reply1", "Text message did not reply with correct text.");
         }
@@ -326,6 +333,7 @@ Item {
 
             var messageButton = findChild(messageMenuSelected, "messageButton");
             verify(messageButton !== undefined, "Message button not found");
+            waitForRendering(messageButton)
             mouseClick(messageButton, messageButton.width / 2, messageButton.height / 2);
 
             mouseClick(replyText, replyText.width / 2, replyText.height / 2);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,41 +14,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authored by Andrea Cimitan <andrea.cimitan@canonical.com>
+ *             Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 
 StandardMenu {
     id: userSessionMenu
 
     property alias name: userSessionMenu.text
-    property bool active: false
+    property alias active: activeIcon.visible
 
-    component: Component {
+    slots: [
         Rectangle {
             id: activeIcon
             objectName: "activeIcon"
-            implicitWidth: checkMark.width + units.gu(1.5)
-            implicitHeight: checkMark.height + units.gu(1.5)
+            implicitWidth: checkMark.width + units.gu(1)
+            implicitHeight: checkMark.height + units.gu(1)
             radius: width / 2
             antialiasing: true
             color: theme.palette.normal.backgroundText
-            visible: userSessionMenu.active
+            visible: false
 
-            Image {
+            Icon {
                 id: checkMark
-                source: "image://theme/tick"
+                name: "tick"
                 height: units.gu(2)
                 width: height
                 anchors.centerIn: parent
-
-                sourceSize {
-                    height: height
-                    width: width
-                }
             }
         }
-    }
+    ]
 }

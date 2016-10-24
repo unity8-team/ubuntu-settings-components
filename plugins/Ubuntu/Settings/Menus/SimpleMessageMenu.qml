@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,20 +16,19 @@
  * Authors:
  *      Renato Araujo Oliveira Filho <renato@canonical.com>
  *      Olivier Tilloy <olivier.tilloy@canonical.com>
+ *      Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 import Ubuntu.Settings.Components 0.1 as USC
-import QtQuick.Layouts 1.1
 
-ListItem.Empty {
+BaseMenu {
     id: menu
 
-    property alias title: messageHeader.title
+    property string title
+    property string body
     property alias time: messageHeader.time
-    property alias body: messageHeader.body
 
     property url avatar
     property url icon
@@ -37,47 +36,43 @@ ListItem.Empty {
     signal iconActivated
     signal dismissed
 
-    property alias footer: footerLoader.sourceComponent
+    property alias footer: footerContainer.children
     property real _animationDuration: UbuntuAnimation.FastDuration
 
-    __height: layout.implicitHeight + units.gu(3)
-    clip: heightAnimation.running
+    height: layout.height + (divider.visible ? divider.height : 0)
+    clip: leadingActions || trailingActions || heightAnimation.running
 
-    ColumnLayout {
+    Column {
         id: layout
-
-        anchors {
-            left: parent.left
-            right: parent.right
-            leftMargin: units.gu(2)
-            rightMargin: units.gu(2)
-            top: parent.top
-            topMargin: units.gu(1.5)
-        }
-        spacing: units.gu(1.5)
+        anchors { right: parent.right; left: parent.left }
 
         USC.MessageHeader {
             id: messageHeader
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignTop
 
             avatar: menu.avatar != "" ? menu.avatar : "image://theme/contact"
             icon: menu.icon != "" ? menu.icon : "image://theme/message"
-
             state: menu.state
+            title.text: menu.title
+            body.text: menu.body
 
             onIconClicked:  {
                 menu.iconActivated();
             }
         }
 
-        Loader {
-            id: footerLoader
+        Item {
+            id: footerContainer
+            anchors { right: parent.right; left: parent.left }
+            width: childrenRect.width
+            height: childrenRect.height
             visible: menu.state === "expanded"
-            opacity: 0.0
-            asynchronous: false
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            opacity: 0
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration:  _animationDuration
+                }
+            }
         }
     }
 
@@ -89,21 +84,20 @@ ListItem.Empty {
         }
     }
 
-    onTriggered: if (!footer || !selected) messageHeader.shakeIcon();
+    onTriggered: if (!selected) messageHeader.shakeIcon();
 
     states: State {
         name: "expanded"
-        when: selected && footerLoader.status == Loader.Ready
+        when: selected
 
         PropertyChanges {
-            target: footerLoader
+            target: footerContainer
             opacity: 1.0
         }
-    }
 
-    transitions: Transition {
-        ParallelAnimation {
-            PropertyAnimation { target: footerLoader; property: "opacity"; duration:  _animationDuration }
+        PropertyChanges {
+            target: menu
+            color: highlightColor
         }
     }
 

@@ -78,4 +78,5 @@ ListItem {
     }
 
     leadingActions: removable ? removeAction : null
+    clip: leadingActions || trailingActions
 }

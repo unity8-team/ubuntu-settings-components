@@ -40,7 +40,7 @@ BaseMenu {
     property real _animationDuration: UbuntuAnimation.FastDuration
 
     height: layout.height + (divider.visible ? divider.height : 0)
-    clip: heightAnimation.running
+    clip: leadingActions || trailingActions || heightAnimation.running
 
     Column {
         id: layout

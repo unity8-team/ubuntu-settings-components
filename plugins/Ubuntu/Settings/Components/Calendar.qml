@@ -194,7 +194,8 @@ ListView {
         readonly property var gridStart: monthStart.weekStart(firstDayOfWeek)
 
         Column {
-            id: weekColumn
+            id: weekNumbersColumn
+            objectName: "weekNumbersColumn" + index
             visible: calendar.showWeekNumbers
             spacing: monthGrid.rowSpacing
 
@@ -213,7 +214,7 @@ ListView {
                         id: weekNumbers
                         model: priv.weeks
                         delegate: Item {
-                            readonly property var rowDate: monthStart.addDays(modelData * priv.days).toDate()
+                            readonly property var rowDate: monthStart.addDays(index * priv.days).toDate()
                             width: priv.squareUnit
                             height: priv.squareUnit
 
@@ -231,7 +232,7 @@ ListView {
                 Column {
                     Item {
                         width: units.gu(2)
-                        height: weekColumn.height
+                        height: weekNumbersColumn.height
 
                         Rectangle {
                             color: theme.palette.disabled.base
@@ -250,7 +251,7 @@ ListView {
             id: monthGrid
 
             columns: priv.days
-            columnSpacing: (calendar.width - calendar.implicitWidth - (weekColumn.visible ? weekColumn.width : 0)) / (columns - 1)
+            columnSpacing: (calendar.width - calendar.implicitWidth - (weekNumbersColumn.visible ? weekNumbersColumn.width : 0)) / (columns - 1)
 
             rows: priv.weeks + 1 /* the weekDays header */
             rowSpacing: (calendar.height - calendar.implicitHeight) / (rows - 1)
@@ -263,8 +264,8 @@ ListView {
                 model: priv.days
 
                 delegate: Label {
-                    objectName: "weekDay" + modelData
-                    text: Qt.locale(i18n.language).standaloneDayName((modelData + firstDayOfWeek) % priv.days, Locale.ShortFormat).toUpperCase()
+                    objectName: "weekDay" + index
+                    text: Qt.locale(i18n.language).standaloneDayName((index + firstDayOfWeek) % priv.days, Locale.ShortFormat).toUpperCase()
                     textSize: Label.XSmall
                     // FIXME: There's no good palette that covers both
                     //        Ambiance (Ash) and Suru (Silk)

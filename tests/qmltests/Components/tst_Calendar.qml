@@ -158,8 +158,16 @@ Rectangle {
             compare(eventMarker.visible, expected)
         }
 
-        function test_showWeeksNumber() {
-            
+        function test_showWeeksNumber_data() {
+            return [{tag: "visible", visible: true}, {tag: "not visible", visible: false}]
+        }
+
+        function test_showWeeksNumber(data) {
+            var weekNumbersColumn = findChild(calendar, "weekNumbersColumn"+calendar.currentIndex)
+            verify(weekNumbersColumn)
+
+            calendar.showWeekNumbers = data.visible
+            compare(weekNumbersColumn.visible, data.visible)
         }
     }
 }

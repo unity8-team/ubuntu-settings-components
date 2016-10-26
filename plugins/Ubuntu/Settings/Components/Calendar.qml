@@ -202,6 +202,7 @@ ListView {
                 Column {
                     Label {
                         objectName: "weekDay" + modelData
+                        // TRANSLATORS: "header text, keep it short and upper case"
                         text: i18n.tr("WEEK")
                         textSize: Label.XSmall
                         // FIXME: There's no good palette that covers both
@@ -288,7 +289,7 @@ ListView {
                     property bool isToday: dayStart.equals(priv.today)
                     property bool hasEvent: isCurrentMonth && eventDays.indexOf(dayStart.day) != -1
                     property bool isWithinBounds: (priv.minimumDay === undefined || dayStart >= priv.minimumDay) &&
-                                                (priv.maximumDay === undefined || dayStart <= priv.maximumDay)
+                                                  (priv.maximumDay === undefined || dayStart <= priv.maximumDay)
 
                     width: priv.squareUnit
                     height: priv.squareUnit

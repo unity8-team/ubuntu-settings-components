@@ -188,10 +188,10 @@ ListView {
     Keys.onRightPressed: selectedDate.addDays(1)
 
     delegate: Row {
-        property var month: new Cal.Month(model.month)
-        property var monthStart: new Cal.Day(model.month.year, model.month.month, 1)
-        property var monthEnd: monthStart.addMonths(1)
-        property var gridStart: monthStart.weekStart(firstDayOfWeek)
+        readonly property var month: new Cal.Month(model.month)
+        readonly property var monthStart: new Cal.Day(model.month.year, model.month.month, 1)
+        readonly property var monthEnd: monthStart.addMonths(1)
+        readonly property var gridStart: monthStart.weekStart(firstDayOfWeek)
 
         Column {
             id: weekColumn
@@ -214,8 +214,8 @@ ListView {
                         id: weekNumbers
                         model: priv.weeks
                         delegate: Item {
-                            property var rowDate: monthStart.addDays(modelData * priv.days)
-                            property int weekNumber: QtDateFunctions.weekNumber(rowDate.toDate())
+                            readonly property var rowDate: monthStart.addDays(modelData * priv.days)
+                            readonly property int weekNumber: QtDateFunctions.weekNumber(rowDate.toDate())
                             width: priv.squareUnit
                             height: priv.squareUnit
 
@@ -281,15 +281,15 @@ ListView {
                     id: dayItem
                     objectName: "dayItem" + index
 
-                    property int weekday: (index % priv.days + firstDayOfWeek) % priv.days
-                    property var dayStart: gridStart.addDays(index)
-                    property bool isSelected: priv.userSelected && dayStart.equals(priv.selectedDay)
-                    property bool isCurrentMonth: (monthStart < dayStart || monthStart.equals(dayStart))  && dayStart < monthEnd
-                    property bool isWeekend: weekday == 0 || weekday == 6
-                    property bool isToday: dayStart.equals(priv.today)
-                    property bool hasEvent: isCurrentMonth && eventDays.indexOf(dayStart.day) != -1
-                    property bool isWithinBounds: (priv.minimumDay === undefined || dayStart >= priv.minimumDay) &&
-                                                  (priv.maximumDay === undefined || dayStart <= priv.maximumDay)
+                    readonly property int weekday: (index % priv.days + firstDayOfWeek) % priv.days
+                    readonly property var dayStart: gridStart.addDays(index)
+                    readonly property bool isSelected: priv.userSelected && dayStart.equals(priv.selectedDay)
+                    readonly property bool isCurrentMonth: (monthStart < dayStart || monthStart.equals(dayStart))  && dayStart < monthEnd
+                    readonly property bool isWeekend: weekday == 0 || weekday == 6
+                    readonly property bool isToday: dayStart.equals(priv.today)
+                    readonly property bool hasEvent: isCurrentMonth && eventDays.indexOf(dayStart.day) != -1
+                    readonly property bool isWithinBounds: (priv.minimumDay === undefined || dayStart >= priv.minimumDay) &&
+                                                           (priv.maximumDay === undefined || dayStart <= priv.maximumDay)
 
                     width: priv.squareUnit
                     height: priv.squareUnit

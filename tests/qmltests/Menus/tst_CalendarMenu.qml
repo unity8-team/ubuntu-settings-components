@@ -70,7 +70,8 @@ Item {
 
         function test_currentDate() {
             calendarMenu.currentDate = date2
-            compare(calendar.currentDate, date2, "Cannot set currendDate")
+            var expected = new Date(date2.getFullYear(), date2.getMonth(), 1)
+            compare(calendar.currentDate, expected, "Cannot set currendDate")
         }
 
         function test_firstDayOfWeek() {

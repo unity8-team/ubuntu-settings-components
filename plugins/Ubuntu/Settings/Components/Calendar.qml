@@ -20,6 +20,7 @@
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
+import Ubuntu.Settings.Components 0.1
 import "dateExt.js" as DateExt
 import "Calendar.js" as Cal
 
@@ -212,7 +213,8 @@ ListView {
                         id: weekNumbers
                         model: priv.weeks
                         delegate: Item {
-                            property int weekNumber: modelData + (monthStart.toDate() - new Date(monthStart.year, 0, 1))/1000/86400/7
+                            property var rowDate: monthStart.addDays(modelData * priv.days)
+                            property int weekNumber: QtDateFunctions.weekNumber(rowDate.toDate())
                             width: priv.squareUnit
                             height: priv.squareUnit
 

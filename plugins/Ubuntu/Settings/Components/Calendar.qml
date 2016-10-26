@@ -202,8 +202,7 @@ ListView {
                 Column {
                     Label {
                         objectName: "weekDay" + modelData
-                        // TRANSLATORS: "header text, keep it short and upper case"
-                        text: i18n.tr("WEEK")
+                        text: i18n.ctr("Header text: keep it short and upper case", "WEEK")
                         textSize: Label.XSmall
                         // FIXME: There's no good palette that covers both
                         //        Ambiance (Ash) and Suru (Silk)
@@ -214,14 +213,14 @@ ListView {
                         id: weekNumbers
                         model: priv.weeks
                         delegate: Item {
-                            readonly property var rowDate: monthStart.addDays(modelData * priv.days)
+                            readonly property var rowDate: monthStart.addDays(modelData * priv.days).toDate()
                             width: priv.squareUnit
                             height: priv.squareUnit
 
                             Label {
                                 id: weekNumberLabel
                                 anchors.centerIn: parent
-                                text: QtDateFunctions.formattedWeekNumber(rowDate.toDate())
+                                text: QtDateFunctions.formattedWeekNumber(rowDate)
                                 textSize: Label.Medium
                                 color: theme.palette.normal.backgroundTertiaryText
                             }

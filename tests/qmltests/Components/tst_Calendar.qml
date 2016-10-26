@@ -157,5 +157,9 @@ Rectangle {
 
             compare(eventMarker.visible, expected)
         }
+
+        function test_showWeeksNumber() {
+            
+        }
     }
 }

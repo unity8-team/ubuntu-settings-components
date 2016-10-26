@@ -316,7 +316,7 @@ ListView {
                     Label {
                         id: dayNumber
                         anchors.centerIn: parent
-                        text: dayStart.day > 9 ? dayStart.day : Qt.locale(i18n.language).zeroDigit + dayStart.day
+                        text: dayStart.toDate().toLocaleDateString(Qt.locale(), "dd")
                         textSize: Label.Medium
                         color: isSelected ? theme.palette.normal.positionText : theme.palette.normal.backgroundText
 

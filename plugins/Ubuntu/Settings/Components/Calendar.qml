@@ -32,6 +32,7 @@ ListView {
     property var minimumDate
     property var selectedDate: currentDate
     property var eventDays: new Array()
+    property bool showWeekNumbers: false
 
     function reset() {
         if (!priv.ready) return;
@@ -185,120 +186,175 @@ ListView {
     Keys.onLeftPressed: selectedDate.addDays(-1)
     Keys.onRightPressed: selectedDate.addDays(1)
 
-    delegate: Grid {
-        id: monthGrid
-
+    delegate: Row {
         property var month: new Cal.Month(model.month)
         property var monthStart: new Cal.Day(model.month.year, model.month.month, 1)
         property var monthEnd: monthStart.addMonths(1)
         property var gridStart: monthStart.weekStart(firstDayOfWeek)
 
-        columns: priv.days
-        columnSpacing: (calendar.width - calendar.implicitWidth) / (columns - 1)
+        Column {
+            id: weekColumn
+            visible: calendar.showWeekNumbers
+            spacing: monthGrid.rowSpacing
 
-        rows: priv.weeks + 1 /* the weekDays header */
-        rowSpacing: (calendar.height - calendar.implicitHeight) / (rows - 1)
+            Row {
+                Column {
+                    Label {
+                        objectName: "weekDay" + modelData
+                        text: i18n.tr("WEEK")
+                        textSize: Label.XSmall
+                        // FIXME: There's no good palette that covers both
+                        //        Ambiance (Ash) and Suru (Silk)
+                        color: theme.palette.disabled.base
+                    }
 
-        verticalItemAlignment: Grid.AlignVCenter
-        horizontalItemAlignment: Grid.AlignHCenter
+                    Repeater {
+                        id: weekNumbers
+                        model: priv.weeks
+                        delegate: Item {
+                            property int weekNumber: modelData + (monthStart.toDate() - new Date(monthStart.year, 0, 1))/1000/86400/7
+                            width: priv.squareUnit
+                            height: priv.squareUnit
 
-        Repeater {
-            id: daysHeader
-            model: priv.days
+                            Label {
+                                id: weekNumberLabel
+                                anchors.centerIn: parent
+                                text: weekNumber > 9 ? weekNumber : Qt.locale(i18n.language).zeroDigit + weekNumber
+                                textSize: Label.Medium
+                                color: theme.palette.normal.backgroundTertiaryText
+                            }
+                        }
+                    }
+                }
 
-            delegate: Label {
-                objectName: "weekDay" + modelData
-                text: Qt.locale(i18n.language).standaloneDayName((modelData + firstDayOfWeek) % priv.days, Locale.ShortFormat).toUpperCase()
-                textSize: Label.XSmall
-                // FIXME: There's no good palette that covers both
-                //        Ambiance (Ash) and Suru (Silk)
-                color: theme.palette.highlighted.base
-                onHeightChanged: priv.weekDaysHeight = Math.max(height, priv.weekDaysHeight)
+                Column {
+                    Item {
+                        width: units.gu(2)
+                        height: weekColumn.height
+
+                        Rectangle {
+                            color: theme.palette.disabled.base
+                            anchors.fill: parent
+                            anchors.topMargin: units.gu(0.5)
+                            anchors.bottomMargin: anchors.topMargin
+                            anchors.leftMargin: units.gu(0.9)
+                            anchors.rightMargin: anchors.leftMargin
+                        }
+                    }
+                }
             }
         }
 
-        Repeater {
-            model: priv.days * priv.weeks
-            delegate: Item {
-                id: dayItem
-                objectName: "dayItem" + index
+        Grid {
+            id: monthGrid
 
-                property int weekday: (index % priv.days + firstDayOfWeek) % priv.days
-                property var dayStart: gridStart.addDays(index)
-                property bool isSelected: priv.userSelected && dayStart.equals(priv.selectedDay)
-                property bool isCurrentMonth: (monthStart < dayStart || monthStart.equals(dayStart))  && dayStart < monthEnd
-                property bool isWeekend: weekday == 0 || weekday == 6
-                property bool isToday: dayStart.equals(priv.today)
-                property bool hasEvent: isCurrentMonth && eventDays.indexOf(dayStart.day) != -1
-                property bool isWithinBounds: (priv.minimumDay === undefined || dayStart >= priv.minimumDay) &&
-                                              (priv.maximumDay === undefined || dayStart <= priv.maximumDay)
+            columns: priv.days
+            columnSpacing: (calendar.width - calendar.implicitWidth - (weekColumn.visible ? weekColumn.width : 0)) / (columns - 1)
 
-                width: priv.squareUnit
-                height: priv.squareUnit
+            rows: priv.weeks + 1 /* the weekDays header */
+            rowSpacing: (calendar.height - calendar.implicitHeight) / (rows - 1)
 
-                UbuntuShape {
-                    anchors.fill: parent
-                    visible: isToday
-                    aspect: UbuntuShape.Flat
-                    radius: "small"
-                    color: dayNumber.color
+            verticalItemAlignment: Grid.AlignVCenter
+            horizontalItemAlignment: Grid.AlignHCenter
+
+            Repeater {
+                id: daysHeader
+                model: priv.days
+
+                delegate: Label {
+                    objectName: "weekDay" + modelData
+                    text: Qt.locale(i18n.language).standaloneDayName((modelData + firstDayOfWeek) % priv.days, Locale.ShortFormat).toUpperCase()
+                    textSize: Label.XSmall
+                    // FIXME: There's no good palette that covers both
+                    //        Ambiance (Ash) and Suru (Silk)
+                    color: theme.palette.highlighted.base
+                    onHeightChanged: priv.weekDaysHeight = Math.max(height, priv.weekDaysHeight)
+                }
+            }
+
+            Repeater {
+                model: priv.days * priv.weeks
+                delegate: Item {
+                    id: dayItem
+                    objectName: "dayItem" + index
+
+                    property int weekday: (index % priv.days + firstDayOfWeek) % priv.days
+                    property var dayStart: gridStart.addDays(index)
+                    property bool isSelected: priv.userSelected && dayStart.equals(priv.selectedDay)
+                    property bool isCurrentMonth: (monthStart < dayStart || monthStart.equals(dayStart))  && dayStart < monthEnd
+                    property bool isWeekend: weekday == 0 || weekday == 6
+                    property bool isToday: dayStart.equals(priv.today)
+                    property bool hasEvent: isCurrentMonth && eventDays.indexOf(dayStart.day) != -1
+                    property bool isWithinBounds: (priv.minimumDay === undefined || dayStart >= priv.minimumDay) &&
+                                                (priv.maximumDay === undefined || dayStart <= priv.maximumDay)
+
+                    width: priv.squareUnit
+                    height: priv.squareUnit
 
                     UbuntuShape {
-                        // XXX: since we can't just colorize the shape border
-                        //      we need another one to fill the center with bg color
-                        id: currentDayShape
-                        radius: parent.radius
-                        aspect: parent.aspect
-                        backgroundColor: theme.palette.normal.background
-
                         anchors.fill: parent
-                        anchors.margins: units.gu(0.1)
+                        visible: isToday
+                        aspect: UbuntuShape.Flat
+                        radius: "small"
+                        color: dayNumber.color
+
+                        UbuntuShape {
+                            // XXX: since we can't just colorize the shape border
+                            //      we need another one to fill the center with bg color
+                            id: currentDayShape
+                            radius: parent.radius
+                            aspect: parent.aspect
+                            backgroundColor: theme.palette.normal.background
+
+                            anchors.fill: parent
+                            anchors.margins: units.gu(0.1)
+                        }
                     }
-                }
 
-                Label {
-                    id: dayNumber
-                    anchors.centerIn: parent
-                    text: dayStart.day > 9 ? dayStart.day : Qt.locale(i18n.language).zeroDigit + dayStart.day
-                    textSize: Label.Medium
-                    color: isSelected ? theme.palette.normal.positionText : theme.palette.normal.backgroundText
+                    Label {
+                        id: dayNumber
+                        anchors.centerIn: parent
+                        text: dayStart.day > 9 ? dayStart.day : Qt.locale(i18n.language).zeroDigit + dayStart.day
+                        textSize: Label.Medium
+                        color: isSelected ? theme.palette.normal.positionText : theme.palette.normal.backgroundText
 
-                    Binding on color {
-                        when: isCurrentMonth && isWeekend && !isSelected
-                        value: theme.palette.normal.backgroundTertiaryText
+                        Binding on color {
+                            when: isCurrentMonth && isWeekend && !isSelected
+                            value: theme.palette.normal.backgroundTertiaryText
+                        }
+
+                        Binding on color {
+                            when: !isCurrentMonth
+                            // FIXME: There's no good palette that covers both
+                            //        Ambiance (silk) and Suru (inkstone)
+                            value: theme.palette.disabled.base
+                        }
                     }
 
-                    Binding on color {
-                        when: !isCurrentMonth
-                        // FIXME: There's no good palette that covers both
-                        //        Ambiance (silk) and Suru (inkstone)
-                        value: theme.palette.disabled.base
+                    UbuntuShape {
+                        objectName: "eventMarker"+index
+                        aspect: UbuntuShape.Flat
+                        radius: "small"
+                        color: theme.palette.selected.baseText
+                        width: units.gu(0.4)
+                        height: width
+                        visible: hasEvent
+                        y: dayNumber.height + (parent.height - dayNumber.height - height) / 2
+                        anchors.horizontalCenter: parent.horizontalCenter
                     }
-                }
 
-                UbuntuShape {
-                    objectName: "eventMarker"+index
-                    aspect: UbuntuShape.Flat
-                    radius: "small"
-                    color: theme.palette.selected.baseText
-                    width: units.gu(0.4)
-                    height: width
-                    visible: hasEvent
-                    y: dayNumber.height + (parent.height - dayNumber.height - height) / 2
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
+                    AbstractButton {
+                        anchors.fill: parent
 
-                AbstractButton {
-                    anchors.fill: parent
-
-                    onClicked: {
-                        if (isWithinBounds) {
-                            if (!isSelected) {
-                                calendar.selectedDate = new Date(dayStart.year, dayStart.month, dayStart.day)
-                                priv.userSelected = true
-                            } else if (priv.userSelected) {
-                                calendar.selectedDate = new Date(dayStart.year, dayStart.month)
-                                priv.userSelected = false
+                        onClicked: {
+                            if (isWithinBounds) {
+                                if (!isSelected) {
+                                    calendar.selectedDate = new Date(dayStart.year, dayStart.month, dayStart.day)
+                                    priv.userSelected = true
+                                } else if (priv.userSelected) {
+                                    calendar.selectedDate = new Date(dayStart.year, dayStart.month)
+                                    priv.userSelected = false
+                                }
                             }
                         }
                     }

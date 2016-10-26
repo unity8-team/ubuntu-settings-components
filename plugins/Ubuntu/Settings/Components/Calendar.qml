@@ -207,11 +207,11 @@ ListView {
             model: priv.days
 
             delegate: Label {
+                objectName: "weekDay" + modelData
                 text: Qt.locale(i18n.language).standaloneDayName((modelData + firstDayOfWeek) % priv.days, Locale.ShortFormat).toUpperCase()
                 textSize: Label.XSmall
                 // FIXME: There's no good palette that covers both
                 //        Ambiance (Ash) and Suru (Silk)
-                objectName: "weekDay"
                 color: theme.palette.highlighted.base
                 onHeightChanged: priv.weekDaysHeight = Math.max(height, priv.weekDaysHeight)
             }
@@ -272,7 +272,7 @@ ListView {
                         when: !isCurrentMonth
                         // FIXME: There's no good palette that covers both
                         //        Ambiance (silk) and Suru (inkstone)
-                        value: theme.palette.normal.foreground
+                        value: theme.palette.disabled.base
                     }
                 }
 

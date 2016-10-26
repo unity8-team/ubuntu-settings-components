@@ -215,14 +215,13 @@ ListView {
                         model: priv.weeks
                         delegate: Item {
                             readonly property var rowDate: monthStart.addDays(modelData * priv.days)
-                            readonly property int weekNumber: QtDateFunctions.weekNumber(rowDate.toDate())
                             width: priv.squareUnit
                             height: priv.squareUnit
 
                             Label {
                                 id: weekNumberLabel
                                 anchors.centerIn: parent
-                                text: weekNumber > 9 ? weekNumber : Qt.locale(i18n.language).zeroDigit + weekNumber
+                                text: QtDateFunctions.formattedWeekNumber(rowDate.toDate())
                                 textSize: Label.Medium
                                 color: theme.palette.normal.backgroundTertiaryText
                             }

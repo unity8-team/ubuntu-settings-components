@@ -30,6 +30,7 @@ public:
     ~QtDateFunctions() = default;
 
     Q_INVOKABLE int weekNumber(const QDate &date) const { return date.weekNumber(); }
+    Q_INVOKABLE QString formattedWeekNumber(const QDate &date) const { return QString("%1").arg(date.weekNumber(), 2, 10, QChar('0')); }
 };
 
 void UbuntuSettingsComponentsPlugin::registerTypes(const char *uri)

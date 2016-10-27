@@ -31,11 +31,12 @@ BaseMenu {
     property bool roaming: false
     signal unlock
 
-    implicitHeight: slotsLayout.height + (divider.visible ? divider.height : 0)
+    menuHeight: slotsLayout.height
 
-    SlotsLayout {
+    StyledSlotsLayout {
         id: slotsLayout
         objectName: "menuItemInfoSlotsLayout"
+        style: menuStyle
 
         mainSlot: ColumnLayout {
             spacing: units.gu(0.5)
@@ -44,8 +45,10 @@ BaseMenu {
                 id: labelSimIdentifier
                 elide: Text.ElideRight
                 visible: text !== ""
-                font.bold: true
                 opacity: menu.locked ? 0.6 : 1.0
+                color: menu.foregroundColor
+                font.bold: true
+                font.pixelSize: menuStyle.fontSize
             }
 
             Row {
@@ -57,6 +60,8 @@ BaseMenu {
                     id: labelStatus
                     elide: Text.ElideRight
                     opacity: 0.6
+                    color: menu.foregroundColor
+                    font.pixelSize: menuStyle.fontSize
                 }
 
                 Row {
@@ -64,9 +69,9 @@ BaseMenu {
                     height: parent.height
                     Icon {
                         id: statusIcon
-                        color: theme.palette.normal.backgroundText
+                        color: menuStyle.iconColor
 
-                        height: labelStatus.height
+                        height: menuStyle.iconSize
                         width: height
 
                         visible: name !== ""
@@ -74,9 +79,9 @@ BaseMenu {
 
                     Icon {
                         id: iconConnectivity
-                        color: theme.palette.normal.backgroundText
+                        color: menuStyle.iconColor
 
-                        width: statusIcon.width // fix lp:1585645 by breaking the binding loop
+                        width: menuStyle.iconSize
                         height: width
 
                         visible: name !== ""
@@ -91,17 +96,18 @@ BaseMenu {
                         id: labelRoaming
                         visible: menu.roaming
                         elide: Text.ElideRight
-                        fontSize: "x-small"
                         text: i18n.dtr("ubuntu-settings-components", "Roaming")
+                        font.pixelSize: menuStyle.subtitleFontSize
+                        color: menu.foregroundColor
                         opacity: 0.6
                     }
 
                     Icon {
                         id: iconRoaming
-                        color: theme.palette.normal.backgroundText
+                        color: menuStyle.iconColor
                         visible: menu.roaming
 
-                        height: labelStatus.height
+                        height: menuStyle.iconSize
                         width: height
 
                         name: "network-cellular-roaming"
@@ -113,9 +119,13 @@ BaseMenu {
                 id: buttonUnlock
                 objectName: "buttonUnlockSim"
                 visible: menu.locked
+                color: menuStyle.buttonColor
 
                 text: i18n.dtr("ubuntu-settings-components", "Unlock SIM")
+                font.pixelSize: menuStyle.buttonFontSize
                 Layout.preferredWidth: implicitWidth + units.gu(5)
+                Layout.preferredHeight: menuStyle.buttonHeight
+                height: menuStyle.buttonHeight
 
                 onTriggered: menu.unlock()
             }

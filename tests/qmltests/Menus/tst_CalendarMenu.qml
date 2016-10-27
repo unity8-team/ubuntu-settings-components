@@ -56,14 +56,22 @@ Item {
 
         property var calendar: findChild(calendarMenu, "calendar")
 
-        function test_collapsed() {
-            calendarMenu.collapsed = true
-            compare(calendar.collapsed, true, "Cannot set collapsed")
+        function test_interactive_data() {
+            return [
+                        {tag: "pointer", pointer: true, expected: false },
+                        {tag: "touch", pointer: false, expected: true }
+            ]
+        }
+
+        function test_interactive(data) {
+            calendarMenu.pointerMode = data.pointer
+            compare(calendar.interactive, data.expected, "Cannot use interactive")
         }
 
         function test_currentDate() {
             calendarMenu.currentDate = date2
-            compare(calendar.currentDate, date2, "Cannot set currendDate")
+            var expected = new Date(date2.getFullYear(), date2.getMonth(), 1)
+            compare(calendar.currentDate, expected, "Cannot set currendDate")
         }
 
         function test_firstDayOfWeek() {
@@ -91,6 +99,34 @@ Item {
             calendar.selectedDate = date4;
             calendar.selectedDate = calendar.selectedDate.addDays(1);
             compare(calendar.selectedDate, date5, "The next day after 2016-10-30 is not 2016-10-31");
+        }
+
+        function test_SwitchMonth_data() {
+            var tests = []
+
+            for (var i = 1; i <= 15; ++i) {
+                tests.push({tag: "previous "+i, buttonName: "goPreviousMonth", delta: -i })
+                tests.push({tag: "next "+i, buttonName: "goNextMonth", delta: i })
+            }
+
+            return tests
+        }
+
+        function test_SwitchMonth(data) {
+            var button = findChild(calendarMenu, data.buttonName);
+            var monthLayout = findChild(calendarMenu, "monthLayout")
+            verify(button)
+            verify(monthLayout)
+
+            var expected = calendar.currentDate.addMonths(data.delta)
+
+            for (var i = 0; i < Math.abs(data.delta); ++i)
+                mouseClick(button, button.width / 2, button.height / 2)
+
+            compare(calendar.currentDate, expected)
+            compare(monthLayout.title.text, i18n.ctr("%1=month name, %2=4-digit year", "%1 %2")
+                                                .arg(Qt.locale().standaloneMonthName(expected.getMonth(), Locale.LongFormat))
+                                                .arg(expected.getFullYear()))
         }
     }
 }

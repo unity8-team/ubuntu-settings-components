@@ -29,24 +29,20 @@ BaseMenu {
     property alias summary: layoutItem.summary
     property alias slots: layoutItem.children
 
-    // These fields are for retro-compatibility with ListItem.Empty based MenuItems
-    property alias trailingComponent: trailingComponentLoader.sourceComponent
-    property alias trailingComponentItem: trailingComponentLoader.item
-    property alias component: menu.trailingComponent
-
-    implicitHeight: layoutItem.height + (divider.visible ? divider.height : 0)
+    menuHeight: layoutItem.height
 
     ListItemLayout {
         id: layoutItem
         objectName: "menuLayoutItem"
         title.text: menu.text
         title.color: menu.foregroundColor
+        title.font.pixelSize: menuStyle.fontSize
 
-        Loader {
-            id: trailingComponentLoader
-            asynchronous: false
-            visible: status == Loader.Ready
-            SlotsLayout.position: SlotsLayout.Trailing
+        padding {
+            top: menuStyle.padding.top
+            bottom: menuStyle.padding.bottom
+            leading: menuStyle.padding.leading
+            trailing: menuStyle.padding.trailing
         }
     }
 }

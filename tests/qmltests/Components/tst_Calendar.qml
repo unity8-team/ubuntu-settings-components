@@ -59,15 +59,6 @@ Rectangle {
             calendar.minimumDate = undefined;
         }
 
-        function test_collapsed() {
-            calendar.collapsed = true;
-            compare(calendar.interactive, false, "Calendar should not be interactive");
-            var collapsedHeight = calendar.height;
-            calendar.collapsed = false;
-            verify(calendar.height > collapsedHeight * 4 && calendar.height < collapsedHeight * 6, "Height did not expand properly");
-            compare(calendar.interactive, true, "Calendar should be interactive");
-        }
-
         function test_selectedDate_data() {
             return [
                 { date: new Date(2010, 4, 10) },
@@ -125,6 +116,73 @@ Rectangle {
             calendar.minimumDate = data.minDate;
             calendar.maximumDate = data.maxDate;
             compare(calendar.count, data.count, "The number of months should have changed");
+        }
+
+        function test_selectedDateUpdatesCurrent_data() {
+            return [
+                { date: new Date(2010, 4, 10) },
+                { date: new Date() },
+                { date: new Date(2020, 10, 31)},
+            ];
+        }
+
+        function test_selectedDateUpdatesCurrent(data) {
+            calendar.selectedDate = data.date
+            compare(calendar.currentDate, data.date)
+        }
+
+        function test_eventsMarker_data()
+        {
+            var values = []
+            for (var i = 0; i < 20; ++i) {
+                values.push({tag: "eventDay "+i+": "+(i % 2 != 0), idx: i, dayEvent: (i % 2 != 0)})
+            }
+
+            return values
+        }
+
+        function test_eventsMarker(data) {
+            var eventMarkerLoader = findChild(calendar, "eventMarkerLoader"+data.idx)
+            verify(eventMarkerLoader)
+
+            var expected = data.dayEvent
+
+            if (data.dayEvent) {
+                var dayItem = findChild(calendar, "dayItem"+data.idx)
+                verify(dayItem)
+
+                calendar.eventDays = [dayItem.dayStart.day]
+                expected = dayItem.isCurrentMonth
+            }
+
+            compare(eventMarkerLoader.visible, expected)
+            var eventMarker = findChild(eventMarkerLoader, "eventMarker"+data.idx)
+            verify(expected ? eventMarker : eventMarker === undefined)
+        }
+
+        function test_showWeeksNumber_data() {
+            return [{tag: "visible", visible: true}, {tag: "not visible", visible: false}]
+        }
+
+        function test_showWeeksNumber(data) {
+            var weekNumbersLoader = findChild(calendar, "weekNumbersLoader"+calendar.currentIndex)
+            verify(weekNumbersLoader)
+
+            calendar.showWeekNumbers = data.visible
+            var weekNumbersColumn = findChild(weekNumbersLoader, "weekNumbersColumn"+calendar.currentIndex)
+            verify(data.visible ? weekNumbersColumn !== undefined : weekNumbersColumn === undefined)
+        }
+
+        function test_isToday() {
+            for (var i = 0; i < 7*6; ++i) {
+                var dayItem = findChild(calendar, "dayItem"+i)
+                verify(dayItem)
+                var todayMarkerLoader = findChild(dayItem, "todayMarkerLoader"+i)
+                verify(todayMarkerLoader)
+
+                compare(todayMarkerLoader.visible, dayItem.isToday)
+                compare(todayMarkerLoader.active, dayItem.isToday)
+            }
         }
     }
 }

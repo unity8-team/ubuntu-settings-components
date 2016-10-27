@@ -34,13 +34,13 @@ StandardMenu {
             implicitHeight: checkMark.height + units.gu(1)
             radius: width / 2
             antialiasing: true
-            color: theme.palette.normal.backgroundText
+            color: menuStyle.iconColor
             visible: false
 
             Icon {
                 id: checkMark
                 name: "tick"
-                height: units.gu(2)
+                height: menuStyle.iconSize
                 width: height
                 anchors.centerIn: parent
             }

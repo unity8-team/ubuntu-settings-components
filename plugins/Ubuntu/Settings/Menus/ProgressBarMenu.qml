@@ -36,6 +36,9 @@ StandardMenu {
             minimumValue: 0.0
             maximumValue: 1.0
             value: 0.0
+
+            SlotsLayout.overrideVerticalPositioning: true
+            anchors.verticalCenter: parent.verticalCenter
         }
     ]
 }

@@ -30,6 +30,7 @@ Item {
     property alias time: timeText.text
     property alias title: itemLayout.title
     property alias body: itemLayout.summary
+    property QtObject menuStyle
 
     signal iconClicked()
 
@@ -43,8 +44,15 @@ Item {
     ListItemLayout {
         id: itemLayout
 
+        padding {
+            top: menuStyle.padding.top
+            bottom: menuStyle.padding.bottom
+            leading: menuStyle.padding.leading
+            trailing: menuStyle.padding.trailing
+        }
+
         UbuntuShape {
-            width: units.gu(6)
+            width: menuStyle.avatarSize
             height: width
 
             SlotsLayout.position: SlotsLayout.Leading
@@ -60,24 +68,34 @@ Item {
 
                 Binding on color {
                     when: String(avatarImage.source).match(/^image:\/\/theme/)
-                    value: theme.palette.normal.backgroundText
+                    value: menuStyle.iconColor
                 }
             }
         }
 
+        padding {
+            top: menuStyle.padding.top
+            bottom: menuStyle.padding.bottom
+            leading: menuStyle.padding.leading
+            trailing: menuStyle.padding.trailing
+        }
+
         title.objectName: "title"
+        title.color: menuStyle.foregroundColor
         title.font.weight: Font.DemiBold
+        title.font.pixelSize: menuStyle.fontSize
         title.anchors.rightMargin: timeText.width > iconImage.width ? timeText.width - iconImage.width : 0
 
         summary.objectName: "body"
         summary.maximumLineCount: 3
         summary.wrapMode: Text.WordWrap
         summary.elide: Text.ElideRight
+        summary.font.pixelSize: menuStyle.subtitleFontSize
 
         Icon {
             id: iconImage
             objectName: "icon"
-            color: theme.palette.normal.backgroundText
+            color: menuStyle.iconColor
             width: units.gu(3)
             height: width
             SlotsLayout.position: SlotsLayout.Trailing
@@ -116,7 +134,8 @@ Item {
             rightMargin: itemLayout.padding.trailing
         }
 
-        fontSize: "x-small"
+        color: menuStyle.foregroundColor
+        textSize: Label.XSmall
         maximumLineCount: 1
     }
 }

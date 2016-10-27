@@ -142,8 +142,8 @@ Rectangle {
         }
 
         function test_eventsMarker(data) {
-            var eventMarker = findChild(calendar, "eventMarker"+data.idx)
-            verify(eventMarker)
+            var eventMarkerLoader = findChild(calendar, "eventMarkerLoader"+data.idx)
+            verify(eventMarkerLoader)
 
             var expected = data.dayEvent
 
@@ -155,7 +155,9 @@ Rectangle {
                 expected = dayItem.isCurrentMonth
             }
 
-            compare(eventMarker.visible, expected)
+            compare(eventMarkerLoader.visible, expected)
+            var eventMarker = findChild(eventMarkerLoader, "eventMarker"+data.idx)
+            verify(expected ? eventMarker : eventMarker === undefined)
         }
 
         function test_showWeeksNumber_data() {

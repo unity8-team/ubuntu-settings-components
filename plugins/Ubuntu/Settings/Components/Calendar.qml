@@ -343,16 +343,21 @@ ListView {
                         }
                     }
 
-                    UbuntuShape {
-                        objectName: "eventMarker"+index
-                        aspect: UbuntuShape.Flat
-                        radius: "small"
-                        color: theme.palette.selected.baseText
+                    Loader{
+                        objectName: "eventMarkerLoader"+index
+                        active: hasEvent
+                        visible: active
                         width: units.gu(0.4)
                         height: width
-                        visible: hasEvent
                         y: dayNumber.height + (parent.height - dayNumber.height - height) / 2
                         anchors.horizontalCenter: parent.horizontalCenter
+
+                        sourceComponent: UbuntuShape {
+                            objectName: "eventMarker"+index
+                            aspect: UbuntuShape.Flat
+                            radius: "small"
+                            color: theme.palette.selected.baseText
+                        }
                     }
 
                     AbstractButton {

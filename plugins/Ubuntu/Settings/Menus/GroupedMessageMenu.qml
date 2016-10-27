@@ -51,7 +51,7 @@ StandardMenu {
                 font.pixelSize: menuStyle.fontSize
                 text: "0"
 
-                color: theme.palette.normal.foregroundText
+                color: theme.palette.normal.foreground
             }
         }
     ]

@@ -183,6 +183,7 @@ ListView {
     snapMode: ListView.SnapOneItem
     focus: true
     highlightFollowsCurrentItem: true
+    highlightMoveDuration: UbuntuAnimation.FastDuration
 
     Keys.onLeftPressed: selectedDate.addDays(-1)
     Keys.onRightPressed: selectedDate.addDays(1)

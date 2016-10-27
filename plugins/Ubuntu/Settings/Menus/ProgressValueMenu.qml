@@ -32,8 +32,8 @@ StandardMenu {
             objectName: "progress"
 
             text: menuItem.value + " %"
-            fontSize: "medium"
             color: menuItem.foregroundColor
+            font.pixelSize: menuStyle.fontSize
         }
     ]
 }

@@ -151,20 +151,9 @@ Item {
 
             SeparatorMenu {}
 
-            RadioMenu {
-                id: applesRadio
-                text: i18n.tr("Apples")
-                checked: true
-                onTriggered: orangesRadio.checked = !checked
+            CalendarMenu {
+                id: calendar
             }
-
-            RadioMenu {
-                id: orangesRadio
-                text: i18n.tr("Oranges")
-                onTriggered: applesRadio.checked = !checked
-            }
-
-            CalendarMenu {}
 
             UserSessionMenu {
                 name: i18n.tr("Lola Chang")
@@ -247,6 +236,23 @@ Item {
                     }
                 }
             }
+
+            SeparatorMenu {}
+
+            RadioMenu {
+                id: applesRadio
+                text: i18n.tr("Apples")
+                checked: true
+                onTriggered: orangesRadio.checked = !checked
+            }
+
+            RadioMenu {
+                id: orangesRadio
+                text: i18n.tr("Oranges")
+                onTriggered: applesRadio.checked = !checked
+            }
+
+            SeparatorMenu {}
 
             GroupedMessageMenu {
                 text: "Group Message"

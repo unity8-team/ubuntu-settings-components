@@ -163,11 +163,12 @@ Rectangle {
         }
 
         function test_showWeeksNumber(data) {
-            var weekNumbersColumn = findChild(calendar, "weekNumbersColumn"+calendar.currentIndex)
-            verify(weekNumbersColumn)
+            var weekNumbersLoader = findChild(calendar, "weekNumbersLoader"+calendar.currentIndex)
+            verify(weekNumbersLoader)
 
             calendar.showWeekNumbers = data.visible
-            compare(weekNumbersColumn.visible, data.visible)
+            var weekNumbersColumn = findChild(weekNumbersLoader, "weekNumbersColumn"+calendar.currentIndex)
+            verify(data.visible ? weekNumbersColumn !== undefined : weekNumbersColumn === undefined)
         }
     }
 }

@@ -75,6 +75,7 @@ ListView {
         property var today: new Cal.Day().fromDate((new Date()))
         property real weekDaysHeight: 0
         readonly property real squareUnit: units.gu(3)
+        readonly property real todayRingThickness: units.gu(.1)
         readonly property int days: 7
         readonly property int weeks: 6
 
@@ -301,6 +302,7 @@ ListView {
                     height: priv.squareUnit
 
                     Loader {
+                        id: todayMarkerLoader
                         objectName: "todayMarkerLoader" + index
                         active: isToday
                         visible: active
@@ -319,7 +321,7 @@ ListView {
                                 backgroundColor: theme.palette.normal.background
 
                                 anchors.fill: parent
-                                anchors.margins: units.gu(0.1)
+                                anchors.margins: priv.todayRingThickness
                             }
                         }
                     }
@@ -350,7 +352,7 @@ ListView {
                         visible: active
                         width: units.gu(0.4)
                         height: width
-                        y: dayNumber.height + (parent.height - dayNumber.height - height) / 2
+                        y: dayNumber.height + (parent.height - dayNumber.height) / 2 - priv.todayRingThickness
                         anchors.horizontalCenter: parent.horizontalCenter
 
                         sourceComponent: UbuntuShape {

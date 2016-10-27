@@ -299,23 +299,27 @@ ListView {
                     width: priv.squareUnit
                     height: priv.squareUnit
 
-                    UbuntuShape {
+                    Loader {
+                        objectName: "todayMarkerLoader" + index
+                        active: isToday
+                        visible: active
                         anchors.fill: parent
-                        visible: isToday
-                        aspect: UbuntuShape.Flat
-                        radius: "small"
-                        color: dayNumber.color
+                        sourceComponent: UbuntuShape {
+                            aspect: UbuntuShape.Flat
+                            radius: "small"
+                            color: dayNumber.color
 
-                        UbuntuShape {
-                            // XXX: since we can't just colorize the shape border
-                            //      we need another one to fill the center with bg color
-                            id: currentDayShape
-                            radius: parent.radius
-                            aspect: parent.aspect
-                            backgroundColor: theme.palette.normal.background
+                            UbuntuShape {
+                                // XXX: since we can't just colorize the shape border
+                                //      we need another one to fill the center with bg color
+                                id: currentDayShape
+                                radius: parent.radius
+                                aspect: parent.aspect
+                                backgroundColor: theme.palette.normal.background
 
-                            anchors.fill: parent
-                            anchors.margins: units.gu(0.1)
+                                anchors.fill: parent
+                                anchors.margins: units.gu(0.1)
+                            }
                         }
                     }
 

@@ -170,5 +170,17 @@ Rectangle {
             var weekNumbersColumn = findChild(weekNumbersLoader, "weekNumbersColumn"+calendar.currentIndex)
             verify(data.visible ? weekNumbersColumn !== undefined : weekNumbersColumn === undefined)
         }
+
+        function test_isToday() {
+            for (var i = 0; i < 7*6; ++i) {
+                var dayItem = findChild(calendar, "dayItem"+i)
+                verify(dayItem)
+                var todayMarkerLoader = findChild(dayItem, "todayMarkerLoader"+i)
+                verify(todayMarkerLoader)
+
+                compare(todayMarkerLoader.visible, dayItem.isToday)
+                compare(todayMarkerLoader.active, dayItem.isToday)
+            }
+        }
     }
 }

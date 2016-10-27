@@ -357,7 +357,7 @@ ListView {
                             objectName: "eventMarker"+index
                             aspect: UbuntuShape.Flat
                             radius: "small"
-                            color: theme.palette.selected.baseText
+                            color: isSelected ? dayNumber.color : theme.palette.selected.baseText
                         }
                     }
 

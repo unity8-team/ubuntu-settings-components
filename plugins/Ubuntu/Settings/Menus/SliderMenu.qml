@@ -94,13 +94,13 @@ BaseMenu {
         }
     }
 
-    menuHeight: slotsLayout.height
+    menuHeight: column.childrenRect.height + column.anchors.topMargin + column.anchors.bottomMargin
     highlightWhenPressed: false
 
     Column {
         id: column
         anchors.fill: parent
-        anchors.topMargin: menuStyle.padding.top
+        anchors.topMargin: label.visible ? menuStyle.padding.top : 0
         spacing: -units.gu(1.5)
 
         Label {
@@ -178,7 +178,7 @@ BaseMenu {
 
                 AbstractButton {
                     anchors.fill: parent
-                    onClicked: slider.value =  slider.maximumValue
+                    onClicked: slider.value = slider.maximumValue
                 }
 
                 SlotsLayout.position: SlotsLayout.Trailing

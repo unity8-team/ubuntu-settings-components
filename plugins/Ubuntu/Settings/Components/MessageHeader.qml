@@ -25,6 +25,9 @@ import Ubuntu.Components 1.3
 Item {
     id: messageHeader
 
+    LayoutMirroring.enabled: Qt.application.layoutDirection == Qt.RightToLeft
+    LayoutMirroring.childrenInherit: true
+
     property alias avatar: avatarImage.source
     property alias icon: iconImage.source
     property alias time: timeText.text

@@ -38,6 +38,9 @@ BaseMenu {
         objectName: "menuItemInfoSlotsLayout"
         style: menuStyle
 
+        LayoutMirroring.enabled: Qt.application.layoutDirection == Qt.RightToLeft
+        LayoutMirroring.childrenInherit: true
+
         mainSlot: ColumnLayout {
             spacing: units.gu(0.5)
 

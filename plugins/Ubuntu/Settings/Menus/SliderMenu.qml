@@ -103,13 +103,16 @@ BaseMenu {
         anchors.topMargin: menuStyle.padding.top
         spacing: -units.gu(1.5)
 
+        LayoutMirroring.enabled: Qt.application.layoutDirection == Qt.RightToLeft
+        LayoutMirroring.childrenInherit: true
+
         Label {
             id: label
             visible: text != ""
             color: menu.foregroundColor
             font.pixelSize: menuStyle.fontSize
             x: Qt.application.layoutDirection == Qt.LeftToRight ?
-                    leftButton.x : rightButton.x + rightButton.width - width
+                    leftButton.x : rightButton.x
         }
 
         StyledSlotsLayout {

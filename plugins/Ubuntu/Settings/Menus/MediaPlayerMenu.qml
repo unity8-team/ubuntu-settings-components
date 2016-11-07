@@ -34,15 +34,15 @@ BaseLayoutMenu {
     property string album
 
     highlightWhenPressed: false
-    implicitHeight: (albumLayout.visible ? albumLayout.height : layout.height) + (divider.visible ? divider.height : 0)
-    Behavior on implicitHeight { UbuntuNumberAnimation {} }
+    menuHeight: albumLayout.visible ? albumLayout.height : layout.height
+    Behavior on menuHeight { UbuntuNumberAnimation {} }
 
     layout.visible: !albumLayout.visible
     layout.objectName: "player"
 
     slots: Image {
         id: playerIcon
-        height: units.gu(5)
+        height: menuStyle.avatarSize
         width: height
         SlotsLayout.position: SlotsLayout.Leading
     }
@@ -51,12 +51,25 @@ BaseLayoutMenu {
         id: albumLayout
         objectName: "albumArt"
         visible: showTrack
+
+        padding {
+            top: menuStyle.padding.top
+            bottom: menuStyle.padding.bottom
+            leading: menuStyle.padding.leading
+            trailing: menuStyle.padding.trailing
+        }
+
         title.text: menu.song
+        title.font.pixelSize: menuStyle.fontSize
+        title.color: menu.foregroundColor
         subtitle.text: menu.artist
+        subtitle.color: menu.foregroundColor
+        subtitle.font.pixelSize: menuStyle.fontSize
         summary.text: menu.album
+        summary.font.pixelSize: menuStyle.subtitleFontSize
 
         UbuntuShape {
-            width: units.gu(8)
+            width: units.gu(7)
             height: width
             SlotsLayout.position: SlotsLayout.Leading
 

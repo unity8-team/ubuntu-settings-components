@@ -29,6 +29,8 @@ MainView {
     width: units.gu(50)
     height: units.gu(100)
 
+    property bool pointerMode: true
+
     Component.onCompleted: {
         theme.name = "Ubuntu.Components.Themes.SuruDark"
     }
@@ -45,6 +47,26 @@ MainView {
         header: PageHeader {
             id: header
             title: listView.currentItem ? listView.currentItem.item.title : "Components"
+
+            trailingActionBar.actions: [
+                Action {
+                    iconName: mainView.pointerMode ? "input-mouse-symbolic" : "input-touchpad-symbolic"
+                    text: mainView.pointerMode ? "Pointer mode" : "Touch mode"
+                    onTriggered: mainView.pointerMode = !mainView.pointerMode
+                },
+                Action {
+                    text: i18n.tr('Use dark theme')
+                    iconName: 'torch-on'
+                    visible: theme.name == 'Ubuntu.Components.Themes.Ambiance'
+                    onTriggered: theme.name = 'Ubuntu.Components.Themes.SuruDark'
+                },
+                Action {
+                    text: i18n.tr('Use light theme')
+                    iconName: 'torch-off'
+                    visible: theme.name == 'Ubuntu.Components.Themes.SuruDark'
+                    onTriggered: theme.name = 'Ubuntu.Components.Themes.Ambiance'
+                }
+            ]
         }
 
         clip: true
@@ -65,6 +87,11 @@ MainView {
                 height: ListView.view.height
 
                 source: model.source
+                onStatusChanged: {
+                    if (status == Loader.Ready) {
+                        item.pointerMode = Qt.binding(function() { return mainView.pointerMode })
+                    }
+                }
             }
         }
     }

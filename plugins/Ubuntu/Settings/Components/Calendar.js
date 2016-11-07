@@ -99,3 +99,7 @@ Day.prototype.equals = function(other) {
     }
     return false;
 }
+
+Day.prototype.toDate = function() {
+    return new Date(this.year, this.month, this.day)
+}

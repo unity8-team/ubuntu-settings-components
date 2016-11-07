@@ -22,7 +22,9 @@ import Ubuntu.Settings.Components 0.1
 import Ubuntu.Settings.Menus 0.1
 
 Item {
+    id: page
     property string title: "MessageComponents"
+    property bool pointerMode: false
 
     width: units.gu(42)
     height: units.gu(75)
@@ -88,6 +90,7 @@ Item {
                     body: model.body
                     time: model.time
                     removable: true
+                    pointerMode: page.pointerMode
 
                     onIconActivated: {
                         print("Icon Activated")
@@ -103,6 +106,7 @@ Item {
                     title: model.title
                     body: model.body
                     time: model.time
+                    pointerMode: page.pointerMode
                     removable: true
                     replyHintText: "Reply"
 
@@ -124,6 +128,7 @@ Item {
                     title: model.title
                     body: model.body
                     time: model.time
+                    pointerMode: page.pointerMode
                     removable: true
                     replyHintText: "Reply"
 

@@ -20,6 +20,7 @@ import QtQuick 2.4
 import QtTest 1.0
 import Ubuntu.Test 0.1
 import Ubuntu.Settings.Menus 0.1
+import Ubuntu.Settings.Menus.Style 0.1
 
 Item {
     width: units.gu(42)
@@ -38,11 +39,6 @@ Item {
         }
 
         BaseMenu {
-            id: legacyDividerMenu
-            showDivider: true
-        }
-
-        BaseMenu {
             id: clickOverride
             property bool clicked: false
             function onClickedCallback() { clicked = true }
@@ -51,6 +47,21 @@ Item {
         BaseMenu {
             id: removableMenu
             removable: true
+        }
+
+        BaseMenu {
+            id: pointerModeMenu
+            pointerMode: true
+        }
+
+        BaseMenu {
+            id: touchModeMenu
+            pointerMode: false
+        }
+
+        BaseMenu {
+            id: menuHeightMenu
+            menuHeight: units.gu(10)
         }
     }
 
@@ -76,44 +87,42 @@ Item {
         function test_doHighlightWhenPressed() {
             baseMenu.highlightWhenPressed = true;
             mousePress(baseMenu, baseMenu.width/2, baseMenu.height/2)
-            compare(Qt.colorEqual(baseMenu.highlightColor, theme.palette.highlighted.background), true)
+            compare(Qt.colorEqual(baseMenu.highlightColor, baseMenu.menuStyle.highlightColor), true)
             mouseRelease(baseMenu)
         }
 
         function test_showDivider() {
-            compare(baseMenu.showDivider, false)
             compare(baseMenu.divider.visible, false)
 
-            baseMenu.showDivider = true
-            compare(baseMenu.showDivider, true)
+            baseMenu.divider.visible = true
             compare(baseMenu.divider.visible, true)
 
-            baseMenu.showDivider = false
+            baseMenu.divider.visible = false
             compare(baseMenu.divider.visible, false)
-            compare(baseMenu.showDivider, false)
         }
 
         function test_hideDivider() {
-            compare(dividerMenu.showDivider, true)
             compare(dividerMenu.divider.visible, true)
 
-            dividerMenu.showDivider = false
-            compare(dividerMenu.showDivider, false)
+            dividerMenu.divider.visible = false
             compare(dividerMenu.divider.visible, false)
 
-            dividerMenu.showDivider = true
+            dividerMenu.divider.visible = true
             compare(dividerMenu.divider.visible, true)
-            compare(dividerMenu.showDivider, true)
         }
 
-        function test_hideDividerLegacy() {
-            legacyDividerMenu.showDivider = false
-            compare(legacyDividerMenu.showDivider, false)
-            compare(legacyDividerMenu.divider.visible, false)
+        function test_noMenuHeight() {
+            compare(baseMenu.height > baseMenu.menuHeight, true)
+        }
 
-            legacyDividerMenu.showDivider = true
-            compare(legacyDividerMenu.divider.visible, true)
-            compare(legacyDividerMenu.showDivider, true)
+        function test_dividerMenuHeight() {
+            menuHeightMenu.divider.visible = true
+            compare(menuHeightMenu.height, menuHeightMenu.menuHeight + dividerMenu.divider.height)
+        }
+
+        function test_noDividerMenuHeight() {
+            menuHeightMenu.divider.visible = false
+            compare(menuHeightMenu.height, menuHeightMenu.menuHeight)
         }
 
         function test_clickEvent() {
@@ -177,6 +186,14 @@ Item {
             tryCompare(removeAction, "visible", true)
             mouseClick(removeAction, removeAction.width/2, removeAction.height/2)
             tryCompare(signalSpy, "count", 1)
+        }
+
+        function test_pointerMode() {
+            compare(pointerModeMenu.menuStyle, PointerStyle, "menuStyle doesn't match Pointer")
+        }
+
+        function test_touchMode() {
+            compare(touchModeMenu.menuStyle, TouchStyle, "menuStyle doesn't match Touch")
         }
     }
 }

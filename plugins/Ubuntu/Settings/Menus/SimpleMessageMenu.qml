@@ -39,7 +39,7 @@ BaseMenu {
     property alias footer: footerContainer.children
     property real _animationDuration: UbuntuAnimation.FastDuration
 
-    height: layout.height + (divider.visible ? divider.height : 0)
+    menuHeight: layout.height
     clip: leadingActions || trailingActions || heightAnimation.running
 
     Column {
@@ -52,6 +52,7 @@ BaseMenu {
             avatar: menu.avatar != "" ? menu.avatar : "image://theme/contact"
             icon: menu.icon != "" ? menu.icon : "image://theme/message"
             state: menu.state
+            menuStyle: menu.menuStyle
             title.text: menu.title
             body.text: menu.body
 
@@ -76,7 +77,7 @@ BaseMenu {
         }
     }
 
-    Behavior on height {
+    Behavior on menuHeight {
         NumberAnimation {
             id: heightAnimation
             duration: _animationDuration

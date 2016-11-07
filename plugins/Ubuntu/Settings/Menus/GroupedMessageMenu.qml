@@ -48,10 +48,10 @@ StandardMenu {
                 }
                 horizontalAlignment: Text.AlignRight
                 font.weight: Font.DemiBold
-                fontSize: "medium"
+                font.pixelSize: menuStyle.fontSize
                 text: "0"
 
-                color: theme.palette.normal.foregroundText
+                color: theme.palette.normal.foreground
             }
         }
     ]

@@ -17,24 +17,19 @@
  */
 
 import QtQuick 2.4
-import Ubuntu.Components 1.3
 
-BaseLayoutMenu {
-    id: menu
+QtObject {
+    readonly property MenuPaddings padding: MenuPaddings {}
+    readonly property real subtitleFontSize: units.gu(1.4)
+    readonly property real avatarSize: units.gu(4)
+    readonly property color foregroundColor: theme.palette.normal.backgroundText
+    readonly property color highlightColor: theme.palette.highlighted.background
+    readonly property color iconColor: foregroundColor
+    readonly property color buttonColor: theme.palette.normal.foreground
 
-    property alias iconSource: icon.source
-    property alias iconName: icon.name
-    property alias iconSize: icon.height
-    property alias iconColor: icon.color
-    property alias icon: icon
-
-    slots: Icon {
-        id: icon
-        objectName: "standardMenuIcon"
-        color: menuStyle.iconColor
-        visible: source != ""
-        height: menuStyle.iconSize
-        width: height
-        SlotsLayout.position: SlotsLayout.Leading
-    }
+    property real minimumHeight
+    property real fontSize
+    property real iconSize
+    property real buttonFontSize
+    property real buttonHeight
 }

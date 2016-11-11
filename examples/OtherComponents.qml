@@ -22,7 +22,9 @@ import Ubuntu.Settings.Components 0.1
 import Ubuntu.Settings.Menus 0.1
 
 Item {
+    id: page
     property string title: "Settings Components"
+    property bool pointerMode: false
 
     width: parent && parent.width ? parent.width : units.gu(42)
     height: parent && parent.width ? parent.height : units.gu(75)
@@ -66,17 +68,10 @@ Item {
                 onTriggered: console.log("Triggered")
             }
 
-            StandardMenu {
-                id: dividerToggleMenu
+            ButtonMenu {
                 text: i18n.tr("Toggle divider menu.")
-                showDivider: false
-
-                slots: [
-                    Button {
-                        text: dividerToggleMenu.showDivider ? i18n.tr("Hide") : i18n.tr("Show")
-                        onClicked: dividerToggleMenu.showDivider = !dividerToggleMenu.showDivider
-                    }
-                ]
+                buttonText: divider.visible ? i18n.tr("Hide") : i18n.tr("Show")
+                onButtonClicked: divider.visible = !divider.visible
             }
 
             StandardMenu {
@@ -96,11 +91,10 @@ Item {
                 iconName: "calendar"
                 iconColor: "red"
                 text: i18n.tr("Standard Menu with Component")
-                component: Component {
-                    Button {
-                        text: "Press Me"
-                        onClicked: print("Button pressed!")
-                    }
+                slots: Button {
+                    text: "Press Me"
+                    onClicked: print("Button pressed!")
+                    color: theme.palette.normal.foreground
                 }
             }
 
@@ -260,6 +254,7 @@ Item {
                     TimeZoneMenu {
                         city: model.city
                         time: model.time
+                        pointerMode: page.pointerMode
                     }
                 }
             }
@@ -279,6 +274,15 @@ Item {
                         eventColor: model.eventColor
                         time: model.time
                         enabled: false
+                        pointerMode: page.pointerMode
+                    }
+                }
+            }
+
+            Component.onCompleted: {
+                for (var i = 0; i < children.length; ++i) {
+                    if (children[i].pointerMode !== undefined) {
+                        children[i].pointerMode = Qt.binding(function() { return page.pointerMode })
                     }
                 }
             }

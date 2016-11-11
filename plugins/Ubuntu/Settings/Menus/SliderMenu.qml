@@ -32,9 +32,6 @@ BaseMenu {
     property alias minIcon: leftButton.source
     property alias maxIcon: rightButton.source
 
-    // These fields are for retro-compatibility with ListItem.Empty
-    property string iconSource
-
     signal updated(real value)
 
     property QtObject d: QtObject {
@@ -97,25 +94,28 @@ BaseMenu {
         }
     }
 
-    implicitHeight: slotsLayout.height + (divider.visible ? divider.height : 0)
+    menuHeight: column.childrenRect.height + column.anchors.topMargin + column.anchors.bottomMargin
     highlightWhenPressed: false
 
     Column {
         id: column
         anchors.fill: parent
-        anchors.topMargin: units.gu(0.5)
+        anchors.topMargin: label.visible ? menuStyle.padding.top : 0
         spacing: -units.gu(1.5)
 
         Label {
             id: label
             visible: text != ""
+            color: menu.foregroundColor
+            font.pixelSize: menuStyle.fontSize
             x: Qt.application.layoutDirection == Qt.LeftToRight ?
                     leftButton.x : rightButton.x + rightButton.width - width
         }
 
-        SlotsLayout {
+        StyledSlotsLayout {
             id: slotsLayout
             objectName: "sliderMenuSlotsLayout"
+            style: menuStyle
 
             mainSlot: Slider {
                 id: slider
@@ -154,9 +154,9 @@ BaseMenu {
                 id: leftButton
                 objectName: "leftButton"
                 visible: source !== ""
-                height: slider.height - units.gu(2)
+                height: menuStyle.iconSize
                 width: height
-                color: theme.palette.normal.backgroundText
+                color: menuStyle.iconColor
 
                 AbstractButton {
                     anchors.fill: parent
@@ -172,13 +172,13 @@ BaseMenu {
                 id: rightButton
                 objectName: "rightButton"
                 visible: source !== ""
-                height: slider.height - units.gu(2)
+                height: menuStyle.iconSize
                 width: height
-                color: theme.palette.normal.backgroundText
+                color: menuStyle.iconColor
 
                 AbstractButton {
                     anchors.fill: parent
-                    onClicked: slider.value =  slider.maximumValue
+                    onClicked: slider.value = slider.maximumValue
                 }
 
                 SlotsLayout.position: SlotsLayout.Trailing

@@ -23,7 +23,7 @@ AbstractButton {
     id: button
     objectName: "playbackButton"
 
-    property real size: units.gu(5)
+    property real size: units.gu(3)
     property alias iconName: icon.name
 
     width: size

@@ -1,0 +1,5 @@
+module Ubuntu.Settings.Menus.Style
+
+BaseStyle 0.1 BaseStyle.qml
+singleton PointerStyle 0.1 PointerStyle.qml
+singleton TouchStyle 0.1 TouchStyle.qml

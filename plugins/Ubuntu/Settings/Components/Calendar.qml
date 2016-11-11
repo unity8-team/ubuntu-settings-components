@@ -51,15 +51,18 @@ ListView {
     }
 
     onSelectedDateChanged: {
+        if (!priv.ready) return;
+
         if (currentDate != selectedDate)
             currentDate = selectedDate
     }
 
     onCurrentDateChanged: {
-        if (selectedDate.getFullYear() != currentDate.getFullYear() ||
-            selectedDate.getMonth() != currentDate.getMonth()) {
+        if (!priv.ready) return;
+
+        if (selectedDate != currentDate) {
             priv.userSelected = false
-            selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
+            selectedDate = currentDate
         }
     }
 
@@ -369,8 +372,8 @@ ListView {
                         onClicked: {
                             if (isWithinBounds) {
                                 if (!isSelected) {
-                                    calendar.selectedDate = new Date(dayStart.year, dayStart.month, dayStart.day)
                                     priv.userSelected = true
+                                    calendar.selectedDate = new Date(dayStart.year, dayStart.month, dayStart.day)
                                 } else if (priv.userSelected) {
                                     calendar.selectedDate = new Date(dayStart.year, dayStart.month)
                                     priv.userSelected = false

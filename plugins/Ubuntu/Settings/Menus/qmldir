@@ -15,6 +15,7 @@ ModemInfoItem 0.1 ModemInfoItem.qml
 PlaybackItemMenu 0.1 PlaybackItemMenu.qml
 ProgressBarMenu 0.1 ProgressBarMenu.qml
 ProgressValueMenu 0.1 ProgressValueMenu.qml
+RadioMenu 0.1 RadioMenu.qml
 SectionMenu 0.1 SectionMenu.qml
 SeparatorMenu 0.1 SeparatorMenu.qml
 SimpleMessageMenu 0.1 SimpleMessageMenu.qml

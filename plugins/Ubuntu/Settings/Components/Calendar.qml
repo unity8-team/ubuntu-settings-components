@@ -29,8 +29,6 @@ ListView {
 
     property var currentDate: new Date(priv.today.year, priv.today.month, 1)
     property int firstDayOfWeek: Qt.locale(i18n.language).firstDayOfWeek
-    property var maximumDate
-    property var minimumDate
     property var selectedDate: currentDate
     property var eventDays: new Array()
     property bool showWeekNumbers: false
@@ -84,45 +82,18 @@ ListView {
 
         property var currentMonth: new Cal.Month().fromDate(currentDate)
         property var selectedDay: new Cal.Day().fromDate(selectedDate)
-        property var minimumMonth: minimumDate ? new Cal.Month().fromDate(minimumDate) : undefined
-        property var maximumMonth: maximumDate ? new Cal.Month().fromDate(maximumDate) : undefined
-
-        property var minimumDay: minimumDate ? new Cal.Day().fromDate(minimumDate) : undefined
-        property var maximumDay: maximumDate ? new Cal.Day().fromDate(maximumDate) : undefined
 
         onCurrentMonthChanged: {
             if (!ready) return
             __populateModel();
-        }
-        onMinimumMonthChanged: {
-            if (!ready) return
-            __populateModel();
-        }
-        onMaximumMonthChanged: {
-            if (!ready) return
-            __populateModel();
-        }
-
-        function __getRealMinimumMonth(month) {
-            if (minimumMonth !== undefined && minimumMonth > month) {
-                return minimumMonth;
-            }
-            return month;
-        }
-
-        function __getRealMaximumMonth(month) {
-            if (maximumMonth !== undefined && maximumMonth < month) {
-                return maximumMonth;
-            }
-            return month;
         }
 
         function __populateModel() {
             //  disable the onCurrentIndexChanged logic
             priv.ready = false;
 
-            var minimumMonth = __getRealMinimumMonth(currentMonth.addMonths(-2));
-            var maximumMonth = __getRealMaximumMonth(currentMonth.addMonths(2));
+            var minimumMonth = currentMonth.addMonths(-2);
+            var maximumMonth = currentMonth.addMonths(2);
 
             // Remove old minimum months
             while (calendarModel.count > 0 && new Cal.Month(calendarModel.get(0).month) < minimumMonth) {
@@ -298,8 +269,6 @@ ListView {
                     readonly property bool isWeekend: weekday == 0 || weekday == 6
                     readonly property bool isToday: dayStart.equals(priv.today)
                     readonly property bool hasEvent: isCurrentMonth && eventDays.indexOf(dayStart.day) != -1
-                    readonly property bool isWithinBounds: (priv.minimumDay === undefined || dayStart >= priv.minimumDay) &&
-                                                           (priv.maximumDay === undefined || dayStart <= priv.maximumDay)
 
                     width: priv.squareUnit
                     height: priv.squareUnit
@@ -370,14 +339,12 @@ ListView {
                         anchors.fill: parent
 
                         onClicked: {
-                            if (isWithinBounds) {
-                                if (!isSelected) {
-                                    priv.userSelected = true
-                                    calendar.selectedDate = new Date(dayStart.year, dayStart.month, dayStart.day)
-                                } else if (priv.userSelected) {
-                                    calendar.selectedDate = new Date(dayStart.year, dayStart.month)
-                                    priv.userSelected = false
-                                }
+                            if (!isSelected) {
+                                priv.userSelected = true
+                                calendar.selectedDate = new Date(dayStart.year, dayStart.month, dayStart.day)
+                            } else if (priv.userSelected) {
+                                calendar.selectedDate = new Date(dayStart.year, dayStart.month)
+                                priv.userSelected = false
                             }
                         }
                     }

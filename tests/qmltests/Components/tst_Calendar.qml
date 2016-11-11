@@ -55,8 +55,6 @@ Rectangle {
 
         function init() {
             calendar.selectedDate = new Date(2013, 4, 10);
-            calendar.maximumDate = undefined;
-            calendar.minimumDate = undefined;
         }
 
         function test_selectedDate_data() {
@@ -91,31 +89,6 @@ Rectangle {
                 var dayStart =  new Date(dayColumn.dayStart.year, dayColumn.dayStart.month, dayColumn.dayStart.day);
                 compare(dayStart.getDay(), (data.firstDayOfWeek + i)%7, "Day column does not match expected for firstDayOfWeek");
             }
-        }
-
-        function test_minMaxDate_data() {
-            return [
-                {tag: "Min=-0", date: new Date(), minDate: new Date(), maxDate: undefined, count: 3},
-                {tag: "Min=-1", date: new Date(), minDate: new Date().addMonths(-1), maxDate: undefined, count: 4},
-                {tag: "Min=-22", date: new Date(), minDate: new Date().addMonths(-22), maxDate: undefined, count: 5}, // max out at +-2
-
-                {tag: "Max=+0", date: new Date(), minDate: undefined, maxDate: new Date(), count: 3},
-                {tag: "Max=+1", date: new Date(), minDate: undefined, maxDate: new Date().addMonths(1), count: 4},
-                {tag: "Max=+22", date: new Date(), minDate: undefined, maxDate: new Date().addMonths(22), count: 5}, // max out at +-2
-
-                {tag: "Min=-0,Max=+0", date: new Date(), minDate: new Date(), maxDate: new Date(), count: 1},
-                {tag: "Min=-1,Max=+1", date: new Date(), minDate: new Date().addMonths(-1), maxDate: new Date().addMonths(1), count: 3},
-                {tag: "Min=-22,Max=+1", date: new Date(), minDate: new Date().addMonths(-22), maxDate: new Date().addMonths(1), count: 4}, // max out at +-2
-                {tag: "Min=-1,Max=+22", date: new Date(), minDate: new Date().addMonths(-1), maxDate: new Date().addMonths(22), count: 4}, // max out at +-2
-                {tag: "Min=-22,Max=+22", date: new Date(), minDate: new Date().addMonths(-22), maxDate: new Date().addMonths(22), count: 5}, // max out at +-2
-            ];
-        }
-
-        function test_minMaxDate(data) {
-            calendar.selectedDate = data.date;
-            calendar.minimumDate = data.minDate;
-            calendar.maximumDate = data.maxDate;
-            compare(calendar.count, data.count, "The number of months should have changed");
         }
 
         function test_selectedDateUpdatesCurrent_data() {

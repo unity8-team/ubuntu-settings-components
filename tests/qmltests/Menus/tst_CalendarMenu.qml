@@ -70,23 +70,12 @@ Item {
 
         function test_currentDate() {
             calendarMenu.currentDate = date2
-            var expected = new Date(date2.getFullYear(), date2.getMonth(), 1)
-            compare(calendar.currentDate, expected, "Cannot set currendDate")
+            compare(calendar.currentDate, date2, "Cannot set currendDate")
         }
 
         function test_firstDayOfWeek() {
             calendarMenu.firstDayOfWeek = 5
             compare(calendar.firstDayOfWeek, 5, "Cannot set firstDayOfWeek")
-        }
-
-        function test_maximumDate() {
-            calendarMenu.maximumDate = date3
-            compare(calendar.maximumDate, date3, "Cannot set maximumDate")
-        }
-
-        function test_minimumDate() {
-            calendar.minimumDate = date1
-            compare(calendar.minimumDate, date1, "Cannot set minimumDate")
         }
 
         function test_selectedDate() {

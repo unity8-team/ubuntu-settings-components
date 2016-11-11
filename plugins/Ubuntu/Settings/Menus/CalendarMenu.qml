@@ -27,8 +27,6 @@ BaseMenu {
 
     property alias currentDate: calendar.currentDate
     property alias firstDayOfWeek: calendar.firstDayOfWeek
-    property alias maximumDate: calendar.maximumDate
-    property alias minimumDate: calendar.minimumDate
     property alias selectedDate: calendar.selectedDate
     property alias showWeekNumbers: calendar.showWeekNumbers
     property alias eventDays: calendar.eventDays

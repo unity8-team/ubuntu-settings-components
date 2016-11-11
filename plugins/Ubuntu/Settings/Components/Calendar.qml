@@ -163,27 +163,53 @@ ListView {
     Keys.onLeftPressed: selectedDate.addDays(-1)
     Keys.onRightPressed: selectedDate.addDays(1)
 
-    delegate: Row {
+    // This is a workaround for bug https://bugreports.qt.io/browse/QTBUG-49224
+    delegate: Loader {
+        id: monthDelegateLoader
+        sourceComponent: monthComponent
+
         readonly property var month: new Cal.Month(model.month)
+
+        Binding {
+            target: monthDelegateLoader.item
+            property: "monthIndex"
+            value: index
+            when: monthDelegateLoader.status == Loader.Ready
+        }
+
+        Binding {
+            target: monthDelegateLoader.item
+            property: "month"
+            value: month
+            when: monthDelegateLoader.status == Loader.Ready
+        }
+    }
+
+Component {
+    id: monthComponent
+    Row {
+        objectName: "monthRow" + monthIndex
+        property int monthIndex: 0
+        property var month: new Cal.Month()
         readonly property var monthStart: month.firstDay()
         readonly property var monthEnd: monthStart.addMonths(1)
         readonly property var gridStart: monthStart.weekStart(firstDayOfWeek)
 
         Loader {
             id: weekNumbersLoader
-            objectName: "weekNumbersLoader" + index
+            objectName: "weekNumbersLoader" + monthIndex
             active: calendar.showWeekNumbers
             visible: active
 
             sourceComponent: Column {
                 id: weekNumbersColumn
-                objectName: "weekNumbersColumn" + index
+                objectName: "weekNumbersColumn" + monthIndex
                 spacing: monthGrid.rowSpacing
 
                 Row {
                     Column {
                         Label {
-                            objectName: "weekDay" + modelData
+                            objectName: "weekDay" + monthIndex
                             text: i18n.ctr("Header text: keep it short and upper case", "WEEK")
                             textSize: Label.XSmall
                             // FIXME: There's no good palette that covers both
@@ -352,4 +378,6 @@ ListView {
             }
         }
     }
+}
+
 }

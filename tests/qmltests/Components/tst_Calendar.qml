@@ -68,8 +68,8 @@ Rectangle {
         function test_selectedDate(data) {
             calendar.selectedDate = data.date;
 
-            compare(calendar.currentItem.monthStart.year, data.date.getFullYear(), "Current year does no correspond to set date");
-            compare(calendar.currentItem.monthStart.month, data.date.getMonth(), "Current month does no correspond to set date");
+            compare(calendar.currentItem.month.firstDay().year, data.date.getFullYear(), "Current year does no correspond to set date");
+            compare(calendar.currentItem.month.firstDay().month, data.date.getMonth(), "Current month does no correspond to set date");
         }
 
         function test_firstDayOfWeek_data() {

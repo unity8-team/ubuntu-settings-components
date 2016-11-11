@@ -98,16 +98,10 @@ BaseMenu {
             objectName: "calenderMenuSlotsLayout"
             style: menuStyle
 
-            mainSlot: Column {
-                Calendar {
-                    id: calendar
-                    objectName: "calendar"
-                    interactive: !pointerMode
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                }
+            mainSlot: Calendar {
+                id: calendar
+                objectName: "calendar"
+                interactive: !pointerMode
             }
         }
     }

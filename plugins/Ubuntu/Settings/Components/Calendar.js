@@ -25,6 +25,10 @@ Month.prototype.addMonths = function(months) {
     return new Month(date.getFullYear(), date.getMonth());
 }
 
+Month.prototype.firstDay = function() {
+    return new Day(this.year, this.month, 1)
+}
+
 Month.prototype.toString = function() {
     return JSON.stringify(this);
 }

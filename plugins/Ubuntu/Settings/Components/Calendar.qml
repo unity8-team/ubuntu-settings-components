@@ -194,7 +194,7 @@ ListView {
 
     delegate: Row {
         readonly property var month: new Cal.Month(model.month)
-        readonly property var monthStart: new Cal.Day(model.month.year, model.month.month, 1)
+        readonly property var monthStart: month.firstDay()
         readonly property var monthEnd: monthStart.addMonths(1)
         readonly property var gridStart: monthStart.weekStart(firstDayOfWeek)
 

@@ -153,6 +153,13 @@ Item {
 
             CalendarMenu {
                 id: calendar
+                eventDays: currentDate.getMonth() % 2 ? [5, 20] : []
+            }
+
+            SwitchMenu {
+                text: i18n.tr("Show week numbers in calendar")
+                checked: calendar.showWeekNumbers
+                onCheckedChanged: calendar.showWeekNumbers = checked
             }
 
             UserSessionMenu {

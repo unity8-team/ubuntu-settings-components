@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -12,22 +12,26 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Authors:
+ *      Andrea Cimitan <andrea.cimitan@canonical.com>
+ *      Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
+import Ubuntu.Settings.Components 0.1
 import "dateExt.js" as DateExt
 import "Calendar.js" as Cal
 
 ListView {
-    id: monthView
+    id: calendar
 
-    property bool collapsed: false
-    property var currentDate: new Date(priv.selectedDay.year, priv.selectedDay.month, 1)
+    property var currentDate: new Date(priv.today.year, priv.today.month, 1)
     property int firstDayOfWeek: Qt.locale(i18n.language).firstDayOfWeek
-    property var maximumDate
-    property var minimumDate
-    property var selectedDate: new Date(priv.today.year, priv.today.month, priv.today.day)
+    property var selectedDate: currentDate
+    property var eventDays: new Array()
+    property bool showWeekNumbers: false
 
     function reset() {
         if (!priv.ready) return;
@@ -44,6 +48,22 @@ ListView {
         currentDate = new Date(currentItem.month.year, currentItem.month.month, 1);
     }
 
+    onSelectedDateChanged: {
+        if (!priv.ready) return;
+
+        if (currentDate != selectedDate)
+            currentDate = selectedDate
+    }
+
+    onCurrentDateChanged: {
+        if (!priv.ready) return;
+
+        if (selectedDate != currentDate) {
+            priv.userSelected = false
+            selectedDate = currentDate
+        }
+    }
+
     ListModel {
         id: calendarModel
     }
@@ -52,55 +72,28 @@ ListView {
         id: priv
 
         property bool ready: false
-        property int squareUnit: monthView.width / 7
-        property int verticalMargin: units.gu(1)
+        property bool userSelected: false
         property var today: new Cal.Day().fromDate((new Date()))
+        property real weekDaysHeight: 0
+        readonly property real squareUnit: units.gu(3)
+        readonly property real todayRingThickness: units.gu(.1)
+        readonly property int days: 7
+        readonly property int weeks: 6
 
         property var currentMonth: new Cal.Month().fromDate(currentDate)
         property var selectedDay: new Cal.Day().fromDate(selectedDate)
-        property var minimumMonth: minimumDate ? new Cal.Month().fromDate(minimumDate) : undefined
-        property var maximumMonth: maximumDate ? new Cal.Month().fromDate(maximumDate) : undefined
-
-        property var minimumDay: minimumDate ? new Cal.Day().fromDate(minimumDate) : undefined
-        property var maximumDay: maximumDate ? new Cal.Day().fromDate(maximumDate) : undefined
 
         onCurrentMonthChanged: {
             if (!ready) return
             __populateModel();
-        }
-        onSelectedDayChanged: {
-            if (!ready) return
-            __populateModel();
-        }
-        onMinimumMonthChanged: {
-            if (!ready) return
-            __populateModel();
-        }
-        onMaximumMonthChanged: {
-            if (!ready) return
-            __populateModel();
-        }
-
-        function __getRealMinimumMonth(month) {
-            if (minimumMonth !== undefined && minimumMonth > month) {
-                return minimumMonth;
-            }
-            return month;
-        }
-
-        function __getRealMaximumMonth(month) {
-            if (maximumMonth !== undefined && maximumMonth < month) {
-                return maximumMonth;
-            }
-            return month;
         }
 
         function __populateModel() {
             //  disable the onCurrentIndexChanged logic
             priv.ready = false;
 
-            var minimumMonth = __getRealMinimumMonth(currentMonth.addMonths(-2));
-            var maximumMonth = __getRealMaximumMonth(currentMonth.addMonths(2));
+            var minimumMonth = currentMonth.addMonths(-2);
+            var maximumMonth = currentMonth.addMonths(2);
 
             // Remove old minimum months
             while (calendarModel.count > 0 && new Cal.Month(calendarModel.get(0).month) < minimumMonth) {
@@ -140,7 +133,7 @@ ListView {
     }
 
     LiveTimer {
-        frequency: monthView.visible ? LiveTimer.Minute : LiveTimer.Disabled
+        frequency: calendar.visible ? LiveTimer.Minute : LiveTimer.Disabled
         onFrequencyChanged: trigger()
         onTrigger: {
             Date.timeZoneUpdated(); // FIXME remove when fixed in UITK
@@ -152,9 +145,9 @@ ListView {
         }
     }
 
-    width: parent.width
-    height: priv.squareUnit * (collapsed ? 1 : 6) + priv.verticalMargin * 2
-    interactive: !collapsed
+    implicitWidth: priv.squareUnit * priv.days
+    implicitHeight: priv.squareUnit * priv.weeks + priv.weekDaysHeight
+    interactive: true
     clip: true
     cacheBuffer: Math.max((width+1) * 3, 0) // one page left, one page right
     highlightRangeMode: ListView.StrictlyEnforceRange
@@ -165,97 +158,226 @@ ListView {
     snapMode: ListView.SnapOneItem
     focus: true
     highlightFollowsCurrentItem: true
+    highlightMoveDuration: UbuntuAnimation.FastDuration
 
     Keys.onLeftPressed: selectedDate.addDays(-1)
     Keys.onRightPressed: selectedDate.addDays(1)
 
-    delegate: Item {
-        id: monthItem
+    // This is a workaround for bug https://bugreports.qt.io/browse/QTBUG-49224
+    delegate: Loader {
+        id: monthDelegateLoader
+        sourceComponent: monthComponent
 
-        property int currentWeekRow: Math.floor((priv.selectedDay - gridStart) / 7)
-        property var gridStart: monthStart.weekStart(firstDayOfWeek)
-        property var monthEnd: monthStart.addMonths(1)
-        property var monthStart: new Cal.Day(model.month.year, model.month.month, 1)
+        readonly property var month: new Cal.Month(model.month)
 
-        property var month: new Cal.Month(model.month)
+        Binding {
+            target: monthDelegateLoader.item
+            property: "monthIndex"
+            value: index
+            when: monthDelegateLoader.status == Loader.Ready
+        }
 
-        width: monthView.width
-        height: monthView.height
+        Binding {
+            target: monthDelegateLoader.item
+            property: "month"
+            value: month
+            when: monthDelegateLoader.status == Loader.Ready
+        }
+    }
 
-        Grid {
-            id: monthGrid
+Component {
+    id: monthComponent
+    Row {
+        objectName: "monthRow" + monthIndex
+        property int monthIndex: 0
+        property var month: new Cal.Month()
+        readonly property var monthStart: month.firstDay()
+        readonly property var monthEnd: monthStart.addMonths(1)
+        readonly property var gridStart: monthStart.weekStart(firstDayOfWeek)
 
-            rows: 6
-            columns: 7
-            y: priv.verticalMargin
-            width: priv.squareUnit * columns
-            height: priv.squareUnit * rows
+        Loader {
+            id: weekNumbersLoader
+            objectName: "weekNumbersLoader" + monthIndex
+            active: calendar.showWeekNumbers
+            visible: active
 
-            Repeater {
-                model: monthGrid.rows * monthGrid.columns
-                delegate: Item {
-                    id: dayItem
-                    objectName: "dayItem" + index
+            sourceComponent: Column {
+                id: weekNumbersColumn
+                objectName: "weekNumbersColumn" + monthIndex
+                spacing: monthGrid.rowSpacing
 
-                    property bool isCurrent: dayStart.equals(priv.selectedDay)
-                    property bool isCurrentMonth: (monthStart < dayStart || monthStart.equals(dayStart))  && dayStart < monthEnd
-                    property bool isCurrentWeek: row == currentWeekRow
-                    property bool isSunday: weekday == 0
-                    property bool isToday: dayStart.equals(priv.today)
-                    property bool isWithinBounds: (priv.minimumDay === undefined || dayStart >= priv.minimumDay) &&
-                                                  (priv.maximumDay === undefined || dayStart <= priv.maximumDay)
-                    property int row: Math.floor(index / 7)
-                    property int weekday: (index % 7 + firstDayOfWeek) % 7
-                    property real bottomMargin: (row == 5 || (collapsed && isCurrentWeek)) ? -priv.verticalMargin : 0
-                    property real topMargin: (row == 0 || (collapsed && isCurrentWeek)) ? -priv.verticalMargin : 0
-                    property var dayStart: gridStart.addDays(index)
-
-                    visible: collapsed ? isCurrentWeek : true
-                    width: priv.squareUnit
-                    height: priv.squareUnit
-
-                    Item {
-                        anchors {
-                            fill: parent
-                            topMargin: dayItem.topMargin
-                            bottomMargin: dayItem.bottomMargin
-                        }
-
-                        Rectangle {
-                            anchors.fill: parent
-                            visible: isSunday
-                            opacity: 0.1
-                            color: UbuntuColors.warmGrey
-                        }
-
+                Row {
+                    Column {
                         Label {
-                            anchors.centerIn: parent
-                            text: dayStart.day
-                            font.pixelSize: units.dp(isCurrent ? 36 : 20)
-                            color: isCurrentMonth && isWithinBounds ? isToday ? UbuntuColors.green :
-                                                                                theme.palette.normal.backgroundText :
-                                                                      theme.palette.disabled.backgroundText
-                            opacity: isWithinBounds ? 1. : 0.33
+                            objectName: "weekDay" + monthIndex
+                            text: i18n.ctr("Header text: keep it short and upper case", "WEEK")
+                            textSize: Label.XSmall
+                            // FIXME: There's no good palette that covers both
+                            //        Ambiance (Ash) and Suru (Silk)
+                            color: theme.palette.disabled.base
+                        }
 
-                            Behavior on font.pixelSize {
-                                NumberAnimation { duration: 50 }
+                        Repeater {
+                            id: weekNumbers
+                            model: priv.weeks
+                            delegate: Item {
+                                readonly property var rowDate: monthStart.addDays(index * priv.days).toDate()
+                                width: priv.squareUnit
+                                height: priv.squareUnit
+
+                                Label {
+                                    id: weekNumberLabel
+                                    anchors.centerIn: parent
+                                    text: QtDateFunctions.formattedWeekNumber(rowDate)
+                                    textSize: Label.Medium
+                                    color: theme.palette.normal.backgroundTertiaryText
+                                }
                             }
                         }
                     }
 
-                    MouseArea {
-                        anchors {
-                            fill: parent
-                            topMargin: dayItem.topMargin
-                            bottomMargin: dayItem.bottomMargin
+                    Column {
+                        Item {
+                            width: units.gu(2)
+                            height: weekNumbersColumn.height
+
+                            Rectangle {
+                                color: theme.palette.disabled.base
+                                anchors.fill: parent
+                                anchors.topMargin: units.gu(0.5)
+                                anchors.bottomMargin: anchors.topMargin
+                                anchors.leftMargin: units.gu(0.9)
+                                anchors.rightMargin: anchors.leftMargin
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Grid {
+            id: monthGrid
+
+            columns: priv.days
+            columnSpacing: (calendar.width - calendar.implicitWidth - (weekNumbersLoader.visible ? weekNumbersLoader.width : 0)) / (columns - 1)
+
+            rows: priv.weeks + 1 /* the weekDays header */
+            rowSpacing: (calendar.height - calendar.implicitHeight) / (rows - 1)
+
+            verticalItemAlignment: Grid.AlignVCenter
+            horizontalItemAlignment: Grid.AlignHCenter
+
+            Repeater {
+                id: daysHeader
+                model: priv.days
+
+                delegate: Label {
+                    objectName: "weekDay" + index
+                    text: Qt.locale(i18n.language).standaloneDayName((index + firstDayOfWeek) % priv.days, Locale.ShortFormat).toUpperCase()
+                    textSize: Label.XSmall
+                    // FIXME: There's no good palette that covers both
+                    //        Ambiance (Ash) and Suru (Silk)
+                    color: theme.palette.highlighted.base
+                    onHeightChanged: priv.weekDaysHeight = Math.max(height, priv.weekDaysHeight)
+                }
+            }
+
+            Repeater {
+                model: priv.days * priv.weeks
+                delegate: Item {
+                    id: dayItem
+                    objectName: "dayItem" + index
+
+                    readonly property int weekday: (index % priv.days + firstDayOfWeek) % priv.days
+                    readonly property var dayStart: gridStart.addDays(index)
+                    readonly property bool isSelected: priv.userSelected && dayStart.equals(priv.selectedDay)
+                    readonly property bool isCurrentMonth: (monthStart < dayStart || monthStart.equals(dayStart))  && dayStart < monthEnd
+                    readonly property bool isWeekend: weekday == 0 || weekday == 6
+                    readonly property bool isToday: dayStart.equals(priv.today)
+                    readonly property bool hasEvent: isCurrentMonth && eventDays.indexOf(dayStart.day) != -1
+
+                    width: priv.squareUnit
+                    height: priv.squareUnit
+
+                    Loader {
+                        id: todayMarkerLoader
+                        objectName: "todayMarkerLoader" + index
+                        active: isToday
+                        visible: active
+                        anchors.fill: parent
+                        sourceComponent: UbuntuShape {
+                            aspect: UbuntuShape.Flat
+                            radius: "small"
+                            color: dayNumber.color
+
+                            UbuntuShape {
+                                // XXX: since we can't just colorize the shape border
+                                //      we need another one to fill the center with bg color
+                                id: currentDayShape
+                                radius: parent.radius
+                                aspect: parent.aspect
+                                backgroundColor: theme.palette.normal.background
+
+                                anchors.fill: parent
+                                anchors.margins: priv.todayRingThickness
+                            }
+                        }
+                    }
+
+                    Label {
+                        id: dayNumber
+                        anchors.centerIn: parent
+                        text: dayStart.toDate().toLocaleDateString(Qt.locale(), "dd")
+                        textSize: Label.Medium
+                        color: isSelected ? theme.palette.normal.positionText : theme.palette.normal.backgroundText
+
+                        Binding on color {
+                            when: isCurrentMonth && isWeekend && !isSelected
+                            value: theme.palette.normal.backgroundTertiaryText
                         }
 
+                        Binding on color {
+                            when: !isCurrentMonth
+                            // FIXME: There's no good palette that covers both
+                            //        Ambiance (silk) and Suru (inkstone)
+                            value: theme.palette.disabled.base
+                        }
+                    }
+
+                    Loader{
+                        objectName: "eventMarkerLoader"+index
+                        active: hasEvent
+                        visible: active
+                        width: units.gu(0.4)
+                        height: width
+                        y: dayNumber.height + (parent.height - dayNumber.height) / 2 - priv.todayRingThickness
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        sourceComponent: UbuntuShape {
+                            objectName: "eventMarker"+index
+                            aspect: UbuntuShape.Flat
+                            radius: "small"
+                            color: isSelected ? dayNumber.color : theme.palette.selected.baseText
+                        }
+                    }
+
+                    AbstractButton {
+                        anchors.fill: parent
+
                         onClicked: {
-                            if (isWithinBounds) monthView.selectedDate = new Date(dayStart.year, dayStart.month, dayStart.day)
+                            if (!isSelected) {
+                                priv.userSelected = true
+                                calendar.selectedDate = new Date(dayStart.year, dayStart.month, dayStart.day)
+                            } else if (priv.userSelected) {
+                                calendar.selectedDate = new Date(dayStart.year, dayStart.month)
+                                priv.userSelected = false
+                            }
                         }
                     }
                 }
             }
         }
     }
+}
+
 }

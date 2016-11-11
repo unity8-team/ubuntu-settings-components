@@ -25,6 +25,10 @@ Month.prototype.addMonths = function(months) {
     return new Month(date.getFullYear(), date.getMonth());
 }
 
+Month.prototype.firstDay = function() {
+    return new Day(this.year, this.month, 1)
+}
+
 Month.prototype.toString = function() {
     return JSON.stringify(this);
 }
@@ -98,4 +102,8 @@ Day.prototype.equals = function(other) {
         return other.valueOf() == this.valueOf();
     }
     return false;
+}
+
+Day.prototype.toDate = function() {
+    return new Date(this.year, this.month, this.day)
 }

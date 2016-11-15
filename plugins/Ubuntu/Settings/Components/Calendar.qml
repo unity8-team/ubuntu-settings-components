@@ -365,6 +365,7 @@ Component {
 
                     AbstractButton {
                         anchors.fill: parent
+                        visible: (currentIndex == monthIndex)
 
                         onClicked: {
                             if (!isSelected) {

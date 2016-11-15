@@ -60,6 +60,15 @@ BaseMenu {
                             .arg(Qt.locale().standaloneMonthName(calendar.currentDate.getMonth(), Locale.LongFormat))
                             .arg(calendar.currentDate.getFullYear())
 
+            title.children: [
+                AbstractButton {
+                    x: (parent.width - width) / 2
+                    width: parent.contentWidth
+                    height: parent.contentHeight
+                    onClicked: calendar.resetSelectionForMonth()
+                }
+            ]
+
             Icon {
                 objectName: "goPreviousMonth"
                 name: "go-previous"
@@ -71,7 +80,7 @@ BaseMenu {
                 AbstractButton {
                     anchors.fill: parent
                     onClicked: {
-                        calendar.currentDate = calendar.currentDate.addMonths(-1)
+                        currentDate = currentDate.addMonths(-1)
                     }
                 }
             }
@@ -87,7 +96,7 @@ BaseMenu {
                 AbstractButton {
                     anchors.fill: parent
                     onClicked: {
-                        calendar.currentDate = calendar.currentDate.addMonths(1)
+                        currentDate = currentDate.addMonths(1)
                     }
                 }
             }

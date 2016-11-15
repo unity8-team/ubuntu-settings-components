@@ -38,6 +38,16 @@ ListView {
         currentDate = new Date(priv.today.year, priv.today.month, 1)
     }
 
+    function firstDayOfCurrentMonth() {
+        return new Date(currentItem.month.year, currentItem.month.month)
+    }
+
+    function resetSelectionForMonth() {
+        if (!priv.ready) return;
+        priv.userSelected = false
+        selectedDate = firstDayOfCurrentMonth()
+    }
+
     Component.onCompleted: {
         priv.__populateModel();
     }
@@ -45,7 +55,7 @@ ListView {
     onCurrentIndexChanged: {
         if (!priv.ready) return;
 
-        currentDate = new Date(currentItem.month.year, currentItem.month.month, 1);
+        currentDate = firstDayOfCurrentMonth()
     }
 
     onSelectedDateChanged: {

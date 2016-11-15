@@ -329,18 +329,20 @@ Component {
                         anchors.centerIn: parent
                         text: dayStart.toDate().toLocaleDateString(Qt.locale(), "dd")
                         textSize: Label.Medium
-                        color: isSelected ? theme.palette.normal.positionText : theme.palette.normal.backgroundText
+                        color: {
+                            if (!isCurrentMonth) {
+                                // FIXME: There's no good palette that covers both
+                                //        Ambiance (silk) and Suru (inkstone)
+                                return theme.palette.disabled.base
+                            }
+                            if (isSelected) {
+                                return theme.palette.normal.positionText
+                            }
+                            if (isWeekend) {
+                                return theme.palette.normal.backgroundTertiaryText
+                            }
 
-                        Binding on color {
-                            when: isCurrentMonth && isWeekend && !isSelected
-                            value: theme.palette.normal.backgroundTertiaryText
-                        }
-
-                        Binding on color {
-                            when: !isCurrentMonth
-                            // FIXME: There's no good palette that covers both
-                            //        Ambiance (silk) and Suru (inkstone)
-                            value: theme.palette.disabled.base
+                            return theme.palette.normal.backgroundText
                         }
                     }
 

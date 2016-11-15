@@ -79,9 +79,7 @@ BaseMenu {
 
                 AbstractButton {
                     anchors.fill: parent
-                    onClicked: {
-                        currentDate = currentDate.addMonths(-1)
-                    }
+                    onClicked: calendar.moveToMonth(-1)
                 }
             }
 
@@ -95,9 +93,7 @@ BaseMenu {
 
                 AbstractButton {
                     anchors.fill: parent
-                    onClicked: {
-                        currentDate = currentDate.addMonths(1)
-                    }
+                    onClicked: calendar.moveToMonth(1)
                 }
             }
         }

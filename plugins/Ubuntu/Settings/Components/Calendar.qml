@@ -42,6 +42,11 @@ ListView {
         return new Date(currentItem.month.year, currentItem.month.month)
     }
 
+    function moveToMonth(delta) {
+        if (!priv.ready) return;
+        currentDate = priv.currentMonth.addMonths(delta).firstDay().toDate()
+    }
+
     function resetSelectionForMonth() {
         if (!priv.ready) return;
         priv.userSelected = false

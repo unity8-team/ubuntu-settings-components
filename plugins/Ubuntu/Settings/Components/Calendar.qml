@@ -46,7 +46,7 @@ ListView {
     function selectFistDayOfTheMonth() {
         if (!priv.ready) return;
         priv.userSelected = false
-        selectedDate = currentItem.month.firstDay().toDate()
+        selectedDate = currentItem.month.toDate()
     }
 
     Component.onCompleted: {
@@ -103,7 +103,7 @@ ListView {
             if (month.equals(priv.today.getMonth())) {
                currentDate = priv.today.toDate()
             } else {
-                currentDate = month.firstDay().toDate()
+                currentDate = month.toDate()
             }
         }
 

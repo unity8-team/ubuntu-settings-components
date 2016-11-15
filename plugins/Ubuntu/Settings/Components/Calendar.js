@@ -44,6 +44,10 @@ Month.prototype.equals = function(other) {
     return false;
 }
 
+Month.prototype.toDate = function() {
+    return new Date(this.year, this.month)
+}
+
 function Day(arg1, arg2, arg3) {
     if (arg1 === undefined) {
         var date = new Date();

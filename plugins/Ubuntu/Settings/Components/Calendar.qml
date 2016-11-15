@@ -364,7 +364,7 @@ Component {
                     }
 
                     AbstractButton {
-                        anchors.fill: parent
+                        anchors.fill: dayNumber
                         visible: (currentIndex == monthIndex)
 
                         onClicked: {

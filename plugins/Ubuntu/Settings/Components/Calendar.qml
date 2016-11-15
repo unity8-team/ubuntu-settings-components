@@ -387,7 +387,11 @@ Component {
                                 priv.userSelected = true
                                 calendar.selectedDate = new Date(dayStart.year, dayStart.month, dayStart.day)
                             } else if (priv.userSelected) {
-                                calendar.selectedDate = new Date(dayStart.year, dayStart.month)
+                                if (priv.today.getMonth().equals(month)) {
+                                    calendar.selectedDate = priv.today.toDate()
+                                } else {
+                                    calendar.selectedDate = new Date(dayStart.year, dayStart.month)
+                                }
                                 priv.userSelected = false
                             }
                         }

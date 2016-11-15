@@ -37,6 +37,13 @@ Month.prototype.valueOf = function() {
     return this.year * 12 + this.month;
 }
 
+Month.prototype.equals = function(other) {
+    if (other instanceof Month) {
+        return other.valueOf() == this.valueOf();
+    }
+    return false;
+}
+
 function Day(arg1, arg2, arg3) {
     if (arg1 === undefined) {
         var date = new Date();
@@ -67,6 +74,10 @@ Day.prototype.addMonths = function(months) {
 Day.prototype.addDays = function(days) {
     var date = new Date(this.year, this.month, this.day).addDays(days);
     return new Day(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+Day.prototype.getMonth = function() {
+    return new Month(this.year, this.month)
 }
 
 Day.prototype.dayofweek = function ()	/* 1 <= m <= 12,  y > 1752 (in the U.K.) */

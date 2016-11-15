@@ -27,7 +27,7 @@ import "Calendar.js" as Cal
 ListView {
     id: calendar
 
-    property var currentDate: new Date(priv.today.year, priv.today.month, 1)
+    property var currentDate: priv.today.toDate()
     property int firstDayOfWeek: Qt.locale(i18n.language).firstDayOfWeek
     property var selectedDate: currentDate
     property var eventDays: new Array()
@@ -35,22 +35,18 @@ ListView {
 
     function reset() {
         if (!priv.ready) return;
-        currentDate = new Date(priv.today.year, priv.today.month, 1)
-    }
-
-    function firstDayOfCurrentMonth() {
-        return new Date(currentItem.month.year, currentItem.month.month)
+        currentDate = priv.today.toDate()
     }
 
     function moveToMonth(delta) {
         if (!priv.ready) return;
-        currentDate = priv.currentMonth.addMonths(delta).firstDay().toDate()
+        priv.__setCurrentDateFromMonth(priv.currentMonth.addMonths(delta))
     }
 
-    function resetSelectionForMonth() {
+    function selectFistDayOfTheMonth() {
         if (!priv.ready) return;
         priv.userSelected = false
-        selectedDate = firstDayOfCurrentMonth()
+        selectedDate = currentItem.month.firstDay().toDate()
     }
 
     Component.onCompleted: {
@@ -59,8 +55,7 @@ ListView {
 
     onCurrentIndexChanged: {
         if (!priv.ready) return;
-
-        currentDate = firstDayOfCurrentMonth()
+        priv.__setCurrentDateFromMonth(currentItem.month)
     }
 
     onSelectedDateChanged: {
@@ -85,6 +80,7 @@ ListView {
 
     QtObject {
         id: priv
+        objectName: "calendarPriv"
 
         property bool ready: false
         property bool userSelected: false
@@ -101,6 +97,14 @@ ListView {
         onCurrentMonthChanged: {
             if (!ready) return
             __populateModel();
+        }
+
+        function __setCurrentDateFromMonth(month) {
+            if (month.equals(priv.today.getMonth())) {
+               currentDate = priv.today.toDate()
+            } else {
+                currentDate = month.firstDay().toDate()
+            }
         }
 
         function __populateModel() {

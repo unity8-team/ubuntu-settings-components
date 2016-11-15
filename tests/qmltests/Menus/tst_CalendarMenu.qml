@@ -108,6 +108,13 @@ Item {
             verify(monthLayout)
 
             var expected = calendar.currentDate.addMonths(data.delta)
+            var now = new Date()
+
+            if (expected.getFullYear() != now.getFullYear() || expected.getMonth() != now.getMonth()) {
+                expected.setDate(1)
+            } else {
+                expected.setDate(now.getDate())
+            }
 
             for (var i = 0; i < Math.abs(data.delta); ++i)
                 mouseClick(button, button.width / 2, button.height / 2)

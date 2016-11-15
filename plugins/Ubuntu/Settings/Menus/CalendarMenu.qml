@@ -65,7 +65,7 @@ BaseMenu {
                     x: (parent.width - width) / 2
                     width: parent.contentWidth
                     height: parent.contentHeight
-                    onClicked: calendar.resetSelectionForMonth()
+                    onClicked: calendar.selectFistDayOfTheMonth()
                 }
             ]
 

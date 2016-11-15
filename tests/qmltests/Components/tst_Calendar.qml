@@ -157,5 +157,30 @@ Rectangle {
                 compare(todayMarkerLoader.active, dayItem.isToday)
             }
         }
+
+        function test_moveToMonth_data() {
+            var tests = []
+
+            for (var i = 1; i <= 15; ++i) {
+                tests.push({tag: "previous "+i, delta: -i })
+                tests.push({tag: "next "+i, delta: i })
+            }
+
+            return tests
+        }
+
+        function test_moveToMonth(data) {
+            var expected = calendar.currentDate.addMonths(data.delta)
+            var now = new Date()
+
+            if (expected.getFullYear() != now.getFullYear() || expected.getMonth() != now.getMonth()) {
+                expected.setDate(1)
+            } else {
+                expected.setDate(now.getDate())
+            }
+
+            calendar.moveToMonth(data.delta)
+            compare(calendar.currentDate, expected)
+        }
     }
 }

@@ -18,27 +18,17 @@
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
+import Ubuntu.Settings.Menus.Style 0.1
 
 ListItem {
     id: menu
 
+    property bool pointerMode: false
     property bool highlightWhenPressed: true
-    property color foregroundColor: theme.palette.normal.baseText
+    property real menuHeight: -1
+    property BaseStyle menuStyle: pointerMode ? PointerStyle : TouchStyle
     property alias backColor: menu.color
-
-    // Can't create an alias for divider.visible here, see QTBUG-50407
-    // Thus this hack is needed not to override the default divider.visible value
-    property bool showDivider: false
-    divider.visible: false
-    Component.onCompleted: {
-        if (showDivider != divider.visible)
-            showDivider = divider.visible;
-
-        divider.visible = Qt.binding(function() { return showDivider })
-        showDivider = Qt.binding(function() { return divider.visible })
-    }
-
-    highlightColor: highlightWhenPressed ? theme.palette.highlighted.background : backColor
+    property color foregroundColor: menuStyle.foregroundColor
 
     // This is for retro-compatibility with ListItem.Empty, adding support to override the callback
     signal triggered(var value)
@@ -49,6 +39,24 @@ ListItem {
     property bool confirmRemoval: true
     onConfirmRemovalChanged: console.error(menu+": confirmRemoval property is deprecated")
     signal itemRemoved()
+
+    divider.visible: false
+
+    // FIXME: this is should use implicitHeight, but we can't yet due to lp:1630683
+    Binding on height {
+        when: menuHeight >= 0
+        value: Math.max(menuStyle.minimumHeight, menuHeight) + (divider.visible ? divider.height : 0)
+    }
+
+    Binding on highlightColor {
+        when: !highlightWhenPressed
+        value: backColor
+    }
+
+    Binding on highlightColor {
+        when: highlightWhenPressed && menuStyle
+        value: menuStyle.highlightColor
+    }
 
     ListItemActions {
         id: removeAction

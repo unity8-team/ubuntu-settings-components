@@ -1,3 +1,5 @@
+add_subdirectory(Style)
+
 project(UbuntuSettingsMenusQml)
 
 add_definitions(-DUBUNTUSETTINGSCOMPONENTS_LIBRARY)

@@ -31,15 +31,16 @@ BaseMenu {
     property alias maximum: progressBar.maximumValue
     property bool active: false
 
-    implicitHeight: slotsLayout.height + (divider.visible ? divider.height : 0)
+    menuHeight: slotsLayout.height
 
-    SlotsLayout {
+    StyledSlotsLayout {
         id: slotsLayout
         objectName: "transferMenuSlotsLayout"
+        style: menuStyle
 
         UbuntuShape {
             SlotsLayout.position: SlotsLayout.Leading
-            width: units.gu(6)
+            width: menuStyle.avatarSize
             height: width
 
             source: ShaderEffectSource {
@@ -52,7 +53,7 @@ BaseMenu {
 
                 color: {
                     if (String(source).match(/^image:\/\/theme/)) {
-                        return theme.palette.normal.backgroundText;
+                        return menuStyle.iconColor;
                     }
                     return Qt.rgba(0.0, 0.0, 0.0, 0.0);
                 }
@@ -68,7 +69,9 @@ BaseMenu {
                 anchors { left: parent.left; right: parent.right }
                 elide: Text.ElideRight
                 maximumLineCount: 1
+                color: menu.foregroundColor
                 font.weight: Font.DemiBold
+                font.pixelSize: menuStyle.fontSize
             }
 
             ProgressBar {
@@ -85,8 +88,9 @@ BaseMenu {
                 id: stateLabel
                 objectName: "stateText"
                 anchors { left: parent.left; right: parent.right }
+                font.pixelSize: menuStyle.subtitleFontSize
+                color: menu.foregroundColor
                 visible: menu.active
-                fontSize: "x-small"
                 elide: Text.ElideRight
                 maximumLineCount: 1
             }

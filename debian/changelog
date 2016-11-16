@@ -1,4 +1,4 @@
-ubuntu-settings-components (0.11) UNRELEASED; urgency=medium
+ubuntu-settings-components (0.11+17.04.20161116.1-0ubuntu1) zesty; urgency=medium
 
   * Menus: add Pointer and Touch styles to be used depending on the user
     interaction with components
@@ -12,8 +12,12 @@ ubuntu-settings-components (0.11) UNRELEASED; urgency=medium
     style.
 
   * Bump package version as there's a new API for various components
+  * Calendar: update to new style with weekdays header and Month
+    selection (LP: #1640936, #1641719, #1641721, #1641722, #1641724,
+    #1641728)
+  * RadioMenu: add menu item for creating radio items
 
- -- Marco Trevisan (Treviño) <marco@ubuntu.com>  Thu, 27 Oct 2016 13:46:39 +0200
+ -- Marco Trevisan (Treviño) <mail@3v1n0.net>  Wed, 16 Nov 2016 18:54:00 +0000
 
 ubuntu-settings-components (0.10+17.04.20161024-0ubuntu1) zesty; urgency=medium
 

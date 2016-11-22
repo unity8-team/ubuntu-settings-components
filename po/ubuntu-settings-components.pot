@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ubuntu-settings-components\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-16 18:54+0000\n"
+"POT-Creation-Date: 2016-11-22 09:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -127,11 +127,11 @@ msgctxt "%1=month name, %2=4-digit year"
 msgid "%1 %2"
 msgstr ""
 
-#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:99
+#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:102
 msgid "Roaming"
 msgstr ""
 
-#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:124
+#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:127
 msgid "Unlock SIM"
 msgstr ""
 

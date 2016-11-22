@@ -7,19 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ubuntu-settings-components\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-06-20 15:57+0200\n"
+"POT-Creation-Date: 2016-11-16 18:54+0000\n"
 "PO-Revision-Date: 2016-10-22 12:50+0000\n"
 "Last-Translator: Phan Hoang <phahoatho@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-10-23 06:55+0000\n"
-"X-Generator: Launchpad (build 18246)\n"
+"X-Launchpad-Export-Date: 2016-11-22 06:06+0000\n"
+"X-Generator: Launchpad (build 18269)\n"
 
-#: plugins/Ubuntu/Settings/Components/QuickReply.qml:63
-msgid "Quick reply with:"
-msgstr "Réponse rapide avec :"
+#: plugins/Ubuntu/Settings/Components/Calendar.qml:232
+msgctxt "Header text: keep it short and upper case"
+msgid "WEEK"
+msgstr ""
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:80
 msgid "Fingerprint Name"
@@ -38,7 +39,7 @@ msgstr "Désolé, l'empreinte n'a pas pu être supprimée"
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:137
 #: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:148
 msgid "OK"
-msgstr "Ok"
+msgstr ""
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:32
 msgid "Fingerprint ID"
@@ -94,8 +95,8 @@ msgid "Sorry, the reader doesn’t seem to be working."
 msgstr "Désolé, le lecteur semble ne pas fonctionner."
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:60
-msgid "Swipe your finger repeatedly over the reader."
-msgstr "Passez plusieurs fois votre doigt sur le lecteur."
+msgid "Tap your finger repeatedly on the reader."
+msgstr ""
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:77
 msgid "Keep your finger on the reader for longer."
@@ -122,32 +123,32 @@ msgstr "%1%"
 msgid "Next"
 msgstr "Suivant"
 
-#: plugins/Ubuntu/Settings/Menus/CalendarMenu.qml:57
+#: plugins/Ubuntu/Settings/Menus/CalendarMenu.qml:59
 #, qt-format
 msgctxt "%1=month name, %2=4-digit year"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:100
+#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:99
 msgid "Roaming"
 msgstr "Itinérance"
 
-#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:122
+#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:124
 msgid "Unlock SIM"
 msgstr "Déverrouiller la carte SIM"
 
-#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:30
+#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:64
+msgid "Message"
+msgstr "Message"
+
+#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:76
 msgid "Call back"
 msgstr "Rappeler"
 
-#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:33
-#: plugins/Ubuntu/Settings/Menus/TextMessageMenu.qml:29
+#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:93
+#: plugins/Ubuntu/Settings/Menus/TextMessageMenu.qml:38
 msgid "Send"
 msgstr "Envoyer"
-
-#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:58
-msgid "Message"
-msgstr "Message"
 
 #: plugins/Ubuntu/Settings/Vpn/DialogFile.qml:170
 msgid "Accept"
@@ -350,8 +351,6 @@ msgid ""
 "Your Wi-Fi/mobile provider can see when and how much you use the Internet, "
 "but not what for."
 msgstr ""
-"Votre opérateur Wi-Fi/mobile peut voir quand et quelle quantité d'Internet "
-"vous utilisez, mais pas ce que vous en faites."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:39
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:45
@@ -376,15 +375,11 @@ msgid ""
 "Your Wi-Fi/mobile provider can still see when and how much you use the "
 "Internet."
 msgstr ""
-"Votre opérateur Wi-Fi/mobile peut toujours savoir quand et quelle quantité "
-"d'Internet vous utilisez."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:39
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:45
 msgid "The DNS provider can see which Web sites and other services you use."
 msgstr ""
-"L'opérateur du DNS peut voir quels sites Web et autres services vous "
-"utilisez."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:30
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NoCert.qml:27
@@ -428,8 +423,6 @@ msgstr "Le certificat est sur la liste noire."
 msgid ""
 "It does not provide a certificate. The VPN provider could be impersonated."
 msgstr ""
-"Il ne fournit pas de certificat. Quelqu'un se fait peut-être passer pour le "
-"fournisseur du VPN."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:27
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:27
@@ -463,8 +456,6 @@ msgstr "Vous utilisez ce VPN pour des services spécifiques."
 msgid ""
 "Your traffic to these services is private to them and the VPN provider."
 msgstr ""
-"Votre trafic vers ces services est privé pour eux et pour le fournisseur de "
-"VPN."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SomeTraffic.qml:39
 msgid "Your Wi-Fi/mobile provider can track your use of any other services. "
@@ -513,3 +504,9 @@ msgstr "Son propre réseau"
 #: plugins/Ubuntu/Settings/Vpn/VpnTypeField.qml:32
 msgid "Type:"
 msgstr "Type :"
+
+#~ msgid "Quick reply with:"
+#~ msgstr "Réponse rapide avec :"
+
+#~ msgid "Swipe your finger repeatedly over the reader."
+#~ msgstr "Passez plusieurs fois votre doigt sur le lecteur."

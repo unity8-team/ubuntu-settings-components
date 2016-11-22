@@ -7,18 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ubuntu-settings-components\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-06-20 15:57+0200\n"
+"POT-Creation-Date: 2016-11-16 18:54+0000\n"
 "PO-Revision-Date: 2016-06-27 12:35+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Occitan (post 1500) <oc@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-06-28 05:41+0000\n"
-"X-Generator: Launchpad (build 18115)\n"
+"X-Launchpad-Export-Date: 2016-11-22 06:06+0000\n"
+"X-Generator: Launchpad (build 18269)\n"
 
-#: plugins/Ubuntu/Settings/Components/QuickReply.qml:63
-msgid "Quick reply with:"
+#: plugins/Ubuntu/Settings/Components/Calendar.qml:232
+msgctxt "Header text: keep it short and upper case"
+msgid "WEEK"
 msgstr ""
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:80
@@ -92,7 +93,7 @@ msgid "Sorry, the reader doesn’t seem to be working."
 msgstr ""
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:60
-msgid "Swipe your finger repeatedly over the reader."
+msgid "Tap your finger repeatedly on the reader."
 msgstr ""
 
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:77
@@ -120,31 +121,31 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: plugins/Ubuntu/Settings/Menus/CalendarMenu.qml:57
+#: plugins/Ubuntu/Settings/Menus/CalendarMenu.qml:59
 #, qt-format
 msgctxt "%1=month name, %2=4-digit year"
 msgid "%1 %2"
 msgstr ""
 
-#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:100
+#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:99
 msgid "Roaming"
 msgstr ""
 
-#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:122
+#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:124
 msgid "Unlock SIM"
 msgstr ""
 
-#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:30
+#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:64
+msgid "Message"
+msgstr ""
+
+#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:76
 msgid "Call back"
 msgstr ""
 
-#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:33
-#: plugins/Ubuntu/Settings/Menus/TextMessageMenu.qml:29
+#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:93
+#: plugins/Ubuntu/Settings/Menus/TextMessageMenu.qml:38
 msgid "Send"
-msgstr ""
-
-#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:58
-msgid "Message"
 msgstr ""
 
 #: plugins/Ubuntu/Settings/Vpn/DialogFile.qml:170

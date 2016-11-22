@@ -27,8 +27,6 @@ BaseMenu {
 
     property alias currentDate: calendar.currentDate
     property alias firstDayOfWeek: calendar.firstDayOfWeek
-    property alias maximumDate: calendar.maximumDate
-    property alias minimumDate: calendar.minimumDate
     property alias selectedDate: calendar.selectedDate
     property alias showWeekNumbers: calendar.showWeekNumbers
     property alias eventDays: calendar.eventDays
@@ -62,6 +60,15 @@ BaseMenu {
                             .arg(Qt.locale().standaloneMonthName(calendar.currentDate.getMonth(), Locale.LongFormat))
                             .arg(calendar.currentDate.getFullYear())
 
+            title.children: [
+                AbstractButton {
+                    x: (parent.width - width) / 2
+                    width: parent.contentWidth
+                    height: parent.contentHeight
+                    onClicked: calendar.selectFistDayOfTheMonth()
+                }
+            ]
+
             Icon {
                 objectName: "goPreviousMonth"
                 name: "go-previous"
@@ -72,9 +79,7 @@ BaseMenu {
 
                 AbstractButton {
                     anchors.fill: parent
-                    onClicked: {
-                        calendar.currentDate = calendar.currentDate.addMonths(-1)
-                    }
+                    onClicked: calendar.moveToMonth(-1)
                 }
             }
 
@@ -88,9 +93,7 @@ BaseMenu {
 
                 AbstractButton {
                     anchors.fill: parent
-                    onClicked: {
-                        calendar.currentDate = calendar.currentDate.addMonths(1)
-                    }
+                    onClicked: calendar.moveToMonth(1)
                 }
             }
         }
@@ -100,7 +103,10 @@ BaseMenu {
             objectName: "calenderMenuSlotsLayout"
             style: menuStyle
 
-            mainSlot: Column {
+            mainSlot: Item {
+                // XXX: this extra Item seems to be needed by Qt 5.4,
+                //      we can remove it once migrated to new versions
+                height: calendar.height
                 Calendar {
                     id: calendar
                     objectName: "calendar"

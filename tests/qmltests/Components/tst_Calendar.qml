@@ -55,8 +55,6 @@ Rectangle {
 
         function init() {
             calendar.selectedDate = new Date(2013, 4, 10);
-            calendar.maximumDate = undefined;
-            calendar.minimumDate = undefined;
         }
 
         function test_selectedDate_data() {
@@ -70,8 +68,8 @@ Rectangle {
         function test_selectedDate(data) {
             calendar.selectedDate = data.date;
 
-            compare(calendar.currentItem.monthStart.year, data.date.getFullYear(), "Current year does no correspond to set date");
-            compare(calendar.currentItem.monthStart.month, data.date.getMonth(), "Current month does no correspond to set date");
+            compare(calendar.currentItem.month.firstDay().year, data.date.getFullYear(), "Current year does no correspond to set date");
+            compare(calendar.currentItem.month.firstDay().month, data.date.getMonth(), "Current month does no correspond to set date");
         }
 
         function test_firstDayOfWeek_data() {
@@ -91,31 +89,6 @@ Rectangle {
                 var dayStart =  new Date(dayColumn.dayStart.year, dayColumn.dayStart.month, dayColumn.dayStart.day);
                 compare(dayStart.getDay(), (data.firstDayOfWeek + i)%7, "Day column does not match expected for firstDayOfWeek");
             }
-        }
-
-        function test_minMaxDate_data() {
-            return [
-                {tag: "Min=-0", date: new Date(), minDate: new Date(), maxDate: undefined, count: 3},
-                {tag: "Min=-1", date: new Date(), minDate: new Date().addMonths(-1), maxDate: undefined, count: 4},
-                {tag: "Min=-22", date: new Date(), minDate: new Date().addMonths(-22), maxDate: undefined, count: 5}, // max out at +-2
-
-                {tag: "Max=+0", date: new Date(), minDate: undefined, maxDate: new Date(), count: 3},
-                {tag: "Max=+1", date: new Date(), minDate: undefined, maxDate: new Date().addMonths(1), count: 4},
-                {tag: "Max=+22", date: new Date(), minDate: undefined, maxDate: new Date().addMonths(22), count: 5}, // max out at +-2
-
-                {tag: "Min=-0,Max=+0", date: new Date(), minDate: new Date(), maxDate: new Date(), count: 1},
-                {tag: "Min=-1,Max=+1", date: new Date(), minDate: new Date().addMonths(-1), maxDate: new Date().addMonths(1), count: 3},
-                {tag: "Min=-22,Max=+1", date: new Date(), minDate: new Date().addMonths(-22), maxDate: new Date().addMonths(1), count: 4}, // max out at +-2
-                {tag: "Min=-1,Max=+22", date: new Date(), minDate: new Date().addMonths(-1), maxDate: new Date().addMonths(22), count: 4}, // max out at +-2
-                {tag: "Min=-22,Max=+22", date: new Date(), minDate: new Date().addMonths(-22), maxDate: new Date().addMonths(22), count: 5}, // max out at +-2
-            ];
-        }
-
-        function test_minMaxDate(data) {
-            calendar.selectedDate = data.date;
-            calendar.minimumDate = data.minDate;
-            calendar.maximumDate = data.maxDate;
-            compare(calendar.count, data.count, "The number of months should have changed");
         }
 
         function test_selectedDateUpdatesCurrent_data() {
@@ -183,6 +156,31 @@ Rectangle {
                 compare(todayMarkerLoader.visible, dayItem.isToday)
                 compare(todayMarkerLoader.active, dayItem.isToday)
             }
+        }
+
+        function test_moveToMonth_data() {
+            var tests = []
+
+            for (var i = 1; i <= 15; ++i) {
+                tests.push({tag: "previous "+i, delta: -i })
+                tests.push({tag: "next "+i, delta: i })
+            }
+
+            return tests
+        }
+
+        function test_moveToMonth(data) {
+            var expected = calendar.currentDate.addMonths(data.delta)
+            var now = new Date()
+
+            if (expected.getFullYear() != now.getFullYear() || expected.getMonth() != now.getMonth()) {
+                expected.setDate(1)
+            } else {
+                expected.setDate(now.getDate())
+            }
+
+            calendar.moveToMonth(data.delta)
+            compare(calendar.currentDate, expected)
         }
     }
 }

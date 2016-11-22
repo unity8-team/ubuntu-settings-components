@@ -27,17 +27,26 @@ import "Calendar.js" as Cal
 ListView {
     id: calendar
 
-    property var currentDate: new Date(priv.today.year, priv.today.month, 1)
+    property var currentDate: priv.today.toDate()
     property int firstDayOfWeek: Qt.locale(i18n.language).firstDayOfWeek
-    property var maximumDate
-    property var minimumDate
     property var selectedDate: currentDate
     property var eventDays: new Array()
     property bool showWeekNumbers: false
 
     function reset() {
         if (!priv.ready) return;
-        currentDate = new Date(priv.today.year, priv.today.month, 1)
+        currentDate = priv.today.toDate()
+    }
+
+    function moveToMonth(delta) {
+        if (!priv.ready) return;
+        priv.__setCurrentDateFromMonth(priv.currentMonth.addMonths(delta))
+    }
+
+    function selectFistDayOfTheMonth() {
+        if (!priv.ready) return;
+        priv.userSelected = false
+        selectedDate = currentItem.month.toDate()
     }
 
     Component.onCompleted: {
@@ -46,20 +55,22 @@ ListView {
 
     onCurrentIndexChanged: {
         if (!priv.ready) return;
-
-        currentDate = new Date(currentItem.month.year, currentItem.month.month, 1);
+        priv.__setCurrentDateFromMonth(currentItem.month)
     }
 
     onSelectedDateChanged: {
+        if (!priv.ready) return;
+
         if (currentDate != selectedDate)
             currentDate = selectedDate
     }
 
     onCurrentDateChanged: {
-        if (selectedDate.getFullYear() != currentDate.getFullYear() ||
-            selectedDate.getMonth() != currentDate.getMonth()) {
+        if (!priv.ready) return;
+
+        if (selectedDate != currentDate) {
             priv.userSelected = false
-            selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
+            selectedDate = currentDate
         }
     }
 
@@ -69,6 +80,7 @@ ListView {
 
     QtObject {
         id: priv
+        objectName: "calendarPriv"
 
         property bool ready: false
         property bool userSelected: false
@@ -81,45 +93,26 @@ ListView {
 
         property var currentMonth: new Cal.Month().fromDate(currentDate)
         property var selectedDay: new Cal.Day().fromDate(selectedDate)
-        property var minimumMonth: minimumDate ? new Cal.Month().fromDate(minimumDate) : undefined
-        property var maximumMonth: maximumDate ? new Cal.Month().fromDate(maximumDate) : undefined
-
-        property var minimumDay: minimumDate ? new Cal.Day().fromDate(minimumDate) : undefined
-        property var maximumDay: maximumDate ? new Cal.Day().fromDate(maximumDate) : undefined
 
         onCurrentMonthChanged: {
             if (!ready) return
             __populateModel();
         }
-        onMinimumMonthChanged: {
-            if (!ready) return
-            __populateModel();
-        }
-        onMaximumMonthChanged: {
-            if (!ready) return
-            __populateModel();
-        }
 
-        function __getRealMinimumMonth(month) {
-            if (minimumMonth !== undefined && minimumMonth > month) {
-                return minimumMonth;
+        function __setCurrentDateFromMonth(month) {
+            if (month.equals(priv.today.getMonth())) {
+               currentDate = priv.today.toDate()
+            } else {
+                currentDate = month.toDate()
             }
-            return month;
-        }
-
-        function __getRealMaximumMonth(month) {
-            if (maximumMonth !== undefined && maximumMonth < month) {
-                return maximumMonth;
-            }
-            return month;
         }
 
         function __populateModel() {
             //  disable the onCurrentIndexChanged logic
             priv.ready = false;
 
-            var minimumMonth = __getRealMinimumMonth(currentMonth.addMonths(-2));
-            var maximumMonth = __getRealMaximumMonth(currentMonth.addMonths(2));
+            var minimumMonth = currentMonth.addMonths(-2);
+            var maximumMonth = currentMonth.addMonths(2);
 
             // Remove old minimum months
             while (calendarModel.count > 0 && new Cal.Month(calendarModel.get(0).month) < minimumMonth) {
@@ -189,27 +182,53 @@ ListView {
     Keys.onLeftPressed: selectedDate.addDays(-1)
     Keys.onRightPressed: selectedDate.addDays(1)
 
-    delegate: Row {
+    // This is a workaround for bug https://bugreports.qt.io/browse/QTBUG-49224
+    delegate: Loader {
+        id: monthDelegateLoader
+        sourceComponent: monthComponent
+
         readonly property var month: new Cal.Month(model.month)
-        readonly property var monthStart: new Cal.Day(model.month.year, model.month.month, 1)
+
+        Binding {
+            target: monthDelegateLoader.item
+            property: "monthIndex"
+            value: index
+            when: monthDelegateLoader.status == Loader.Ready
+        }
+
+        Binding {
+            target: monthDelegateLoader.item
+            property: "month"
+            value: month
+            when: monthDelegateLoader.status == Loader.Ready
+        }
+    }
+
+Component {
+    id: monthComponent
+    Row {
+        objectName: "monthRow" + monthIndex
+        property int monthIndex: 0
+        property var month: new Cal.Month()
+        readonly property var monthStart: month.firstDay()
         readonly property var monthEnd: monthStart.addMonths(1)
         readonly property var gridStart: monthStart.weekStart(firstDayOfWeek)
 
         Loader {
             id: weekNumbersLoader
-            objectName: "weekNumbersLoader" + index
+            objectName: "weekNumbersLoader" + monthIndex
             active: calendar.showWeekNumbers
             visible: active
 
             sourceComponent: Column {
                 id: weekNumbersColumn
-                objectName: "weekNumbersColumn" + index
+                objectName: "weekNumbersColumn" + monthIndex
                 spacing: monthGrid.rowSpacing
 
                 Row {
                     Column {
                         Label {
-                            objectName: "weekDay" + modelData
+                            objectName: "weekDay" + monthIndex
                             text: i18n.ctr("Header text: keep it short and upper case", "WEEK")
                             textSize: Label.XSmall
                             // FIXME: There's no good palette that covers both
@@ -295,8 +314,6 @@ ListView {
                     readonly property bool isWeekend: weekday == 0 || weekday == 6
                     readonly property bool isToday: dayStart.equals(priv.today)
                     readonly property bool hasEvent: isCurrentMonth && eventDays.indexOf(dayStart.day) != -1
-                    readonly property bool isWithinBounds: (priv.minimumDay === undefined || dayStart >= priv.minimumDay) &&
-                                                           (priv.maximumDay === undefined || dayStart <= priv.maximumDay)
 
                     width: priv.squareUnit
                     height: priv.squareUnit
@@ -331,18 +348,20 @@ ListView {
                         anchors.centerIn: parent
                         text: dayStart.toDate().toLocaleDateString(Qt.locale(), "dd")
                         textSize: Label.Medium
-                        color: isSelected ? theme.palette.normal.positionText : theme.palette.normal.backgroundText
+                        color: {
+                            if (!isCurrentMonth) {
+                                // FIXME: There's no good palette that covers both
+                                //        Ambiance (silk) and Suru (inkstone)
+                                return theme.palette.disabled.base
+                            }
+                            if (isSelected) {
+                                return theme.palette.normal.positionText
+                            }
+                            if (isWeekend) {
+                                return theme.palette.normal.backgroundTertiaryText
+                            }
 
-                        Binding on color {
-                            when: isCurrentMonth && isWeekend && !isSelected
-                            value: theme.palette.normal.backgroundTertiaryText
-                        }
-
-                        Binding on color {
-                            when: !isCurrentMonth
-                            // FIXME: There's no good palette that covers both
-                            //        Ambiance (silk) and Suru (inkstone)
-                            value: theme.palette.disabled.base
+                            return theme.palette.normal.backgroundText
                         }
                     }
 
@@ -364,17 +383,20 @@ ListView {
                     }
 
                     AbstractButton {
-                        anchors.fill: parent
+                        anchors.fill: dayNumber
+                        visible: (currentIndex == monthIndex)
 
                         onClicked: {
-                            if (isWithinBounds) {
-                                if (!isSelected) {
-                                    calendar.selectedDate = new Date(dayStart.year, dayStart.month, dayStart.day)
-                                    priv.userSelected = true
-                                } else if (priv.userSelected) {
+                            if (!isSelected) {
+                                priv.userSelected = true
+                                calendar.selectedDate = new Date(dayStart.year, dayStart.month, dayStart.day)
+                            } else if (priv.userSelected) {
+                                if (priv.today.getMonth().equals(month)) {
+                                    calendar.selectedDate = priv.today.toDate()
+                                } else {
                                     calendar.selectedDate = new Date(dayStart.year, dayStart.month)
-                                    priv.userSelected = false
                                 }
+                                priv.userSelected = false
                             }
                         }
                     }
@@ -382,4 +404,6 @@ ListView {
             }
         }
     }
+}
+
 }

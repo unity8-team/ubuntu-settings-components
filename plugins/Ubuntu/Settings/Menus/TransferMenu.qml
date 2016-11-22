@@ -24,6 +24,9 @@ import Ubuntu.Settings.Components 0.1
 BaseMenu {
     id: menu
 
+    LayoutMirroring.enabled: Qt.application.layoutDirection == Qt.RightToLeft
+    LayoutMirroring.childrenInherit: true
+
     property alias iconSource: icon.source
     property alias text: label.text
     property alias stateText: stateLabel.text

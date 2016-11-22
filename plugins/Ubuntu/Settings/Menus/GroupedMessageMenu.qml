@@ -35,7 +35,7 @@ StandardMenu {
             implicitHeight: label.implicitHeight + units.gu(2)
             implicitWidth: label.implicitWidth + units.gu(2)
 
-            color: theme.palette.normal.backgroundText
+            color: theme.palette.normal.background
             radius: "medium"
 
             Label {

@@ -310,7 +310,7 @@ Component {
                     readonly property int weekday: (index % priv.days + firstDayOfWeek) % priv.days
                     readonly property var dayStart: gridStart.addDays(index)
                     readonly property bool isSelected: priv.userSelected && dayStart.equals(priv.selectedDay)
-                    readonly property bool isCurrentMonth: (monthStart < dayStart || monthStart.equals(dayStart))  && dayStart < monthEnd
+                    readonly property bool isCurrentMonth: (monthStart < dayStart || monthStart.equals(dayStart)) && dayStart < monthEnd
                     readonly property bool isWeekend: weekday == 0 || weekday == 6
                     readonly property bool isToday: dayStart.equals(priv.today)
                     readonly property bool hasEvent: isCurrentMonth && eventDays.indexOf(dayStart.day) != -1

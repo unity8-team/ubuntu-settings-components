@@ -1,3 +1,10 @@
+ubuntu-settings-components (0.11+17.04.20161123-0ubuntu1) zesty; urgency=medium
+
+  [ Lukáš Tinkl ]
+  * Indicator components fixes for right-to-left languages (RTL)
+
+ -- Andrea Cimitan <andrea.cimitan@canonical.com>  Wed, 23 Nov 2016 12:10:36 +0000
+
 ubuntu-settings-components (0.11+17.04.20161116.1-0ubuntu1) zesty; urgency=medium
 
   * Menus: add Pointer and Touch styles to be used depending on the user

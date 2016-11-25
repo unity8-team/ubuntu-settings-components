@@ -8,6 +8,7 @@ BaseLayoutMenu 0.1 BaseLayoutMenu.qml
 ButtonMenu 0.1 ButtonMenu.qml
 CalendarMenu 0.1 CalendarMenu.qml
 CheckableMenu 0.1 CheckableMenu.qml
+EthernetItem 0.1 EthernetItem.qml
 EventMenu 0.1 EventMenu.qml
 GroupedMessageMenu 0.1 GroupedMessageMenu.qml
 MediaPlayerMenu 0.1 MediaPlayerMenu.qml

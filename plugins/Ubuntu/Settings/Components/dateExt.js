@@ -30,6 +30,8 @@ Date.prototype.addDays = function(days) {
 
 Date.prototype.addMonths = function(months) {
     var date = new Date(this)
-    date.setMonth(date.getMonth() + months)
+    var targetMonth = date.getMonth() + months
+    date.setDate(Math.min(date.getDate(), Date.daysInMonth(date.getFullYear(), targetMonth)))
+    date.setMonth(targetMonth)
     return date
 }

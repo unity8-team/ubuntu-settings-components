@@ -101,7 +101,7 @@ ListView {
 
         function __setCurrentDateFromMonth(month) {
             if (month.equals(priv.today.getMonth())) {
-               currentDate = priv.today.toDate()
+                currentDate = priv.today.toDate()
             } else {
                 currentDate = month.toDate()
             }

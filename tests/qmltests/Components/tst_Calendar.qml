@@ -102,7 +102,7 @@ Rectangle {
             var monthDelta = date.getMonth() + data.delta
             var monthNumber = monthDelta % 12
 
-            compare(newDate.getFullYear(), date.getFullYear() + monthDelta / 12 | 0)
+            compare(newDate.getFullYear(), Math.floor(date.getFullYear() + monthDelta / 12))
             compare(newDate.getMonth(), monthNumber < 0 ? 12 + monthNumber : monthNumber)
             compare(newDate.getDate(), Date.daysInMonth(newDate.getFullYear(), newDate.getMonth()))
         }

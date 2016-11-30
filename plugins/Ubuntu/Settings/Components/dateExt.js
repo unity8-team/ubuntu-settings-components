@@ -13,7 +13,7 @@ Date.leapYear = function(year) {
 }
 
 Date.daysInMonth = function(year, month) {
-    return new Date(year, month + 1, 0).getDate();
+    return new Date(year, month + 1, 0).getDate()
 }
 
 Date.prototype.midnight = function() {
@@ -31,7 +31,7 @@ Date.prototype.addDays = function(days) {
 Date.prototype.addMonths = function(months) {
     var date = new Date(this)
     var targetMonth = date.getMonth() + months
-    date.setDate(Math.min(date.getDate(), Date.daysInMonth(date.getFullYear(), targetMonth)))
-    date.setMonth(targetMonth)
+    var targetDay = Math.min(date.getDate(), Date.daysInMonth(date.getFullYear(), targetMonth))
+    date.setMonth(targetMonth, targetDay)
     return date
 }

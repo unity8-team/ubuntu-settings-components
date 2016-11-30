@@ -13,10 +13,7 @@ Date.leapYear = function(year) {
 }
 
 Date.daysInMonth = function(year, month) {
-    return [
-        31/*Jan*/, 28/*Feb*/, 31/*Mar*/, 30/*Apr*/, 31/*May*/, 30/*Jun*/,
-        31/*Jul*/, 31/*Aug*/, 30/*Sep*/, 31/*Oct*/, 30/*Nov*/, 31/*Dec*/
-    ][month] + (month == 1) * Date.leapYear(year)
+    return new Date(year, month + 1, 0).getDate();
 }
 
 Date.prototype.midnight = function() {

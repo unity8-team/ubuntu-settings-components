@@ -57,6 +57,56 @@ Rectangle {
             calendar.selectedDate = new Date(2013, 4, 10);
         }
 
+        function test_daysInMonth_data() {
+            var tests = []
+
+            for (var year = 2000; year <= 2016; ++year) {
+                for (var month = 1; month <= 12; ++month) {
+                    tests.push({tag: year+"/"+month, year: year, month: month })
+                }
+            }
+
+            return tests
+        }
+
+        function test_daysInMonth(data) {
+            switch (data.month) {
+                case 2:
+                    var expected = Date.leapYear(data.year) ? 29 : 28
+                    break
+                case 4:
+                case 6:
+                case 9:
+                case 11:
+                    var expected = 30
+                    break
+                default:
+                    var expected = 31
+            }
+
+            compare(Date.daysInMonth(data.year, data.month-1), expected)
+        }
+
+        function test_addMonthsFromLastDay_data() {
+            var tests = []
+            for (var i = 0; i <= 25; ++i) {
+                tests.push({tag: "previous "+i, delta: -i })
+                tests.push({tag: "next "+i, delta: i })
+            }
+            return tests
+        }
+
+        function test_addMonthsFromLastDay(data) {
+            var date = new Date(2016, 4, 31)
+            var newDate = date.addMonths(data.delta)
+            var monthDelta = date.getMonth() + data.delta
+            var monthNumber = monthDelta % 12
+
+            compare(newDate.getFullYear(), date.getFullYear() + monthDelta / 12 | 0)
+            compare(newDate.getMonth(), monthNumber < 0 ? 12 + monthNumber : monthNumber)
+            compare(newDate.getDate(), Date.daysInMonth(newDate.getFullYear(), newDate.getMonth()))
+        }
+
         function test_selectedDate_data() {
             return [
                 { date: new Date(2010, 4, 10) },

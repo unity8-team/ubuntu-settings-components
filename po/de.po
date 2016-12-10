@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: ubuntu-settings-components\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2016-12-01 00:34+0000\n"
-"PO-Revision-Date: 2016-11-22 23:40+0000\n"
+"PO-Revision-Date: 2016-12-09 17:12+0000\n"
 "Last-Translator: Tobias Bannert <tobannert@gmail.com>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-12-03 05:14+0000\n"
-"X-Generator: Launchpad (build 18282)\n"
+"X-Launchpad-Export-Date: 2016-12-10 05:28+0000\n"
+"X-Generator: Launchpad (build 18292)\n"
 
 #: plugins/Ubuntu/Settings/Components/Calendar.qml:232
 msgctxt "Header text: keep it short and upper case"
 msgid "WEEK"
-msgstr ""
+msgstr "WOCHE"
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:80
 msgid "Fingerprint Name"
@@ -194,7 +194,7 @@ msgstr "Port:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:187
 msgid "Use custom gateway port"
-msgstr ""
+msgstr "Benutzerdefinierten Zugangsport verwenden"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:215
 msgid "Protocol:"
@@ -247,7 +247,7 @@ msgstr "Schlüsselrichtung:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:439
 msgid "Remote IP:"
-msgstr ""
+msgstr "Entfernte IP:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:454
 msgid "Local IP:"
@@ -263,11 +263,11 @@ msgstr "TLS-Schlüssel:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:530
 msgid "Verify peer certificate:"
-msgstr ""
+msgstr "Peer-Zertifikat prüfen:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:539
 msgid "Peer certificate TLS type:"
-msgstr ""
+msgstr "Peer-Zertifikat-TLS-Typ:"
 
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:547
 msgid "Server"
@@ -396,6 +396,7 @@ msgid ""
 "The server certificate is not valid. The VPN provider may be being "
 "impersonated."
 msgstr ""
+"Das Serverzertifikat ist ungültig. Der VPN-Anbieter kann vorgetäuscht werden."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:46
 #, qt-format
@@ -426,6 +427,7 @@ msgstr "Das Zertifikat befindet sich auf einer schwarzen Liste."
 msgid ""
 "It does not provide a certificate. The VPN provider could be impersonated."
 msgstr ""
+"Kein Zertifikat bereitgestellt. Der VPN-Anbieter könnte vorgetäuscht sein."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:27
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:27
@@ -459,6 +461,8 @@ msgstr "Sie verwenden das VPN für bestimmte Dienste."
 msgid ""
 "Your traffic to these services is private to them and the VPN provider."
 msgstr ""
+"Ihr Datenverkehr zu diesen Diensten ist sowohl denen als auch dem VPN-"
+"Anbieter gegenüber vertraulich."
 
 #: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SomeTraffic.qml:39
 msgid "Your Wi-Fi/mobile provider can track your use of any other services. "

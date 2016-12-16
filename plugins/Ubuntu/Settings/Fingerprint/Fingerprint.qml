@@ -23,11 +23,13 @@ import Ubuntu.Components.Themes.Ambiance 1.3
 
 Page {
     id: root
+    objectName: "fingerprintItemPage"
     property string name
     property string templateId
 
     signal requestDeletion(string templateId)
     signal requestRename(string templateId, string name)
+    signal done()
 
     function deletionFailed() {
         PopupUtils.open(deletionFailed);
@@ -95,8 +97,9 @@ Page {
                 }
                 onAccepted: {
                     if (text) {
+                        console.log('onAccepted')
                         requestRename(templateId, text);
-                        pageStack.pop();
+                        done();
                     }
                 }
             }

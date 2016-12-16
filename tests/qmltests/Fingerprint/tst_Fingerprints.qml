@@ -18,6 +18,7 @@
 
 import QtQuick 2.4
 import QtTest 1.0
+import Ubuntu.Components 1.3
 import Ubuntu.Test 0.1
 import Ubuntu.Settings.Fingerprint 0.1
 import Biometryd 0.0
@@ -27,6 +28,16 @@ Item {
     id: testRoot
     width: units.gu(50)
     height: units.gu(90)
+
+    Component {
+        id: testPageStackComponent
+        PageStack {}
+    }
+
+    Component {
+        id: testAplComponent
+        AdaptivePageLayout {}
+    }
 
     Component {
         id: fingerprintsComponent
@@ -44,18 +55,21 @@ Item {
         name: "Fingerprints"
         when: windowShown
 
+        property var testPageStack: null
         property var fingerprintsInstance: null
 
         function init() {
             Biometryd.setAvailable(true);
-            fingerprintsInstance = fingerprintsComponent.createObject(testRoot);
+            testPageStack = testPageStackComponent.createObject(testRoot);
+            fingerprintsInstance = testPageStack.push(fingerprintsComponent);
         }
 
         function cleanup() {
             spy.clear();
             spy.target = null;
             spy.signalName = "";
-            fingerprintsInstance.destroy();
+            testPageStack.pop();
+            testPageStack.destroy();
             GSettingsController.setFingerprintNames({});
         }
 
@@ -225,6 +239,120 @@ Item {
             tryCompareFunction(function() {
                 return GSettingsController.fingerprintNames()["tmplId"];
             }, targetFingerprintName);
+        }
+
+        function test_goToSetup() {
+            var btn = getSetupEntry();
+            fingerprintsInstance.passcodeSet = true;
+            mouseClick(btn, btn.width / 2, btn.height / 2);
+            compare(testPageStack.currentPage.objectName, "fingerprintSetupPage");
+
+            // Go back
+            testPageStack.currentPage.done();
+            compare(testPageStack.currentPage, fingerprintsInstance);
+        }
+
+        function test_goToFingerprint() {
+            var obs = getEnrollmentObserver();
+            var btn;
+
+            // Prerequisites for test:
+            fingerprintsInstance.passcodeSet = true;
+            obs.mockEnroll("tmplId", "");
+
+            btn = findChild(fingerprintsInstance, "fingerprintInstance-0");
+            waitForRendering(btn);
+            mouseClick(btn, btn.width / 2, btn.height / 2);
+            tryCompareFunction(function () {
+                return !!findChild(testRoot, "fingerprintItemPage");
+            }, true);
+
+            // Go back
+            testPageStack.currentPage.done();
+            compare(testPageStack.currentPage, fingerprintsInstance);
+        }
+    }
+
+
+    UbuntuTestCase {
+        name: "FingerprintsAdaptivePageLayout"
+        when: windowShown
+
+        Component {
+            id: pageComponent
+            Page {
+                header: PageHeader {}
+            }
+        }
+
+        property var testApl: null
+        property var fingerprintsInstance: null
+
+        function waitFor(objectName) {
+            tryCompareFunction(function () {
+                return !!findChild(testRoot, objectName);
+            }, true);
+        }
+
+        function waitForDestruction(objectName) {
+            tryCompareFunction(function () {
+                return !!findChild(testRoot, objectName);
+            }, false);
+        }
+
+        function init() {
+            var incubator;
+            Biometryd.setAvailable(true);
+            testApl = testAplComponent.createObject(testRoot, {
+                primaryPageSource: pageComponent
+            });
+
+            // Wait until the primaryPage has been created.
+            tryCompareFunction(function () {
+                return !!testApl.primaryPage
+            }, true);
+
+            // Synchronously create the fingerprint instance on the APL.
+            incubator = testApl.addPageToNextColumn(
+                testApl.primaryPage, fingerprintsComponent
+            );
+            incubator.forceCompletion();
+            fingerprintsInstance = incubator.object;
+            waitForRendering(fingerprintsInstance)
+        }
+
+        function cleanup() {
+            testApl.removePages(testApl.primaryPage);
+            testApl.destroy();
+        }
+
+        function test_goToSetup() {
+            var btn = findChild(fingerprintsInstance, "fingerprintSetupEntry");;
+            fingerprintsInstance.passcodeSet = true;
+            mouseClick(btn, btn.width / 2, btn.height / 2);
+            waitFor("fingerprintSetupPage");
+
+            // Go back out
+            findChild(testRoot, "fingerprintSetupPage").done();
+            waitForDestruction("fingerprintSetupPage");
+        }
+
+        function test_goToFingerprint() {
+            var obs = findInvisibleChild(fingerprintsInstance, "enrollmentObserver");
+            var btn;
+
+            // Prerequisites for test:
+            fingerprintsInstance.passcodeSet = true;
+            obs.mockEnroll("tmplId", "");
+
+            btn = findChild(fingerprintsInstance, "fingerprintInstance-0");
+            waitForRendering(btn);
+            mouseClick(btn, btn.width / 2, btn.height / 2);
+            waitFor("fingerprintItemPage");
+
+            // Go back out.
+            findChild(testRoot, "fingerprintItemPage").done();
+            waitForDestruction("fingerprintItemPage");
         }
     }
 }

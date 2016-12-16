@@ -29,6 +29,7 @@ Page {
 
     signal enroll()
     signal cancel()
+    signal done()
 
     function enrollmentFailed(error) {
         root.state = "failed";
@@ -346,10 +347,7 @@ Page {
                 }
                 height: parent.height
                 width: units.gu(10)
-                onClicked: {
-                    root.cancel();
-                    pageStack.pop();
-                }
+                onClicked: root.cancel()
 
                 Label {
                     id: cancelButtonText
@@ -370,7 +368,7 @@ Page {
                 enabled: false
                 height: parent.height
                 width: units.gu(10)
-                onClicked: pageStack.pop()
+                onClicked: root.done()
 
                 Label {
                     id: doneButtonText

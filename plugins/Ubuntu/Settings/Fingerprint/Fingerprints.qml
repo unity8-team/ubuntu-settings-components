@@ -122,8 +122,8 @@ Page {
         }
     }
 
-    /* Pops a pageStack or APL.
-    The page argument is only effective if the pageStack is an APL. */
+    /* Pops a pageStack or APL. The page argument is only effective if the
+    pageStack is an APL, in which case all child pages of page are removed. */
     function popShim(page) {
         if (pageStack.pop) {
             pageStack.pop();
@@ -434,6 +434,8 @@ Page {
         onCanceled: _removalOperation = null
         onSucceeded: {
             _removalOperation = null;
+            /* If we have a currentPage, be pop one page. If not, just pop
+            every child of root. */
             if (pageStack.currentPage) {
                 if (pageStack.currentPage === _fpInstancePage) {
                     popShim();

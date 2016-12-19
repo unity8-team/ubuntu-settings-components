@@ -97,7 +97,6 @@ Page {
                 }
                 onAccepted: {
                     if (text) {
-                        console.log('onAccepted')
                         requestRename(templateId, text);
                         done();
                     }

@@ -1,3 +1,9 @@
+ubuntu-settings-components (0.11+17.04.20161219-0ubuntu1) zesty; urgency=medium
+
+  * Compatibility with unversioned cmake-extras modules (LP: #1563573)
+
+ -- Pete Woods <pete.woods@canonical.com>  Mon, 19 Dec 2016 09:36:13 +0000
+
 ubuntu-settings-components (0.11+17.04.20161201-0ubuntu1) zesty; urgency=medium
 
   * dateExt: take care of the numbers of days in month when adding

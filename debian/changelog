@@ -5,6 +5,13 @@ ubuntu-settings-components (0.12+17.04.20161123-0ubuntu2) UNRELEASED; urgency=me
 
  -- Jonas G. Drange <jonas.drange@canonical.com>  Fri, 16 Dec 2016 14:16:24 +0100
 
+ubuntu-settings-components (0.11+17.04.20161201-0ubuntu1) zesty; urgency=medium
+
+  * dateExt: take care of the numbers of days in month when adding
+    months
+
+ -- Marco Trevisan (Treviño) <mail@3v1n0.net>  Thu, 01 Dec 2016 00:34:16 +0000
+
 ubuntu-settings-components (0.11+17.04.20161123-0ubuntu1) zesty; urgency=medium
 
   [ Lukáš Tinkl ]

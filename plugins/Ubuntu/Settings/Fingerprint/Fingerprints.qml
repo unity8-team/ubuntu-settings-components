@@ -42,7 +42,6 @@ Page {
     property var _fpInstancePage: null
     property var _settings: sysSettings
 
-    property var parentPage: null
     property Dialog _diag: null
     property bool passcodeSet: false
 

@@ -434,8 +434,8 @@ Page {
         onCanceled: _removalOperation = null
         onSucceeded: {
             _removalOperation = null;
-            /* If we have a currentPage, be pop one page. If not, just pop
-            every child of root. */
+            /* If we have a currentPage, pop one page. If not, pop every child
+            of root. */
             if (pageStack.currentPage) {
                 if (pageStack.currentPage === _fpInstancePage) {
                     popShim();

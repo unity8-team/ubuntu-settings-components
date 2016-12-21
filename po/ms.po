@@ -1,0 +1,509 @@
+# Malay translation for ubuntu-settings-components
+# Copyright (c) 2016 Rosetta Contributors and Canonical Ltd 2016
+# This file is distributed under the same license as the ubuntu-settings-components package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ubuntu-settings-components\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2016-12-01 00:34+0000\n"
+"PO-Revision-Date: 2016-12-20 13:52+0000\n"
+"Last-Translator: abuyop <Unknown>\n"
+"Language-Team: Malay <ms@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2016-12-21 05:34+0000\n"
+"X-Generator: Launchpad (build 18298)\n"
+
+#: plugins/Ubuntu/Settings/Components/Calendar.qml:232
+msgctxt "Header text: keep it short and upper case"
+msgid "WEEK"
+msgstr "MGGU"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:80
+msgid "Fingerprint Name"
+msgstr "Nama Cap Jari"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:107
+msgid "Delete Fingerprint"
+msgstr "Padam Cap Jari"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:124
+msgid "Sorry, the fingerprint could not be deleted."
+msgstr "Maaf, cap jari tidak dapat dipadamkan."
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:129
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:337
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:137
+#: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:148
+msgid "OK"
+msgstr "OK"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:32
+msgid "Fingerprint ID"
+msgstr "ID Cap Jari"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:93
+#, qt-format
+msgid "Finger %1"
+msgstr "Jari %1"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:187
+msgid "Passcode required"
+msgstr "Kod laluan diperlukan"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:191
+msgid "You must set a passcode to use fingerprint ID"
+msgstr "Anda mesti tetapkan kod laluan untuk guna ID cap jari"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:198
+msgid "Set Passcode…"
+msgstr "Tetapkan Kod Laluan..."
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:274
+msgid "Add fingerprint"
+msgstr "Tambah cap jari"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:287
+msgid "Remove All…"
+msgstr "Buang Semua..."
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:302
+msgid "Are you sure you want to forget all stored fingerprints?"
+msgstr "Anda pasti mahu lupakan semua cap jari tersimpan?"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:311
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:357
+#: plugins/Ubuntu/Settings/Vpn/DialogFile.qml:161
+#: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:135
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:104
+msgid "Cancel"
+msgstr "Batal"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:318
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:84
+msgid "Remove"
+msgstr "Buang"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:332
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:102
+msgid "Sorry, the reader doesn’t seem to be working."
+msgstr "Maaf, pembaca tidak kelihatan berfungsi."
+
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:60
+msgid "Tap your finger repeatedly on the reader."
+msgstr "Ketik jari anda berulang kali di atas pembaca."
+
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:77
+msgid "Keep your finger on the reader for longer."
+msgstr "Letak jari anda di atas pembaca lebih lama."
+
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:93
+msgid "Back"
+msgstr "Undur"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:130
+msgid "All done!"
+msgstr "Semua selesai!"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:296
+msgid "Swipe your finger over the reader."
+msgstr "Leret jari anda di atas pembaca."
+
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:310
+#, qt-format
+msgid "%1%"
+msgstr "%1%"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:382
+msgid "Next"
+msgstr "Berikutnya"
+
+#: plugins/Ubuntu/Settings/Menus/CalendarMenu.qml:59
+#, qt-format
+msgctxt "%1=month name, %2=4-digit year"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:102
+msgid "Roaming"
+msgstr "Perayauan"
+
+#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:127
+msgid "Unlock SIM"
+msgstr "Buka SIM"
+
+#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:64
+msgid "Message"
+msgstr "Mesej"
+
+#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:76
+msgid "Call back"
+msgstr "Panggilan semula"
+
+#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:93
+#: plugins/Ubuntu/Settings/Menus/TextMessageMenu.qml:38
+msgid "Send"
+msgstr "Hantar"
+
+#: plugins/Ubuntu/Settings/Vpn/DialogFile.qml:170
+msgid "Accept"
+msgstr "Terima"
+
+#: plugins/Ubuntu/Settings/Vpn/FileSelector.qml:25
+msgid "Choose…"
+msgstr "Pilih..."
+
+#: plugins/Ubuntu/Settings/Vpn/FileSelector.qml:34
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:431
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:513
+msgid "None"
+msgstr "Tiada"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:29
+msgid "Authentication type:"
+msgstr "Jenis pengesahihan:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:42
+msgid "Certificates (TLS)"
+msgstr "Sijil (TLS)"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:43
+msgid "Password"
+msgstr "Kata Laluan"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:44
+msgid "Password with certificates (TLS)"
+msgstr "Kata laluan dengan sijil (TLS)"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:45
+msgid "Static key"
+msgstr "Kunci statik"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:123
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:114
+msgid "Server:"
+msgstr "Pelayan:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:137
+msgid "Port:"
+msgstr "Port:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:187
+msgid "Use custom gateway port"
+msgstr "Guna port get laluan suai"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:215
+msgid "Protocol:"
+msgstr "Protokol:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:304
+msgid "Username:"
+msgstr "Nama Pengguna:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:319
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:165
+msgid "Password:"
+msgstr "Kata Laluan"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:341
+msgid "Client certificate:"
+msgstr "Sijil klien:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:349
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:396
+msgid "Choose Certificate…"
+msgstr "Pilih Sijil..."
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:356
+msgid "Private key:"
+msgstr "Kunci persendirian:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:364
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:417
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:497
+msgid "Choose Key…"
+msgstr "Pilih Kunci..."
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:371
+msgid "Key password:"
+msgstr "Kata laluan kunci:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:388
+msgid "CA certificate:"
+msgstr "Sijil CA:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:409
+msgid "Static key:"
+msgstr "Kunci statik:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:421
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:502
+msgid "Key direction:"
+msgstr "Arah kunci:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:439
+msgid "Remote IP:"
+msgstr "IP Jauh:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:454
+msgid "Local IP:"
+msgstr "IP Setempat:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:479
+msgid "Use additional TLS authentication:"
+msgstr "Guna pengesahihan TLS tambahan:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:488
+msgid "TLS key:"
+msgstr "Kunci TLS:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:530
+msgid "Verify peer certificate:"
+msgstr "Sahkan sijil rakan:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:539
+msgid "Peer certificate TLS type:"
+msgstr "Jenis TLS sijil rakan:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:547
+msgid "Server"
+msgstr "Pelayan"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:548
+msgid "Client"
+msgstr "Klien"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:558
+msgid "Cipher:"
+msgstr "Sifer:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:565
+msgid "Default"
+msgstr "Lalai"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:595
+msgid "Compress data"
+msgstr "Mampat data"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:150
+msgid "User:"
+msgstr "Pengguna:"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:180
+msgid "NT Domain:"
+msgstr "Domain NT:"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:192
+msgid "Authentication methods:"
+msgstr "Kaedah pengesahihan:"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:292
+msgid "Use Point-to-Point encryption"
+msgstr "Guna penyulitan Titik-ke-Titik"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:301
+msgid "All Available (Default)"
+msgstr "Semua Tersedia (Lalai)"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:302
+msgid "128-bit (most secure)"
+msgstr "128-bit (paling selamat)"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:303
+msgid "40-bit (less secure)"
+msgstr "40-bit (kurang selamat)"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:319
+msgid "Allow stateful encryption"
+msgstr "Benarkan penyulitan berkeadaan"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:333
+msgid "Allow BSD data compression"
+msgstr "Benarkan pemampatan data BSD"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:347
+msgid "Allow Deflate data compression"
+msgstr "Benarkan pengempisan data termampat"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:361
+msgid "Use TCP Header compression"
+msgstr "Gunakan pemampatan Pengepala TCP"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:375
+msgid "Send PPP echo packets"
+msgstr "Hantar paket gema PPP"
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:27
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:27
+msgid "You’re using this VPN for all Internet traffic."
+msgstr "Anda menggunakan VPN ini untuk semua trafik Internet."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:33
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:39
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:39
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SetUpUnused.qml:40
+msgid ""
+"Your Wi-Fi/mobile provider can see when and how much you use the Internet, "
+"but not what for."
+msgstr ""
+"Penyedia Wi-Fi/mudah alih anda dapat mengetahui bila dan bagaimana anda "
+"gunakan Internet, tetapi tidak tahu atas tujuan apa."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:39
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:45
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:51
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:51
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SetUpUnused.qml:47
+msgid "The VPN provider can see or modify your Internet traffic."
+msgstr "Penyedia VPN boleh pantau atau ubahsuai trafik Internet anda."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:45
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:51
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:57
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:57
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SetUpUnused.qml:54
+msgid "Web sites and other service providers can still monitor your use."
+msgstr ""
+"Laman sesawang dan lain-lain penyedia perkhidmatan masih boleh memantau "
+"penggunaan anda."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:33
+msgid ""
+"Your Wi-Fi/mobile provider can still see when and how much you use the "
+"Internet."
+msgstr ""
+"Penyedia Wi-Fi/mudah alih masih dapat melihat bila dan bagaimana anda "
+"gunakan Internet."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:39
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:45
+msgid "The DNS provider can see which Web sites and other services you use."
+msgstr ""
+"Penyedia DNS masih dapat melihat Laman sesawang dan lain-lain perkhidmatan "
+"yang anda guna."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:30
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NoCert.qml:27
+msgid "This VPN is not safe to use."
+msgstr "VPN ini tidak selamat digunakan."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:36
+msgid ""
+"The server certificate is not valid. The VPN provider may be being "
+"impersonated."
+msgstr "Sijil pelayan tidak sah. Penyedia VPN mungkin telah menyamar."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:46
+#, qt-format
+msgid "Details: %1"
+msgstr "Perincian: %1"
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:51
+msgid "The certificate was not found."
+msgstr "Sijil tidak ditemui."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:54
+msgid "The certificate is empty."
+msgstr "Sijil adalah kosong."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:57
+msgid "The certificate is self signed."
+msgstr "Sijil ditandatangan sendiri."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:60
+msgid "The certificate has expired."
+msgstr "Sijil sudah tamat tempoh."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:63
+msgid "The certificate is blacklisted."
+msgstr "Sijil disenarai hitam."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NoCert.qml:33
+msgid ""
+"It does not provide a certificate. The VPN provider could be impersonated."
+msgstr "Ia tidak menyediakan sijil. Penyedia VPN mungkin telah menyamar."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:27
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:27
+msgid "This VPN configuration is not installed."
+msgstr "Konfigurasi VPN tidak dipasang."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:33
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:33
+msgid "If you install it:"
+msgstr "Jika anda pasangkannya:"
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:45
+msgid "The DNS provider can see which Web sites and other services you use. "
+msgstr ""
+"Penyedia DNS dapat mengetahui Laman sesawang dan lain-lain perkhidmatan yang "
+"anda gunakan. "
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SetUpUnused.qml:27
+msgid "This VPN is set up, but not in use now."
+msgstr "VPN telah dipasang, tetapi tidak boleh guna sekarang."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SetUpUnused.qml:33
+msgid "When you use it:"
+msgstr "Bila anda gunakannya:"
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SomeTraffic.qml:27
+msgid "You’re using this VPN for specific services."
+msgstr "Anda menggunakan VPN ini atas perkhidmatan tertentu."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SomeTraffic.qml:33
+msgid ""
+"Your traffic to these services is private to them and the VPN provider."
+msgstr ""
+"Trafik anda ke perkhidmatan ini adalah sulit kepada mereka dan penyedia VPN."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SomeTraffic.qml:39
+msgid "Your Wi-Fi/mobile provider can track your use of any other services. "
+msgstr ""
+"Penyedia Wi-Fi/mudah alih dapat menjejak mana-mana perkhidmatan lain yang "
+"anda gunakan. "
+
+#: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:25
+msgid "Set up VPN"
+msgstr "Persediaan VPN"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnList.qml:62
+msgid "Delete configuration"
+msgstr "Padam konfigurasi"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:53
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:58
+#, qt-format
+msgid "VPN “%1”"
+msgstr "VPN “%1”"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:69
+msgid "VPN"
+msgstr "VPN"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:96
+msgid "Change"
+msgstr "Ubah"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:112
+msgid "Install"
+msgstr "Pasang"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnRoutesField.qml:30
+msgid "Use this VPN for:"
+msgstr "Guna VPN ini untuk:"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnRoutesField.qml:60
+msgid "All network connections"
+msgstr "Semua sambungan rangkaian"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnRoutesField.qml:76
+msgid "Its own network"
+msgstr "Rangkaiannya sendiri"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnTypeField.qml:32
+msgid "Type:"
+msgstr "Jenis:"

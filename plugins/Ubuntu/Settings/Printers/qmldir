@@ -1,0 +1,2 @@
+module Ubuntu.Settings.Printers
+plugin UbuntuSettingsPrintersQml

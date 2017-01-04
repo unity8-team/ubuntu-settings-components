@@ -279,6 +279,11 @@ Item {
         signalName: "requestRename"
     }
 
+    SignalSpy {
+        id: doneSpy
+        signalName: "done"
+    }
+
     UbuntuTestCase {
         name: "TestTemplate"
         when: windowShown
@@ -310,11 +315,13 @@ Item {
             pageStack.push(templateInstance);
             requestRenameSpy.target = templateInstance;
             requestDeletionSpy.target = templateInstance;
+            doneSpy.target = templateInstance;
         }
 
         function cleanup() {
             requestRenameSpy.clear();
             requestDeletionSpy.clear();
+            doneSpy.clear();
             pageStack.pop();
             templateInstance.destroy();
             templateInstance = null;
@@ -345,6 +352,17 @@ Item {
             compare(requestRenameSpy.count, 1);
             compare(requestRenameSpy.signalArguments[0][0], "tmplId");
             compare(requestRenameSpy.signalArguments[0][1], "Your finger");
+        }
+
+        function test_requestDone() {
+            templateInstance.templateId = "tmplId";
+            templateInstance.name = "My finger";
+
+            getNameInput().text = "Your finger";
+            getNameInput().accepted();
+            doneSpy.wait();
+
+            compare(doneSpy.count, 1);
         }
 
         function test_deletionFailed() {

@@ -14,9 +14,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef USC_PRINTERS_STRUCTS_H
+#define USC_PRINTERS_STRUCTS_H
+
 #include <QtCore/QMap>
 
+namespace Printing
+{
 struct InkLevels {
 public:
     QMap<CartridgeType, uint> levels;
 }
+} // Printing
+
+#endif // USC_PRINTERS_STRUCTS_H

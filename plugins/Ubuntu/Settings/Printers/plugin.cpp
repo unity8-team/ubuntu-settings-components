@@ -15,21 +15,20 @@
  */
 
 #include "plugin.h"
-#include "cupspkhelpermechanism.h"
 
 #include <QtQml/qqml.h>
 
-static QObject* p_singletonprovider(QQmlEngine *engine, QJSEngine *scriptEngine)
-{
-    Q_UNUSED(engine)
-    Q_UNUSED(scriptEngine)
+// static QObject* p_singletonprovider(QQmlEngine *engine, QJSEngine *scriptEngine)
+// {
+//     Q_UNUSED(engine)
+//     Q_UNUSED(scriptEngine)
 
-    return new UbuntuSettingsPrinters;
-}
+//     return new UbuntuSettingsPrinters;
+// }
 
 void UbuntuSettingsPrintersPlugin::registerTypes(const char *uri)
 {
-    qmlRegisterSingletonType<UbuntuSettingsPrinters>(
-        uri, 0, 1, "UbuntuSettingsPrinters", p_singletonprovider
-    );
+    // qmlRegisterSingletonType<UbuntuSettingsPrinters>(
+    //     uri, 0, 1, "UbuntuSettingsPrinters", p_singletonprovider
+    // );
 }

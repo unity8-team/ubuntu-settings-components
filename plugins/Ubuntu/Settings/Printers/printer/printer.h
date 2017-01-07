@@ -14,12 +14,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef USC_PRINTER_H
-#define USC_PRINTER_H
+#ifndef USC_PRINTERS_PRINTER_H
+#define USC_PRINTERS_PRINTER_H
 
+#include "enums.h"
 #include "structs.h"
+#include "printer/printerinfo.h"
 
-#include <QtCore/QObject>
+#include <QObject>
+#include <QPageSize>
+#include <QList>
+#include <QScopedPointer>
+#include <QString>
+#include <QStringList>
 
 class PrinterPrivate;
 class Printer : public QObject
@@ -27,9 +34,11 @@ class Printer : public QObject
     Q_OBJECT
     Q_DECLARE_PRIVATE(Printer)
     Q_PROPERTY(ColorMode colorMode READ colorMode WRITE setColorMode NOTIFY colorModeChanged)
+    Q_PROPERTY(ColorMode defaultColorMode READ defaultColorMode CONSTANT)
     Q_PROPERTY(int copies READ copies WRITE setCopies NOTIFY copiesChanged)
     Q_PROPERTY(bool duplex READ duplex WRITE setDuplex NOTIFY duplexChanged)
     Q_PROPERTY(bool duplexSupported READ duplexSupported NOTIFY duplexSupportedChanged)
+    Q_PROPERTY(DuplexMode defaultDuplexMode READ defaultDuplexMode CONSTANT)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString printRange READ printRange WRITE setPrintRange NOTIFY printRangeChanged)
     Q_PROPERTY(PrintRange printRangeMode READ printRangeMode WRITE setPrintRangeMode NOTIFY printRangeModeChanged)
@@ -43,92 +52,29 @@ class Printer : public QObject
     Q_PROPERTY(QStringList users READ users NOTIFY usersChanged)
     Q_PROPERTY(State state READ state NOTIFY stateChanged)
     Q_PROPERTY(QString lastStateMessage READ lastStateMessage NOTIFY lastStateMessageChanged)
+
+    QScopedPointer<PrinterPrivate> const d_ptr;
 public:
-    explicit Printer(QObject *parent = 0);
-    ~Printer();
+    Q_DECL_EXPORT explicit Printer(QObject *parent = nullptr);
+    Q_DECL_EXPORT explicit Printer(PrinterInfo *info, QObject *parent = nullptr);
+    Q_DECL_EXPORT ~Printer();
 
-    enum class PrintRange
-    {
-        AllPages,
-        PageRange,
-    };
     Q_ENUM(PrintRange)
-
-    enum class ColorMode
-    {
-        ColorMode,
-        GrayscaleMode,
-    };
     Q_ENUM(ColorMode)
-
-    enum class Quality
-    {
-        DraftQuality,
-        NormalQuality,
-        BestQuality,
-        PhotoQuality,
-    };
     Q_ENUM(Quality)
-
-    enum class ErrorPolicy
-    {
-        RetryOnError,
-        AbortOnError,
-        StopPrinterOnError,
-        RetryCurrentOnError,
-    };
     Q_ENUM(ErrorPolicy)
-
-    enum class OperationPolicy
-    {
-        DefaultOperation,
-        AuthenticatedOperation,
-    };
     Q_ENUM(OperationPolicy)
-
-    enum class AccessControl
-    {
-        AccessAllow,
-        AccessDeny,
-    };
     Q_ENUM(AccessControl)
-
-    enum class DuplexMode
-    {
-        DuplexNone,
-        DuplexAuto,
-        DuplexLongSide,
-        DuplexShortSide,
-    };
     Q_ENUM(DuplexMode)
-
-    enum class State
-    {
-        IdleState,
-        ActiveState,
-        AbortedState,
-        ErrorState,
-    };
     Q_ENUM(State)
-
-    enum class CartridgeType
-    {
-        BlackCartridge,
-        CyanCartridge,
-        MagentaCartridge,
-        YellowCartridge,
-        RedCartridge,
-        GreenCartridge,
-        BlueCartridge,
-        UnknownCartridge,
-        WhiteCartridge,
-    };
     Q_ENUM(CartridgeType)
 
     ColorMode colorMode() const;
+    ColorMode defaultColorMode() const;
     int copies() const;
     bool duplex() const;
     bool duplexSupported() const;
+    DuplexMode defaultDuplexMode() const;
     QString name() const;
     QString printRange() const;
     PrintRange printRangeMode() const;
@@ -143,10 +89,13 @@ public:
     State state() const;
     QString lastStateMessage() const;
 
+    void setAccessControl(const AccessControl &accessControl);
     void setColorMode(const ColorMode &colorMode);
     void setCopies(const int &copies);
+    void setDescription(const QString &description);
     void setDuplex(const bool duplex);
     void setDuplexSupported(const bool duplexSupported);
+    void setErrorPolicy(const ErrorPolicy &errorPolicy);
     void setName(const QString &name);
     void setPrintRange(const QString &printRange);
     void setPrintRangeMode(const PrintRange &printRangeMode);
@@ -154,7 +103,7 @@ public:
     void setQuality(const Quality &quality);
     void setPageSize(const QPageSize &pageSize);
 
-public slots:
+public Q_SLOTS:
     // Add user that is either denied or allowed printer. See AccessControl.
     void addUser(const QString &username);
 
@@ -164,7 +113,7 @@ public slots:
     // Requests ink levels for printer.
     void requestInkLevels(const QString &name);
 
-signals:
+Q_SIGNALS:
     void nameChanged();
     void descriptionChanged();
     void pageSizeChanged();
@@ -183,7 +132,6 @@ signals:
     void printRangeChanged();
     void printRangeModeChanged();
     void pdfModeChanged();
-    void qualityChanged();
     void lastStateMessageChanged();
 
     void inkLevelsRequestComplete(const InkLevels &inkLevels);
@@ -191,6 +139,6 @@ signals:
 
     // Signals that some printer setting was changed.
     void printerChanged();
-}
+};
 
-#endif // USC_PRINTER_H
+#endif // USC_PRINTERS_PRINTER_H

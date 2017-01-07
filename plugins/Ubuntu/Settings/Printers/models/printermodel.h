@@ -25,7 +25,6 @@
 #include <QModelIndex>
 #include <QObject>
 #include <QVariant>
-#include <QVector>
 
 class PrinterModelPrivate;
 class PrinterModel : public QAbstractListModel

@@ -14,13 +14,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef USC_PRINTERS_METATYPES_H
-#define USC_PRINTERS_METATYPES_H
+#ifndef USC_PRINTERS_PRINTERPRIVATE_H
+#define USC_PRINTERS_PRINTERPRIVATE_H
 
-#include <QtCore>
-#include <QtDBus>
+struct PrinterPrivate
+{
+    Q_DISABLE_COPY(PrinterPrivate)
+    Q_DECLARE_PUBLIC(Printer)
+    explicit PrinterPrivate(Printer *q);
+    explicit PrinterPrivate(Printer *q, PrinterInfo *info);
+    Printer *q_ptr;
+    PrinterInfo *info;
+};
 
-typedef QMap<QString,QString> QStringMap;
-Q_DECLARE_METATYPE(QStringMap)
-
-#endif // USC_PRINTERS_METATYPES_H
+#endif // USC_PRINTERS_PRINTERPRIVATE_H

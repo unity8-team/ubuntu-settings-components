@@ -17,14 +17,14 @@
 #ifndef USC_PRINTERS_STRUCTS_H
 #define USC_PRINTERS_STRUCTS_H
 
+#include "enums.h"
+
 #include <QtCore/QMap>
 
-namespace Printing
+struct InkLevels
 {
-struct InkLevels {
 public:
     QMap<CartridgeType, uint> levels;
-}
-} // Printing
+};
 
 #endif // USC_PRINTERS_STRUCTS_H

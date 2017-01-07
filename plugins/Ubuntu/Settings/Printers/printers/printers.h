@@ -21,6 +21,7 @@
 #include <QObject>
 #include <QSharedPointer>
 #include <QString>
+#include <QUrl>
 
 class PrintersPrivate;
 class Printers : public QObject
@@ -43,7 +44,19 @@ public:
 public slots:
     QSharedPointer<Printer> getPrinterByName(const QString &name);
     QSharedPointer<Printer> getJobOwner(const int &jobId);
-    void addPrinter();
+
+    QSharedPointer<Printer> addPrinter(const QString &name,
+                                       const QUrl &ppd,
+                                       const QUrl &device,
+                                       const QString &description,
+                                       const QString &location);
+
+    QSharedPointer<Printer> addPrinter(const QString &name,
+                                       const QUrl &device,
+                                       const QString &description,
+                                       const QString &location);
+
+    bool removePrinter(const QString &name);
     void updatePrinters();
 
 signals:

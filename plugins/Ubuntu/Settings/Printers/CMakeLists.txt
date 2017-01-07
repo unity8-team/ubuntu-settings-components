@@ -2,18 +2,17 @@ project(UbuntuSettingsPrintersQml)
 
 add_definitions(-DUBUNTUSETTINGSCOMPONENTS_LIBRARY)
 
-add_library(UbuntuSettingsPrintersQml MODULE
-    plugin.cpp
-    cupspkhelpermechanism.cpp
-)
+find_package(Qt5PrintSupport REQUIRED)
+find_package(Qt5Gui REQUIRED)
 
-find_package(Qt5DBus REQUIRED)
+add_library(UbuntuSettingsPrintersQml SHARED
+    printer/printer.cpp
+    printer/printerinfo_impl.cpp
+)
 
 target_link_libraries(UbuntuSettingsPrintersQml
-    Qt5::Core
-    Qt5::Qml
-    Qt5::Quick
-    Qt5::DBus
+    Qt5::PrintSupport
+    Qt5::Gui
 )
 
-add_usc_plugin(Ubuntu.Settings.Printers 0.1 Ubuntu/Settings/Printers TARGETS UbuntuSettingsPrintersQml)
+#add_usc_plugin(Ubuntu.Settings.Printers 0.1 Ubuntu/Settings/Printers TARGETS UbuntuSettingsPrintersQml)

@@ -29,7 +29,7 @@
 #include <QStringList>
 
 class PrinterPrivate;
-class Printer : public QObject
+class Q_DECL_EXPORT Printer : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(Printer)
@@ -55,9 +55,9 @@ class Printer : public QObject
 
     QScopedPointer<PrinterPrivate> const d_ptr;
 public:
-    Q_DECL_EXPORT explicit Printer(QObject *parent = nullptr);
-    Q_DECL_EXPORT explicit Printer(PrinterInfo *info, QObject *parent = nullptr);
-    Q_DECL_EXPORT ~Printer();
+    explicit Printer(QObject *parent = nullptr);
+    explicit Printer(PrinterInfo *info, QObject *parent = nullptr);
+    ~Printer();
 
     Q_ENUM(PrintRange)
     Q_ENUM(ColorMode)

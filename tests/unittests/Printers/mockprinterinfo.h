@@ -42,28 +42,27 @@ public:
 
     virtual QString printerName() const override
     {
-
+        return m_printerName;
     }
 
     virtual QString description() const override
     {
-
+        return m_description;
     }
 
     virtual QString location() const override
     {
-
+        return m_location;
     }
 
     virtual QString makeAndModel() const override
     {
-
+        return m_makeAndModel;
     }
-
 
     virtual State state() const override
     {
-
+        return m_state;
     }
 
     virtual QList<QPageSize> supportedPageSizes() const override
@@ -105,6 +104,12 @@ public:
     {
 
     }
+
+    QString m_printerName = QString::null;
+    QString m_description = QString::null;
+    QString m_location = QString::null;
+    QString m_makeAndModel = QString::null;
+    State m_state = State::IdleState;
 };
 
 #endif // USC_PRINTERS_MOCK_PRINTERINFO_H

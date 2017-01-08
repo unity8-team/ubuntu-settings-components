@@ -30,7 +30,7 @@ private Q_SLOTS:
     void init()
     {
         m_mockinfo = new MockPrinterInfo;
-        m_instance = new Printer;
+        m_instance = new Printer(m_mockinfo);
     }
     void cleanup()
     {
@@ -39,8 +39,9 @@ private Q_SLOTS:
         QTRY_COMPARE(destroyedSpy.count(), 1);
         delete m_mockinfo;
     }
-    void testRequestSucceeded()
+    void testName()
     {
+        QCOMPARE(m_mockinfo->printerName(), m_instance->name());
     }
 private:
     Printer *m_instance = nullptr;

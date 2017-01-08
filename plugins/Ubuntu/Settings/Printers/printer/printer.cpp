@@ -65,7 +65,8 @@ DuplexMode Printer::defaultDuplexMode() const
 
 QString Printer::name() const
 {
-
+    Q_D(const Printer);
+    return d->info->printerName();
 }
 
 QString Printer::printRange() const
@@ -215,5 +216,5 @@ PrinterPrivate::PrinterPrivate(Printer *q)
 
 PrinterPrivate::PrinterPrivate(Printer *q, PrinterInfo *info)
 {
-
+    this->info = info;
 }

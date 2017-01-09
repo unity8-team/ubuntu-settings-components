@@ -21,19 +21,20 @@
 
 #include <QAbstractListModel>
 #include <QByteArray>
-#include <QDBusConnection>
 #include <QModelIndex>
 #include <QObject>
+#include <QSortFilterProxyModel>
 #include <QVariant>
 
 class PrinterModelPrivate;
-class PrinterModel : public QAbstractListModel
+class Q_DECL_EXPORT PrinterModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(PrinterModel)
+    QScopedPointer<PrinterModelPrivate> const d_ptr;
 public:
     explicit PrinterModel(QObject *parent = 0);
-    explicit PrinterModel(QDBusConnection &dbus, QObject *parent = 0);
+    explicit PrinterModel(PrinterInfo *info, CupsFacade *cups, QObject *parent = 0);
     ~PrinterModel();
 
     enum class Roles
@@ -60,27 +61,25 @@ public:
         LastRole = LastStateMessageRole,
     };
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    QHash<int, QByteArray> roleNames() const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    virtual QHash<int, QByteArray> roleNames() const override;
 
     QSharedPointer<Printer> getPrinterFromName(const QString &name);
 };
 
-class PrinterFilterPrivate;
 class PrinterFilter : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(PrinterFilter)
 public:
-    explicit PrinterFilter() {}
-    virtual ~PrinterFilter() {}
-    void filterOnState(const Printer::State &state);
+    explicit PrinterFilter();
+    ~PrinterFilter();
+    void filterOnState(const State &state);
     void filterOnRecent(const bool recent);
 
 protected:
-    virtual bool filterAcceptsRow(int, const QModelIndex&) const;
-    virtual bool lessThan(const QModelIndex&, const QModelIndex&) const;
+    virtual bool filterAcceptsRow(int, const QModelIndex&) const override;
+    virtual bool lessThan(const QModelIndex&, const QModelIndex&) const override;
 };
 
 #endif // USC_PRINTER_MODEL_H

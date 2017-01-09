@@ -14,22 +14,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef USC_PRINTERS_PRIVATE_H
-#define USC_PRINTERS_PRIVATE_H
+#ifndef USC_PRINTERS_PRINTERMODELPRIVATE_H
+#define USC_PRINTERS_PRINTERMODELPRIVATE_H
 
-#include "models/printermodel.h"
-
-struct PrintersPrivate
+struct PrinterModelPrivate
 {
-    Q_DISABLE_COPY(PrintersPrivate)
-    Q_DECLARE_PUBLIC(Printers)
-    explicit PrintersPrivate(Printers *q);
-    explicit PrintersPrivate(Printers *q, PrinterInfo *info, CupsFacade *cups);
+    Q_DISABLE_COPY(PrinterModelPrivate)
+    Q_DECLARE_PUBLIC(PrinterModel)
+    explicit PrinterModelPrivate(PrinterModel *q);
+    explicit PrinterModelPrivate(PrinterModel *q, PrinterInfo *info, CupsFacade *cups);
     CupsFacade *cups;
-    Printers *q_ptr;
+    PrinterModel *q_ptr;
     PrinterInfo *info;
-    PrinterModel model;
-    PrinterFilter recentPrinters;
+    QList<QSharedPointer<Printer>> printers;
 };
 
-#endif // USC_PRINTERS_PRIVATE_H
+#endif // USC_PRINTERS_PRINTERMODELPRIVATE_H

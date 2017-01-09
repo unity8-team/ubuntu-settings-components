@@ -92,3 +92,14 @@ QList<DuplexMode> PrinterInfoImpl::supportedDuplexModes() const
 {
 
 }
+
+QStringList PrinterInfoImpl::availablePrinterNames()
+{
+
+}
+
+PrinterInfo* PrinterInfoImpl::printerInfo(const QString &printerName)
+{
+
+}
+

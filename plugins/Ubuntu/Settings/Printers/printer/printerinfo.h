@@ -19,15 +19,11 @@
 
 #include "enums.h"
 
-// #include <QObject>
 #include <QPageSize>
 #include <QList>
 #include <QString>
 #include <QStringList>
 
-/* PrinterInfo uses the bridge pattern to accommodate different
-implementations, like QPrinterInfo; and future and testable
-implementations. */
 class PrinterInfo
 {
 
@@ -52,6 +48,10 @@ public:
     virtual QList<int> supportedResolutions() const = 0;
     virtual DuplexMode defaultDuplexMode() const = 0;
     virtual QList<DuplexMode> supportedDuplexModes() const = 0;
+
+    virtual QStringList availablePrinterNames() = 0;
+    virtual PrinterInfo* printerInfo(const QString &printerName) = 0;
+
 };
 
 #endif // USC_PRINTERS_PRINTERINFO_H

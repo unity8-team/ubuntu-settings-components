@@ -105,11 +105,22 @@ public:
 
     }
 
+    virtual QStringList availablePrinterNames() override
+    {
+        return m_availablePrinterNames;
+    }
+
+    virtual PrinterInfo* printerInfo(const QString &printerName) override
+    {
+
+    }
+
     QString m_printerName = QString::null;
     QString m_description = QString::null;
     QString m_location = QString::null;
     QString m_makeAndModel = QString::null;
     State m_state = State::IdleState;
+    QStringList m_availablePrinterNames;
 };
 
 #endif // USC_PRINTERS_MOCK_PRINTERINFO_H

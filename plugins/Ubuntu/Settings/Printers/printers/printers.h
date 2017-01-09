@@ -17,14 +17,20 @@
 #ifndef USC_PRINTERS_H
 #define USC_PRINTERS_H
 
+#include "cups/cupsfacade.h"
+#include "models/printermodel.h"
+#include "printer/printer.h"
+#include "printer/printerinfo.h"
+
 #include <QAbstractItemModel>
 #include <QObject>
+#include <QScopedPointer>
 #include <QSharedPointer>
 #include <QString>
 #include <QUrl>
 
 class PrintersPrivate;
-class Printers : public QObject
+class Q_DECL_EXPORT Printers : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(Printers)
@@ -33,7 +39,13 @@ class Printers : public QObject
     Q_PROPERTY(QAbstractItemModel* printJobs READ printJobs CONSTANT)
     Q_PROPERTY(QString defaultPrinterName READ defaultPrinterName WRITE setDefaultPrinterName NOTIFY defaultPrinterNameChanged)
 
+    QScopedPointer<PrintersPrivate> const d_ptr;
+
 public:
+    explicit Printers(QObject *parent = nullptr);
+    explicit Printers(PrinterInfo *info, CupsFacade *cups, QObject *parent = nullptr);
+    ~Printers();
+
     QAbstractItemModel* allPrinters() const;
     QAbstractItemModel* recentPrinters() const;
     QAbstractItemModel* printJobs() const;
@@ -41,7 +53,7 @@ public:
 
     void setDefaultPrinterName(const QString &name);
 
-public slots:
+public Q_SLOTS:
     QSharedPointer<Printer> getPrinterByName(const QString &name);
     QSharedPointer<Printer> getJobOwner(const int &jobId);
 
@@ -57,10 +69,9 @@ public slots:
                                        const QString &location);
 
     bool removePrinter(const QString &name);
-    void updatePrinters();
 
-signals:
+Q_SIGNALS:
     void defaultPrinterNameChanged();
-}
+};
 
 #endif // USC_PRINTERS_H

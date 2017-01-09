@@ -45,6 +45,9 @@ public:
     virtual QList<int> supportedResolutions() const override;
     virtual DuplexMode defaultDuplexMode() const override;
     virtual QList<DuplexMode> supportedDuplexModes() const override;
+    virtual QStringList availablePrinterNames() override;
+    virtual PrinterInfo* printerInfo(const QString &printerName) override;
+
 private:
     QPrinterInfo m_info;
     CupsFacade *m_cups;

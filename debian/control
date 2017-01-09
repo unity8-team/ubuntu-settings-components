@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Build-Depends: cmake,
                cmake-extras (>= 0.6),
+               libcups2-dev,
                debhelper (>= 9),
                pkg-config,
                python3:any,
@@ -40,6 +41,7 @@ Package: qml-module-ubuntu-settings-components
 Architecture: any
 Multi-Arch: same
 Pre-Depends: dpkg (>= 1.15.6~),
+Suggests: cups,
 Depends: gsettings-ubuntu-schemas (>= 0.0.7),
          qml-module-biometryd,
          qml-module-qtquick-layouts,

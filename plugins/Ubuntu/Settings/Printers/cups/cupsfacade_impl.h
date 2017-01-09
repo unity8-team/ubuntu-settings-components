@@ -14,82 +14,72 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef USC_PRINTERS_CUPSFACADE_H
-#define USC_PRINTERS_CUPSFACADE_H
+#ifndef USC_PRINTERS_CUPSFACADE_IMPL_H
+#define USC_PRINTERS_CUPSFACADE_IMPL_H
 
-#include "enums.h"
+#include "cups/cupsfacade.h"
 
-#include <QObject>
-#include <QString>
-#include <QUrl>
-
-class CupsFacade : public QObject
+class CupsFacadeImpl : public CupsFacade
 {
 public:
-    virtual ~CupsFacade() {};
+    virtual ~CupsFacadeImpl() override;
     virtual QString printerAdd(const QString &name,
                                const QUrl &uri,
                                const QUrl &ppdFile,
                                const QString &info,
-                               const QString &location) = 0;
+                               const QString &location) override;
 
     virtual QString printerAddWithPpd(const QString &name,
                                       const QUrl &uri,
                                       const QString &ppdFileName,
                                       const QString &info,
-                                      const QString &location) = 0;
+                                      const QString &location) override;
 
-    virtual QString printerDelete(const QString &name) = 0;
+    virtual QString printerDelete(const QString &name) override;
 
     virtual QString printerSetEnabled(const QString &name,
-                                      const bool enabled) = 0;
+                                      const bool enabled) override;
 
     virtual QString printerSetAcceptJobs(
         const QString &name,
         const bool enabled,
-        const QString &reason = QString::null) = 0;
+        const QString &reason = QString::null) override;
 
     virtual QString printerSetInfo(const QString &name,
-                                   const QString &info) = 0;
+                                   const QString &info) override;
 
     virtual QString printerSetLocation(const QString &name,
-                                       const QString &location) = 0;
+                                       const QString &location) override;
 
     virtual QString printerSetShared(const QString &name,
-                                     const bool shared) = 0;
+                                     const bool shared) override;
 
     virtual QString printerSetJobSheets(const QString &name,
                                         const QString &start,
-                                        const QString &end) = 0;
+                                        const QString &end) override;
 
     virtual QString printerSetErrorPolicy(const QString &name,
-                                          const ErrorPolicy &policy) = 0;
+                                          const ErrorPolicy &policy) override;
 
     virtual QString printerSetOpPolicy(const QString &name,
-                                       const OperationPolicy &policy) = 0;
+                                       const OperationPolicy &policy) override;
 
     virtual QString printerSetUsersAllowed(const QString &name,
-                                           const QStringList &users) = 0;
+                                           const QStringList &users) override;
 
     virtual QString printerSetUsersDenied(const QString &name,
-                                          const QStringList &users) = 0;
+                                          const QStringList &users) override;
 
     virtual QString printerAddOptionDefault(const QString &name,
                                             const QString &option,
-                                            const QStringList &values) = 0;
+                                            const QStringList &values) override;
 
     virtual QString printerDeleteOptionDefault(const QString &name,
-                                               const QString &value) = 0;
+                                               const QString &value) override;
 
     virtual QString printerAddOption(const QString &name,
                                      const QString &option,
-                                     const QStringList &values) = 0;
-
-Q_SIGNALS:
-    void printerAdded(const QString &name);
-    void printerModified(const QString &name, const bool ppdChanged);
-    void printerDeleted(const QString &name);
-    void printerStateChanged(const QString &name);
+                                     const QStringList &values) override;
 };
 
-#endif // USC_PRINTERS_CUPSFACADE_H
+#endif // USC_PRINTERS_CUPSFACADE_IMPL_H

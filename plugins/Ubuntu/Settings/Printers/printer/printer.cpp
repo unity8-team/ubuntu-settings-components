@@ -23,9 +23,9 @@ Printer::Printer(QObject *parent)
 {
 }
 
-Printer::Printer(PrinterInfo *info, QObject *parent)
+Printer::Printer(PrinterInfo *info, CupsFacade *cups, QObject *parent)
     : QObject(parent)
-    , d_ptr(new PrinterPrivate(this, info))
+    , d_ptr(new PrinterPrivate(this, info, cups))
 {
 }
 
@@ -91,7 +91,8 @@ Quality Printer::quality() const
 
 QString Printer::description() const
 {
-
+    Q_D(const Printer);
+    return d->info->description();
 }
 
 QPageSize Printer::pageSize() const
@@ -146,6 +147,8 @@ void Printer::setCopies(const int &copies)
 
 void Printer::setDescription(const QString &description)
 {
+    Q_D(const Printer);
+    QString answer = d->cups->printerSetInfo(d->info->printerName(), description);
 
 }
 
@@ -214,7 +217,8 @@ PrinterPrivate::PrinterPrivate(Printer *q)
 
 }
 
-PrinterPrivate::PrinterPrivate(Printer *q, PrinterInfo *info)
+PrinterPrivate::PrinterPrivate(Printer *q, PrinterInfo *info, CupsFacade *cups)
 {
     this->info = info;
+    this->cups = cups;
 }

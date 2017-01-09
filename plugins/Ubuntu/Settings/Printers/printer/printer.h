@@ -17,9 +17,10 @@
 #ifndef USC_PRINTERS_PRINTER_H
 #define USC_PRINTERS_PRINTER_H
 
+#include "cups/cupsfacade.h"
 #include "enums.h"
-#include "structs.h"
 #include "printer/printerinfo.h"
+#include "structs.h"
 
 #include <QObject>
 #include <QPageSize>
@@ -39,7 +40,7 @@ class Q_DECL_EXPORT Printer : public QObject
     Q_PROPERTY(bool duplex READ duplex WRITE setDuplex NOTIFY duplexChanged)
     Q_PROPERTY(bool duplexSupported READ duplexSupported NOTIFY duplexSupportedChanged)
     Q_PROPERTY(DuplexMode defaultDuplexMode READ defaultDuplexMode CONSTANT)
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged)
     Q_PROPERTY(QString printRange READ printRange WRITE setPrintRange NOTIFY printRangeChanged)
     Q_PROPERTY(PrintRange printRangeMode READ printRangeMode WRITE setPrintRangeMode NOTIFY printRangeModeChanged)
     Q_PROPERTY(bool pdfMode READ pdfMode WRITE setPdfMode NOTIFY pdfModeChanged)
@@ -56,7 +57,7 @@ class Q_DECL_EXPORT Printer : public QObject
     QScopedPointer<PrinterPrivate> const d_ptr;
 public:
     explicit Printer(QObject *parent = nullptr);
-    explicit Printer(PrinterInfo *info, QObject *parent = nullptr);
+    explicit Printer(PrinterInfo *info, CupsFacade *cups, QObject *parent = nullptr);
     ~Printer();
 
     Q_ENUM(PrintRange)

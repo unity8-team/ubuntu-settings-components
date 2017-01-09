@@ -17,9 +17,11 @@
 #ifndef USC_PRINTERS_PRINTERINFO_IMPL_H
 #define USC_PRINTERS_PRINTERINFO_IMPL_H
 
+#include "cups/cupsfacade.h"
 #include "printer/printerinfo.h"
 
 #include <QObject>
+#include <QPrinterInfo>
 
 class PrinterInfoImpl : public QObject, public PrinterInfo
 {
@@ -43,6 +45,9 @@ public:
     virtual QList<int> supportedResolutions() const override;
     virtual DuplexMode defaultDuplexMode() const override;
     virtual QList<DuplexMode> supportedDuplexModes() const override;
+private:
+    QPrinterInfo m_info;
+    CupsFacade *m_cups;
 };
 
 #endif // USC_PRINTERS_PRINTERINFO_IMPL_H

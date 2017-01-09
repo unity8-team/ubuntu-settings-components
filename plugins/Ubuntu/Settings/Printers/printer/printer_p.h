@@ -22,7 +22,8 @@ struct PrinterPrivate
     Q_DISABLE_COPY(PrinterPrivate)
     Q_DECLARE_PUBLIC(Printer)
     explicit PrinterPrivate(Printer *q);
-    explicit PrinterPrivate(Printer *q, PrinterInfo *info);
+    explicit PrinterPrivate(Printer *q, PrinterInfo *info, CupsFacade *cups);
+    CupsFacade *cups;
     Printer *q_ptr;
     PrinterInfo *info;
 };

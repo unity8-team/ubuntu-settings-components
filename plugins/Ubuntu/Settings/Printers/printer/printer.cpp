@@ -132,6 +132,11 @@ ErrorPolicy Printer::errorPolicy() const
 
 }
 
+bool Printer::enabled() const
+{
+
+}
+
 QStringList Printer::users() const
 {
 
@@ -175,6 +180,11 @@ void Printer::setDuplex(const bool duplex)
 }
 
 void Printer::setDuplexSupported(const bool duplexSupported)
+{
+
+}
+
+void Printer::setEnabled(const bool enabled)
 {
 
 }

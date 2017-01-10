@@ -36,6 +36,7 @@ class PRINTERS_DECL_EXPORT Printer : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(Printer)
+    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(ColorMode colorMode READ colorMode WRITE setColorMode NOTIFY colorModeChanged)
     Q_PROPERTY(ColorMode defaultColorMode READ defaultColorMode CONSTANT)
     Q_PROPERTY(int copies READ copies WRITE setCopies NOTIFY copiesChanged)
@@ -72,6 +73,7 @@ public:
     Q_ENUM(State)
     Q_ENUM(CartridgeType)
 
+    bool enabled() const;
     ColorMode colorMode() const;
     ColorMode defaultColorMode() const;
     int copies() const;
@@ -98,6 +100,7 @@ public:
     void setDescription(const QString &description);
     void setDuplex(const bool duplex);
     void setDuplexSupported(const bool duplexSupported);
+    void setEnabled(const bool enabled);
     void setErrorPolicy(const ErrorPolicy &errorPolicy);
     void setName(const QString &name);
     void setPrintRange(const QString &printRange);
@@ -118,6 +121,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void nameChanged();
+    void enabledChanged();
     void descriptionChanged();
     void pageSizeChanged();
     void duplexModeChanged();

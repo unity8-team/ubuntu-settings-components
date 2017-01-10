@@ -18,7 +18,7 @@
 #define USC_PRINTERS_CUPSFACADE_IMPL_H
 
 #include "cups/cupsfacade.h"
-#include "cups/pkhelper.h"
+#include "cups/cupspkhelper.h"
 
 class CupsFacadeImpl : public CupsFacade
 {
@@ -84,7 +84,7 @@ public:
                                      const QStringList &values) override;
 
 private:
-    PkHelper helper;
+    CupsPkHelper helper;
 };
 
 #endif // USC_PRINTERS_CUPSFACADE_IMPL_H

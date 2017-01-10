@@ -73,12 +73,7 @@ QString CupsFacadeImpl::printerSetAcceptJobs(
 QString CupsFacadeImpl::printerSetInfo(const QString &name,
                                        const QString &info)
 {
-  qWarning() << "setinfo";
-  helper.sendNewPrinterClassRequest(name,
-                                    IPP_TAG_PRINTER,
-                                    IPP_TAG_TEXT,
-                                    "printer-info",
-                                    info);
+    helper.printerClassSetInfo(name, info);
 }
 
 QString CupsFacadeImpl::printerSetLocation(const QString &name,

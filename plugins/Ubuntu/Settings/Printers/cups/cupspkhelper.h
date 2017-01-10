@@ -21,17 +21,14 @@
 
 #include <QString>
 
-class PkHelper
+// Class that wraps code from cups-pk-helper as well as cups state.
+class CupsPkHelper
 {
 public:
-    explicit PkHelper();
-    ~PkHelper();
+    explicit CupsPkHelper();
+    ~CupsPkHelper();
 
-    bool sendNewPrinterClassRequest(const QString &printerName,
-                                    ipp_tag_t group,
-                                    ipp_tag_t type,
-                                    const QString &name,
-                                    const QString &value);
+    bool printerClassSetInfo(const QString &name, const QString &info);
 
 private:
     enum CphResource
@@ -41,16 +38,19 @@ private:
         CphResourceJobs,
     };
 
-    static void _cph_cups_add_printer_uri(ipp_t *request,
-                                          const QString &name);
-    static void _cph_cups_add_requesting_user_name(ipp_t *request,
-                                                   const QString &username);
-    static const QString _cph_cups_get_resource (const CphResource &resource);
+    bool sendNewPrinterClassRequest(const QString &printerName,
+                                    ipp_tag_t group,
+                                    ipp_tag_t type,
+                                    const QString &name,
+                                    const QString &value);
+    static void addPrinterUri(ipp_t *request, const QString &name);
+    static void addRequestingUsername(ipp_t *request, const QString &username);
+    static const QString getResource(const CphResource &resource);
+    static bool isPrinterNameValidInternal(const QString &name);
 
     bool sendRequest(ipp_t *request, const CphResource &resource);
     bool handleReply(ipp_t *reply);
-    bool isReplyOk(ipp_t *reply,
-                   bool deleteIfReplyNotOk);
+    bool isReplyOk(ipp_t *reply, bool deleteIfReplyNotOk);
     void setErrorFromReply(ipp_t *reply);
 
     http_t *m_connection;

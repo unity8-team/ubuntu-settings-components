@@ -10,7 +10,7 @@ find_package(Qt5Qml REQUIRED)
 
 add_library(UbuntuSettingsPrintersQml SHARED
     cups/cupsfacade_impl.cpp
-    cups/pkhelper.cpp
+    cups/cupspkhelper.cpp
     models/printermodel.cpp
     printer/printer.cpp
     printer/printerinfo_impl.cpp

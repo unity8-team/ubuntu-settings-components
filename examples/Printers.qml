@@ -28,6 +28,10 @@ MainView {
     width: units.gu(50)
     height: units.gu(90)
 
+    PrinterModel {
+        id: printerModel
+    }
+
     PageStack {
         id: pageStack
 
@@ -38,20 +42,31 @@ MainView {
             visible: false
 
             Column {
+                spacing: units.gu(2)
                 anchors { left: parent.left; right: parent.right }
 
                 Label {
+                    anchors { left: parent.left; right: parent.right }
                     text: "Printers"
                 }
 
                 ListView {
-                    model:
+                    anchors { left: parent.left; right: parent.right }
+                    model: printerModel
                     delegate: ListItem {
                         // shall specify the height when Using ListItemLayout inside ListItem
                         height: modelLayout.height + (divider.visible ? divider.height : 0)
                         ListItemLayout {
                             id: modelLayout
-                            title.text: modelData
+                            title.text: displayName
+                            subtitle.text: description
+
+                            Button {
+                                property string newInfo: description === "my description" ? "your description" : "my description"
+                                text: "Change info to " + newInfo
+                                onClicked: description = newInfo
+                            }
+                        }
                     }
                 }
             }

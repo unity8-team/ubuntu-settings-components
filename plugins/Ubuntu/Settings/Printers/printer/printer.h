@@ -17,6 +17,8 @@
 #ifndef USC_PRINTERS_PRINTER_H
 #define USC_PRINTERS_PRINTER_H
 
+#include "printers_global.h"
+
 #include "cups/cupsfacade.h"
 #include "enums.h"
 #include "printer/printerinfo.h"
@@ -30,7 +32,7 @@
 #include <QStringList>
 
 class PrinterPrivate;
-class Q_DECL_EXPORT Printer : public QObject
+class PRINTERS_DECL_EXPORT Printer : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(Printer)

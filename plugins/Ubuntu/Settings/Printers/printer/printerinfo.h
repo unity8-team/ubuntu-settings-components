@@ -26,12 +26,12 @@
 
 class PrinterInfo
 {
-
-//protected:
-    //explicit PrinterInfo(QObject* parent = 0);
-
 public:
+    explicit PrinterInfo(const QString &name = QString::null)
+        : m_printerName(name) {};
     virtual ~PrinterInfo() {};
+
+    virtual bool holdsDefinition() const = 0;
 
     virtual QString printerName() const = 0;
     virtual QString description() const = 0;
@@ -49,9 +49,15 @@ public:
     virtual DuplexMode defaultDuplexMode() const = 0;
     virtual QList<DuplexMode> supportedDuplexModes() const = 0;
 
+    virtual QList<PrinterInfo*> availablePrinters() = 0;
     virtual QStringList availablePrinterNames() = 0;
     virtual PrinterInfo* printerInfo(const QString &printerName) = 0;
 
+protected:
+    const QString m_printerName;
+
 };
+
+Q_DECLARE_TYPEINFO(PrinterInfo, Q_MOVABLE_TYPE);
 
 #endif // USC_PRINTERS_PRINTERINFO_H

@@ -36,6 +36,17 @@ Printers::~Printers()
 
 }
 
+PrintersPrivate::PrintersPrivate(Printers *q)
+{
+
+}
+
+PrintersPrivate::PrintersPrivate(Printers *q, PrinterInfo *info, CupsFacade *cups)
+{
+    this->info = info;
+    this->cups = cups;
+}
+
 QAbstractItemModel* Printers::allPrinters() const
 {
 
@@ -90,15 +101,4 @@ QSharedPointer<Printer> Printers::addPrinter(const QString &name,
 bool Printers::removePrinter(const QString &name)
 {
 
-}
-
-PrintersPrivate::PrintersPrivate(Printers *q)
-{
-
-}
-
-PrintersPrivate::PrintersPrivate(Printers *q, PrinterInfo *info, CupsFacade *cups)
-{
-    this->info = info;
-    this->cups = cups;
 }

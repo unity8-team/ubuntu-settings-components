@@ -26,6 +26,7 @@
 class CupsFacade : public QObject
 {
 public:
+    explicit CupsFacade(QObject *parent = nullptr) : QObject(parent) {};
     virtual ~CupsFacade() {};
     virtual QString printerAdd(const QString &name,
                                const QUrl &uri,

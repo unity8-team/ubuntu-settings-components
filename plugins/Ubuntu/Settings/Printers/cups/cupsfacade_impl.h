@@ -18,10 +18,12 @@
 #define USC_PRINTERS_CUPSFACADE_IMPL_H
 
 #include "cups/cupsfacade.h"
+#include "cups/pkhelper.h"
 
 class CupsFacadeImpl : public CupsFacade
 {
 public:
+    explicit CupsFacadeImpl(QObject *parent = nullptr);
     virtual ~CupsFacadeImpl() override;
     virtual QString printerAdd(const QString &name,
                                const QUrl &uri,
@@ -80,6 +82,9 @@ public:
     virtual QString printerAddOption(const QString &name,
                                      const QString &option,
                                      const QStringList &values) override;
+
+private:
+    PkHelper helper;
 };
 
 #endif // USC_PRINTERS_CUPSFACADE_IMPL_H

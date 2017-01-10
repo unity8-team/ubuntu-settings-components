@@ -31,6 +31,23 @@ Printer::Printer(PrinterInfo *info, CupsFacade *cups, QObject *parent)
 
 Printer::~Printer()
 {
+
+}
+
+PrinterPrivate::PrinterPrivate(Printer *q)
+{
+
+}
+
+PrinterPrivate::PrinterPrivate(Printer *q, PrinterInfo *info, CupsFacade *cups)
+{
+    this->info = info;
+    this->cups = cups;
+}
+
+PrinterPrivate::~PrinterPrivate()
+{
+    delete this->info;
 }
 
 ColorMode Printer::colorMode() const
@@ -210,15 +227,4 @@ void Printer::removeUser(const QString &username)
 void Printer::requestInkLevels(const QString &name)
 {
 
-}
-
-PrinterPrivate::PrinterPrivate(Printer *q)
-{
-
-}
-
-PrinterPrivate::PrinterPrivate(Printer *q, PrinterInfo *info, CupsFacade *cups)
-{
-    this->info = info;
-    this->cups = cups;
 }

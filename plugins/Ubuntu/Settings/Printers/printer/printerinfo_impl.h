@@ -20,15 +20,16 @@
 #include "cups/cupsfacade.h"
 #include "printer/printerinfo.h"
 
-#include <QObject>
 #include <QPrinterInfo>
 
-class PrinterInfoImpl : public QObject, public PrinterInfo
+class PrinterInfoImpl : public PrinterInfo
 {
-    Q_OBJECT
 public:
-    explicit PrinterInfoImpl(QObject* parent = 0);
+    explicit PrinterInfoImpl(const QString &name = QString::null);
+    explicit PrinterInfoImpl(QPrinterInfo info);
     virtual ~PrinterInfoImpl() override;
+
+    virtual bool holdsDefinition() const override;
 
     virtual QString printerName() const override;
     virtual QString description() const override;
@@ -45,12 +46,12 @@ public:
     virtual QList<int> supportedResolutions() const override;
     virtual DuplexMode defaultDuplexMode() const override;
     virtual QList<DuplexMode> supportedDuplexModes() const override;
+    virtual QList<PrinterInfo*> availablePrinters() override;
     virtual QStringList availablePrinterNames() override;
     virtual PrinterInfo* printerInfo(const QString &printerName) override;
 
 private:
     QPrinterInfo m_info;
-    CupsFacade *m_cups;
 };
 
 #endif // USC_PRINTERS_PRINTERINFO_IMPL_H

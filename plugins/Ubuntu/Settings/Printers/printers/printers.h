@@ -17,6 +17,8 @@
 #ifndef USC_PRINTERS_H
 #define USC_PRINTERS_H
 
+#include "printers_global.h"
+
 #include "cups/cupsfacade.h"
 #include "models/printermodel.h"
 #include "printer/printer.h"
@@ -30,7 +32,7 @@
 #include <QUrl>
 
 class PrintersPrivate;
-class Q_DECL_EXPORT Printers : public QObject
+class PRINTERS_DECL_EXPORT Printers : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(Printers)

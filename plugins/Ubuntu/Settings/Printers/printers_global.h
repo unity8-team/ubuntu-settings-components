@@ -1,0 +1,7 @@
+#include <QtCore/QtGlobal>
+
+#if defined(UBUNTUSETTINGSPRINTERS_LIBRARY)
+#  define PRINTERS_DECL_EXPORT Q_DECL_EXPORT
+#else
+#  define PRINTERS_DECL_EXPORT Q_DECL_IMPORT
+#endif

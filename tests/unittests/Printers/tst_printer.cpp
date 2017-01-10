@@ -32,11 +32,8 @@ private Q_SLOTS:
     void init()
     {
         m_mockcups = new MockCupsFacade;
-        m_mockinfo = new MockPrinterInfo;
+        m_mockinfo = new MockPrinterInfo(m_printerName);
         m_instance = new Printer(m_mockinfo, m_mockcups);
-
-        // Need a name for most tests.
-        ((MockPrinterInfo*) m_mockinfo)->m_printerName = m_printerName;
     }
     void cleanup()
     {

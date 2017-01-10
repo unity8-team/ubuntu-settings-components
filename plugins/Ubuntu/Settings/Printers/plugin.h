@@ -17,9 +17,12 @@
 #ifndef UBUNTU_SETTINGS_COMPONENTS_PRINTERS_PLUGIN_H
 #define UBUNTU_SETTINGS_COMPONENTS_PRINTERS_PLUGIN_H
 
+#include "printers_global.h"
+
 #include <QtQml/QQmlExtensionPlugin>
 
-class UbuntuSettingsComponentsPrintersPlugin : public QQmlExtensionPlugin
+class PRINTERS_DECL_EXPORT UbuntuSettingsComponentsPrintersPlugin
+    : public QQmlExtensionPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")

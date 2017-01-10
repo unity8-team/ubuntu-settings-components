@@ -21,6 +21,13 @@
 #include <cups/ipp.h>
 #include <cups/ppd.h>
 
+#include <QDebug>
+
+CupsFacadeImpl::CupsFacadeImpl(QObject *parent) : CupsFacade(parent)
+{
+
+}
+
 CupsFacadeImpl::~CupsFacadeImpl()
 {
 
@@ -66,7 +73,12 @@ QString CupsFacadeImpl::printerSetAcceptJobs(
 QString CupsFacadeImpl::printerSetInfo(const QString &name,
                                        const QString &info)
 {
-
+  qWarning() << "setinfo";
+  helper.sendNewPrinterClassRequest(name,
+                                    IPP_TAG_PRINTER,
+                                    IPP_TAG_TEXT,
+                                    "printer-info",
+                                    info);
 }
 
 QString CupsFacadeImpl::printerSetLocation(const QString &name,

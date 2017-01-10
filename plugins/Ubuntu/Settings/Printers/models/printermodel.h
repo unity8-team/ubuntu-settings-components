@@ -17,6 +17,8 @@
 #ifndef USC_PRINTER_MODEL_H
 #define USC_PRINTER_MODEL_H
 
+#include "printers_global.h"
+
 #include "printer/printer.h"
 
 #include <QAbstractListModel>
@@ -27,17 +29,17 @@
 #include <QVariant>
 
 class PrinterModelPrivate;
-class Q_DECL_EXPORT PrinterModel : public QAbstractListModel
+class PRINTERS_DECL_EXPORT PrinterModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(PrinterModel)
-    QScopedPointer<PrinterModelPrivate> const d_ptr;
+    Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
     explicit PrinterModel(QObject *parent = 0);
     explicit PrinterModel(PrinterInfo *info, CupsFacade *cups, QObject *parent = 0);
     ~PrinterModel();
 
-    enum class Roles
+    enum Roles
     {
         // Qt::DisplayRole holds device name
         ColorModeRole = Qt::UserRole,
@@ -63,9 +65,19 @@ public:
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
     virtual QHash<int, QByteArray> roleNames() const override;
 
+    int count() const;
+
     QSharedPointer<Printer> getPrinterFromName(const QString &name);
+
+private:
+    QScopedPointer<PrinterModelPrivate> const d_ptr;
+    void update();
+
+Q_SIGNALS:
+    void countChanged();
 };
 
 class PrinterFilter : public QSortFilterProxyModel

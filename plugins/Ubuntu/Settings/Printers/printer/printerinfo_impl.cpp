@@ -16,9 +16,21 @@
 
 #include "printer/printerinfo_impl.h"
 
-PrinterInfoImpl::PrinterInfoImpl(QObject* parent) : QObject(parent)
-{
+#include <QDebug>
 
+PrinterInfoImpl::PrinterInfoImpl(const QString &name) : PrinterInfo(name)
+{
+    if (m_printerName.isEmpty()) {
+        m_info = QPrinterInfo();
+    } else {
+        m_info = QPrinterInfo::printerInfo(m_printerName);
+    }
+}
+
+PrinterInfoImpl::PrinterInfoImpl(QPrinterInfo info)
+    : PrinterInfo(info.isNull() ? QString::null : info.printerName())
+    , m_info(info)
+{
 }
 
 PrinterInfoImpl::~PrinterInfoImpl()
@@ -26,14 +38,19 @@ PrinterInfoImpl::~PrinterInfoImpl()
 
 }
 
+bool PrinterInfoImpl::holdsDefinition() const
+{
+    return !m_info.isNull();
+}
+
 QString PrinterInfoImpl::printerName() const
 {
-
+    return m_info.printerName();
 }
 
 QString PrinterInfoImpl::description() const
 {
-
+    return m_info.description();
 }
 
 QString PrinterInfoImpl::location() const
@@ -93,6 +110,16 @@ QList<DuplexMode> PrinterInfoImpl::supportedDuplexModes() const
 
 }
 
+QList<PrinterInfo*> PrinterInfoImpl::availablePrinters()
+{
+    QList<PrinterInfo*> list;
+    Q_FOREACH(QPrinterInfo info, QPrinterInfo::availablePrinters()) {
+        list.append(new PrinterInfoImpl(info));
+    }
+    return list;
+
+}
+
 QStringList PrinterInfoImpl::availablePrinterNames()
 {
 
@@ -102,4 +129,3 @@ PrinterInfo* PrinterInfoImpl::printerInfo(const QString &printerName)
 {
 
 }
-

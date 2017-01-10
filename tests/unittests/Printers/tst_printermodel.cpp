@@ -37,7 +37,7 @@ private Q_SLOTS:
     {
         QTest::addColumn<CupsFacade*>("cups");
         QTest::addColumn<PrinterInfo*>("info");
-        QTest::addColumn<int>("rowCount");
+        QTest::addColumn<int>("targetCount");
 
         {
             CupsFacade* cups = new MockCupsFacade;
@@ -47,7 +47,12 @@ private Q_SLOTS:
         {
             CupsFacade* cups = new MockCupsFacade;
             PrinterInfo* info = new MockPrinterInfo;
-            ((MockPrinterInfo*) info)->m_availablePrinterNames << "my-printer";
+
+            PrinterInfo* printerA = new MockPrinterInfo("a-printer");
+            PrinterInfo* printerB = new MockPrinterInfo("b-printer");
+
+            ((MockPrinterInfo*) info)->m_availablePrinters << printerA;
+
             QTest::newRow("some printers") << cups << info << 1;
         }
     }
@@ -55,10 +60,10 @@ private Q_SLOTS:
     {
         QFETCH(CupsFacade*, cups);
         QFETCH(PrinterInfo*, info);
-        QFETCH(int, rowCount);
+        QFETCH(int, targetCount);
 
         PrinterModel model(info, cups);
-        QCOMPARE(model.rowCount(), rowCount);
+        QCOMPARE(model.count(), targetCount);
     }
 };
 

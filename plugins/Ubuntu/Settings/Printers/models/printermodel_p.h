@@ -27,6 +27,9 @@ struct PrinterModelPrivate
     PrinterModel *q_ptr;
     PrinterInfo *info;
     QList<QSharedPointer<Printer>> printers;
+
+    void refreshPrinters();
+    void init();
 };
 
 #endif // USC_PRINTERS_PRINTERMODELPRIVATE_H

@@ -23,6 +23,7 @@ struct PrinterPrivate
     Q_DECLARE_PUBLIC(Printer)
     explicit PrinterPrivate(Printer *q);
     explicit PrinterPrivate(Printer *q, PrinterInfo *info, CupsFacade *cups);
+    ~PrinterPrivate();
     CupsFacade *cups;
     Printer *q_ptr;
     PrinterInfo *info;

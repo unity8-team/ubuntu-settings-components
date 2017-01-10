@@ -21,21 +21,25 @@
 #include "printer/printer.h"
 #include "printer/printerinfo.h"
 
-#include <QObject>
 #include <QString>
 #include <QStringList>
 #include <QPageSize>
 
-class MockPrinterInfo : public QObject, public PrinterInfo
+class MockPrinterInfo : public PrinterInfo
 {
-    Q_OBJECT
 public:
-    explicit MockPrinterInfo(QObject* parent = 0)
+    explicit MockPrinterInfo(const QString &name = QString::null)
+        : PrinterInfo(name)
     {
 
     }
 
     virtual ~MockPrinterInfo() override
+    {
+
+    }
+
+    virtual bool holdsDefinition() const override
     {
 
     }
@@ -105,6 +109,11 @@ public:
 
     }
 
+    virtual QList<PrinterInfo*> availablePrinters() override
+    {
+        return m_availablePrinters;
+    }
+
     virtual QStringList availablePrinterNames() override
     {
         return m_availablePrinterNames;
@@ -115,12 +124,12 @@ public:
 
     }
 
-    QString m_printerName = QString::null;
     QString m_description = QString::null;
     QString m_location = QString::null;
     QString m_makeAndModel = QString::null;
     State m_state = State::IdleState;
     QStringList m_availablePrinterNames;
+    QList<PrinterInfo*> m_availablePrinters;
 };
 
 #endif // USC_PRINTERS_MOCK_PRINTERINFO_H

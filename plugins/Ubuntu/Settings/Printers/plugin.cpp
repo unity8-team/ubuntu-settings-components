@@ -16,6 +16,8 @@
 
 #include "plugin.h"
 
+#include "models/printermodel.h"
+
 #include <QtQml/qqml.h>
 
 // static QObject* p_singletonprovider(QQmlEngine *engine, QJSEngine *scriptEngine)
@@ -26,9 +28,10 @@
 //     return new UbuntuSettingsPrinters;
 // }
 
-void UbuntuSettingsPrintersPlugin::registerTypes(const char *uri)
+void UbuntuSettingsComponentsPrintersPlugin::registerTypes(const char *uri)
 {
     // qmlRegisterSingletonType<UbuntuSettingsPrinters>(
     //     uri, 0, 1, "UbuntuSettingsPrinters", p_singletonprovider
     // );
+    qmlRegisterType<PrinterModel>(uri, 0, 1, "PrinterModel");
 }

@@ -99,9 +99,9 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
         // case DuplexRole:
         //     ret = printer->duplex();
         //     break;
-        // case DuplexSupportedRole:
-        //     ret = printer->duplexSupported();
-        //     break;
+        case SupportedDuplexModesRole:
+            ret = QVariant::fromValue(printer->supportedDuplexStrings());
+            break;
         // case PrintRangeRole:
         //     ret = printer->printRange();
         //     break;
@@ -135,9 +135,10 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
         // case StateRole:
         //     ret = printer->state();
         //     break;
-        // case PrinterRole:
-        //     ret = printer->printer();
-        //     break;
+        case PrinterRole:
+            // TODO: figure out how crazy this is...
+            ret = QVariant::fromValue(printer.data());
+            break;
         // case LastStateMessageRole:
         //     ret = printer->lastStateMessage();
         //     break;
@@ -176,7 +177,7 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
         names[ColorModeRole] = "colorMode";
         names[CopiesRole] = "copies";
         names[DuplexRole] = "duplex";
-        names[DuplexSupportedRole] = "duplexSupported";
+        names[SupportedDuplexModesRole] = "supportedDuplexModes";
         names[NameRole] = "name";
         names[PrintRangeRole] = "printRange";
         names[PrintRangeModeRole] = "printRangeMode";

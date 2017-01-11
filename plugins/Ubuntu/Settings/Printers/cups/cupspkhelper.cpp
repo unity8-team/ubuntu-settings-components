@@ -40,8 +40,15 @@ CupsPkHelper::~CupsPkHelper()
 bool CupsPkHelper::printerClassSetInfo(const QString &name,
                                        const QString &info)
 {
-    if (!isPrinterNameValidInternal(name))
+    if (!isPrinterNameValid(name)) {
+        setInternalStatus(QString("%1 is not a valid printer name.").arg(info));
         return false;
+    }
+
+    if (!isStringValid(info)) {
+        setInternalStatus(QString("%1 is not a valid description.").arg(info));
+        return false;
+    }
 
     return sendNewPrinterClassRequest(name, IPP_TAG_PRINTER, IPP_TAG_TEXT,
                                       "printer-info", info);
@@ -69,7 +76,7 @@ bool CupsPkHelper::sendNewPrinterClassRequest(const QString &printerName,
         return false;
     }
 
-    // TODO: implement class modification here.
+    // TODO: implement class modification <here>.
     return false;
 }
 
@@ -104,14 +111,14 @@ const QString CupsPkHelper::getResource(
     case CphResourceJobs:
         return "/jobs/";
     default:
-        /* that's a fallback -- we don't use
-         * g_assert_not_reached() to avoir crashing. */
+        /* that's a fall back -- we don't use
+         * g_assert_not_reached() to avoid crashing. */
         qCritical("Asking for a resource with no match.");
         return "/";
     }
 }
 
-bool CupsPkHelper::isPrinterNameValidInternal(const QString &name)
+bool CupsPkHelper::isPrinterNameValid(const QString &name)
 {
     int i;
     int len;
@@ -145,6 +152,53 @@ bool CupsPkHelper::isPrinterNameValidInternal(const QString &name)
     return true;
 }
 
+bool CupsPkHelper::isStringValid(const QString &string, const bool checkNull,
+                                 const int maxLength)
+{
+    if (isStringPrintable(string, checkNull, maxLength))
+        return true;
+    return false;
+}
+
+bool CupsPkHelper::isStringPrintable(const QString &string,
+                                     const bool checkNull,
+                                     const int maxLength)
+{
+    int i;
+    int len;
+
+    /* no null string */
+    if (string.isNull())
+        return !checkNull;
+
+    len = string.size();
+    if (maxLength > 0 && len > maxLength)
+        return false;
+
+    /* only printable characters */
+    for (i = 0; i < len; i++) {
+        const QChar c = string.at(i);
+        if (!c.isPrint())
+                return false;
+    }
+    return true;
+}
+
+void CupsPkHelper::setInternalStatus(const QString &status)
+{
+    if (!m_internalStatus.isNull()) {
+        m_internalStatus = QString::null;
+    }
+
+    if (status.isNull()) {
+        m_internalStatus = QString::null;
+    } else {
+        m_internalStatus = status;
+
+        // Only used for errors for now.
+        qCritical() << status;
+    }
+}
 
 bool CupsPkHelper::sendRequest(ipp_t *request, const CphResource &resource)
 {

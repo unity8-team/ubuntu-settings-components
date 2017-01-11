@@ -14,9 +14,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "utils.h"
+
 #include "printer/printerinfo_impl.h"
 
 #include <QDebug>
+#include <QPrinter>
 
 PrinterInfoImpl::PrinterInfoImpl(const QString &name) : PrinterInfo(name)
 {
@@ -107,7 +110,14 @@ DuplexMode PrinterInfoImpl::defaultDuplexMode() const
 
 QList<DuplexMode> PrinterInfoImpl::supportedDuplexModes() const
 {
-
+    if (m_info.isNull()) {
+        qWarning() << "was null";
+    }
+    QList<DuplexMode> list;
+    Q_FOREACH(const QPrinter::DuplexMode mode, m_info.supportedDuplexModes()) {
+        list.append(Utils::qDuplexModeToDuplexMode(mode));
+    }
+    return list;
 }
 
 QList<PrinterInfo*> PrinterInfoImpl::availablePrinters()
@@ -117,7 +127,6 @@ QList<PrinterInfo*> PrinterInfoImpl::availablePrinters()
         list.append(new PrinterInfoImpl(info));
     }
     return list;
-
 }
 
 QStringList PrinterInfoImpl::availablePrinterNames()

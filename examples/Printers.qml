@@ -32,6 +32,48 @@ MainView {
         id: printerModel
     }
 
+    Component {
+        id: printerPage
+
+        Page {
+            visible: false
+            property var printer
+            header: PageHeader {
+               title: printer.name
+               flickable: printerFlickable
+            }
+
+            Flickable {
+                id: printerFlickable
+                anchors.fill: parent
+
+                Column {
+                    spacing: units.gu(2)
+                    anchors {
+                        top: parent.top
+                        topMargin: units.gu(2)
+                        left: parent.left
+                        right: parent.right
+                    }
+
+                    ListItems.ValueSelector {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Duplex"
+                        values: printer.supportedDuplexStrings
+                        onSelectedIndexChanged: {
+
+                        }
+                        Component.onCompleted: console.log(Printer.DuplexAuto)
+                    }
+                }
+            }
+
+        }
+    }
+
     PageStack {
         id: pageStack
 
@@ -39,35 +81,35 @@ MainView {
 
         Page {
             id: printersPage
+            header: PageHeader {
+                title: "Printers"
+                flickable: printerList
+            }
             visible: false
 
-            Column {
-                spacing: units.gu(2)
-                anchors { left: parent.left; right: parent.right }
+            ListView {
+                id: printerList
+                anchors { fill: parent }
+                model: printerModel
+                delegate: ListItem {
+                    height: modelLayout.height + (divider.visible ? divider.height : 0)
+                    ListItemLayout {
+                        id: modelLayout
+                        title.text: displayName
+                        subtitle.text: description
 
-                Label {
-                    anchors { left: parent.left; right: parent.right }
-                    text: "Printers"
-                }
-
-                ListView {
-                    anchors { left: parent.left; right: parent.right }
-                    model: printerModel
-                    delegate: ListItem {
-                        // shall specify the height when Using ListItemLayout inside ListItem
-                        height: modelLayout.height + (divider.visible ? divider.height : 0)
-                        ListItemLayout {
-                            id: modelLayout
-                            title.text: displayName
-                            subtitle.text: description
-
-                            Button {
-                                property string newInfo: description === "my description" ? "your description" : "my description"
-                                text: "Change info to " + newInfo
-                                onClicked: description = newInfo
-                            }
+                        Icon {
+                            id: icon
+                            width: height
+                            height: units.gu(2.5)
+                            name: "printer-symbolic"
+                            SlotsLayout.position: SlotsLayout.First
                         }
+
+                        ProgressionSlot {}
                     }
+                    onClicked: pageStack.push(printerPage, { printer: printer })
+                    Component.onCompleted: console.log("printer", printer.name)
                 }
             }
         }

@@ -21,7 +21,8 @@
 
 #include <QString>
 
-// Class that wraps code from cups-pk-helper as well as cups state.
+/* Class that wraps code from cups-pk-helper as well as cups state,
+but without using polkit. */
 class CupsPkHelper
 {
 public:
@@ -46,8 +47,20 @@ private:
     static void addPrinterUri(ipp_t *request, const QString &name);
     static void addRequestingUsername(ipp_t *request, const QString &username);
     static const QString getResource(const CphResource &resource);
-    static bool isPrinterNameValidInternal(const QString &name);
+    static bool isPrinterNameValid(const QString &name);
 
+    /* From https://bugzilla.novell.com/show_bug.cgi?id=447444#c5
+     * We need to define a maximum length for strings to avoid cups
+     * thinking there are multiple lines.
+     */
+    static bool isStringValid(const QString &string,
+                              const bool checkNull = false,
+                              const int maxLength = 512);
+    static bool isStringPrintable(const QString &string, const bool checkNull,
+                                  const int maxLength);
+
+
+    void setInternalStatus(const QString &status);
     bool sendRequest(ipp_t *request, const CphResource &resource);
     bool handleReply(ipp_t *reply);
     bool isReplyOk(ipp_t *reply, bool deleteIfReplyNotOk);

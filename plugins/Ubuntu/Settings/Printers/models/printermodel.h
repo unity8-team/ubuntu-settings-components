@@ -45,7 +45,7 @@ public:
         ColorModeRole = Qt::UserRole,
         CopiesRole,
         DuplexRole,
-        DuplexSupportedRole,
+        SupportedDuplexModesRole,
         NameRole,
         PrintRangeRole,
         PrintRangeModeRole,

@@ -14,8 +14,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "utils.h"
+
 #include "printer.h"
 #include "printer_p.h"
+
+#include <QDebug>
 
 Printer::Printer(QObject *parent)
     : QObject(parent)
@@ -67,17 +71,30 @@ int Printer::copies() const
 
 bool Printer::duplex() const
 {
-
+    Q_D(const Printer);
+    return d->info->defaultDuplexMode() != DuplexMode::DuplexNone;
 }
 
-bool Printer::duplexSupported() const
+QList<DuplexMode> Printer::supportedDuplexModes() const
 {
+    Q_D(const Printer);
+    return d->info->supportedDuplexModes();
+}
 
+QStringList Printer::supportedDuplexStrings() const
+{
+    Q_D(const Printer);
+    QStringList list;
+    Q_FOREACH(const DuplexMode &mode, supportedDuplexModes()) {
+        list << Utils::duplexModeToPpdChoice(mode);
+    }
+    return list;
 }
 
 DuplexMode Printer::defaultDuplexMode() const
 {
-
+    Q_D(const Printer);
+    return d->info->defaultDuplexMode();
 }
 
 QString Printer::name() const
@@ -176,12 +193,20 @@ void Printer::setDescription(const QString &description)
 
 void Printer::setDuplex(const bool duplex)
 {
-
+    // TODO: this seems useless, maybe drop this setter?
 }
 
-void Printer::setDuplexSupported(const bool duplexSupported)
+void Printer::setDefaultDuplexMode(const DuplexMode &duplexMode)
 {
+    Q_D(Printer);
 
+    if (!d->info->supportedDuplexModes().contains(duplexMode)) {
+        qWarning() << __PRETTY_FUNCTION__ << "duplex mode not supported";
+        return;
+    }
+
+    QStringList vals({Utils::duplexModeToPpdChoice(duplexMode)});
+    QString reply = d->cups->printerAddOption(name(), "Duplex", vals);
 }
 
 void Printer::setEnabled(const bool enabled)

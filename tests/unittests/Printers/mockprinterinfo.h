@@ -101,12 +101,12 @@ public:
 
     virtual DuplexMode defaultDuplexMode() const override
     {
-
+        return m_defaultDuplexMode;
     }
 
     virtual QList<DuplexMode> supportedDuplexModes() const override
     {
-
+        return m_supportedDuplexModes;
     }
 
     virtual QList<PrinterInfo*> availablePrinters() override
@@ -130,6 +130,8 @@ public:
     State m_state = State::IdleState;
     QStringList m_availablePrinterNames;
     QList<PrinterInfo*> m_availablePrinters;
+    QList<DuplexMode> m_supportedDuplexModes;
+    DuplexMode m_defaultDuplexMode;
 };
 
 #endif // USC_PRINTERS_MOCK_PRINTERINFO_H

@@ -41,8 +41,8 @@ class PRINTERS_DECL_EXPORT Printer : public QObject
     Q_PROPERTY(ColorMode defaultColorMode READ defaultColorMode CONSTANT)
     Q_PROPERTY(int copies READ copies WRITE setCopies NOTIFY copiesChanged)
     Q_PROPERTY(bool duplex READ duplex WRITE setDuplex NOTIFY duplexChanged)
-    Q_PROPERTY(bool duplexSupported READ duplexSupported NOTIFY duplexSupportedChanged)
-    Q_PROPERTY(DuplexMode defaultDuplexMode READ defaultDuplexMode CONSTANT)
+    Q_PROPERTY(QStringList supportedDuplexStrings READ supportedDuplexStrings CONSTANT)
+    Q_PROPERTY(DuplexMode defaultDuplexMode READ defaultDuplexMode WRITE setDefaultDuplexMode NOTIFY defaultDuplexModeChanged)
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
     Q_PROPERTY(QString printRange READ printRange WRITE setPrintRange NOTIFY printRangeChanged)
     Q_PROPERTY(PrintRange printRangeMode READ printRangeMode WRITE setPrintRangeMode NOTIFY printRangeModeChanged)
@@ -78,7 +78,8 @@ public:
     ColorMode defaultColorMode() const;
     int copies() const;
     bool duplex() const;
-    bool duplexSupported() const;
+    QList<DuplexMode> supportedDuplexModes() const;
+    QStringList supportedDuplexStrings() const;
     DuplexMode defaultDuplexMode() const;
     QString name() const;
     QString printRange() const;
@@ -99,7 +100,7 @@ public:
     void setCopies(const int &copies);
     void setDescription(const QString &description);
     void setDuplex(const bool duplex);
-    void setDuplexSupported(const bool duplexSupported);
+    void setDefaultDuplexMode(const DuplexMode &duplexMode);
     void setEnabled(const bool enabled);
     void setErrorPolicy(const ErrorPolicy &errorPolicy);
     void setName(const QString &name);
@@ -124,7 +125,7 @@ Q_SIGNALS:
     void enabledChanged();
     void descriptionChanged();
     void pageSizeChanged();
-    void duplexModeChanged();
+    void defaultDuplexModeChanged();
     void colorModeChanged();
     void qualityChanged();
     void rangeChanged();
@@ -134,7 +135,6 @@ Q_SIGNALS:
     void stateChanged();
     void copiesChanged();
     void duplexChanged();
-    void duplexSupportedChanged();
     void settingsChanged();
     void printRangeChanged();
     void printRangeModeChanged();
@@ -147,5 +147,7 @@ Q_SIGNALS:
     // Signals that some printer setting was changed.
     void printerChanged();
 };
+
+Q_DECLARE_METATYPE(QList<DuplexMode>)
 
 #endif // USC_PRINTERS_PRINTER_H

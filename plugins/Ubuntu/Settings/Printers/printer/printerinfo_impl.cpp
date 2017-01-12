@@ -74,19 +74,18 @@ State PrinterInfoImpl::state() const
 
 QList<QPageSize> PrinterInfoImpl::supportedPageSizes() const
 {
-
+    return m_info.supportedPageSizes();
 }
 
 QPageSize PrinterInfoImpl::defaultPageSize() const
 {
-
+    return m_info.defaultPageSize();
 }
 
 bool PrinterInfoImpl::supportsCustomPageSizes() const
 {
 
 }
-
 
 QPageSize PrinterInfoImpl::minimumPhysicalPageSize() const
 {

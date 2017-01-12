@@ -53,7 +53,7 @@ public:
         QualityRole,
         DescriptionRole,
         PageSizeRole,
-        QPageSizeRole,
+        SupportedPageSizesRole,
         AccessControlRole,
         ErrorPolicyRole,
         UsersRole,

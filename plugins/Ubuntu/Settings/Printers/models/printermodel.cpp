@@ -116,15 +116,22 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
         // case QualityRole:
         //     ret = printer->quality();
         //     break;
+
         case DescriptionRole:
             ret = printer->description();
             break;
-        // case PageSizeRole:
-        //     ret = printer->pageSize();
-        //     break;
-        // case QPageSizeRole:
-        //     ret = printer->qPageSize();
-        //     break;
+        case PageSizeRole:
+            ret = printer->defaultPageSize().name();
+            break;
+        case SupportedPageSizesRole: {
+                QStringList sizes;
+                Q_FOREACH(const QPageSize &s, printer->supportedPageSizes()) {
+                    sizes << s.name();
+                }
+                ret = sizes;
+            }
+            break;
+
         // case AccessControlRole:
         //     ret = printer->accessControl();
         //     break;
@@ -162,9 +169,20 @@ bool PrinterModel::setData(const QModelIndex &index, const QVariant &value, int 
         case DescriptionRole:
             printer->setDescription(value.toString());
             break;
-        case SupportedDuplexModesRole:
-            DuplexMode mode = Utils::ppdChoiceToDuplexMode(value.toString());
-            printer->setDefaultDuplexMode(mode);
+        case DuplexRole: {
+                /* FIXME: UI should not be concerned about strings, only the
+                index. */
+                DuplexMode mode = Utils::ppdChoiceToDuplexMode(value.toString());
+                printer->setDefaultDuplexMode(mode);
+            }
+            break;
+        case PageSizeRole: {
+                int index = value.toInt();
+                QList<QPageSize> sizes = printer->supportedPageSizes();
+                if (index >= 0 && sizes.size() > index) {
+                    printer->setDefaultPageSize(sizes.at(index));
+                }
+            }
             break;
         }
     }
@@ -189,7 +207,7 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
         names[QualityRole] = "quality";
         names[DescriptionRole] = "description";
         names[PageSizeRole] = "pageSize";
-        names[QPageSizeRole] = "qPageSize";
+        names[SupportedPageSizesRole] = "supportedPageSizes";
         names[AccessControlRole] = "accessControl";
         names[ErrorPolicyRole] = "errorPolicy";
         names[UsersRole] = "users";

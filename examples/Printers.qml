@@ -63,9 +63,20 @@ MainView {
                         }
                         text: "Duplex"
                         values: printer.supportedDuplexModes
-                        onSelectedIndexChanged: printer.supportedDuplexModes = values[selectedIndex]
+                        onSelectedIndexChanged: printer.duplex = values[selectedIndex]
                         Component.onCompleted: selectedIndex =
                             printer.supportedDuplexModes.indexOf(printer.duplex)
+                    }
+
+                    ListItems.ValueSelector {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Page size"
+                        values: printer.supportedPageSizes
+                        onSelectedIndexChanged: printer.pageSize = selectedIndex
+                        Component.onCompleted: selectedIndex = printer.supportedPageSizes.indexOf(printer.pageSize)
                     }
                 }
             }

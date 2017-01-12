@@ -108,6 +108,18 @@ private Q_SLOTS:
             (QString) Utils::duplexModeToPpdChoice(DuplexMode::DuplexLongSide)
         );
     }
+    void testDefaultPageSize()
+    {
+        auto targetSize = QPageSize(QPageSize::A4);
+        ((MockPrinterInfo*) m_mockinfo)->m_defaultPageSize = targetSize;
+        QCOMPARE(m_instance->defaultPageSize(), targetSize);
+    }
+    void testSupportedPageSizes_data()
+    {
+        auto supported = QList<QPageSize>({QPageSize(QPageSize::A4), QPageSize(QPageSize::Letter)});
+        ((MockPrinterInfo*) m_mockinfo)->m_supportedPageSizes = supported;
+        QCOMPARE(m_instance->supportedPageSizes(), supported);
+    }
 private:
     QString m_printerName = "my-printer";
     CupsFacade *m_mockcups = nullptr;

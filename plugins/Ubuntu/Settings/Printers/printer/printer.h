@@ -49,7 +49,7 @@ class PRINTERS_DECL_EXPORT Printer : public QObject
     Q_PROPERTY(bool pdfMode READ pdfMode WRITE setPdfMode NOTIFY pdfModeChanged)
     Q_PROPERTY(Quality quality READ quality WRITE setQuality NOTIFY qualityChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
-    Q_PROPERTY(QPageSize pageSize READ pageSize WRITE setPageSize NOTIFY pageSizeChanged)
+    Q_PROPERTY(QPageSize defaultPageSize READ defaultPageSize WRITE setDefaultPageSize NOTIFY pageSizeChanged)
     Q_PROPERTY(QList<QPageSize> supportedPageSizes READ supportedPageSizes CONSTANT)
     Q_PROPERTY(AccessControl accessControl READ accessControl WRITE setAccessControl NOTIFY accessControlChanged)
     Q_PROPERTY(ErrorPolicy errorPolicy READ errorPolicy WRITE setErrorPolicy NOTIFY errorPolicyChanged)
@@ -87,7 +87,7 @@ public:
     bool pdfMode() const;
     Quality quality() const;
     QString description() const;
-    QPageSize pageSize() const;
+    QPageSize defaultPageSize() const;
     QList<QPageSize> supportedPageSizes() const;
     AccessControl accessControl() const;
     ErrorPolicy errorPolicy() const;
@@ -108,7 +108,7 @@ public:
     void setPrintRangeMode(const PrintRange &printRangeMode);
     void setPdfMode(const bool pdfMode);
     void setQuality(const Quality &quality);
-    void setPageSize(const QPageSize &pageSize);
+    void setDefaultPageSize(const QPageSize &pageSize);
 
 public Q_SLOTS:
     // Add user that is either denied or allowed printer. See AccessControl.

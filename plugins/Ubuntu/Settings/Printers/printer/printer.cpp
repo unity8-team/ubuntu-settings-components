@@ -129,14 +129,16 @@ QString Printer::description() const
     return d->info->description();
 }
 
-QPageSize Printer::pageSize() const
+QPageSize Printer::defaultPageSize() const
 {
-
+    Q_D(const Printer);
+    return d->info->defaultPageSize();
 }
 
 QList<QPageSize> Printer::supportedPageSizes() const
 {
-
+    Q_D(const Printer);
+    return d->info->supportedPageSizes();
 }
 
 AccessControl Printer::accessControl() const
@@ -248,9 +250,26 @@ void Printer::setQuality(const Quality &quality)
 
 }
 
-void Printer::setPageSize(const QPageSize &pageSize)
+void Printer::setDefaultPageSize(const QPageSize &pageSize)
 {
+    Q_D(Printer);
 
+    if (defaultPageSize() == pageSize) {
+        return;
+    }
+
+    if (!d->info->supportedPageSizes().contains(pageSize)) {
+        qWarning() << __PRETTY_FUNCTION__ << "pagesize not supported.";
+        return;
+    }
+
+    if (pageSize.key().isEmpty()) {
+        qWarning() << __PRETTY_FUNCTION__ << "pagesize does not expose a ppd key.";
+        return;
+    }
+
+    QStringList vals({pageSize.key()});
+    QString reply = d->cups->printerAddOption(name(), "PageSize", vals);
 }
 
 void Printer::addUser(const QString &username)

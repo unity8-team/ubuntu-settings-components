@@ -71,12 +71,12 @@ public:
 
     virtual QList<QPageSize> supportedPageSizes() const override
     {
-
+        return m_supportedPageSizes;
     }
 
     virtual QPageSize defaultPageSize() const override
     {
-
+        return m_defaultPageSize;
     }
 
     virtual bool supportsCustomPageSizes() const override
@@ -127,11 +127,17 @@ public:
     QString m_description = QString::null;
     QString m_location = QString::null;
     QString m_makeAndModel = QString::null;
+
     State m_state = State::IdleState;
-    QStringList m_availablePrinterNames;
-    QList<PrinterInfo*> m_availablePrinters;
+
+    QPageSize m_defaultPageSize;
+    QList<QPageSize> m_supportedPageSizes;
+
     QList<DuplexMode> m_supportedDuplexModes;
     DuplexMode m_defaultDuplexMode;
+
+    QStringList m_availablePrinterNames;
+    QList<PrinterInfo*> m_availablePrinters;
 };
 
 #endif // USC_PRINTERS_MOCK_PRINTERINFO_H

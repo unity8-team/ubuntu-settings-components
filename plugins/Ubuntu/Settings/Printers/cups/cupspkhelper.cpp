@@ -65,7 +65,7 @@ bool CupsPkHelper::printerClassSetOption(const QString &name,
                                          const QStringList &values)
 {
         bool isClass;
-        int length;
+        int length = 0;
         ipp_t *request;
         ipp_attribute_t *attr;
         char *newppdfile;
@@ -81,18 +81,18 @@ bool CupsPkHelper::printerClassSetOption(const QString &name,
             return false;
         }
 
-        if (values.size() == 0) {
-            setInternalStatus("Invalid values argument.");
-            return false;
-        }
-
         Q_FOREACH(const QString &val, values) {
             if (!isStringValid(val)) {
                 setInternalStatus(QString("%1 is not a valid value.").arg(val));
                 return false;
             }
+            length++;
         }
 
+        if (length == 0) {
+            setInternalStatus("No valid values.");
+            return false;
+        }
 
         isClass = printerIsClass(name);
 
@@ -242,7 +242,11 @@ QString CupsPkHelper::preparePpdForOptions(const QString &ppdfile,
                 choice = ppdFindMarkedChoice(ppd, keyword);
             }
 
-            QString choice_qs(choice->choice);
+
+            QString choice_qs;
+            if (choice) {
+                choice_qs = choice->choice;
+            }
 
             if (choice && choice_qs != keyptr_qs) {
                 /* We have to set the value in PPD manually if

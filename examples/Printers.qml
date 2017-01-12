@@ -56,6 +56,34 @@ MainView {
                         right: parent.right
                     }
 
+                    Label {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            margins: units.gu(2)
+                        }
+                        text: "Description"
+                    }
+
+                    ListItems.SingleControl {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+
+                        control: TextField {
+                           anchors {
+                                margins: units.gu(1)
+                                left: parent.left
+                                right: parent.right
+
+                            }
+                            text: printer.description
+                            onTextChanged: printer.description = text
+                        }
+                    }
+
+
                     ListItems.ValueSelector {
                         anchors {
                             left: parent.left

@@ -190,7 +190,6 @@ void Printer::setDescription(const QString &description)
 {
     Q_D(const Printer);
     QString answer = d->cups->printerSetInfo(d->info->printerName(), description);
-
 }
 
 void Printer::setDuplex(const bool duplex)

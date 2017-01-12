@@ -148,6 +148,7 @@ Q_SIGNALS:
     void printerChanged();
 };
 
+// FIXME: not necessary outside tests
 Q_DECLARE_METATYPE(QList<DuplexMode>)
 
 #endif // USC_PRINTERS_PRINTER_H

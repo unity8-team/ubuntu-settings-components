@@ -26,6 +26,9 @@ struct PrinterModelPrivate
     CupsFacade *cups;
     PrinterModel *q_ptr;
     PrinterInfo *info;
+
+    /* FIXME: there's currently no need to share the Printer obj with QML, so
+    this should be normal pointers that are deletedLater. */
     QList<QSharedPointer<Printer>> printers;
 
     void refreshPrinters();

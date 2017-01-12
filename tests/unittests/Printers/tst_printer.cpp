@@ -27,6 +27,8 @@
 #include <QSignalSpy>
 #include <QTest>
 
+Q_DECLARE_METATYPE(QList<QPageSize>)
+
 class TestPrinter : public QObject
 {
     Q_OBJECT
@@ -119,6 +121,45 @@ private Q_SLOTS:
         auto supported = QList<QPageSize>({QPageSize(QPageSize::A4), QPageSize(QPageSize::Letter)});
         ((MockPrinterInfo*) m_mockinfo)->m_supportedPageSizes = supported;
         QCOMPARE(m_instance->supportedPageSizes(), supported);
+    }
+    void testSetDefaultPageSize_data()
+    {
+        QTest::addColumn<QList<QPageSize>>("sizes");
+        QTest::addColumn<QPageSize>("size");
+        QTest::addColumn<bool>("expectCupsCommunication");
+        QTest::addColumn<QString>("expectedValue");
+        {
+            QList<QPageSize> sizes; // none supported
+            QPageSize size(QPageSize::A4);
+            QTest::newRow("unsupported") << sizes << size << false << "";
+        }
+        {
+            QList<QPageSize> sizes({QPageSize(QPageSize::A4)});
+            QPageSize size(QPageSize::A4);
+            QTest::newRow("supported") << sizes << size << true << "A4";
+        }
+        {
+            QPageSize custom(QSize(100, 100), "foo");
+            QList<QPageSize> sizes({custom});
+            QTest::newRow("supported, but non-ppd size") << sizes << custom << false << "";
+        }
+    }
+    void testSetDefaultPageSize()
+    {
+        QFETCH(QList<QPageSize>, sizes);
+        QFETCH(QPageSize, size);
+        QFETCH(bool, expectCupsCommunication);
+        QFETCH(QString, expectedValue);
+        ((MockPrinterInfo*) m_mockinfo)->m_supportedPageSizes = sizes;
+
+        m_instance->setDefaultPageSize(size);
+
+        if (expectCupsCommunication) {
+            QCOMPARE(
+                ((MockCupsFacade*) m_mockcups)->printerOptions[m_printerName].value("PageSize").at(0),
+                expectedValue
+            );
+        }
     }
 private:
     QString m_printerName = "my-printer";

@@ -123,7 +123,6 @@ QString CupsFacadeImpl::printerAddOptionDefault(const QString &name,
                                                 const QString &option,
                                                 const QStringList &values)
 {
-
 }
 
 QString CupsFacadeImpl::printerDeleteOptionDefault(const QString &name,
@@ -136,5 +135,6 @@ QString CupsFacadeImpl::printerAddOption(const QString &name,
                                          const QString &option,
                                          const QStringList &values)
 {
+    qWarning() << __PRETTY_FUNCTION__ << name << option << values;
 
 }

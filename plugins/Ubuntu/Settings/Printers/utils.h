@@ -25,15 +25,17 @@
 class Utils
 {
 public:
-    // static DuplexMode ppdChoiceToDuplexMode(const QString &choice)
-    // {
-    //     if (choice == "DuplexTumble")
-    //         return DuplexMode::DuplexShortSide;
-    //     else if (choice == "DuplexNoTumble")
-    //         return DuplexMode::DuplexLongSide;
-    //     else // None or SimplexTumble or SimplexNoTumble
-    //         return DuplexMode::DuplexNone;
-    // }
+    static DuplexMode ppdChoiceToDuplexMode(const QString &choice)
+    {
+        if (choice == "DuplexTumble")
+            return DuplexMode::DuplexShortSide;
+        else if (choice == "DuplexNoTumble")
+            return DuplexMode::DuplexLongSide;
+        else if (choice == "Auto")
+            return DuplexMode::DuplexAuto;
+        else
+            return DuplexMode::DuplexNone;
+    }
 
     static const QString duplexModeToPpdChoice(const DuplexMode &mode)
     {

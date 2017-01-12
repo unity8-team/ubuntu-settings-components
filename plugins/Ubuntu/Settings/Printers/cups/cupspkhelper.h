@@ -17,12 +17,21 @@
 #include <cups/cups.h>
 #include <cups/http.h>
 #include <cups/ipp.h>
-// #include <cups/ppd.h>
 
 #include <QString>
+#include <QStringList>
 
-/* Class that wraps code from cups-pk-helper as well as cups state,
-but without using polkit. */
+/* From https://bugzilla.novell.com/show_bug.cgi?id=447444#c5
+ * We need to define a maximum length for strings to avoid cups
+ * thinking there are multiple lines.
+ */
+#define CPH_STR_MAXLEN 512
+
+/* This code is only a shim for systems not running the daemon provided by
+cups-pk-helper. Once provided on all platforms, this code should be replaced
+by proper dbus bindings, and subsequently be set on fire. */
+
+// TODO: rename to CupsPkHelperShim to emphasize its transient nature.
 class CupsPkHelper
 {
 public:
@@ -30,6 +39,8 @@ public:
     ~CupsPkHelper();
 
     bool printerClassSetInfo(const QString &name, const QString &info);
+    bool printerClassSetOption(const QString &name, const QString &option,
+                               const QStringList &values);
 
 private:
     enum CphResource
@@ -48,19 +59,20 @@ private:
     static void addRequestingUsername(ipp_t *request, const QString &username);
     static const QString getResource(const CphResource &resource);
     static bool isPrinterNameValid(const QString &name);
-
-    /* From https://bugzilla.novell.com/show_bug.cgi?id=447444#c5
-     * We need to define a maximum length for strings to avoid cups
-     * thinking there are multiple lines.
-     */
+    static void addClassUri(ipp_t *request, const QString &name);
     static bool isStringValid(const QString &string,
                               const bool checkNull = false,
                               const int maxLength = 512);
     static bool isStringPrintable(const QString &string, const bool checkNull,
                                   const int maxLength);
 
-
+    QString preparePpdForOptions(const QString &ppdfile,
+                                 cups_option_t *options,
+                                 int numOptions);
+    bool printerIsClass(const QString &name);
     void setInternalStatus(const QString &status);
+    bool postRequest(ipp_t *request, const QString &file,
+                     const CphResource &resource);
     bool sendRequest(ipp_t *request, const CphResource &resource);
     bool handleReply(ipp_t *reply);
     bool isReplyOk(ipp_t *reply, bool deleteIfReplyNotOk);

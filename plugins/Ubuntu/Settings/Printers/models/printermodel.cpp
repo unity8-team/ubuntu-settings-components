@@ -14,6 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "utils.h"
+
 #include "cups/cupsfacade_impl.h"
 #include "models/printermodel.h"
 #include "models/printermodel_p.h"
@@ -152,8 +154,6 @@ bool PrinterModel::setData(const QModelIndex &index, const QVariant &value, int 
 {
     Q_D(const PrinterModel);
 
-    QString status;
-
     if ((0<=index.row()) && (index.row()<d->printers.size())) {
 
         auto printer = d->printers[index.row()];
@@ -162,10 +162,14 @@ bool PrinterModel::setData(const QModelIndex &index, const QVariant &value, int 
         case DescriptionRole:
             printer->setDescription(value.toString());
             break;
+        case SupportedDuplexModesRole:
+            DuplexMode mode = Utils::ppdChoiceToDuplexMode(value.toString());
+            printer->setDefaultDuplexMode(mode);
+            break;
         }
     }
 
-    return status.isEmpty();
+    return true;
 }
 
 QHash<int, QByteArray> PrinterModel::roleNames() const

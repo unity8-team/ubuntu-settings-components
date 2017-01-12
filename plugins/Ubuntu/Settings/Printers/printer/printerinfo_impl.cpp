@@ -110,9 +110,6 @@ DuplexMode PrinterInfoImpl::defaultDuplexMode() const
 
 QList<DuplexMode> PrinterInfoImpl::supportedDuplexModes() const
 {
-    if (m_info.isNull()) {
-        qWarning() << "was null";
-    }
     QList<DuplexMode> list;
     Q_FOREACH(const QPrinter::DuplexMode mode, m_info.supportedDuplexModes()) {
         list.append(Utils::qDuplexModeToDuplexMode(mode));

@@ -62,10 +62,8 @@ MainView {
                             right: parent.right
                         }
                         text: "Duplex"
-                        values: printer.supportedDuplexStrings
-                        onSelectedIndexChanged: {
-
-                        }
+                        values: printer.supportedDuplexModes
+                        onSelectedIndexChanged: printer.supportedDuplexModes = values[selectedIndex]
                         Component.onCompleted: console.log(Printer.DuplexAuto)
                     }
                 }
@@ -108,8 +106,8 @@ MainView {
 
                         ProgressionSlot {}
                     }
-                    onClicked: pageStack.push(printerPage, { printer: printer })
-                    Component.onCompleted: console.log("printer", printer.name)
+                    onClicked: pageStack.push(printerPage, { printer: model })
+                    Component.onCompleted: console.log("printer", model.name)
                 }
             }
         }

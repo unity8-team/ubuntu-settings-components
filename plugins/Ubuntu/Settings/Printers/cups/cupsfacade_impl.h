@@ -22,6 +22,7 @@
 
 class CupsFacadeImpl : public CupsFacade
 {
+    Q_OBJECT
 public:
     explicit CupsFacadeImpl(QObject *parent = nullptr);
     virtual ~CupsFacadeImpl() override;

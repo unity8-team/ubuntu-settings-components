@@ -9,6 +9,7 @@ find_package(Qt5PrintSupport REQUIRED)
 find_package(Qt5Qml REQUIRED)
 
 add_library(UbuntuSettingsPrintersQml SHARED
+    cups/cupsfacade.h
     cups/cupsfacade_impl.cpp
     cups/cupspkhelper.cpp
     models/printermodel.cpp

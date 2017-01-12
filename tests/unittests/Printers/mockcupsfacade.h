@@ -21,9 +21,9 @@
 
 #include <QMap>
 
-
 class MockCupsFacade : public CupsFacade
 {
+    Q_OBJECT
 public:
     virtual ~MockCupsFacade() override {}
     virtual QString printerAdd(const QString &name,

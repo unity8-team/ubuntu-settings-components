@@ -17,14 +17,17 @@
 #ifndef USC_PRINTERS_CUPSFACADE_H
 #define USC_PRINTERS_CUPSFACADE_H
 
+#include "printers_global.h"
+
 #include "enums.h"
 
 #include <QObject>
 #include <QString>
 #include <QUrl>
 
-class CupsFacade : public QObject
+class PRINTERS_DECL_EXPORT CupsFacade : public QObject
 {
+    Q_OBJECT
 public:
     explicit CupsFacade(QObject *parent = nullptr) : QObject(parent) {};
     virtual ~CupsFacade() {};

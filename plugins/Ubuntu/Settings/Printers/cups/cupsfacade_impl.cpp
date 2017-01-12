@@ -135,7 +135,10 @@ QString CupsFacadeImpl::printerAddOption(const QString &name,
                                          const QString &option,
                                          const QStringList &values)
 {
-    qWarning() << __PRETTY_FUNCTION__ << name << option << values;
-    helper.printerClassSetOption(name, option, values);
+    if (!helper.printerClassSetOption(name, option, values)) {
+        return helper.getLastError();
+    }
 
+    Q_EMIT printerModified(name, true);
+    return QString();
 }

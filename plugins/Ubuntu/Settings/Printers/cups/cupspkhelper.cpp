@@ -341,6 +341,11 @@ void CupsPkHelper::addRequestingUsername(ipp_t *request,
                      "requesting-user-name", NULL, cupsUser());
 }
 
+QString CupsPkHelper::getLastError() const
+{
+    return m_internalStatus;
+}
+
 const QString CupsPkHelper::getResource(
         const CupsPkHelper::CphResource &resource)
 {

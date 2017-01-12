@@ -208,6 +208,7 @@ QSharedPointer<Printer> PrinterModel::getPrinterFromName(const QString &name)
 
 void PrinterModelPrivate::refreshPrinters()
 {
+    printers.clear();
     Q_FOREACH(PrinterInfo *printerInfo, info->availablePrinters()) {
         QSharedPointer<Printer> printer = QSharedPointer<Printer>(
             new Printer(printerInfo, this->cups)

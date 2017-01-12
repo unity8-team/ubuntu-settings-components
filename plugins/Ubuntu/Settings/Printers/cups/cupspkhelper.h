@@ -41,7 +41,7 @@ public:
     bool printerClassSetInfo(const QString &name, const QString &info);
     bool printerClassSetOption(const QString &name, const QString &option,
                                const QStringList &values);
-
+    QString getLastError() const;
 private:
     enum CphResource
     {

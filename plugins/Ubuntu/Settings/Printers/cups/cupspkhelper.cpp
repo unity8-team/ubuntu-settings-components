@@ -103,16 +103,16 @@ bool CupsPkHelper::printerClassSetOption(const QString &name,
             int numOptions = 0;
             QString ppdfile;
 
-            numOptions = cupsAddOption(option.toStdString().c_str(),
-                                       values[0].toStdString().c_str(),
+            numOptions = cupsAddOption(option.toUtf8(),
+                                       values[0].toUtf8(),
                                        numOptions, &options);
 
-            ppdfile = QString(cupsGetPPD(name.toStdString().c_str()));
+            ppdfile = QString(cupsGetPPD(name.toUtf8()));
 
-            newppdfile = preparePpdForOptions(ppdfile.toStdString().c_str(),
+            newppdfile = preparePpdForOptions(ppdfile.toUtf8(),
                                               options, numOptions).toLatin1().data();
 
-            unlink(ppdfile.toStdString().c_str());
+            unlink(ppdfile.toUtf8());
             cupsFreeOptions(numOptions, options);
         } else
             newppdfile = NULL;
@@ -129,17 +129,17 @@ bool CupsPkHelper::printerClassSetOption(const QString &name,
 
         if (length == 1) {
             ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_NAME,
-                         option.toStdString().c_str(),
+                         option.toUtf8(),
                          NULL,
-                         values[0].toStdString().c_str());
+                         values[0].toUtf8());
         } else {
             int i;
 
             attr = ippAddStrings(request, IPP_TAG_PRINTER, IPP_TAG_NAME,
-                                 option.toStdString().c_str(), length, NULL, NULL);
+                                 option.toUtf8(), length, NULL, NULL);
 
             for (i = 0; i < length; i++)
-                ippSetString(request, &attr, i, values[i].toStdString().c_str());
+                ippSetString(request, &attr, i, values[i].toUtf8());
         }
 
         if (newppdfile) {
@@ -162,7 +162,7 @@ QString CupsPkHelper::preparePpdForOptions(const QString &ppdfile,
                                            cups_option_t *options,
                                            int numOptions)
 {
-    auto ppdfile_c = ppdfile.toStdString().c_str();
+    auto ppdfile_c = ppdfile.toUtf8();
     ppd_file_t *ppd;
     bool ppdchanged = false;
     QString result;
@@ -170,11 +170,11 @@ QString CupsPkHelper::preparePpdForOptions(const QString &ppdfile,
     char newppdfile[PATH_MAX];
     cups_file_t  *in = NULL;
     cups_file_t  *out = NULL;
-    QString line(CPH_STR_MAXLEN, QChar());
-    QString keyword(CPH_STR_MAXLEN, QChar());
-    QString keyptr;
+    char line[CPH_STR_MAXLEN];
+    char keyword[CPH_STR_MAXLEN];
+    char *keyptr;
     ppd_choice_t *choice;
-    const QString value;
+    QString value;
     QLatin1String defaultStr("*Default");
 
     ppd = ppdOpenFile(ppdfile_c);
@@ -203,9 +203,10 @@ QString CupsPkHelper::preparePpdForOptions(const QString &ppdfile,
     ppdMarkDefaults(ppd);
     cupsMarkOptions(ppd, numOptions, options);
 
-    while (cupsFileGets(in, line.data()->toLatin1(), line.size())) {
-        if (!line.startsWith(defaultStr)) {
-            cupsFilePrintf(out, "%s\n", line.data());
+    while (cupsFileGets(in, line, sizeof(line))) {
+        QString line_qs(line);
+        if (!line_qs.startsWith(defaultStr)) {
+            cupsFilePrintf(out, "%s\n", line);
         } else {
             /* This part parses lines with *Default on their
              * beginning. For instance:
@@ -213,23 +214,26 @@ QString CupsPkHelper::preparePpdForOptions(const QString &ppdfile,
              *     - keyword: Resolution
              *     - keyptr: 1200dpi
              */
-            keyword = line.mid(defaultStr.size());
-            for (keyptr = keyword.data(); *keyptr; keyptr++)
-                if (*keyptr == ':' || isspace(*keyptr & 255))
-                    break;
+            strncpy(keyword, line + defaultStr.size(), sizeof(keyword));
+
+            for (keyptr = keyword; *keyptr; keyptr++)
+                    if (*keyptr == ':' || isspace (*keyptr & 255))
+                            break;
 
             *keyptr++ = '\0';
+            while (isspace (*keyptr & 255))
+                    keyptr++;
 
-            while (isspace(*keyptr & 255))
-                keyptr++;
+            QString keyword_sq(keyword);
+            QString keyptr_qs(keyptr);
 
             /* We have to change PageSize if any of PageRegion,
              * PageSize, PaperDimension or ImageableArea changes.
              * We change PageRegion if PageSize is not available. */
-            if (keyword == "PageRegion" ||
-                keyword == "PageSize" ||
-                keyword == "PaperDimension" ||
-                keyword == "ImageableArea") {
+            if (keyword_sq == "PageRegion" ||
+                keyword_sq == "PageSize" ||
+                keyword_sq == "PaperDimension" ||
+                keyword_sq == "ImageableArea") {
 
                 choice = ppdFindMarkedChoice(ppd, "PageSize");
                 if (!choice)
@@ -238,32 +242,34 @@ QString CupsPkHelper::preparePpdForOptions(const QString &ppdfile,
                 choice = ppdFindMarkedChoice(ppd, keyword);
             }
 
-            if (choice && !g_str_equal (choice->choice, keyptr)) {
+            QString choice_qs(choice->choice);
+
+            if (choice && choice_qs != keyptr_qs) {
                 /* We have to set the value in PPD manually if
                  * a custom value was passed in:
                  * cupsMarkOptions() marks the choice as
                  * "Custom". We want to set this value with our
                  * input. */
-                if (!(QString(choice->choice) == "Custom")) {
+                if (choice_qs != "Custom") {
                     cupsFilePrintf(out,
                                    "*Default%s: %s\n",
-                                   keyword.toStdString().c_str(),
+                                   keyword,
                                    choice->choice);
                     ppdchanged = true;
                 } else {
                     value = cupsGetOption(keyword, numOptions, options);
-                    if (value) {
+                    if (!value.isEmpty()) {
                         cupsFilePrintf(out,
                                        "*Default%s: %s\n",
-                                       keyword.toStdString().c_str(),
+                                       keyword,
                                        value.toStdString().c_str());
                         ppdchanged = true;
                     } else {
-                        cupsFilePrintf(out, "%s\n", line.toStdString().c_str());
+                        cupsFilePrintf(out, "%s\n", line);
                     }
                 }
             } else {
-                cupsFilePrintf (out, "%s\n", line.toStdString().c_str());
+                cupsFilePrintf(out, "%s\n", line);
             }
         }
     }
@@ -296,8 +302,8 @@ bool CupsPkHelper::sendNewPrinterClassRequest(const QString &printerName,
     request = ippNewRequest(CUPS_ADD_MODIFY_PRINTER);
     addPrinterUri(request, printerName);
     addRequestingUsername(request, QString());
-    ippAddString(request, group, type, name.toStdString().c_str(), NULL,
-                 value.toStdString().c_str());
+    ippAddString(request, group, type, name.toUtf8(), NULL,
+                 value.toUtf8());
 
     if (sendRequest(request, CphResource::CphResourceAdmin))
         return true;
@@ -325,7 +331,7 @@ void CupsPkHelper::addRequestingUsername(ipp_t *request,
     if (!username.isEmpty())
         ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_NAME,
                      "requesting-user-name", NULL,
-                     username.toStdString().c_str());
+                     username.toUtf8());
     else
         ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_NAME,
                      "requesting-user-name", NULL, cupsUser());
@@ -440,10 +446,10 @@ bool CupsPkHelper::postRequest(ipp_t *request, const QString &file,
     resourceChar = getResource(resource);
 
     if (!file.isEmpty())
-        reply = cupsDoFileRequest(m_connection, request, resourceChar,
-                                  file.toStdString().c_str());
+        reply = cupsDoFileRequest(m_connection, request, resourceChar.toUtf8(),
+                                  file.toUtf8());
     else
-        reply = cupsDoFileRequest(m_connection, request, resourceChar,
+        reply = cupsDoFileRequest(m_connection, request, resourceChar.toUtf8(),
                                   NULL);
 
     return handleReply(reply);
@@ -455,7 +461,7 @@ bool CupsPkHelper::sendRequest(ipp_t *request, const CphResource &resource)
     ipp_t *reply;
     const QString resourceChar = getResource(resource);
     reply = cupsDoRequest(m_connection, request,
-                          resourceChar.toStdString().c_str());
+                          resourceChar.toUtf8());
     return handleReply(reply);
 }
 
@@ -496,7 +502,7 @@ void CupsPkHelper::setErrorFromReply(ipp_t *reply)
         m_lastStatus = cupsLastError();
 }
 
-bool CupsPkHelper::printerIsClass(const QString &name);
+bool CupsPkHelper::printerIsClass(const QString &name)
 {
     const char * const attrs[1] = { "member-names" };
     ipp_t *request;
@@ -517,9 +523,7 @@ bool CupsPkHelper::printerIsClass(const QString &name);
                   "requested-attributes", 1, NULL, attrs);
 
     resource = getResource(CphResource::CphResourceRoot);
-    reply = cupsDoRequest(cups->priv->connection,
-                          request.toStdString().c_str(),
-                          resource.toStdString().c_str());
+    reply = cupsDoRequest(m_connection, request, resource.toUtf8());
 
     if (!isReplyOk(reply, true))
         return true;

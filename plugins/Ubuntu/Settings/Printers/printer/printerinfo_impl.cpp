@@ -105,7 +105,7 @@ QList<int> PrinterInfoImpl::supportedResolutions() const
 
 DuplexMode PrinterInfoImpl::defaultDuplexMode() const
 {
-
+    return Utils::qDuplexModeToDuplexMode(m_info.defaultDuplexMode());
 }
 
 QList<DuplexMode> PrinterInfoImpl::supportedDuplexModes() const

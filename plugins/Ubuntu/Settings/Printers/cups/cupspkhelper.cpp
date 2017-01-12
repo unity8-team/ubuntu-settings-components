@@ -64,93 +64,93 @@ bool CupsPkHelper::printerClassSetOption(const QString &name,
                                          const QString &option,
                                          const QStringList &values)
 {
-        bool isClass;
-        int length = 0;
-        ipp_t *request;
-        ipp_attribute_t *attr;
-        char *newppdfile;
-        bool retval;
+    bool isClass;
+    int length = 0;
+    ipp_t *request;
+    ipp_attribute_t *attr;
+    QString newPpdFile;
+    bool retval;
 
-        if (!isPrinterNameValid(name)) {
-            setInternalStatus(QString("%1 is not a valid printer name.").arg(name));
+    if (!isPrinterNameValid(name)) {
+        setInternalStatus(QString("%1 is not a valid printer name.").arg(name));
+        return false;
+    }
+
+    if (!isStringValid(option)) {
+        setInternalStatus(QString("%1 is not a valid option.").arg(option));
+        return false;
+    }
+
+    Q_FOREACH(const QString &val, values) {
+        if (!isStringValid(val)) {
+            setInternalStatus(QString("%1 is not a valid value.").arg(val));
             return false;
         }
+        length++;
+    }
 
-        if (!isStringValid(option)) {
-            setInternalStatus(QString("%1 is not a valid option.").arg(option));
-            return false;
-        }
+    if (length == 0) {
+        setInternalStatus("No valid values.");
+        return false;
+    }
 
-        Q_FOREACH(const QString &val, values) {
-            if (!isStringValid(val)) {
-                setInternalStatus(QString("%1 is not a valid value.").arg(val));
-                return false;
-            }
-            length++;
-        }
+    isClass = printerIsClass(name);
 
-        if (length == 0) {
-            setInternalStatus("No valid values.");
-            return false;
-        }
+    /* We permit only one value to change in PPD file because we are setting
+     * default value in it. */
+    if (!isClass && length == 1) {
+        cups_option_t *options = NULL;
+        int numOptions = 0;
+        QString ppdfile;
 
-        isClass = printerIsClass(name);
+        numOptions = cupsAddOption(option.toUtf8(),
+                                   values[0].toUtf8(),
+                                   numOptions, &options);
 
-        /* We permit only one value to change in PPD file because we are setting
-         * default value in it. */
-        if (!isClass && length == 1) {
-            cups_option_t *options = NULL;
-            int numOptions = 0;
-            QString ppdfile;
+        ppdfile = QString(cupsGetPPD(name.toUtf8()));
 
-            numOptions = cupsAddOption(option.toUtf8(),
-                                       values[0].toUtf8(),
-                                       numOptions, &options);
+        newPpdFile = preparePpdForOptions(ppdfile.toUtf8(),
+                                          options, numOptions).toLatin1().data();
 
-            ppdfile = QString(cupsGetPPD(name.toUtf8()));
+        unlink(ppdfile.toUtf8());
+        cupsFreeOptions(numOptions, options);
+    }
 
-            newppdfile = preparePpdForOptions(ppdfile.toUtf8(),
-                                              options, numOptions).toLatin1().data();
+    if (isClass) {
+        request = ippNewRequest(CUPS_ADD_MODIFY_CLASS);
+        addClassUri(request, name);
+    } else {
+        request = ippNewRequest(CUPS_ADD_MODIFY_PRINTER);
+        addPrinterUri(request, name);
+    }
 
-            unlink(ppdfile.toUtf8());
-            cupsFreeOptions(numOptions, options);
-        } else
-            newppdfile = NULL;
+    addRequestingUsername(request, NULL);
 
-        if (isClass) {
-            request = ippNewRequest(CUPS_ADD_MODIFY_CLASS);
-            addClassUri(request, name);
-        } else {
-            request = ippNewRequest(CUPS_ADD_MODIFY_PRINTER);
-            addPrinterUri(request, name);
-        }
+    if (length == 1) {
+        ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_NAME,
+                     option.toUtf8(),
+                     NULL,
+                     values[0].toUtf8());
+    } else {
+        int i;
 
-        addRequestingUsername(request, NULL);
+        attr = ippAddStrings(request, IPP_TAG_PRINTER, IPP_TAG_NAME,
+                             option.toUtf8(), length, NULL, NULL);
 
-        if (length == 1) {
-            ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_NAME,
-                         option.toUtf8(),
-                         NULL,
-                         values[0].toUtf8());
-        } else {
-            int i;
+        for (i = 0; i < length; i++)
+            ippSetString(request, &attr, i, values[i].toUtf8());
+    }
 
-            attr = ippAddStrings(request, IPP_TAG_PRINTER, IPP_TAG_NAME,
-                                 option.toUtf8(), length, NULL, NULL);
+    if (!newPpdFile.isEmpty()) {
+        retval = postRequest(request, newPpdFile, CphResourceAdmin);
 
-            for (i = 0; i < length; i++)
-                ippSetString(request, &attr, i, values[i].toUtf8());
-        }
+        unlink(newPpdFile.toUtf8());
+        // TODO: fix leak here.
+    } else {
+        retval = sendRequest(request, CphResourceAdmin);
+    }
 
-        if (newppdfile) {
-            retval = postRequest(request, newppdfile, CphResourceAdmin);
-            unlink(newppdfile);
-            // TODO: fix leak here.
-        } else {
-                retval = sendRequest(request, CphResourceAdmin);
-        }
-
-        return retval;
+    return retval;
 }
 
 
@@ -279,7 +279,7 @@ QString CupsPkHelper::preparePpdForOptions(const QString &ppdfile,
     }
 
     if (ppdchanged)
-        result = QString(newppdfile);
+        result = QString::fromUtf8(newppdfile);
     else
         unlink(newppdfile);
 
@@ -489,7 +489,7 @@ bool CupsPkHelper::isReplyOk(ipp_t *reply, bool deleteIfReplyNotOk)
         return true;
     } else {
         setErrorFromReply(reply);
-        qWarning() << __PRETTY_FUNCTION__ << cupsLastErrorString();
+        qWarning() << __PRETTY_FUNCTION__ << "Cups HTTP error:" << cupsLastErrorString();
 
         if (deleteIfReplyNotOk && reply)
             ippDelete(reply);

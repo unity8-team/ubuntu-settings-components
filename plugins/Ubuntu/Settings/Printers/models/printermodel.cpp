@@ -98,11 +98,11 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
         // case CopiesRole:
         //     ret = printer->copies();
         //     break;
-        // case DuplexRole:
-        //     ret = printer->duplex();
-        //     break;
+        case DuplexRole:
+            ret = Utils::duplexModeToPpdChoice(printer->defaultDuplexMode());
+            break;
         case SupportedDuplexModesRole:
-            ret = QVariant::fromValue(printer->supportedDuplexStrings());
+            ret = printer->supportedDuplexStrings();
             break;
         // case PrintRangeRole:
         //     ret = printer->printRange();

@@ -64,7 +64,8 @@ MainView {
                         text: "Duplex"
                         values: printer.supportedDuplexModes
                         onSelectedIndexChanged: printer.supportedDuplexModes = values[selectedIndex]
-                        Component.onCompleted: console.log(Printer.DuplexAuto)
+                        Component.onCompleted: selectedIndex =
+                            printer.supportedDuplexModes.indexOf(printer.duplex)
                     }
                 }
             }

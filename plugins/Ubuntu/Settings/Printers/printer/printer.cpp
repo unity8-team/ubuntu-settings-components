@@ -200,6 +200,10 @@ void Printer::setDefaultDuplexMode(const DuplexMode &duplexMode)
 {
     Q_D(Printer);
 
+    if (defaultDuplexMode() == duplexMode) {
+        return;
+    }
+
     if (!d->info->supportedDuplexModes().contains(duplexMode)) {
         qWarning() << __PRETTY_FUNCTION__ << "duplex mode not supported";
         return;

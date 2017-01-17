@@ -99,7 +99,7 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
         case SupportedColorModelsRole: {
                 QStringList models;
                 Q_FOREACH(const ColorModel &m, printer->supportedColorModels()) {
-                    models << m.text;
+                    models.append(m.text.isEmpty() ? m.name : m.text);
                 }
                 ret = models;
             }

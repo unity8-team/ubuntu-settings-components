@@ -79,6 +79,7 @@ private:
     QTimer *m_update_timer;
 
 private Q_SLOTS:
+    void startTimer(int msecs);
     void update();
 
 Q_SIGNALS:

@@ -53,9 +53,10 @@ public:
                                         const QString &start,
                                         const QString &end) override;
     virtual QString printerSetErrorPolicy(const QString &name,
-                                          const ErrorPolicy &policy) override;
+                                          const PrinterEnum::ErrorPolicy &policy) override;
+
     virtual QString printerSetOpPolicy(const QString &name,
-                                       const OperationPolicy &policy) override;
+                                       const PrinterEnum::OperationPolicy &policy) override;
     virtual QString printerSetUsersAllowed(const QString &name,
                                            const QStringList &users) override;
     virtual QString printerSetUsersDenied(const QString &name,
@@ -76,6 +77,12 @@ public:
     virtual QList<ColorModel> printerGetSupportedColorModels(
         const QString &name) const override;
 
+    virtual cups_dest_t* makeDest(const QString &name,
+                                  const PrinterJob *options) override;
+
+    virtual int printFileToDest(const QString &filepath,
+                                const QString &title,
+                                const cups_dest_t *dest) override;
 private:
     QString getPrinterName(const QString &name) const;
     QString getPrinterInstance(const QString &name) const;

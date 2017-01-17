@@ -22,6 +22,10 @@
 #include "enums.h"
 #include "structs.h"
 
+#include "printer/printerjob.h"
+
+#include <cups/cups.h>
+
 #include <QList>
 #include <QMap>
 #include <QObject>
@@ -63,9 +67,10 @@ public:
                                         const QString &start,
                                         const QString &end) = 0;
     virtual QString printerSetErrorPolicy(const QString &name,
-                                          const ErrorPolicy &policy) = 0;
+                                          const PrinterEnum::ErrorPolicy &policy) = 0;
+
     virtual QString printerSetOpPolicy(const QString &name,
-                                       const OperationPolicy &policy) = 0;
+                                       const PrinterEnum::OperationPolicy &policy) = 0;
     virtual QString printerSetUsersAllowed(const QString &name,
                                            const QStringList &users) = 0;
     virtual QString printerSetUsersDenied(const QString &name,
@@ -85,9 +90,15 @@ public:
     virtual QMap<QString, QVariant> printerGetOptions(
         const QString &name, const QStringList &options
     ) = 0;
+    // FIXME: maybe have a PrinterDest iface that has a CupsDest impl?
+    virtual cups_dest_t* makeDest(const QString &name,
+                                  const PrinterJob *options) = 0;
 
     virtual QList<ColorModel> printerGetSupportedColorModels(
         const QString &name) const = 0;
+    virtual int printFileToDest(const QString &filepath,
+                                const QString &title,
+                                const cups_dest_t *dest) = 0;
 
 Q_SIGNALS:
     void printerAdded(const QString &name);

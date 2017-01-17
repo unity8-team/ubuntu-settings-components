@@ -28,61 +28,61 @@
 class Utils
 {
 public:
-    static DuplexMode ppdChoiceToDuplexMode(const QString &choice)
+    static PrinterEnum::DuplexMode ppdChoiceToDuplexMode(const QString &choice)
     {
         if (choice == "DuplexTumble")
-            return DuplexMode::DuplexShortSide;
+            return PrinterEnum::DuplexMode::DuplexShortSide;
         else if (choice == "DuplexNoTumble")
-            return DuplexMode::DuplexLongSide;
+            return PrinterEnum::DuplexMode::DuplexLongSide;
         else if (choice == "Auto")
-            return DuplexMode::DuplexAuto;
+            return PrinterEnum::DuplexMode::DuplexAuto;
         else
-            return DuplexMode::DuplexNone;
+            return PrinterEnum::DuplexMode::DuplexNone;
     }
 
-    static const QString duplexModeToPpdChoice(const DuplexMode &mode)
+    static const QString duplexModeToPpdChoice(const PrinterEnum::DuplexMode &mode)
     {
         switch (mode) {
-        case DuplexMode::DuplexNone:
+        case PrinterEnum::DuplexMode::DuplexNone:
             return "None";
-        case DuplexMode::DuplexAuto:
+        case PrinterEnum::DuplexMode::DuplexAuto:
             return "Auto";
-        case DuplexMode::DuplexShortSide:
+        case PrinterEnum::DuplexMode::DuplexShortSide:
             return "DuplexTumble";
-        case DuplexMode::DuplexLongSide:
+        case PrinterEnum::DuplexMode::DuplexLongSide:
             return "DuplexNoTumble";
         }
     }
 
-    static DuplexMode qDuplexModeToDuplexMode(const QPrinter::DuplexMode &mode)
+    static PrinterEnum::DuplexMode qDuplexModeToDuplexMode(const QPrinter::DuplexMode &mode)
     {
         switch(mode) {
         case QPrinter::DuplexNone:
-            return DuplexMode::DuplexNone;
+            return PrinterEnum::DuplexMode::DuplexNone;
         case QPrinter::DuplexAuto:
-            return DuplexMode::DuplexAuto;
+            return PrinterEnum::DuplexMode::DuplexAuto;
         case QPrinter::DuplexLongSide:
-            return DuplexMode::DuplexLongSide;
+            return PrinterEnum::DuplexMode::DuplexLongSide;
         case QPrinter::DuplexShortSide:
-            return DuplexMode::DuplexShortSide;
+            return PrinterEnum::DuplexMode::DuplexShortSide;
         }
     }
 
-    static ColorSpace ppdColorSpaceToColorSpace(const ppd_cs_t &space)
+    static PrinterEnum::ColorSpace ppdColorSpaceToColorSpace(const ppd_cs_t &space)
     {
         switch (space) {
         case PPD_CS_CMY:
-            return ColorSpace::CMYSpace;
+            return PrinterEnum::ColorSpace::CMYSpace;
         case PPD_CS_CMYK:
-            return ColorSpace::CMYKSpace;
+            return PrinterEnum::ColorSpace::CMYKSpace;
         case PPD_CS_GRAY:
-            return ColorSpace::GraySpace;
+            return PrinterEnum::ColorSpace::GraySpace;
         case PPD_CS_N:
-            return ColorSpace::NSpace;
+            return PrinterEnum::ColorSpace::NSpace;
         case PPD_CS_RGB:
-            return ColorSpace::RGBSpace;
+            return PrinterEnum::ColorSpace::RGBSpace;
         case PPD_CS_RGBK:
-            return ColorSpace::RGBKSpace;
+            return PrinterEnum::ColorSpace::RGBKSpace;
         }
     }
 
@@ -104,31 +104,31 @@ public:
         }
 
         if (ret.name == "Gray") {
-            ret.colorType = ColorModelType::GrayType;
+            ret.colorType = PrinterEnum::ColorModelType::GrayType;
         } else {
-            ret.colorType = ColorModelType::ColorType;
+            ret.colorType = PrinterEnum::ColorModelType::ColorType;
         }
 
         if (vals.size() == 2) {
             QString s = vals[1].toLower();
-            if (s == "cmy") ret.colorSpace = ColorSpace::CMYSpace;
-            else if (s == "cmyk") ret.colorSpace = ColorSpace::CMYKSpace;
-            else if (s == "n") ret.colorSpace = ColorSpace::NSpace;
-            else if (s == "rgb") ret.colorSpace = ColorSpace::RGBSpace;
-            else if (s == "rgbk") ret.colorSpace = ColorSpace::RGBKSpace;
-            else ret.colorSpace = ColorSpace::GraySpace;
+            if (s == "cmy") ret.colorSpace = PrinterEnum::ColorSpace::CMYSpace;
+            else if (s == "cmyk") ret.colorSpace = PrinterEnum::ColorSpace::CMYKSpace;
+            else if (s == "n") ret.colorSpace = PrinterEnum::ColorSpace::NSpace;
+            else if (s == "rgb") ret.colorSpace = PrinterEnum::ColorSpace::RGBSpace;
+            else if (s == "rgbk") ret.colorSpace = PrinterEnum::ColorSpace::RGBKSpace;
+            else ret.colorSpace = PrinterEnum::ColorSpace::GraySpace;
         }
 
         // ColorOrganization
         if (vals.size() == 3) {
             QString o = vals[2].toLower();
-            ColorOrganization org = ret.colorOrganization;
+            PrinterEnum::ColorOrganization org = ret.colorOrganization;
             if (vals[2] == "chunky") {
-                org = ColorOrganization::ChunkyOrganization;
+                org = PrinterEnum::ColorOrganization::ChunkyOrganization;
             } else if (vals[2] == "banded") {
-                org = ColorOrganization::BandedOrganization;
+                org = PrinterEnum::ColorOrganization::BandedOrganization;
             } else if (vals[3] == "planar") {
-                org = ColorOrganization::PlanarOrganization;
+                org = PrinterEnum::ColorOrganization::PlanarOrganization;
             }
             ret.colorOrganization = org;
         }
@@ -146,25 +146,25 @@ public:
         if (!model.text.isEmpty()) nameText += QString("/%1").arg(model.text);
 
         QString colorSpace;
-        if (model.colorSpace != ColorSpace::UnknownSpace) {
+        if (model.colorSpace != PrinterEnum::ColorSpace::UnknownSpace) {
             switch (model.colorSpace) {
-            case ColorSpace::CMYSpace:
+            case PrinterEnum::ColorSpace::CMYSpace:
                 colorSpace = "cmy";
                 break;
-            case ColorSpace::CMYKSpace:
+            case PrinterEnum::ColorSpace::CMYKSpace:
                 colorSpace = "cmyk";
                 break;
-            case ColorSpace::NSpace:
+            case PrinterEnum::ColorSpace::NSpace:
                 colorSpace = "n";
                 break;
-            case ColorSpace::RGBSpace:
+            case PrinterEnum::ColorSpace::RGBSpace:
                 colorSpace = "rgb";
                 break;
-            case ColorSpace::RGBKSpace:
+            case PrinterEnum::ColorSpace::RGBKSpace:
                 colorSpace = "rgbk";
                 break;
-            case ColorSpace::GraySpace:
-            case ColorSpace::UnknownSpace:
+            case PrinterEnum::ColorSpace::GraySpace:
+            case PrinterEnum::ColorSpace::UnknownSpace:
                 break;
             }
         }
@@ -174,18 +174,18 @@ public:
         }
 
         QString colorOrg;
-        if (model.colorOrganization != ColorOrganization::UnknownOrganization) {
+        if (model.colorOrganization != PrinterEnum::ColorOrganization::UnknownOrganization) {
             switch (model.colorOrganization) {
-            case ColorOrganization::ChunkyOrganization:
+            case PrinterEnum::ColorOrganization::ChunkyOrganization:
                 colorOrg = "chunky";
                 break;
-            case ColorOrganization::BandedOrganization:
+            case PrinterEnum::ColorOrganization::BandedOrganization:
                 colorOrg = "banded";
                 break;
-            case ColorOrganization::PlanarOrganization:
+            case PrinterEnum::ColorOrganization::PlanarOrganization:
                 colorOrg = "planar";
                 break;
-            case ColorOrganization::UnknownOrganization:
+            case PrinterEnum::ColorOrganization::UnknownOrganization:
                 break;
             }
         }

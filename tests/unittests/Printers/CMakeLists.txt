@@ -14,6 +14,10 @@ add_executable(testPrintersPrinter tst_printer.cpp ${MOCK_SOURCES})
 target_link_libraries(testPrintersPrinter UbuntuSettingsPrintersQml Qt5::Test Qt5::Gui)
 add_test(tst_printer testPrintersPrinter)
 
+add_executable(testPrintersPrinterJob tst_printerjob.cpp ${MOCK_SOURCES})
+target_link_libraries(testPrintersPrinterJob UbuntuSettingsPrintersQml Qt5::Test Qt5::Gui)
+add_test(tst_printerjob testPrintersPrinterJob)
+
 add_executable(testPrintersPrinters tst_printers.cpp ${MOCK_SOURCES})
 target_link_libraries(testPrintersPrinters UbuntuSettingsPrintersQml Qt5::Test Qt5::Gui)
 add_test(tst_printers testPrintersPrinters)

@@ -26,7 +26,7 @@
 struct InkLevels
 {
 public:
-    QMap<CartridgeType, uint> levels;
+    QMap<PrinterEnum::CartridgeType, uint> levels;
 };
 
 struct ColorModel
@@ -34,10 +34,12 @@ struct ColorModel
 public:
     QString name = QString::null; // Gray, RGB, CMYK or anything [1], really.
     QString text = QString::null;
-    ColorModelType colorType = ColorModelType::UnknownType;
-    ColorSpace colorSpace = ColorSpace::UnknownSpace;
-    ColorOrganization colorOrganization
-        = ColorOrganization::UnknownOrganization;
+    PrinterEnum::ColorModelType colorType
+        = PrinterEnum::ColorModelType::UnknownType;
+    PrinterEnum::ColorSpace colorSpace
+        = PrinterEnum::ColorSpace::UnknownSpace;
+    PrinterEnum::ColorOrganization colorOrganization
+        = PrinterEnum::ColorOrganization::UnknownOrganization;
     QString compressionMode = QString::null;
 
     bool operator==(const ColorModel& a) const
@@ -46,6 +48,18 @@ public:
                 colorSpace == a.colorSpace &&
                 colorOrganization == a.colorOrganization &&
                 compressionMode == a.compressionMode);
+    }
+    bool operator!=(const ColorModel& a) const
+    {
+        return !(*this == a);
+    }
+    void operator=(const ColorModel &m) {
+        name = m.name;
+        text = m.text;
+        colorType = m.colorType;
+        colorSpace = m.colorSpace;
+        colorOrganization = m.colorOrganization;
+        compressionMode = m.compressionMode;
     }
 };
 

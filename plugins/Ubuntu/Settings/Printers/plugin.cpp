@@ -16,8 +16,10 @@
 
 #include "plugin.h"
 
+#include "enums.h"
 #include "models/printermodel.h"
 #include "printer/printer.h"
+#include "printer/printerjob.h"
 
 #include <QtQml/qqml.h>
 #include <QSharedPointer>
@@ -41,5 +43,7 @@ void UbuntuSettingsComponentsPrintersPlugin::registerTypes(const char *uri)
     qmlRegisterUncreatableType<Printer>(
         uri, 0, 1, "Printer", "use Printers to get a list of Printers."
     );
-    qRegisterMetaType<DuplexMode>("DuplexMode");
+    qmlRegisterType<PrinterJob>(uri, 0, 1, "PrinterJob");
+
+    qmlRegisterUncreatableType<PrinterEnum>(uri, 0, 1, "PrinterEnum", "Is an enum");
 }

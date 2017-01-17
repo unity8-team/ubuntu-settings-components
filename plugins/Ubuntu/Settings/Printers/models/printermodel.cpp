@@ -180,7 +180,7 @@ bool PrinterModel::setData(const QModelIndex &index, const QVariant &value, int 
         case DuplexRole: {
                 /* FIXME: UI should not be concerned about strings, only the
                 index. */
-                DuplexMode mode = Utils::ppdChoiceToDuplexMode(value.toString());
+                PrinterEnum::DuplexMode mode = Utils::ppdChoiceToDuplexMode(value.toString());
                 printer->setDefaultDuplexMode(mode);
             }
             break;
@@ -258,7 +258,7 @@ PrinterFilter::~PrinterFilter()
 
 }
 
-void PrinterFilter::filterOnState(const State &state)
+void PrinterFilter::filterOnState(const PrinterEnum::State &state)
 {
 
 }

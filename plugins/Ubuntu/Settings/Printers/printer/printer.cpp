@@ -85,10 +85,10 @@ int Printer::copies() const
 bool Printer::duplex() const
 {
     Q_D(const Printer);
-    return d->info->defaultDuplexMode() != DuplexMode::DuplexNone;
+    return d->info->defaultDuplexMode() != PrinterEnum::DuplexMode::DuplexNone;
 }
 
-QList<DuplexMode> Printer::supportedDuplexModes() const
+QList<PrinterEnum::DuplexMode> Printer::supportedDuplexModes() const
 {
     Q_D(const Printer);
     return d->info->supportedDuplexModes();
@@ -98,16 +98,31 @@ QStringList Printer::supportedDuplexStrings() const
 {
     Q_D(const Printer);
     QStringList list;
-    Q_FOREACH(const DuplexMode &mode, supportedDuplexModes()) {
+    Q_FOREACH(const PrinterEnum::DuplexMode &mode, supportedDuplexModes()) {
         list << Utils::duplexModeToPpdChoice(mode);
     }
     return list;
 }
 
-DuplexMode Printer::defaultDuplexMode() const
+PrinterEnum::DuplexMode Printer::defaultDuplexMode() const
 {
     Q_D(const Printer);
     return d->info->defaultDuplexMode();
+}
+
+PrinterJob *Printer::job()
+{
+    return new PrinterJob(this);
+}
+
+int Printer::printFile(const QString &filepath, const PrinterJob *options)
+{
+    Q_D(const Printer);
+
+    auto dest = d->cups->makeDest(this->name(), options);  // options could be QMap<QString, QString> ?
+
+    qDebug() << "Going to print:" << filepath << options->title();
+    return d->cups->printFileToDest(filepath, options->title(), dest);
 }
 
 QString Printer::name() const
@@ -116,22 +131,7 @@ QString Printer::name() const
     return d->info->printerName();
 }
 
-QString Printer::printRange() const
-{
-
-}
-
-PrintRange Printer::printRangeMode() const
-{
-
-}
-
-bool Printer::pdfMode() const
-{
-
-}
-
-Quality Printer::quality() const
+PrinterEnum::Quality Printer::quality() const
 {
 
 }
@@ -154,12 +154,12 @@ QList<QPageSize> Printer::supportedPageSizes() const
     return d->info->supportedPageSizes();
 }
 
-AccessControl Printer::accessControl() const
+PrinterEnum::AccessControl Printer::accessControl() const
 {
 
 }
 
-ErrorPolicy Printer::errorPolicy() const
+PrinterEnum::ErrorPolicy Printer::errorPolicy() const
 {
 
 }
@@ -174,7 +174,7 @@ QStringList Printer::users() const
 
 }
 
-State Printer::state() const
+PrinterEnum::State Printer::state() const
 {
 
 }
@@ -184,19 +184,24 @@ QString Printer::lastStateMessage() const
 
 }
 
-void Printer::setAccessControl(const AccessControl &accessControl)
-{
-
-}
-
 void Printer::setDefaultColorModel(const ColorModel &colorModel)
 {
     Q_D(Printer);
+
+    if (defaultColorModel() == colorModel) {
+        return;
+    }
+
+    if (!supportedColorModels().contains(colorModel)) {
+        qWarning() << Q_FUNC_INFO << "color model not supported";
+        return;
+    }
+
     QStringList vals({Utils::colorModelToPpdColorModel(colorModel)});
     d->cups->printerAddOption(name(), "ColorModel", vals);
 }
 
-void Printer::setCopies(const int &copies)
+void Printer::setAccessControl(const PrinterEnum::AccessControl &accessControl)
 {
 
 }
@@ -212,7 +217,7 @@ void Printer::setDuplex(const bool duplex)
     // TODO: this seems useless, maybe drop this setter?
 }
 
-void Printer::setDefaultDuplexMode(const DuplexMode &duplexMode)
+void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
 {
     Q_D(Printer);
 
@@ -221,7 +226,7 @@ void Printer::setDefaultDuplexMode(const DuplexMode &duplexMode)
     }
 
     if (!d->info->supportedDuplexModes().contains(duplexMode)) {
-        qWarning() << __PRETTY_FUNCTION__ << "duplex mode not supported";
+        qWarning() << Q_FUNC_INFO << "duplex mode not supported";
         return;
     }
 
@@ -234,7 +239,7 @@ void Printer::setEnabled(const bool enabled)
 
 }
 
-void Printer::setErrorPolicy(const ErrorPolicy &errorPolicy)
+void Printer::setErrorPolicy(const PrinterEnum::ErrorPolicy &errorPolicy)
 {
 
 }
@@ -244,22 +249,7 @@ void Printer::setName(const QString &name)
 
 }
 
-void Printer::setPrintRange(const QString &printRange)
-{
-
-}
-
-void Printer::setPrintRangeMode(const PrintRange &printRangeMode)
-{
-
-}
-
-void Printer::setPdfMode(const bool pdfMode)
-{
-
-}
-
-void Printer::setQuality(const Quality &quality)
+void Printer::setQuality(const PrinterEnum::Quality &quality)
 {
 
 }
@@ -273,12 +263,12 @@ void Printer::setDefaultPageSize(const QPageSize &pageSize)
     }
 
     if (!d->info->supportedPageSizes().contains(pageSize)) {
-        qWarning() << __PRETTY_FUNCTION__ << "pagesize not supported.";
+        qWarning() << Q_FUNC_INFO << "pagesize not supported.";
         return;
     }
 
     if (pageSize.key().isEmpty()) {
-        qWarning() << __PRETTY_FUNCTION__ << "pagesize does not expose a ppd key.";
+        qWarning() << Q_FUNC_INFO << "pagesize does not expose a ppd key.";
         return;
     }
 

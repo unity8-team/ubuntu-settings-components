@@ -20,6 +20,7 @@
 #include "cups/cupsfacade.h"
 #include "models/printermodel.h"
 #include "printer/printer.h"
+#include "printer/printerjob.h"
 
 #include <QDebug>
 #include <QObject>
@@ -28,6 +29,7 @@
 
 Q_DECLARE_METATYPE(CupsFacade*)
 Q_DECLARE_METATYPE(PrinterInfo*)
+Q_DECLARE_METATYPE(PrinterJob*)
 
 class TestPrinterModel : public QObject
 {

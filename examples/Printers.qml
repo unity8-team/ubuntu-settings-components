@@ -117,10 +117,10 @@ MainView {
                         enabled: values.length > 1
                         onSelectedIndexChanged: printer.colorModel = selectedIndex
                         Component.onCompleted: {
-                            if (enabled) {
-                                selectedIndex = printer.supportedColorModels.indexOf(printer.colorModel);
-                            }
+                            if (enabled)
+                                selectedIndex = printer.colorModel
                         }
+
                     }
                 }
             }

@@ -280,8 +280,8 @@ QList<ColorModel> CupsFacadeImpl::printerGetSupportedColorModels(
         model.colorType = ppd->color_device ? PrinterEnum::ColorModelType::ColorType
                                             : PrinterEnum::ColorModelType::GrayType;
         model.colorSpace = Utils::ppdColorSpaceToColorSpace(ppd->colorspace);
-        if (model.name.isEmpty()) {
-            model.name = ppd->color_device ? "Color" : "Gray"; // Translate? Improve?
+        if (model.text.isEmpty()) {
+            model.text = ppd->color_device ? "Color" : "Grayscale"; // Translate? Improve?
         }
         ret.append(model);
     }

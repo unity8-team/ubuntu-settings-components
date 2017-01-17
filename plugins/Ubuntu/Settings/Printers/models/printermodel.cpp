@@ -94,12 +94,12 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
             ret = printer->name();
             break;
         case ColorModelRole:
-            ret = printer->defaultColorModel().name;
+            ret = printer->supportedColorModels().indexOf(printer->defaultColorModel());
             break;
         case SupportedColorModelsRole: {
                 QStringList models;
                 Q_FOREACH(const ColorModel &m, printer->supportedColorModels()) {
-                    models << m.name;
+                    models << m.text;
                 }
                 ret = models;
             }
@@ -175,6 +175,14 @@ bool PrinterModel::setData(const QModelIndex &index, const QVariant &value, int 
         auto printer = d->printers[index.row()];
 
         switch (role) {
+        case ColorModelRole: {
+                int index = value.toInt();
+                auto modes = printer->supportedColorModels();
+                if (index >= 0 && modes.size() > index) {
+                    printer->setDefaultColorModel(modes.at(index));
+                }
+            }
+            break;
         case DescriptionRole:
             printer->setDescription(value.toString());
             break;

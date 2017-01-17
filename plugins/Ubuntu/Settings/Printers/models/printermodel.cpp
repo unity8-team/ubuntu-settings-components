@@ -69,6 +69,7 @@ void PrinterModel::update()
 
 int PrinterModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
     Q_D(const PrinterModel);
     return d->printers.size();
 }
@@ -230,7 +231,8 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
 
 QSharedPointer<Printer> PrinterModel::getPrinterFromName(const QString &name)
 {
-
+    Q_UNUSED(name);
+    return QSharedPointer<Printer>(nullptr);
 }
 
 void PrinterModelPrivate::refreshPrinters()
@@ -260,20 +262,20 @@ PrinterFilter::~PrinterFilter()
 
 void PrinterFilter::filterOnState(const PrinterEnum::State &state)
 {
-
+    Q_UNUSED(state);
 }
 
 void PrinterFilter::filterOnRecent(const bool recent)
 {
-
+    Q_UNUSED(recent);
 }
 
 bool PrinterFilter::filterAcceptsRow(int, const QModelIndex&) const
 {
-
+    return false;
 }
 
 bool PrinterFilter::lessThan(const QModelIndex&, const QModelIndex&) const
 {
-
+    return false;
 }

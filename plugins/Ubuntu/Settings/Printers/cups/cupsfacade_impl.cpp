@@ -43,7 +43,12 @@ QString CupsFacadeImpl::printerAdd(const QString &name,
                                    const QString &info,
                                    const QString &location)
 {
-
+    Q_UNUSED(name);
+    Q_UNUSED(uri);
+    Q_UNUSED(ppdFile);
+    Q_UNUSED(info);
+    Q_UNUSED(location);
+    return QString();
 }
 
 QString CupsFacadeImpl::printerAddWithPpd(const QString &name,
@@ -52,18 +57,26 @@ QString CupsFacadeImpl::printerAddWithPpd(const QString &name,
                                           const QString &info,
                                           const QString &location)
 {
-
+    Q_UNUSED(name);
+    Q_UNUSED(uri);
+    Q_UNUSED(ppdFileName);
+    Q_UNUSED(info);
+    Q_UNUSED(location);
+    return QString();
 }
 
 QString CupsFacadeImpl::printerDelete(const QString &name)
 {
-
+    Q_UNUSED(name);
+    return QString();
 }
 
 QString CupsFacadeImpl::printerSetEnabled(const QString &name,
                                           const bool enabled)
 {
-
+    Q_UNUSED(name);
+    Q_UNUSED(enabled);
+    return QString();
 }
 
 QString CupsFacadeImpl::printerSetAcceptJobs(
@@ -71,68 +84,95 @@ QString CupsFacadeImpl::printerSetAcceptJobs(
         const bool enabled,
         const QString &reason)
 {
-
+    Q_UNUSED(name);
+    Q_UNUSED(enabled);
+    Q_UNUSED(reason);
+    return QString();
 }
 
 QString CupsFacadeImpl::printerSetInfo(const QString &name,
                                        const QString &info)
 {
-    helper.printerClassSetInfo(name, info);
+    if (!helper.printerClassSetInfo(name, info)) {
+        return helper.getLastError();
+    }
+    return QString();
 }
 
 QString CupsFacadeImpl::printerSetLocation(const QString &name,
                                            const QString &location)
 {
-
+    Q_UNUSED(name);
+    Q_UNUSED(location);
+    return QString();
 }
 
 QString CupsFacadeImpl::printerSetShared(const QString &name,
                                          const bool shared)
 {
-
+    Q_UNUSED(name);
+    Q_UNUSED(shared);
+    return QString();
 }
 
 QString CupsFacadeImpl::printerSetJobSheets(const QString &name,
                                             const QString &start,
                                             const QString &end)
 {
-
+    Q_UNUSED(name);
+    Q_UNUSED(start);
+    Q_UNUSED(end);
+    return QString();
 }
 
 QString CupsFacadeImpl::printerSetErrorPolicy(const QString &name,
                                               const PrinterEnum::ErrorPolicy &policy)
 {
-
+    Q_UNUSED(name);
+    Q_UNUSED(policy);
+    return QString();
 }
 
 QString CupsFacadeImpl::printerSetOpPolicy(const QString &name,
                                            const PrinterEnum::OperationPolicy &policy)
 {
-
+    Q_UNUSED(name);
+    Q_UNUSED(policy);
+    return QString();
 }
 
 QString CupsFacadeImpl::printerSetUsersAllowed(const QString &name,
                                                const QStringList &users)
 {
-
+    Q_UNUSED(name);
+    Q_UNUSED(users);
+    return QString();
 }
 
 QString CupsFacadeImpl::printerSetUsersDenied(const QString &name,
                                               const QStringList &users)
 {
-
+    Q_UNUSED(name);
+    Q_UNUSED(users);
+    return QString();
 }
 
 QString CupsFacadeImpl::printerAddOptionDefault(const QString &name,
                                                 const QString &option,
                                                 const QStringList &values)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(option);
+    Q_UNUSED(values);
+    return QString();
 }
 
 QString CupsFacadeImpl::printerDeleteOptionDefault(const QString &name,
                                                    const QString &value)
 {
-
+    Q_UNUSED(name);
+    Q_UNUSED(value);
+    return QString();
 }
 
 QString CupsFacadeImpl::printerAddOption(const QString &name,
@@ -150,7 +190,9 @@ QString CupsFacadeImpl::printerAddOption(const QString &name,
 QVariant CupsFacadeImpl::printerGetOption(const QString &name,
                                           const QString &option)
 {
-
+    Q_UNUSED(name);
+    Q_UNUSED(option);
+    return QVariant();
 }
 
 QMap<QString, QVariant> CupsFacadeImpl::printerGetOptions(
@@ -228,19 +270,21 @@ QList<ColorModel> CupsFacadeImpl::printerGetSupportedColorModels(
     }
 
     // If there were no ColorModels in the ppd, append the guessed/default one:
-    ColorModel model;
-    ppd_option_t *defCModel = ppdFindOption(ppd, "DefaultColorModel");
-    if (defCModel) {
-        model = Utils::parsePpdColorModel(defCModel->choices[0].choice);
-        free(defCModel);
+    if (ret.size() == 0) {
+        ColorModel model;
+        ppd_option_t *defCModel = ppdFindOption(ppd, "DefaultColorModel");
+        if (defCModel) {
+            model = Utils::parsePpdColorModel(defCModel->choices[0].choice);
+            free(defCModel);
+        }
+        model.colorType = ppd->color_device ? PrinterEnum::ColorModelType::ColorType
+                                            : PrinterEnum::ColorModelType::GrayType;
+        model.colorSpace = Utils::ppdColorSpaceToColorSpace(ppd->colorspace);
+        if (model.name.isEmpty()) {
+            model.name = ppd->color_device ? "Color" : "Gray"; // Translate? Improve?
+        }
+        ret.append(model);
     }
-    model.colorType = ppd->color_device ? PrinterEnum::ColorModelType::ColorType
-                                        : PrinterEnum::ColorModelType::GrayType;
-    model.colorSpace = Utils::ppdColorSpaceToColorSpace(ppd->colorspace);
-    if (model.name.isEmpty()) {
-        model.name = ppd->color_device ? "Color" : "Gray"; // Translate? Improve?
-    }
-    ret.append(model);
 
     ppdClose(ppd);
     return ret;

@@ -66,7 +66,6 @@ QString PrinterInfoImpl::makeAndModel() const
 
 }
 
-
 State PrinterInfoImpl::state() const
 {
 

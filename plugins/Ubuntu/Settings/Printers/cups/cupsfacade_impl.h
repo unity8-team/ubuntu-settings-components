@@ -31,60 +31,55 @@ public:
                                const QUrl &ppdFile,
                                const QString &info,
                                const QString &location) override;
-
     virtual QString printerAddWithPpd(const QString &name,
                                       const QUrl &uri,
                                       const QString &ppdFileName,
                                       const QString &info,
                                       const QString &location) override;
-
     virtual QString printerDelete(const QString &name) override;
-
     virtual QString printerSetEnabled(const QString &name,
                                       const bool enabled) override;
-
     virtual QString printerSetAcceptJobs(
         const QString &name,
         const bool enabled,
         const QString &reason = QString::null) override;
-
     virtual QString printerSetInfo(const QString &name,
                                    const QString &info) override;
-
     virtual QString printerSetLocation(const QString &name,
                                        const QString &location) override;
-
     virtual QString printerSetShared(const QString &name,
                                      const bool shared) override;
-
     virtual QString printerSetJobSheets(const QString &name,
                                         const QString &start,
                                         const QString &end) override;
-
     virtual QString printerSetErrorPolicy(const QString &name,
                                           const ErrorPolicy &policy) override;
-
     virtual QString printerSetOpPolicy(const QString &name,
                                        const OperationPolicy &policy) override;
-
     virtual QString printerSetUsersAllowed(const QString &name,
                                            const QStringList &users) override;
-
     virtual QString printerSetUsersDenied(const QString &name,
                                           const QStringList &users) override;
-
     virtual QString printerAddOptionDefault(const QString &name,
                                             const QString &option,
                                             const QStringList &values) override;
-
     virtual QString printerDeleteOptionDefault(const QString &name,
                                                const QString &value) override;
-
     virtual QString printerAddOption(const QString &name,
                                      const QString &option,
                                      const QStringList &values) override;
+    virtual QVariant printerGetOption(const QString &name,
+                                         const QString &option) override;
+    virtual QMap<QString, QVariant> printerGetOptions(
+        const QString &name, const QStringList &options
+    ) override;
+    virtual QList<ColorModel> printerGetSupportedColorModels(
+        const QString &name) const override;
 
 private:
+    QString getPrinterName(const QString &name) const;
+    QString getPrinterInstance(const QString &name) const;
+    QStringList parsePpdColorModel(const QString &colorModel);
     CupsPkHelper helper;
 };
 

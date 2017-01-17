@@ -132,7 +132,7 @@ public:
     virtual QString printerSetUsersAllowed(const QString &name,
                                            const QStringList &users) override
     {
-        printerOptions[name].insert("users-allowed", users);
+        printerOptions[name].insert("users-allowed", QVariant::fromValue(users));
         return returnValue;
 
     }
@@ -140,7 +140,7 @@ public:
     virtual QString printerSetUsersDenied(const QString &name,
                                           const QStringList &users) override
     {
-        printerOptions[name].insert("users-denied", users);
+        printerOptions[name].insert("users-denied", QVariant::fromValue(users));
         return returnValue;
 
     }
@@ -153,7 +153,6 @@ public:
         Q_UNUSED(option);
         Q_UNUSED(values);
         return returnValue;
-
     }
 
     virtual QString printerDeleteOptionDefault(const QString &name,
@@ -171,7 +170,29 @@ public:
     {
         printerOptions[name].insert(option, values);
         return returnValue;
+    }
 
+    virtual QVariant printerGetOption(const QString &name,
+                                     const QString &option) override
+    {
+        // FIXME: if we're to return a variant, check that it can be converted
+        return printerOptions[name].value(option);
+    }
+
+    virtual QMap<QString, QVariant> printerGetOptions(
+        const QString &name, const QStringList &options) override
+    {
+        QMap<QString, QVariant> opts;
+        Q_FOREACH(const QString &option, options) {
+            opts[option] = printerGetOption(name, option);
+        }
+        return opts;
+    }
+
+    virtual QList<ColorModel> printerGetSupportedColorModels(
+        const QString &name) const override
+    {
+        return printerOptions[name].value("ColorModels").value<QList<ColorModel>>();
     }
 
     void mockPrinterAdded(const QString &name)
@@ -197,7 +218,7 @@ public:
     QString returnValue = QString::null;
 
     // Map from printer to key/val.
-    QMap<QString, QMap<QString, QStringList>> printerOptions;
+    QMap<QString, QMap<QString, QVariant>> printerOptions;
 
     QMap<QString, bool> enableds;
     QMap<QString, bool> shareds;

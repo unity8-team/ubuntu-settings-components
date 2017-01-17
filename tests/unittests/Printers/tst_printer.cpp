@@ -105,8 +105,10 @@ private Q_SLOTS:
         ((MockPrinterInfo*) m_mockinfo)->m_supportedDuplexModes = modes;
 
         m_instance->setDefaultDuplexMode(DuplexMode::DuplexLongSide);
+        QVariant duplexVar = ((MockCupsFacade*) m_mockcups)->printerOptions[m_printerName].value("Duplex");
+        QStringList duplexVals = duplexVar.toStringList();
         QCOMPARE(
-            ((MockCupsFacade*) m_mockcups)->printerOptions[m_printerName].value("Duplex").at(0),
+            duplexVals.at(0),
             (QString) Utils::duplexModeToPpdChoice(DuplexMode::DuplexLongSide)
         );
     }
@@ -154,12 +156,36 @@ private Q_SLOTS:
 
         m_instance->setDefaultPageSize(size);
 
+        QVariant pageSizeVar = ((MockCupsFacade*) m_mockcups)->printerOptions[m_printerName].value("PageSize");
+        QStringList pageSizeVals = pageSizeVar.toStringList();
+
         if (expectCupsCommunication) {
-            QCOMPARE(
-                ((MockCupsFacade*) m_mockcups)->printerOptions[m_printerName].value("PageSize").at(0),
-                expectedValue
-            );
+            QCOMPARE(pageSizeVals.at(0), expectedValue);
         }
+    }
+    void testDefaultColorMode()
+    {
+        ColorModel colorModel;
+        ((MockCupsFacade*) m_mockcups)->printerOptions[m_printerName].insert(
+            "DefaultColorModel", QVariant::fromValue(colorModel));
+
+        QCOMPARE(m_instance->defaultColorModel(), colorModel);
+    }
+    void testSupportedColorModels()
+    {
+        ColorModel a;
+        a.text = "Gray";
+
+        ColorModel b;
+        b.text = "RBG";
+        QList<ColorModel> models({a, b});
+
+        PrinterInfo *info = new MockPrinterInfo(m_printerName);
+        CupsFacade *cups = new MockCupsFacade;
+        ((MockCupsFacade*) cups)->printerOptions[m_printerName].insert(
+            "ColorModels", QVariant::fromValue(models));
+        Printer p(info, cups);
+        QCOMPARE(p.supportedColorModels(), models);
     }
 private:
     QString m_printerName = "my-printer";

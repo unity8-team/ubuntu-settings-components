@@ -92,9 +92,17 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
         case Qt::DisplayRole:
             ret = printer->name();
             break;
-        // case ColorModeRole:
-        //     ret = printer->colorMode();
-        //     break;
+        case ColorModelRole:
+            ret = printer->defaultColorModel().name;
+            break;
+        case SupportedColorModelsRole: {
+                QStringList models;
+                Q_FOREACH(const ColorModel &m, printer->supportedColorModels()) {
+                    models << m.name;
+                }
+                ret = models;
+            }
+            break;
         // case CopiesRole:
         //     ret = printer->copies();
         //     break;
@@ -196,7 +204,8 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
 
     if (Q_UNLIKELY(names.empty())) {
         names[Qt::DisplayRole] = "displayName";
-        names[ColorModeRole] = "colorMode";
+        names[ColorModelRole] = "colorModel";
+        names[SupportedColorModelsRole] = "supportedColorModels";
         names[CopiesRole] = "copies";
         names[DuplexRole] = "duplex";
         names[SupportedDuplexModesRole] = "supportedDuplexModes";

@@ -40,13 +40,15 @@ Printer::~Printer()
 
 PrinterPrivate::PrinterPrivate(Printer *q)
 {
-
+    loadColorModel();
 }
 
 PrinterPrivate::PrinterPrivate(Printer *q, PrinterInfo *info, CupsFacade *cups)
 {
     this->info = info;
     this->cups = cups;
+
+    loadColorModel();
 }
 
 PrinterPrivate::~PrinterPrivate()
@@ -54,14 +56,25 @@ PrinterPrivate::~PrinterPrivate()
     delete this->info;
 }
 
-ColorMode Printer::colorMode() const
+void PrinterPrivate::loadColorModel()
 {
-
+    QStringList opts({"DefaultColorModel"});
+    auto name = this->info->printerName();
+    auto vals = this->cups->printerGetOptions(name, opts);
+    m_defaultColorModel = vals["DefaultColorModel"].value<ColorModel>();
+    m_supportedColorModels = this->cups->printerGetSupportedColorModels(name);
 }
 
-ColorMode Printer::defaultColorMode() const
+ColorModel Printer::defaultColorModel() const
 {
+    Q_D(const Printer);
+    return d->m_defaultColorModel;
+}
 
+QList<ColorModel> Printer::supportedColorModels() const
+{
+    Q_D(const Printer);
+    return d->m_supportedColorModels;
 }
 
 int Printer::copies() const
@@ -176,9 +189,11 @@ void Printer::setAccessControl(const AccessControl &accessControl)
 
 }
 
-void Printer::setColorMode(const ColorMode &colorMode)
+void Printer::setDefaultColorModel(const ColorModel &colorModel)
 {
-
+    Q_D(Printer);
+    QStringList vals({Utils::colorModelToPpdColorModel(colorModel)});
+    d->cups->printerAddOption(name(), "ColorModel", vals);
 }
 
 void Printer::setCopies(const int &copies)

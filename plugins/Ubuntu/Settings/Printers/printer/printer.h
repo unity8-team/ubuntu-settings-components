@@ -37,8 +37,7 @@ class PRINTERS_DECL_EXPORT Printer : public QObject
     Q_OBJECT
     Q_DECLARE_PRIVATE(Printer)
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(ColorMode colorMode READ colorMode WRITE setColorMode NOTIFY colorModeChanged)
-    Q_PROPERTY(ColorMode defaultColorMode READ defaultColorMode CONSTANT)
+    Q_PROPERTY(ColorModel defaultColorModel READ defaultColorModel WRITE setDefaultColorModel NOTIFY defaultColorModelChanged)
     Q_PROPERTY(int copies READ copies WRITE setCopies NOTIFY copiesChanged)
     Q_PROPERTY(bool duplex READ duplex WRITE setDuplex NOTIFY duplexChanged)
     Q_PROPERTY(QStringList supportedDuplexStrings READ supportedDuplexStrings CONSTANT)
@@ -63,19 +62,19 @@ public:
     explicit Printer(PrinterInfo *info, CupsFacade *cups, QObject *parent = nullptr);
     ~Printer();
 
-    Q_ENUM(PrintRange)
-    Q_ENUM(ColorMode)
-    Q_ENUM(Quality)
-    Q_ENUM(ErrorPolicy)
-    Q_ENUM(OperationPolicy)
-    Q_ENUM(AccessControl)
-    Q_ENUM(DuplexMode)
-    Q_ENUM(State)
-    Q_ENUM(CartridgeType)
+    // Q_ENUM(PrintRange)
+    // Q_ENUM(ColorModel)
+    // Q_ENUM(Quality)
+    // Q_ENUM(ErrorPolicy)
+    // Q_ENUM(OperationPolicy)
+    // Q_ENUM(AccessControl)
+    // Q_ENUM(DuplexMode)
+    // Q_ENUM(State)
+    // Q_ENUM(CartridgeType)
 
     bool enabled() const;
-    ColorMode colorMode() const;
-    ColorMode defaultColorMode() const;
+    ColorModel defaultColorModel() const;
+    QList<ColorModel> supportedColorModels() const;
     int copies() const;
     bool duplex() const;
     QList<DuplexMode> supportedDuplexModes() const;
@@ -96,7 +95,7 @@ public:
     QString lastStateMessage() const;
 
     void setAccessControl(const AccessControl &accessControl);
-    void setColorMode(const ColorMode &colorMode);
+    void setDefaultColorModel(const ColorModel &colorModel);
     void setCopies(const int &copies);
     void setDescription(const QString &description);
     void setDuplex(const bool duplex);
@@ -126,7 +125,7 @@ Q_SIGNALS:
     void descriptionChanged();
     void pageSizeChanged();
     void defaultDuplexModeChanged();
-    void colorModeChanged();
+    void defaultColorModelChanged();
     void qualityChanged();
     void rangeChanged();
     void accessControlChanged();

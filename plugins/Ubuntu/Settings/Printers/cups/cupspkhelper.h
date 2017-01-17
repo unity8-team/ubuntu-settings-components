@@ -17,6 +17,8 @@
 #include <cups/cups.h>
 #include <cups/http.h>
 #include <cups/ipp.h>
+#include <cups/ppd.h>
+
 
 #include <QString>
 #include <QStringList>
@@ -31,7 +33,10 @@
 cups-pk-helper. Once provided on all platforms, this code should be replaced
 by proper dbus bindings, and subsequently be set on fire. */
 
-// TODO: rename to CupsPkHelperShim to emphasize its transient nature.
+/* TODO: rename to CupsPkHelperShim to emphasize its transient nature.
+   FIXME: set m_internalStatus to mutable and make most of the "is..." methods
+          const.
+*/
 class CupsPkHelper
 {
 public:
@@ -41,7 +46,11 @@ public:
     bool printerClassSetInfo(const QString &name, const QString &info);
     bool printerClassSetOption(const QString &name, const QString &option,
                                const QStringList &values);
+    ppd_file_t* getPpdFile(const QString &name, const QString &instance) const;
+    cups_dest_t* getDest(const QString &name, const QString &instance) const;
+
     QString getLastError() const;
+
 private:
     enum CphResource
     {
@@ -80,5 +89,5 @@ private:
 
     http_t *m_connection;
     ipp_status_t m_lastStatus = IPP_OK;
-    QString m_internalStatus = QString::null;
+    mutable QString m_internalStatus = QString::null;
 };

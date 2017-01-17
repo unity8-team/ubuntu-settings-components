@@ -23,10 +23,36 @@ enum class PrintRange
     PageRange,
 };
 
-enum class ColorMode
+// enum class ColorModel
+// {
+//     GrayModel = 0,
+//     ColorModel,
+// };
+
+enum class ColorModelType
 {
-    ColorMode = 0,
-    GrayscaleMode,
+    GrayType = 0,
+    ColorType,
+    UnknownType,
+};
+
+enum class ColorSpace
+{
+    NSpace = 0,
+    RGBSpace,
+    RGBKSpace,
+    GraySpace,
+    CMYSpace,
+    CMYKSpace,
+    UnknownSpace,
+};
+
+enum class ColorOrganization
+{
+    ChunkyOrganization = 0,
+    BandedOrganization,
+    PlanarOrganization,
+    UnknownOrganization,
 };
 
 enum class Quality

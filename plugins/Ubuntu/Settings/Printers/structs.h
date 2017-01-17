@@ -20,11 +20,38 @@
 #include "enums.h"
 
 #include <QtCore/QMap>
+#include <QDebug>
+#include <QMetaType>
 
 struct InkLevels
 {
 public:
     QMap<CartridgeType, uint> levels;
 };
+
+struct ColorModel
+{
+public:
+    QString name = QString::null; // Gray, RGB, CMYK or anything [1], really.
+    QString text = QString::null;
+    ColorModelType colorType = ColorModelType::UnknownType;
+    ColorSpace colorSpace = ColorSpace::UnknownSpace;
+    ColorOrganization colorOrganization
+        = ColorOrganization::UnknownOrganization;
+    QString compressionMode = QString::null;
+
+    bool operator==(const ColorModel& a) const
+    {
+        return (name == a.name && text == a.text && colorType == a.colorType &&
+                colorSpace == a.colorSpace &&
+                colorOrganization == a.colorOrganization &&
+                compressionMode == a.compressionMode);
+    }
+};
+
+Q_DECLARE_TYPEINFO(ColorModel, Q_PRIMITIVE_TYPE);
+Q_DECLARE_METATYPE(ColorModel)
+
+// [1] https://www.cups.org/doc/ppd-compiler.html#COLOR
 
 #endif // USC_PRINTERS_STRUCTS_H

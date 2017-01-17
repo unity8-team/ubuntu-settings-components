@@ -1,5 +1,8 @@
 /*
  * Copyright (C) 2017 Canonical, Ltd.
+ * Copyright (C) 2014 John Layt <jlayt@kde.org>
+ * Copyright (C) 2009 Red Hat, Inc.
+ * Copyright (C) 2008 Novell, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,8 +18,6 @@
  */
 
 #include "cups/cupspkhelper.h"
-
-#include <cups/ppd.h>
 
 #include <errno.h>
 #include <string.h>
@@ -555,3 +556,29 @@ void CupsPkHelper::addClassUri(ipp_t *request, const QString &name)
                  "printer-uri", NULL, uri.toEncoded().data());
 }
 
+ppd_file_t* CupsPkHelper::getPpdFile(const QString &name,
+                                     const QString &instance) const
+{
+    ppd_file_t* file = 0;
+    const char *ppdFile = cupsGetPPD(name.toUtf8());
+    if (ppdFile) {
+        file = ppdOpenFile(ppdFile);
+        unlink(ppdFile);
+    }
+    if (file) {
+        ppdMarkDefaults(file);
+    } else {
+        file = 0;
+    }
+
+    return file;
+}
+
+cups_dest_t* CupsPkHelper::getDest(const QString &name,
+                                   const QString &instance) const
+{
+    cups_dest_t *dest = 0;
+    dest = cupsGetNamedDest(m_connection, name.toUtf8(),
+                            instance.toUtf8());
+    return dest;
+}

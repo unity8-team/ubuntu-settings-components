@@ -106,6 +106,18 @@ MainView {
                         onSelectedIndexChanged: printer.pageSize = selectedIndex
                         Component.onCompleted: selectedIndex = printer.supportedPageSizes.indexOf(printer.pageSize)
                     }
+
+                    ListItems.ValueSelector {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Color model"
+                        values: printer.supportedColorModels
+                        enabled: values.length > 1
+                        onSelectedIndexChanged: printer.colorModel = selectedIndex
+                        Component.onCompleted: selectedIndex = printer.supportedColorModels.indexOf(printer.colorModel)
+                    }
                 }
             }
 

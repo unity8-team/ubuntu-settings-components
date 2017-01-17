@@ -42,7 +42,8 @@ public:
     enum Roles
     {
         // Qt::DisplayRole holds device name
-        ColorModeRole = Qt::UserRole,
+        ColorModelRole = Qt::UserRole,
+        SupportedColorModelsRole,
         CopiesRole,
         DuplexRole,
         SupportedDuplexModesRole,

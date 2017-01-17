@@ -14,6 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "utils.h"
+
 #include "cups/cupsfacade_impl.h"
 
 #include <cups/cups.h>
@@ -141,4 +143,119 @@ QString CupsFacadeImpl::printerAddOption(const QString &name,
 
     Q_EMIT printerModified(name, true);
     return QString();
+}
+
+QVariant CupsFacadeImpl::printerGetOption(const QString &name,
+                                          const QString &option)
+{
+
+}
+
+QMap<QString, QVariant> CupsFacadeImpl::printerGetOptions(
+    const QString &name, const QStringList &options)
+{
+    QMap<QString, QVariant> ret;
+
+    QString printerName = getPrinterName(name);
+    QString instance = getPrinterInstance(name);
+
+    ppd_file_t* ppd;
+
+    // We don't need a dest, really.
+    cups_dest_t *dest = helper.getDest(printerName, instance);
+    if (!dest) {
+        qCritical() << "Could not get dest for" << printerName;
+        return ret;
+    }
+
+    ppd = helper.getPpdFile(printerName, instance);
+    if (!ppd) {
+        qCritical() << "Could not get PPD for" << printerName;
+        cupsFreeDests(1, dest);
+        return ret;
+    }
+
+    Q_FOREACH(const QString &option, options) {
+        if (option == "DefaultColorModel") {
+            ColorModel model;
+
+            ppd_option_t *defCModel = ppdFindOption(ppd, option.toUtf8());
+            if (defCModel) {
+                model = Utils::parsePpdColorModel(defCModel->choices[0].choice);
+                free(defCModel);
+            }
+
+            model.colorType = ppd->color_device ? ColorModelType::ColorType
+                                                : ColorModelType::GrayType;
+            model.colorSpace = Utils::ppdColorSpaceToColorSpace(ppd->colorspace);
+            ret[option] = QVariant::fromValue(model);
+        } else {
+            ppd_option_t *val = ppdFindOption(ppd, option.toUtf8());
+
+            if (val) {
+                qWarning() << "asking for" << option << "returns" << val->text;
+                free(val);
+            } else {
+                qWarning() << "option" << option << "yielded no option";
+            }
+        }
+    }
+
+    ppdClose(ppd);
+    cupsFreeDests(1, dest);
+
+    return ret;
+}
+
+QList<ColorModel> CupsFacadeImpl::printerGetSupportedColorModels(
+    const QString &name) const
+{
+    QList<ColorModel> ret;
+    ppd_file_t* ppd;
+
+    ppd = helper.getPpdFile(getPrinterName(name), getPrinterInstance(name));
+    if (!ppd) {
+        qCritical() << "Could not get PPD for" << name;
+        return ret;
+    }
+
+    ppd_option_t *colorModels = ppdFindOption(ppd, "ColorModel");
+    if (colorModels) {
+        for (int i = 0; i < colorModels->num_choices; ++i)
+            ret.append(Utils::parsePpdColorModel(colorModels->choices[i].choice));
+    }
+
+    // If there were no ColorModels in the ppd, append the guessed/default one:
+    ColorModel model;
+    ppd_option_t *defCModel = ppdFindOption(ppd, "DefaultColorModel");
+    if (defCModel) {
+        model = Utils::parsePpdColorModel(defCModel->choices[0].choice);
+        free(defCModel);
+    }
+    model.colorType = ppd->color_device ? ColorModelType::ColorType
+                                        : ColorModelType::GrayType;
+    model.colorSpace = Utils::ppdColorSpaceToColorSpace(ppd->colorspace);
+    if (model.name.isEmpty()) {
+        model.name = ppd->color_device ? "Color" : "Gray"; // Translate? Improve?
+    }
+    ret.append(model);
+
+    ppdClose(ppd);
+    return ret;
+}
+
+QString CupsFacadeImpl::getPrinterName(const QString &name) const
+{
+    const auto parts = name.splitRef(QLatin1Char('/'));
+    return parts.at(0).toString();
+}
+
+QString CupsFacadeImpl::getPrinterInstance(const QString &name) const
+{
+    const auto parts = name.splitRef(QLatin1Char('/'));
+    QString instance;
+    if (parts.size() > 1)
+        instance = parts.at(1).toString();
+
+    return instance;
 }

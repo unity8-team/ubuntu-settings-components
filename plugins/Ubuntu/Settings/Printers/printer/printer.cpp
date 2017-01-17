@@ -62,7 +62,12 @@ void PrinterPrivate::loadColorModel()
     auto name = this->info->printerName();
     auto vals = this->cups->printerGetOptions(name, opts);
     m_defaultColorModel = vals["DefaultColorModel"].value<ColorModel>();
+
     m_supportedColorModels = this->cups->printerGetSupportedColorModels(name);
+
+    if (m_supportedColorModels.size() == 0) {
+        m_supportedColorModels.append(m_defaultColorModel);
+    }
 }
 
 ColorModel Printer::defaultColorModel() const
@@ -198,7 +203,8 @@ void Printer::setDefaultColorModel(const ColorModel &colorModel)
     }
 
     QStringList vals({Utils::colorModelToPpdColorModel(colorModel)});
-    d->cups->printerAddOption(name(), "ColorModel", vals);
+    QString reply = d->cups->printerAddOption(name(), "ColorModel", vals);
+    Q_UNUSED(reply);
 }
 
 void Printer::setAccessControl(const PrinterEnum::AccessControl &accessControl)

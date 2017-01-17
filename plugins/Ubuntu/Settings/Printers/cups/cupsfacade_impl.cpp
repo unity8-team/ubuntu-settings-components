@@ -226,19 +226,18 @@ QMap<QString, QVariant> CupsFacadeImpl::printerGetOptions(
             ppd_option_t *defCModel = ppdFindOption(ppd, option.toUtf8());
             if (defCModel) {
                 model = Utils::parsePpdColorModel(defCModel->choices[0].choice);
-                free(defCModel);
+            } else {
+                ppd_option_t *cModel = ppdFindOption(ppd, "ColorModel");
+                if (cModel) {
+                    model = Utils::parsePpdColorModel(cModel->defchoice);
+                }
             }
-
-            model.colorType = ppd->color_device ? PrinterEnum::ColorModelType::ColorType
-                                                : PrinterEnum::ColorModelType::GrayType;
-            model.colorSpace = Utils::ppdColorSpaceToColorSpace(ppd->colorspace);
             ret[option] = QVariant::fromValue(model);
         } else {
             ppd_option_t *val = ppdFindOption(ppd, option.toUtf8());
 
             if (val) {
                 qWarning() << "asking for" << option << "returns" << val->text;
-                free(val);
             } else {
                 qWarning() << "option" << option << "yielded no option";
             }
@@ -267,23 +266,6 @@ QList<ColorModel> CupsFacadeImpl::printerGetSupportedColorModels(
     if (colorModels) {
         for (int i = 0; i < colorModels->num_choices; ++i)
             ret.append(Utils::parsePpdColorModel(colorModels->choices[i].choice));
-    }
-
-    // If there were no ColorModels in the ppd, append the guessed/default one:
-    if (ret.size() == 0) {
-        ColorModel model;
-        ppd_option_t *defCModel = ppdFindOption(ppd, "DefaultColorModel");
-        if (defCModel) {
-            model = Utils::parsePpdColorModel(defCModel->choices[0].choice);
-            free(defCModel);
-        }
-        model.colorType = ppd->color_device ? PrinterEnum::ColorModelType::ColorType
-                                            : PrinterEnum::ColorModelType::GrayType;
-        model.colorSpace = Utils::ppdColorSpaceToColorSpace(ppd->colorspace);
-        if (model.text.isEmpty()) {
-            model.text = ppd->color_device ? "Color" : "Grayscale"; // Translate? Improve?
-        }
-        ret.append(model);
     }
 
     ppdClose(ppd);

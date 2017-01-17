@@ -112,6 +112,7 @@ MainView {
                             left: parent.left
                             right: parent.right
                         }
+                        visible: printer.supportedColorModels.length
                         text: "Color model"
                         values: printer.supportedColorModels
                         enabled: values.length > 1

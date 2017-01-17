@@ -26,6 +26,7 @@
 #include <QModelIndex>
 #include <QObject>
 #include <QSortFilterProxyModel>
+#include <QTimer>
 #include <QVariant>
 
 class PrinterModelPrivate;
@@ -35,8 +36,8 @@ class PRINTERS_DECL_EXPORT PrinterModel : public QAbstractListModel
     Q_DECLARE_PRIVATE(PrinterModel)
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
-    explicit PrinterModel(QObject *parent = 0);
-    explicit PrinterModel(PrinterInfo *info, CupsFacade *cups, QObject *parent = 0);
+    explicit PrinterModel(int timerMsec=5000, QObject *parent = 0);
+    explicit PrinterModel(PrinterInfo *info, CupsFacade *cups, int timerMsec=5000, QObject *parent = 0);
     ~PrinterModel();
 
     enum Roles
@@ -75,6 +76,9 @@ public:
 
 private:
     QScopedPointer<PrinterModelPrivate> const d_ptr;
+    QTimer *m_update_timer;
+
+private Q_SLOTS:
     void update();
 
 Q_SIGNALS:

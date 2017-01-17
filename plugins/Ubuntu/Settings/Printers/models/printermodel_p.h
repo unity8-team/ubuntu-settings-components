@@ -31,7 +31,6 @@ struct PrinterModelPrivate
     this should be normal pointers that are deletedLater. */
     QList<QSharedPointer<Printer>> printers;
 
-    void refreshPrinters();
     void init();
 };
 

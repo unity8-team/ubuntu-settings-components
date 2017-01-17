@@ -24,7 +24,7 @@
 struct InkLevels
 {
 public:
-    QMap<CartridgeType, uint> levels;
+    QMap<PrinterEnum::CartridgeType, uint> levels;
 };
 
 #endif // USC_PRINTERS_STRUCTS_H

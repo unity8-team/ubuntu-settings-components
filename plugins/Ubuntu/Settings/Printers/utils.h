@@ -25,43 +25,43 @@
 class Utils
 {
 public:
-    static DuplexMode ppdChoiceToDuplexMode(const QString &choice)
+    static PrinterEnum::DuplexMode ppdChoiceToDuplexMode(const QString &choice)
     {
         if (choice == "DuplexTumble")
-            return DuplexMode::DuplexShortSide;
+            return PrinterEnum::DuplexMode::DuplexShortSide;
         else if (choice == "DuplexNoTumble")
-            return DuplexMode::DuplexLongSide;
+            return PrinterEnum::DuplexMode::DuplexLongSide;
         else if (choice == "Auto")
-            return DuplexMode::DuplexAuto;
+            return PrinterEnum::DuplexMode::DuplexAuto;
         else
-            return DuplexMode::DuplexNone;
+            return PrinterEnum::DuplexMode::DuplexNone;
     }
 
-    static const QString duplexModeToPpdChoice(const DuplexMode &mode)
+    static const QString duplexModeToPpdChoice(const PrinterEnum::DuplexMode &mode)
     {
         switch (mode) {
-        case DuplexMode::DuplexNone:
+        case PrinterEnum::DuplexMode::DuplexNone:
             return "None";
-        case DuplexMode::DuplexAuto:
+        case PrinterEnum::DuplexMode::DuplexAuto:
             return "Auto";
-        case DuplexMode::DuplexShortSide:
+        case PrinterEnum::DuplexMode::DuplexShortSide:
             return "DuplexTumble";
-        case DuplexMode::DuplexLongSide:
+        case PrinterEnum::DuplexMode::DuplexLongSide:
             return "DuplexNoTumble";
         }
     }
 
-    static DuplexMode qDuplexModeToDuplexMode(const QPrinter::DuplexMode &mode)
+    static PrinterEnum::DuplexMode qDuplexModeToDuplexMode(const QPrinter::DuplexMode &mode)
     {
         switch(mode) {
         case QPrinter::DuplexNone:
-            return DuplexMode::DuplexNone;
+            return PrinterEnum::DuplexMode::DuplexNone;
         case QPrinter::DuplexAuto:
-            return DuplexMode::DuplexAuto;
+            return PrinterEnum::DuplexMode::DuplexAuto;
         case QPrinter::DuplexLongSide:
-            return DuplexMode::DuplexLongSide;
+            return PrinterEnum::DuplexMode::DuplexLongSide;
         case QPrinter::DuplexShortSide:
-            return DuplexMode::DuplexShortSide;
+            return PrinterEnum::DuplexMode::DuplexShortSide;
         }
     }
 };

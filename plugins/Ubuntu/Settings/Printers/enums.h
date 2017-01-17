@@ -17,73 +17,92 @@
 #ifndef USC_PRINTERS_ENUMS_H
 #define USC_PRINTERS_ENUMS_H
 
-enum class PrintRange
-{
-    AllPages = 0,
-    PageRange,
-};
+#include <QtCore/QObject>
 
-enum class ColorMode
-{
-    ColorMode = 0,
-    GrayscaleMode,
-};
+#include "printers_global.h"
 
-enum class Quality
+class PRINTERS_DECL_EXPORT PrinterEnum
 {
-    DraftQuality = 0,
-    NormalQuality,
-    BestQuality,
-    PhotoQuality,
-};
+    Q_GADGET
 
-enum class ErrorPolicy
-{
-    RetryOnError = 0,
-    AbortOnError,
-    StopPrinterOnError,
-    RetryCurrentOnError,
-};
+public:
+    enum class AccessControl
+    {
+        AccessAllow = 0,
+        AccessDeny,
+    };
+    Q_ENUM(AccessControl)
 
-enum class OperationPolicy
-{
-    DefaultOperation = 0,
-    AuthenticatedOperation,
-};
+    enum class CartridgeType
+    {
+        BlackCartridge = 0,
+        CyanCartridge,
+        MagentaCartridge,
+        YellowCartridge,
+        RedCartridge,
+        GreenCartridge,
+        BlueCartridge,
+        UnknownCartridge,
+        WhiteCartridge,
+    };
+    Q_ENUM(CartridgeType)
 
-enum class AccessControl
-{
-    AccessAllow = 0,
-    AccessDeny,
-};
+    enum class ColorModel
+    {
+        ColorMode = 0,
+        GrayscaleMode,
+    };
+    Q_ENUM(ColorModel)
 
-enum class DuplexMode
-{
-    DuplexNone = 0,
-    DuplexAuto,
-    DuplexLongSide,
-    DuplexShortSide,
-};
+    enum class DuplexMode
+    {
+        DuplexNone = 0,
+        DuplexAuto,
+        DuplexLongSide,
+        DuplexShortSide,
+    };
+    Q_ENUM(DuplexMode)
 
-enum class State
-{
-    IdleState = 0,
-    ActiveState,
-    AbortedState,
-    ErrorState,
-};
+    enum class ErrorPolicy
+    {
+        RetryOnError = 0,
+        AbortOnError,
+        StopPrinterOnError,
+        RetryCurrentOnError,
+    };
+    Q_ENUM(ErrorPolicy)
 
-enum class CartridgeType
-{
-    BlackCartridge = 0,
-    CyanCartridge,
-    MagentaCartridge,
-    YellowCartridge,
-    RedCartridge,
-    GreenCartridge,
-    BlueCartridge,
-    UnknownCartridge,
-    WhiteCartridge,
+    enum class OperationPolicy
+    {
+        DefaultOperation = 0,
+        AuthenticatedOperation,
+    };
+    Q_ENUM(OperationPolicy)
+
+    enum class PrintRange
+    {
+        AllPages = 0,
+        PageRange,
+    };
+    Q_ENUM(PrintRange)
+
+    enum class Quality
+    {
+        DraftQuality = 0,
+        NormalQuality,
+        BestQuality,
+        PhotoQuality,
+    };
+    Q_ENUM(Quality)
+
+    enum class State
+    {
+        IdleState = 0,
+        ActiveState,
+        AbortedState,
+        ErrorState,
+    };
+    Q_ENUM(State)
 };
 
 #endif // USC_PRINTERS_ENUMS_H

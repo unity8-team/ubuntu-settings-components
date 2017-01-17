@@ -67,7 +67,7 @@ QString PrinterInfoImpl::makeAndModel() const
 }
 
 
-State PrinterInfoImpl::state() const
+PrinterEnum::State PrinterInfoImpl::state() const
 {
 
 }
@@ -102,14 +102,14 @@ QList<int> PrinterInfoImpl::supportedResolutions() const
 
 }
 
-DuplexMode PrinterInfoImpl::defaultDuplexMode() const
+PrinterEnum::DuplexMode PrinterInfoImpl::defaultDuplexMode() const
 {
     return Utils::qDuplexModeToDuplexMode(m_info.defaultDuplexMode());
 }
 
-QList<DuplexMode> PrinterInfoImpl::supportedDuplexModes() const
+QList<PrinterEnum::DuplexMode> PrinterInfoImpl::supportedDuplexModes() const
 {
-    QList<DuplexMode> list;
+    QList<PrinterEnum::DuplexMode> list;
     Q_FOREACH(const QPrinter::DuplexMode mode, m_info.supportedDuplexModes()) {
         list.append(Utils::qDuplexModeToDuplexMode(mode));
     }

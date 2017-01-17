@@ -38,7 +38,7 @@ public:
     virtual QString location() const = 0;
     virtual QString makeAndModel() const = 0;
 
-    virtual State state() const = 0;
+    virtual PrinterEnum::State state() const = 0;
     virtual QList<QPageSize> supportedPageSizes() const = 0;
     virtual QPageSize defaultPageSize() const = 0;
     virtual bool supportsCustomPageSizes() const = 0;
@@ -46,8 +46,8 @@ public:
     virtual QPageSize minimumPhysicalPageSize() const = 0;
     virtual QPageSize maximumPhysicalPageSize() const = 0;
     virtual QList<int> supportedResolutions() const = 0;
-    virtual DuplexMode defaultDuplexMode() const = 0;
-    virtual QList<DuplexMode> supportedDuplexModes() const = 0;
+    virtual PrinterEnum::DuplexMode defaultDuplexMode() const = 0;
+    virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const = 0;
 
     virtual QList<PrinterInfo*> availablePrinters() = 0;
     virtual QStringList availablePrinterNames() = 0;

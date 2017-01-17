@@ -36,7 +36,7 @@ public:
     virtual QString location() const override;
     virtual QString makeAndModel() const override;
 
-    virtual State state() const override;
+    virtual PrinterEnum::State state() const override;
     virtual QList<QPageSize> supportedPageSizes() const override;
     virtual QPageSize defaultPageSize() const override;
     virtual bool supportsCustomPageSizes() const override;
@@ -44,8 +44,8 @@ public:
     virtual QPageSize minimumPhysicalPageSize() const override;
     virtual QPageSize maximumPhysicalPageSize() const override;
     virtual QList<int> supportedResolutions() const override;
-    virtual DuplexMode defaultDuplexMode() const override;
-    virtual QList<DuplexMode> supportedDuplexModes() const override;
+    virtual PrinterEnum::DuplexMode defaultDuplexMode() const override;
+    virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const override;
     virtual QList<PrinterInfo*> availablePrinters() override;
     virtual QStringList availablePrinterNames() override;
     virtual PrinterInfo* printerInfo(const QString &printerName) override;

@@ -64,7 +64,7 @@ public:
         return m_makeAndModel;
     }
 
-    virtual State state() const override
+    virtual PrinterEnum::State state() const override
     {
         return m_state;
     }
@@ -99,12 +99,12 @@ public:
 
     }
 
-    virtual DuplexMode defaultDuplexMode() const override
+    virtual PrinterEnum::DuplexMode defaultDuplexMode() const override
     {
         return m_defaultDuplexMode;
     }
 
-    virtual QList<DuplexMode> supportedDuplexModes() const override
+    virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const override
     {
         return m_supportedDuplexModes;
     }
@@ -128,13 +128,13 @@ public:
     QString m_location = QString::null;
     QString m_makeAndModel = QString::null;
 
-    State m_state = State::IdleState;
+    PrinterEnum::State m_state = PrinterEnum::State::IdleState;
 
     QPageSize m_defaultPageSize;
     QList<QPageSize> m_supportedPageSizes;
 
-    QList<DuplexMode> m_supportedDuplexModes;
-    DuplexMode m_defaultDuplexMode;
+    QList<PrinterEnum::DuplexMode> m_supportedDuplexModes;
+    PrinterEnum::DuplexMode m_defaultDuplexMode;
 
     QStringList m_availablePrinterNames;
     QList<PrinterInfo*> m_availablePrinters;

@@ -86,7 +86,7 @@ class PrinterFilter : public QSortFilterProxyModel
 public:
     explicit PrinterFilter();
     ~PrinterFilter();
-    void filterOnState(const State &state);
+    void filterOnState(const PrinterEnum::State &state);
     void filterOnRecent(const bool recent);
 
 protected:

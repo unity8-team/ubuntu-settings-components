@@ -114,7 +114,7 @@ public:
     }
 
     virtual QString printerSetErrorPolicy(const QString &name,
-                                          const ErrorPolicy &policy) override
+                                          const PrinterEnum::ErrorPolicy &policy) override
     {
         errorPolicies.insert(name, policy);
         return returnValue;
@@ -122,7 +122,7 @@ public:
     }
 
     virtual QString printerSetOpPolicy(const QString &name,
-                                       const OperationPolicy &policy) override
+                                       const PrinterEnum::OperationPolicy &policy) override
     {
         operationPolicies.insert(name, policy);
         return returnValue;
@@ -174,6 +174,19 @@ public:
 
     }
 
+    virtual cups_dest_t* makeDest(const QString &name,
+                                  const PrinterJob *options) override
+    {
+
+    }
+
+    virtual int printFileToDest(const QString &filepath,
+                                const QString &title,
+                                const cups_dest_t *dest) override
+    {
+
+    }
+
     void mockPrinterAdded(const QString &name)
     {
         Q_EMIT printerAdded(name);
@@ -203,8 +216,8 @@ public:
     QMap<QString, bool> shareds;
     QMap<QString, QString> infos;
     QMap<QString, QString> locations;
-    QMap<QString, ErrorPolicy> errorPolicies;
-    QMap<QString, OperationPolicy> operationPolicies;
+    QMap<QString, PrinterEnum::ErrorPolicy> errorPolicies;
+    QMap<QString, PrinterEnum::OperationPolicy> operationPolicies;
 };
 
 #endif // USC_PRINTERS_MOCKCUPSFACADE_H

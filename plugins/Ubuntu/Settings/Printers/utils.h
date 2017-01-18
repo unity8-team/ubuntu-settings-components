@@ -50,6 +50,19 @@ public:
         }
     }
 
+    static const QString duplexModeToUIString(const PrinterEnum::DuplexMode &mode)
+    {
+        // TODO: translate
+        switch (mode) {
+        case PrinterEnum::DuplexMode::DuplexNone:
+            return "None";
+        case PrinterEnum::DuplexMode::DuplexShortSide:
+            return "Short edge (flip)";
+        case PrinterEnum::DuplexMode::DuplexLongSide:
+            return "Long edge (standard)";
+        }
+    }
+
     static PrinterEnum::DuplexMode qDuplexModeToDuplexMode(const QPrinter::DuplexMode &mode)
     {
         switch(mode) {

@@ -72,7 +72,7 @@ private Q_SLOTS:
         }
         {
             QList<PrinterEnum::DuplexMode> modes({PrinterEnum::DuplexMode::DuplexNone, PrinterEnum::DuplexMode::DuplexLongSide});
-            QStringList strings({"None", "DuplexNoTumble"});
+            QStringList strings({"None", "Long edge (standard)"});
             QTest::newRow("multiple") << modes << strings;
         }
     }

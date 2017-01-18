@@ -98,7 +98,7 @@ QStringList Printer::supportedDuplexStrings() const
     Q_D(const Printer);
     QStringList list;
     Q_FOREACH(const PrinterEnum::DuplexMode &mode, supportedDuplexModes()) {
-        list << Utils::duplexModeToPpdChoice(mode);
+        list << Utils::duplexModeToUIString(mode);
     }
     return list;
 }

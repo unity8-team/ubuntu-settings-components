@@ -104,19 +104,30 @@ private Q_SLOTS:
 
     void testDuplex()
     {
+        QList<PrinterEnum::DuplexMode> modes = {
+                PrinterEnum::DuplexMode::DuplexNone,
+                PrinterEnum::DuplexMode::DuplexLongSide,
+                PrinterEnum::DuplexMode::DuplexShortSide
+        };
+        ((MockPrinterInfo *) m_mock_info)->m_supportedDuplexModes = modes;
+
         ((MockPrinterInfo *) m_mock_info)->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexNone;
         refreshInstance();
-        QCOMPARE(m_instance->duplex(), false);
+        QCOMPARE(m_instance->duplexMode(), modes.indexOf(PrinterEnum::DuplexMode::DuplexNone));
+        QCOMPARE(m_instance->getDuplexMode(), PrinterEnum::DuplexMode::DuplexNone);
 
-        m_instance->setDuplex(true);
-        QCOMPARE(m_instance->duplex(), true);
+        m_instance->setDuplexMode(modes.indexOf(PrinterEnum::DuplexMode::DuplexLongSide));
+        QCOMPARE(m_instance->duplexMode(), modes.indexOf(PrinterEnum::DuplexMode::DuplexLongSide));
+        QCOMPARE(m_instance->getDuplexMode(), PrinterEnum::DuplexMode::DuplexLongSide);
 
-        ((MockPrinterInfo *) m_mock_info)->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexAuto;
+        ((MockPrinterInfo *) m_mock_info)->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexShortSide;
         refreshInstance();
-        QCOMPARE(m_instance->duplex(), true);
+        QCOMPARE(m_instance->duplexMode(), modes.indexOf(PrinterEnum::DuplexMode::DuplexShortSide));
+        QCOMPARE(m_instance->getDuplexMode(), PrinterEnum::DuplexMode::DuplexShortSide);
 
-        m_instance->setDuplex(false);
-        QCOMPARE(m_instance->duplex(), false);
+        m_instance->setDuplexMode(modes.indexOf(PrinterEnum::DuplexMode::DuplexLongSide));
+        QCOMPARE(m_instance->duplexMode(), modes.indexOf(PrinterEnum::DuplexMode::DuplexLongSide));
+        QCOMPARE(m_instance->getDuplexMode(), PrinterEnum::DuplexMode::DuplexLongSide);
     }
 
     void testPrintFile()

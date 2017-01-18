@@ -42,7 +42,6 @@ class PRINTERS_DECL_EXPORT Printer : public QObject
     Q_DECLARE_PRIVATE(Printer)
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(ColorModel defaultColorModel READ defaultColorModel WRITE setDefaultColorModel NOTIFY defaultColorModelChanged)
-    Q_PROPERTY(bool duplex READ duplex WRITE setDuplex NOTIFY duplexChanged)
     Q_PROPERTY(QStringList supportedDuplexStrings READ supportedDuplexStrings CONSTANT)
     Q_PROPERTY(PrinterEnum::DuplexMode defaultDuplexMode READ defaultDuplexMode WRITE setDefaultDuplexMode NOTIFY defaultDuplexModeChanged)
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
@@ -66,7 +65,6 @@ public:
     ColorModel defaultColorModel() const;
     QList<ColorModel> supportedColorModels() const;
     int copies() const;
-    bool duplex() const;
     QList<PrinterEnum::DuplexMode> supportedDuplexModes() const;
     QStringList supportedDuplexStrings() const;
     PrinterEnum::DuplexMode defaultDuplexMode() const;
@@ -85,7 +83,6 @@ public:
     void setAccessControl(const PrinterEnum::AccessControl &accessControl);
     void setDefaultColorModel(const ColorModel &colorModel);
     void setDescription(const QString &description);
-    void setDuplex(const bool duplex);
     void setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode);
     void setEnabled(const bool enabled);
     void setErrorPolicy(const PrinterEnum::ErrorPolicy &errorPolicy);
@@ -119,7 +116,6 @@ Q_SIGNALS:
     void errorPolicyChanged();
     void usersChanged();
     void stateChanged();
-    void duplexChanged();
     void settingsChanged();
     void lastStateMessageChanged();
 

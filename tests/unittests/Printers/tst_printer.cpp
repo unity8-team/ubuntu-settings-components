@@ -72,7 +72,7 @@ private Q_SLOTS:
         }
         {
             QList<PrinterEnum::DuplexMode> modes({PrinterEnum::DuplexMode::DuplexNone, PrinterEnum::DuplexMode::DuplexLongSide});
-            QStringList strings({"None", "DuplexNoTumble"});
+            QStringList strings({"None", "Long edge (standard)"});
             QTest::newRow("multiple") << modes << strings;
         }
     }
@@ -86,15 +86,12 @@ private Q_SLOTS:
     }
     void testDefaultDuplexMode()
     {
-        ((MockPrinterInfo*) m_mockinfo)->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexAuto;
-        QCOMPARE(m_instance->defaultDuplexMode(), PrinterEnum::DuplexMode::DuplexAuto);
-    }
-    void testDuplex()
-    {
+        ((MockPrinterInfo*) m_mockinfo)->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexLongSide;
+        QCOMPARE(m_instance->defaultDuplexMode(), PrinterEnum::DuplexMode::DuplexLongSide);
         ((MockPrinterInfo*) m_mockinfo)->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexNone;
-        QCOMPARE(m_instance->duplex(), false);
-        ((MockPrinterInfo*) m_mockinfo)->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexAuto;
-        QCOMPARE(m_instance->duplex(), true);
+        QCOMPARE(m_instance->defaultDuplexMode(), PrinterEnum::DuplexMode::DuplexNone);
+        ((MockPrinterInfo*) m_mockinfo)->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexShortSide;
+        QCOMPARE(m_instance->defaultDuplexMode(), PrinterEnum::DuplexMode::DuplexShortSide);
     }
     void testSetDefaultDuplexMode()
     {

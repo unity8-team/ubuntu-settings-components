@@ -174,7 +174,7 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
             ret = printer->isDefault();
             break;
         case DuplexRole:
-            ret = Utils::duplexModeToPpdChoice(printer->defaultDuplexMode());
+            ret = printer->supportedDuplexModes().indexOf(printer->defaultDuplexMode());
             break;
         case SupportedDuplexModesRole:
             ret = printer->supportedDuplexStrings();
@@ -253,10 +253,11 @@ bool PrinterModel::setData(const QModelIndex &index, const QVariant &value, int 
             printer->setDescription(value.toString());
             break;
         case DuplexRole: {
-                /* FIXME: UI should not be concerned about strings, only the
-                index. */
-                PrinterEnum::DuplexMode mode = Utils::ppdChoiceToDuplexMode(value.toString());
-                printer->setDefaultDuplexMode(mode);
+                int index = value.toInt();
+                auto modes = printer->supportedDuplexModes();
+                if (index >= 0 && modes.size() > index) {
+                    printer->setDefaultDuplexMode(modes.at(index));
+                }
             }
             break;
         case PageSizeRole: {
@@ -283,7 +284,7 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
         names[SupportedColorModelsRole] = "supportedColorModels";
         names[CopiesRole] = "copies";
         names[DefaultPrinterRole] = "default";
-        names[DuplexRole] = "duplex";
+        names[DuplexRole] = "duplexMode";
         names[SupportedDuplexModesRole] = "supportedDuplexModes";
         names[NameRole] = "name";
         names[PrintRangeRole] = "printRange";
@@ -302,6 +303,18 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
     }
 
     return names;
+}
+
+QSharedPointer<Printer> PrinterModel::get(const int index)
+{
+    Q_D(const PrinterModel);
+
+    if (index > -1 && index < d->printers.count()) {
+        return d->printers.at(index);
+    } else {
+        qWarning() << "Invalid index:" << index;
+        return QSharedPointer<Printer>(Q_NULLPTR);
+    }
 }
 
 QSharedPointer<Printer> PrinterModel::getPrinterFromName(const QString &name)

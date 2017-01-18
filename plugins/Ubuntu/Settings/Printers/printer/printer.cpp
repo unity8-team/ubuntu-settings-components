@@ -87,12 +87,6 @@ int Printer::copies() const
 
 }
 
-bool Printer::duplex() const
-{
-    Q_D(const Printer);
-    return d->info->defaultDuplexMode() != PrinterEnum::DuplexMode::DuplexNone;
-}
-
 QList<PrinterEnum::DuplexMode> Printer::supportedDuplexModes() const
 {
     Q_D(const Printer);
@@ -104,7 +98,7 @@ QStringList Printer::supportedDuplexStrings() const
     Q_D(const Printer);
     QStringList list;
     Q_FOREACH(const PrinterEnum::DuplexMode &mode, supportedDuplexModes()) {
-        list << Utils::duplexModeToPpdChoice(mode);
+        list << Utils::duplexModeToUIString(mode);
     }
     return list;
 }
@@ -138,7 +132,8 @@ QString Printer::name() const
 
 PrinterEnum::Quality Printer::quality() const
 {
-
+    // FIXME: tmp return a valid quality
+    return PrinterEnum::Quality::NormalQuality;
 }
 
 QString Printer::description() const
@@ -222,11 +217,6 @@ void Printer::setDescription(const QString &description)
 {
     Q_D(const Printer);
     QString answer = d->cups->printerSetInfo(d->info->printerName(), description);
-}
-
-void Printer::setDuplex(const bool duplex)
-{
-    // TODO: this seems useless, maybe drop this setter?
 }
 
 void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)

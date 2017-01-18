@@ -76,10 +76,10 @@ public:
 
 private:
     QScopedPointer<PrinterModelPrivate> const d_ptr;
-    QTimer *m_update_timer;
+    QTimer m_update_timer;
 
 private Q_SLOTS:
-    void startTimer(int msecs);
+    void startUpdateTimer(int msecs);
     void update();
 
 Q_SIGNALS:

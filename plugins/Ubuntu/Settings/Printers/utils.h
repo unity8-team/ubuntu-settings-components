@@ -103,7 +103,7 @@ public:
             }
         }
 
-        if (ret.name == "Gray") {
+        if (ret.name.contains("Gray")) {
             ret.colorType = PrinterEnum::ColorModelType::GrayType;
         } else {
             ret.colorType = PrinterEnum::ColorModelType::ColorType;

@@ -34,7 +34,8 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(ColorModel colorModel READ colorModel WRITE setColorModel NOTIFY colorModelChanged)
+    Q_PROPERTY(int colorModel READ colorModel WRITE setColorModel NOTIFY colorModelChanged)
+    Q_PROPERTY(PrinterEnum::ColorModelType colorModelType READ colorModelType NOTIFY colorModelTypeChanged)
     Q_PROPERTY(int copies READ copies WRITE setCopies NOTIFY copiesChanged)
     Q_PROPERTY(bool duplex READ duplex WRITE setDuplex NOTIFY duplexChanged)
     Q_PROPERTY(bool landscape READ landscape WRITE setLandscape NOTIFY landscapeChanged)
@@ -50,7 +51,8 @@ public:
     explicit PrinterJob(Printer *printer, QObject *parent=Q_NULLPTR);
     ~PrinterJob();
 
-    ColorModel colorModel() const;
+    int colorModel() const;
+    PrinterEnum::ColorModelType colorModelType() const;
     int copies() const;
     bool duplex() const;
     bool landscape() const;
@@ -63,8 +65,9 @@ public:
     QString title() const;
 public Q_SLOTS:
     Q_INVOKABLE void cancel();
+    Q_INVOKABLE ColorModel getColorModel() const;
     Q_INVOKABLE void printFile(const QUrl &url);
-    void setColorModel(const ColorModel &colorModel);
+    void setColorModel(const int colorModel);
     void setCopies(const int copies);
     void setDuplex(const bool duplex);
     void setLandscape(const bool landscape);
@@ -79,6 +82,7 @@ private Q_SLOTS:
     void setState(const PrinterEnum::State &state);
 Q_SIGNALS:
     void colorModelChanged();
+    void colorModelTypeChanged();
     void copiesChanged();
     void duplexChanged();
     void landscapeChanged();
@@ -90,7 +94,7 @@ Q_SIGNALS:
     void stateChanged();
     void titleChanged();
 private:
-    ColorModel m_color_model;
+    int m_color_model;
     int m_copies;
     CupsFacade *m_cups;
     bool m_duplex;

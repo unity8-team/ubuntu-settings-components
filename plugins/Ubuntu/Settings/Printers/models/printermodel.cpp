@@ -26,19 +26,17 @@
 PrinterModel::PrinterModel(int timerMsec, QObject *parent)
     : QAbstractListModel(parent)
     , d_ptr(new PrinterModelPrivate(this))
-    , m_update_timer(Q_NULLPTR)
 {
     update();
-    startTimer(timerMsec);
+    startUpdateTimer(timerMsec);
 }
 
 PrinterModel::PrinterModel(PrinterInfo *info, CupsFacade *cups, int timerMsec, QObject *parent)
     : QAbstractListModel(parent)
     , d_ptr(new PrinterModelPrivate(this, info, cups))
-    , m_update_timer(Q_NULLPTR)
 {
     update();
-    startTimer(timerMsec);
+    startUpdateTimer(timerMsec);
 }
 
 PrinterModelPrivate::PrinterModelPrivate(PrinterModel *q)
@@ -58,12 +56,12 @@ PrinterModel::~PrinterModel()
 
 }
 
-void PrinterModel::startTimer(int msecs)
+void PrinterModel::startUpdateTimer(int msecs)
 {
     // Start a timer to poll for changes in the printers
-    m_update_timer = new QTimer(this);
-    connect(m_update_timer, SIGNAL(timeout()), this, SLOT(update()));
-    m_update_timer->start(msecs);
+    m_update_timer.setParent(this);
+    connect(&m_update_timer, SIGNAL(timeout()), this, SLOT(update()));
+    m_update_timer.start(msecs);
 }
 
 void PrinterModel::update()

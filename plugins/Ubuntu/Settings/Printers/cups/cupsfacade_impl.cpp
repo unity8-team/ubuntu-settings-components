@@ -291,33 +291,16 @@ QString CupsFacadeImpl::getPrinterInstance(const QString &name) const
 cups_dest_t* CupsFacadeImpl::makeDest(const QString &name,
                                       const PrinterJob *options)
 {
-    // Extract the cups name and instance from the m_name
-    QStringList split = name.split("/");
-
-    QString cups_name = split.takeFirst();
-    QString cups_instance = split.isEmpty() ? "" : split.takeFirst();
-
     // Get the cups dest
-    cups_dest_t *dest = cupsGetNamedDest(CUPS_HTTP_DEFAULT,
-                                         cups_name.toLocal8Bit().data(),
-                                         cups_instance.toLocal8Bit().data());
+    cups_dest_t *dest = helper.getDest(getPrinterName(name), getPrinterInstance(name));
 
     if (options->copies() > 1) {
         __CUPS_ADD_OPTION(dest, "copies", QString::number(options->copies()).toLocal8Bit());
     }
 
-    // FIXME: needs to know correct color models of printer?
-    // is this a reason for converting PrinterJob to QMap in Printer?
-    switch (options->colorModel().colorType) {
-    case PrinterEnum::ColorModelType::ColorType:
-        __CUPS_ADD_OPTION(dest, "ColorModel", "RGB");
-        break;
-    case PrinterEnum::ColorModelType::GrayType:
-    default:
-        __CUPS_ADD_OPTION(dest, "ColorModel", "KGray");
-        break;
-    }
+    __CUPS_ADD_OPTION(dest, "ColorModel", options->getColorModel().name.toLocal8Bit());
 
+    // FIXME: check correct
     if (options->duplex()) {
         __CUPS_ADD_OPTION(dest, "Duplex", "DuplexAuto");
     } else {
@@ -330,7 +313,7 @@ cups_dest_t* CupsFacadeImpl::makeDest(const QString &name,
 
     if (options->printRangeMode() == PrinterEnum::PrintRange::PageRange
             && !options->printRange().isEmpty()) {
-        __CUPS_ADD_OPTION(dest, "page-ranges", options->printRange().toLocal8Bit().data());
+        __CUPS_ADD_OPTION(dest, "page-ranges", options->printRange().toLocal8Bit());
     }
 
     QString printQuality = "";
@@ -360,8 +343,8 @@ int CupsFacadeImpl::printFileToDest(const QString &filepath,
 {
     qDebug() << "Printing:" << filepath << title << dest->name << dest->num_options;
     return cupsPrintFile(dest->name,
-                         filepath.toLocal8Bit().data(),
-                         title.toLocal8Bit().data(),
+                         filepath.toLocal8Bit(),
+                         title.toLocal8Bit(),
                          dest->num_options,
                          dest->options);
 }

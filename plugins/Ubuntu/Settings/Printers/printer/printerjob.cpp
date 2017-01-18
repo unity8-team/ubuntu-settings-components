@@ -23,7 +23,7 @@
 
 PrinterJob::PrinterJob(QObject *parent)
     : QObject(parent)
-    , m_color_model()
+    , m_color_model(0)
     , m_copies(1)
     , m_cups(new CupsFacadeImpl())
     , m_duplex(false)
@@ -64,9 +64,14 @@ void PrinterJob::cancel()
 
 }
 
-ColorModel PrinterJob::colorModel() const
+int PrinterJob::colorModel() const
 {
     return m_color_model;
+}
+
+PrinterEnum::ColorModelType PrinterJob::colorModelType() const
+{
+    return getColorModel().colorType;
 }
 
 int PrinterJob::copies() const
@@ -79,6 +84,15 @@ bool PrinterJob::duplex() const
     return m_duplex;
 }
 
+ColorModel PrinterJob::getColorModel() const
+{
+    if (m_printer) {
+        return m_printer->supportedColorModels().at(colorModel());
+    } else {
+        return ColorModel();
+    }
+}
+
 bool PrinterJob::landscape() const
 {
     return m_landscape;
@@ -88,7 +102,7 @@ void PrinterJob::loadDefaults()
 {
     if (m_printer) {
         // Load defaults from printer
-        setColorModel(m_printer->defaultColorModel());
+        setColorModel(m_printer->supportedColorModels().indexOf(m_printer->defaultColorModel()));
         setDuplex(m_printer->duplex());
         setQuality(m_printer->quality());
     }
@@ -137,12 +151,13 @@ PrinterEnum::State PrinterJob::state() const
     return m_state;
 }
 
-void PrinterJob::setColorModel(const ColorModel &colorModel)
+void PrinterJob::setColorModel(const int colorModel)
 {
     if (m_color_model != colorModel) {
         m_color_model = colorModel;
 
         Q_EMIT colorModelChanged();
+        Q_EMIT colorModelTypeChanged();
     }
 }
 

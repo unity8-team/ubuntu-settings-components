@@ -30,8 +30,6 @@ struct PrinterModelPrivate
     /* FIXME: there's currently no need to share the Printer obj with QML, so
     this should be normal pointers that are deletedLater. */
     QList<QSharedPointer<Printer>> printers;
-
-    void init();
 };
 
 #endif // USC_PRINTERS_PRINTERMODELPRIVATE_H

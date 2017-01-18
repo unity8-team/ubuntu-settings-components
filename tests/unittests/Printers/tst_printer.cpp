@@ -188,6 +188,18 @@ private Q_SLOTS:
         Printer p(info, cups);
         QCOMPARE(p.supportedColorModels(), models);
     }
+    void testIsDefault_data()
+    {
+        QTest::addColumn<bool>("isDefault");
+        QTest::newRow("default") << true;
+        QTest::newRow("not default") << false;
+    }
+    void testIsDefault()
+    {
+        QFETCH(bool, isDefault);
+        ((MockPrinterInfo*) m_mockinfo)->m_defaultPrinterName = isDefault ? m_printerName : "some-other";
+        QCOMPARE(m_instance->isDefault(), isDefault);
+    }
 private:
     QString m_printerName = "my-printer";
     CupsFacade *m_mockcups = nullptr;

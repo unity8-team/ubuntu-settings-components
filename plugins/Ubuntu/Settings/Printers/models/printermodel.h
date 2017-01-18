@@ -46,6 +46,7 @@ public:
         ColorModelRole = Qt::UserRole,
         SupportedColorModelsRole,
         CopiesRole,
+        DefaultPrinterRole,
         DuplexRole,
         SupportedDuplexModesRole,
         NameRole,
@@ -96,8 +97,15 @@ public:
     void filterOnRecent(const bool recent);
 
 protected:
-    virtual bool filterAcceptsRow(int, const QModelIndex&) const override;
-    virtual bool lessThan(const QModelIndex&, const QModelIndex&) const override;
+    virtual bool filterAcceptsRow(
+        int sourceRow, const QModelIndex &sourceParent) const override;
+    virtual bool lessThan(const QModelIndex &left,
+                          const QModelIndex &right) const override;
+private:
+    PrinterEnum::State m_state = PrinterEnum::State::IdleState;
+    bool m_stateEnabled = false;
+    bool m_recent = false;
+    bool m_recentEnabled = false;
 };
 
 #endif // USC_PRINTER_MODEL_H

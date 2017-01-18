@@ -52,6 +52,7 @@ public:
     virtual QList<PrinterInfo*> availablePrinters() = 0;
     virtual QStringList availablePrinterNames() = 0;
     virtual PrinterInfo* printerInfo(const QString &printerName) = 0;
+    virtual QString defaultPrinterName() = 0;
 
 protected:
     const QString m_printerName;

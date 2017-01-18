@@ -44,13 +44,17 @@ class PRINTERS_DECL_EXPORT Printers : public QObject
     QScopedPointer<PrintersPrivate> const d_ptr;
 
 public:
-    explicit Printers(QObject *parent = nullptr);
-    explicit Printers(PrinterInfo *info, CupsFacade *cups, QObject *parent = nullptr);
+    explicit Printers(int printerUpdateIntervalMSecs = 5000, QObject *parent = nullptr);
+
+    // Printers takes ownership of info and cups objects.
+    explicit Printers(PrinterInfo *info, CupsFacade *cups,
+                      int printerUpdateIntervalMSecs = 5000,
+                      QObject *parent = nullptr);
     ~Printers();
 
-    QAbstractItemModel* allPrinters() const;
-    QAbstractItemModel* recentPrinters() const;
-    QAbstractItemModel* printJobs() const;
+    QAbstractItemModel* allPrinters();
+    QAbstractItemModel* recentPrinters();
+    QAbstractItemModel* printJobs();
     QString defaultPrinterName() const;
 
     void setDefaultPrinterName(const QString &name);

@@ -133,3 +133,8 @@ PrinterInfo* PrinterInfoImpl::printerInfo(const QString &printerName)
 {
 
 }
+
+QString PrinterInfoImpl::defaultPrinterName()
+{
+    return QPrinterInfo::defaultPrinterName();
+}

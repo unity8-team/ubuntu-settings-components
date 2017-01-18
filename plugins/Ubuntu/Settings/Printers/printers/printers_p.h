@@ -23,12 +23,15 @@ struct PrintersPrivate
 {
     Q_DISABLE_COPY(PrintersPrivate)
     Q_DECLARE_PUBLIC(Printers)
-    explicit PrintersPrivate(Printers *q);
-    explicit PrintersPrivate(Printers *q, PrinterInfo *info, CupsFacade *cups);
+    explicit PrintersPrivate(Printers *q, int printerUpdateIntervalMSecs);
+    explicit PrintersPrivate(Printers *q, PrinterInfo *info, CupsFacade *cups,
+                             int printerUpdateIntervalMSecs);
+    ~PrintersPrivate();
     CupsFacade *cups;
     Printers *q_ptr;
     PrinterInfo *info;
     PrinterModel model;
+    PrinterFilter allPrinters;
     PrinterFilter recentPrinters;
 };
 

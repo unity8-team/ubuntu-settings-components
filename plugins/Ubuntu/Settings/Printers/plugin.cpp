@@ -17,29 +17,31 @@
 #include "plugin.h"
 
 #include "enums.h"
-#include "models/printermodel.h"
+// #include "models/printermodel.h"
 #include "printer/printer.h"
 #include "printer/printerjob.h"
+#include "printers/printers.h"
 
 #include <QtQml/qqml.h>
 #include <QSharedPointer>
 
-// static QObject* p_singletonprovider(QQmlEngine *engine, QJSEngine *scriptEngine)
-// {
-//     Q_UNUSED(engine)
-//     Q_UNUSED(scriptEngine)
+static QObject* p_singletonprovider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
 
-//     return new UbuntuSettingsPrinters;
-// }
+    return new Printers;
+}
 
 void UbuntuSettingsComponentsPrintersPlugin::registerTypes(const char *uri)
 {
-    // qmlRegisterSingletonType<UbuntuSettingsPrinters>(
-    //     uri, 0, 1, "UbuntuSettingsPrinters", p_singletonprovider
-    // );
+    qmlRegisterSingletonType<Printers>(
+        uri, 0, 1, "Printers", p_singletonprovider
+    );
 
     // FIXME: do not expose this model, since QAbstractItemModel will suffice.
     qmlRegisterType<PrinterModel>(uri, 0, 1, "PrinterModel");
+    // qmlRegisterUncreatableType<QAbstractItemModel>();
     qmlRegisterUncreatableType<Printer>(
         uri, 0, 1, "Printer", "use Printers to get a list of Printers."
     );

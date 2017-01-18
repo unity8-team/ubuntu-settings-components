@@ -124,9 +124,15 @@ public:
 
     }
 
+    virtual QString defaultPrinterName() override
+    {
+        return m_defaultPrinterName;
+    }
+
     QString m_description = QString::null;
     QString m_location = QString::null;
     QString m_makeAndModel = QString::null;
+    QString m_defaultPrinterName = QString::null;
 
     PrinterEnum::State m_state = PrinterEnum::State::IdleState;
 

@@ -14,50 +14,69 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "cups/cupsfacade_impl.h"
+#include "printer/printerinfo_impl.h"
 #include "printers/printers.h"
 #include "printers/printers_p.h"
 
-Printers::Printers(QObject *parent)
-    : QObject(parent)
-    , d_ptr(new PrintersPrivate(this))
-{
+#include <QQmlEngine>
 
+Printers::Printers(int printerUpdateIntervalMSecs, QObject *parent)
+    : QObject(parent)
+    , d_ptr(new PrintersPrivate(this, printerUpdateIntervalMSecs))
+{
 }
 
-Printers::Printers(PrinterInfo *info, CupsFacade *cups, QObject *parent)
+Printers::Printers(PrinterInfo *info, CupsFacade *cups,
+                   int printerUpdateIntervalMSecs, QObject *parent)
     : QObject(parent)
-    , d_ptr(new PrintersPrivate(this, info, cups))
+    , d_ptr(new PrintersPrivate(this, info, cups, printerUpdateIntervalMSecs))
 {
-
 }
 
 Printers::~Printers()
 {
-
 }
 
-PrintersPrivate::PrintersPrivate(Printers *q)
+PrintersPrivate::PrintersPrivate(Printers *q, int printerUpdateIntervalMSecs)
+    : PrintersPrivate(q, new PrinterInfoImpl, new CupsFacadeImpl,
+                      printerUpdateIntervalMSecs)
 {
-
 }
 
-PrintersPrivate::PrintersPrivate(Printers *q, PrinterInfo *info, CupsFacade *cups)
+PrintersPrivate::PrintersPrivate(Printers *q, PrinterInfo *info,
+                                 CupsFacade *cups,
+                                 int printerUpdateIntervalMSecs)
+    : model(info, cups, printerUpdateIntervalMSecs)
 {
     this->info = info;
     this->cups = cups;
+
+    allPrinters.setSourceModel(&model);
+    allPrinters.setSortRole(PrinterModel::Roles::DefaultPrinterRole);
+    allPrinters.sort(0, Qt::DescendingOrder);
 }
 
-QAbstractItemModel* Printers::allPrinters() const
+PrintersPrivate::~PrintersPrivate()
+{
+    delete cups;
+    delete info;
+}
+
+QAbstractItemModel* Printers::allPrinters()
+{
+    Q_D(Printers);
+    auto ret = &d->allPrinters;
+    QQmlEngine::setObjectOwnership(ret, QQmlEngine::CppOwnership);
+    return ret;
+}
+
+QAbstractItemModel* Printers::recentPrinters()
 {
 
 }
 
-QAbstractItemModel* Printers::recentPrinters() const
-{
-
-}
-
-QAbstractItemModel* Printers::printJobs() const
+QAbstractItemModel* Printers::printJobs()
 {
 
 }

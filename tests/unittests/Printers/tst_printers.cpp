@@ -27,25 +27,12 @@
 
 Q_DECLARE_METATYPE(CupsFacade*)
 Q_DECLARE_METATYPE(PrinterInfo*)
+Q_DECLARE_METATYPE(QList<PrinterInfo*>)
 
 class TestPrinters : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
-    // void init()
-    // {
-    //     m_mockcups = new MockCupsFacade;
-    //     m_mockinfo = new MockPrinterInfo;
-    //     m_instance = new Printers(m_mockinfo, m_mockcups);
-    // }
-    // void cleanup()
-    // {
-    //     QSignalSpy destroyedSpy(m_instance, SIGNAL(destroyed(QObject*)));
-    //     m_instance->deleteLater();
-    //     QTRY_COMPARE(destroyedSpy.count(), 1);
-    //     delete m_mockinfo;
-    //     delete m_mockcups;
-    // }
     void testInstantiation_data()
     {
         QTest::addColumn<CupsFacade*>("cups");
@@ -64,8 +51,59 @@ private Q_SLOTS:
 
         Printers printers(info, cups);
     }
-};
+    void testAllPrintersFilter_data()
+    {
+        QTest::addColumn<QList<PrinterInfo*>>("in");
+        QTest::addColumn<QList<PrinterInfo*>>("out");
 
+        {
+            auto in = QList<PrinterInfo*>();
+            auto out = QList<PrinterInfo*>();
+
+            auto a = new MockPrinterInfo("printer-a");
+            auto b = new MockPrinterInfo("printer-b");
+
+            in << a << b;
+            out << a << b;
+
+            QTest::newRow("no defaults") << in << out;
+        }
+        {
+            auto in = QList<PrinterInfo*>();
+            auto out = QList<PrinterInfo*>();
+
+            auto a = new MockPrinterInfo("printer-a");
+            auto b = new MockPrinterInfo("printer-b");
+            b->m_defaultPrinterName = "printer-b";
+
+            in << a << b;
+            out << b << a;
+
+            QTest::newRow("have default") << in << out;
+        }
+    }
+    void testAllPrintersFilter()
+    {
+        QFETCH(QList<PrinterInfo*>, in);
+        QFETCH(QList<PrinterInfo*>, out);
+
+        CupsFacade* cups = new MockCupsFacade;
+        PrinterInfo* info = new MockPrinterInfo;
+
+        ((MockPrinterInfo*) info)->m_availablePrinters = in;
+
+        Printers printers(info, cups, 100);
+        auto all = printers.allPrinters();
+
+        QTRY_COMPARE_WITH_TIMEOUT(all->rowCount(), out.size(), 101);
+        for (int i = 0; i < all->rowCount(); i++) {
+            QCOMPARE(
+                 all->data(all->index(i, 0), Qt::DisplayRole).toString(),
+                 out.at(i)->printerName()
+            );
+        }
+    }
+};
 
 QTEST_GUILESS_MAIN(TestPrinters)
 #include "tst_printers.moc"

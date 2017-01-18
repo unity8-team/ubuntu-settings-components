@@ -189,6 +189,12 @@ QString Printer::lastStateMessage() const
 
 }
 
+bool Printer::isDefault()
+{
+    Q_D(Printer);
+    return name() == d->info->defaultPrinterName();
+}
+
 void Printer::setDefaultColorModel(const ColorModel &colorModel)
 {
     Q_D(Printer);

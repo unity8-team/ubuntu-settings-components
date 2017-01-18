@@ -49,6 +49,7 @@ public:
     virtual QList<PrinterInfo*> availablePrinters() override;
     virtual QStringList availablePrinterNames() override;
     virtual PrinterInfo* printerInfo(const QString &printerName) override;
+    virtual QString defaultPrinterName() override;
 
 private:
     QPrinterInfo m_info;

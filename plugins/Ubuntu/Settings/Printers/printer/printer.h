@@ -80,6 +80,7 @@ public:
     QStringList users() const;
     PrinterEnum::State state() const;
     QString lastStateMessage() const;
+    bool isDefault();
 
     void setAccessControl(const PrinterEnum::AccessControl &accessControl);
     void setDefaultColorModel(const ColorModel &colorModel);

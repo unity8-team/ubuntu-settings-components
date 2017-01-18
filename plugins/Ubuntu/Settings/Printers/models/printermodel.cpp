@@ -170,6 +170,9 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
         // case CopiesRole:
         //     ret = printer->copies();
         //     break;
+        case DefaultPrinterRole:
+            ret = printer->isDefault();
+            break;
         case DuplexRole:
             ret = Utils::duplexModeToPpdChoice(printer->defaultDuplexMode());
             break;
@@ -279,6 +282,7 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
         names[ColorModelRole] = "colorModel";
         names[SupportedColorModelsRole] = "supportedColorModels";
         names[CopiesRole] = "copies";
+        names[DefaultPrinterRole] = "default";
         names[DuplexRole] = "duplex";
         names[SupportedDuplexModesRole] = "supportedDuplexModes";
         names[NameRole] = "name";
@@ -306,10 +310,6 @@ QSharedPointer<Printer> PrinterModel::getPrinterFromName(const QString &name)
     return QSharedPointer<Printer>(nullptr);
 }
 
-void PrinterModelPrivate::init()
-{
-}
-
 PrinterFilter::PrinterFilter()
 {
 
@@ -330,12 +330,35 @@ void PrinterFilter::filterOnRecent(const bool recent)
     Q_UNUSED(recent);
 }
 
-bool PrinterFilter::filterAcceptsRow(int, const QModelIndex&) const
+bool PrinterFilter::filterAcceptsRow(int sourceRow,
+                                     const QModelIndex &sourceParent) const
 {
-    return false;
+    bool accepts = true;
+    QModelIndex childIndex = sourceModel()->index(sourceRow, 0, sourceParent);
+
+    if (accepts && m_recentEnabled) {
+        // TODO: implement recent
+    }
+
+    if (accepts && m_stateEnabled) {
+        const PrinterEnum::State state =
+            (PrinterEnum::State) childIndex.model()->data(
+                childIndex, PrinterModel::StateRole
+            ).toInt();
+        accepts = m_state == state;
+    }
+
+    return accepts;
+}
+bool PrinterFilter::lessThan(const QModelIndex &left,
+                             const QModelIndex &right) const
+{
+    QVariant leftData = sourceModel()->data(left, sortRole());
+    QVariant rightData = sourceModel()->data(right, sortRole());
+    if ((QMetaType::Type) leftData.type() == QMetaType::Bool) {
+        return leftData.toInt() < rightData.toInt();
+    } else {
+        return leftData < rightData;
+    }
 }
 
-bool PrinterFilter::lessThan(const QModelIndex&, const QModelIndex&) const
-{
-    return false;
-}

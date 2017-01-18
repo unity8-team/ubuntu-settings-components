@@ -98,7 +98,7 @@ private Q_SLOTS:
         QTRY_COMPARE_WITH_TIMEOUT(all->rowCount(), out.size(), 101);
         for (int i = 0; i < all->rowCount(); i++) {
             QCOMPARE(
-                 all->data(all->index(i, 0), Qt::DisplayRole).toString(),
+                 all->data(all->index(i, 0)).toString(),
                  out.at(i)->printerName()
             );
         }

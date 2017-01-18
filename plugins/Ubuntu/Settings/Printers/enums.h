@@ -79,7 +79,6 @@ public:
     enum class DuplexMode
     {
         DuplexNone = 0,
-        DuplexAuto,
         DuplexLongSide,
         DuplexShortSide,
     };

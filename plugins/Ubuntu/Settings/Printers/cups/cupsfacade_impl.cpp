@@ -299,13 +299,7 @@ cups_dest_t* CupsFacadeImpl::makeDest(const QString &name,
     }
 
     __CUPS_ADD_OPTION(dest, "ColorModel", options->getColorModel().name.toLocal8Bit());
-
-    // FIXME: check correct
-    if (options->duplex()) {
-        __CUPS_ADD_OPTION(dest, "Duplex", "DuplexAuto");
-    } else {
-        __CUPS_ADD_OPTION(dest, "Duplex", "DuplexNone");
-    }
+    __CUPS_ADD_OPTION(dest, "Duplex", Utils::duplexModeToPpdChoice(options->getDuplexMode()).toLocal8Bit());
 
     if (options->landscape()) {
         __CUPS_ADD_OPTION(dest, "landscape", "");

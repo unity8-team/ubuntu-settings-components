@@ -26,8 +26,9 @@ PrinterJob::PrinterJob(QObject *parent)
     , m_color_model(0)
     , m_copies(1)
     , m_cups(new CupsFacadeImpl())
-    , m_duplex(false)
+    , m_duplex_mode(0)
     , m_printer(Q_NULLPTR)
+    , m_printer_name(QStringLiteral(""))
     , m_print_range(QStringLiteral(""))
     , m_print_range_mode(PrinterEnum::PrintRange::AllPages)
     , m_quality(PrinterEnum::Quality::NormalQuality)
@@ -44,6 +45,7 @@ PrinterJob::PrinterJob(Printer *printer, QObject *parent)
     , m_copies(1)
     , m_cups(new CupsFacadeImpl())
     , m_printer(printer)
+    , m_printer_name(QStringLiteral(""))
     , m_print_range(QStringLiteral(""))
     , m_print_range_mode(PrinterEnum::PrintRange::AllPages)
     // TODO: Do we need a separate Job state?
@@ -79,17 +81,26 @@ int PrinterJob::copies() const
     return m_copies;
 }
 
-bool PrinterJob::duplex() const
+int PrinterJob::duplexMode() const
 {
-    return m_duplex;
+    return m_duplex_mode;
 }
 
 ColorModel PrinterJob::getColorModel() const
 {
-    if (m_printer) {
+    if (m_printer && colorModel() > -1 && colorModel() < m_printer->supportedColorModels().count()) {
         return m_printer->supportedColorModels().at(colorModel());
     } else {
         return ColorModel();
+    }
+}
+
+PrinterEnum::DuplexMode PrinterJob::getDuplexMode() const
+{
+    if (m_printer && duplexMode() > -1 && duplexMode() < m_printer->supportedDuplexModes().count()) {
+        return m_printer->supportedDuplexModes().at(duplexMode());
+    } else {
+        return PrinterEnum::DuplexMode::DuplexNone;
     }
 }
 
@@ -103,7 +114,7 @@ void PrinterJob::loadDefaults()
     if (m_printer) {
         // Load defaults from printer
         setColorModel(m_printer->supportedColorModels().indexOf(m_printer->defaultColorModel()));
-        setDuplex(m_printer->duplex());
+        setDuplexMode(m_printer->supportedDuplexModes().indexOf(m_printer->defaultDuplexMode()));
         setQuality(m_printer->quality());
     }
 }
@@ -174,12 +185,12 @@ void PrinterJob::setCopies(const int copies)
     }
 }
 
-void PrinterJob::setDuplex(const bool duplex)
+void PrinterJob::setDuplexMode(const int duplexMode)
 {
-    if (m_duplex != duplex) {
-        m_duplex = duplex;
+    if (m_duplex_mode != duplexMode) {
+        m_duplex_mode = duplexMode;
 
-        Q_EMIT duplexChanged();
+        Q_EMIT duplexModeChanged();
     }
 }
 

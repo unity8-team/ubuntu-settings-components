@@ -91,9 +91,9 @@ MainView {
                         }
                         text: "Duplex"
                         values: printer.supportedDuplexModes
-                        onSelectedIndexChanged: printer.duplex = values[selectedIndex]
-                        Component.onCompleted: selectedIndex =
-                            printer.supportedDuplexModes.indexOf(printer.duplex)
+                        onSelectedIndexChanged: printer.duplexMode = selectedIndex
+                        Component.onCompleted: selectedIndex = printer.duplexMode
+                        // TODO: should be disabled when duplex isn't supported
                     }
 
                     ListItems.ValueSelector {

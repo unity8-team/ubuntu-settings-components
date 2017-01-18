@@ -110,7 +110,9 @@ QList<PrinterEnum::DuplexMode> PrinterInfoImpl::supportedDuplexModes() const
 {
     QList<PrinterEnum::DuplexMode> list;
     Q_FOREACH(const QPrinter::DuplexMode mode, m_info.supportedDuplexModes()) {
-        list.append(Utils::qDuplexModeToDuplexMode(mode));
+        if (mode != QPrinter::DuplexAuto) {
+            list.append(Utils::qDuplexModeToDuplexMode(mode));
+        }
     }
     return list;
 }

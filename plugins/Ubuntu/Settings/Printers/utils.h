@@ -34,8 +34,6 @@ public:
             return PrinterEnum::DuplexMode::DuplexShortSide;
         else if (choice == "DuplexNoTumble")
             return PrinterEnum::DuplexMode::DuplexLongSide;
-        else if (choice == "Auto")
-            return PrinterEnum::DuplexMode::DuplexAuto;
         else
             return PrinterEnum::DuplexMode::DuplexNone;
     }
@@ -45,8 +43,6 @@ public:
         switch (mode) {
         case PrinterEnum::DuplexMode::DuplexNone:
             return "None";
-        case PrinterEnum::DuplexMode::DuplexAuto:
-            return "Auto";
         case PrinterEnum::DuplexMode::DuplexShortSide:
             return "DuplexTumble";
         case PrinterEnum::DuplexMode::DuplexLongSide:
@@ -60,7 +56,6 @@ public:
         case QPrinter::DuplexNone:
             return PrinterEnum::DuplexMode::DuplexNone;
         case QPrinter::DuplexAuto:
-            return PrinterEnum::DuplexMode::DuplexAuto;
         case QPrinter::DuplexLongSide:
             return PrinterEnum::DuplexMode::DuplexLongSide;
         case QPrinter::DuplexShortSide:

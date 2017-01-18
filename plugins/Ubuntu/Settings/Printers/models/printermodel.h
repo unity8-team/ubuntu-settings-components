@@ -74,6 +74,7 @@ public:
 
     QSharedPointer<Printer> getPrinterFromName(const QString &name);
 
+    Q_INVOKABLE QSharedPointer<Printer> get(const int index);
 private:
     QScopedPointer<PrinterModelPrivate> const d_ptr;
     QTimer m_update_timer;

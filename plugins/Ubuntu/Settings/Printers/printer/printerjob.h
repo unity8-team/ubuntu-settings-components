@@ -37,7 +37,7 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
     Q_PROPERTY(int colorModel READ colorModel WRITE setColorModel NOTIFY colorModelChanged)
     Q_PROPERTY(PrinterEnum::ColorModelType colorModelType READ colorModelType NOTIFY colorModelTypeChanged)
     Q_PROPERTY(int copies READ copies WRITE setCopies NOTIFY copiesChanged)
-    Q_PROPERTY(bool duplex READ duplex WRITE setDuplex NOTIFY duplexChanged)
+    Q_PROPERTY(int duplexMode READ duplexMode WRITE setDuplexMode NOTIFY duplexModeChanged)
     Q_PROPERTY(bool landscape READ landscape WRITE setLandscape NOTIFY landscapeChanged)
 //    Q_PROPERTY(Printer *printer READ printer WRITE setPrinter NOTIFY printerChanged)
     Q_PROPERTY(QString printerName READ printerName WRITE setPrinterName NOTIFY printerNameChanged)
@@ -54,7 +54,7 @@ public:
     int colorModel() const;
     PrinterEnum::ColorModelType colorModelType() const;
     int copies() const;
-    bool duplex() const;
+    int duplexMode() const;
     bool landscape() const;
 //    Printer *printer() const;
     QString printerName() const;
@@ -65,11 +65,12 @@ public:
     QString title() const;
 public Q_SLOTS:
     Q_INVOKABLE void cancel();
-    Q_INVOKABLE ColorModel getColorModel() const;
+    PrinterEnum::DuplexMode getDuplexMode() const;
+    ColorModel getColorModel() const;
     Q_INVOKABLE void printFile(const QUrl &url);
     void setColorModel(const int colorModel);
     void setCopies(const int copies);
-    void setDuplex(const bool duplex);
+    void setDuplexMode(const int duplexMode);
     void setLandscape(const bool landscape);
 //    void setPrinter(Printer *printer);
     void setPrinterName(const QString &printerName);
@@ -84,7 +85,7 @@ Q_SIGNALS:
     void colorModelChanged();
     void colorModelTypeChanged();
     void copiesChanged();
-    void duplexChanged();
+    void duplexModeChanged();
     void landscapeChanged();
 //    void printerChanged();
     void printerNameChanged();
@@ -97,7 +98,7 @@ private:
     int m_color_model;
     int m_copies;
     CupsFacade *m_cups;
-    bool m_duplex;
+    int m_duplex_mode;
     bool m_landscape;
     Printer *m_printer;
     QString m_printer_name;

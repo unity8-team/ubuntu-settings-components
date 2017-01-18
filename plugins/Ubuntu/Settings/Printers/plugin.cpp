@@ -38,10 +38,6 @@ void UbuntuSettingsComponentsPrintersPlugin::registerTypes(const char *uri)
     qmlRegisterSingletonType<Printers>(
         uri, 0, 1, "Printers", p_singletonprovider
     );
-
-    // FIXME: do not expose this model, since QAbstractItemModel will suffice.
-    qmlRegisterType<PrinterModel>(uri, 0, 1, "PrinterModel");
-    // qmlRegisterUncreatableType<QAbstractItemModel>();
     qmlRegisterUncreatableType<Printer>(
         uri, 0, 1, "Printer", "use Printers to get a list of Printers."
     );

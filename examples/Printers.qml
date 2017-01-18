@@ -28,10 +28,6 @@ MainView {
     width: units.gu(50)
     height: units.gu(90)
 
-    PrinterModel {
-        id: printerModel
-    }
-
     Component {
         id: printerPage
 
@@ -145,12 +141,13 @@ MainView {
             ListView {
                 id: printerList
                 anchors { fill: parent }
-                model: printerModel
+                model: Printers.allPrinters
                 delegate: ListItem {
                     height: modelLayout.height + (divider.visible ? divider.height : 0)
                     ListItemLayout {
                         id: modelLayout
                         title.text: displayName
+                        title.font.bold: model.default
                         subtitle.text: description
 
                         Icon {

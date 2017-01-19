@@ -107,15 +107,6 @@ public:
     };
     Q_ENUM(PrintRange)
 
-    enum class Quality
-    {
-        DraftQuality = 0,
-        NormalQuality,
-        BestQuality,
-        PhotoQuality,
-    };
-    Q_ENUM(Quality)
-
     enum class State
     {
         IdleState = 0,

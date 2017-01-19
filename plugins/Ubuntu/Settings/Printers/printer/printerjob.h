@@ -43,7 +43,7 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
     Q_PROPERTY(QString printerName READ printerName WRITE setPrinterName NOTIFY printerNameChanged)
     Q_PROPERTY(QString printRange READ printRange WRITE setPrintRange NOTIFY printRangeChanged)
     Q_PROPERTY(PrinterEnum::PrintRange printRangeMode READ printRangeMode WRITE setPrintRangeMode NOTIFY printRangeModeChanged)
-    Q_PROPERTY(PrinterEnum::Quality quality READ quality WRITE setQuality NOTIFY qualityChanged)
+    Q_PROPERTY(int quality READ quality WRITE setQuality NOTIFY qualityChanged)
     Q_PROPERTY(PrinterEnum::State state READ state NOTIFY stateChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
 public:
@@ -60,13 +60,14 @@ public:
     QString printerName() const;
     QString printRange() const;
     PrinterEnum::PrintRange printRangeMode() const;
-    PrinterEnum::Quality quality() const;
+    int quality() const;
     PrinterEnum::State state() const;
     QString title() const;
 public Q_SLOTS:
     Q_INVOKABLE void cancel();
     PrinterEnum::DuplexMode getDuplexMode() const;
     ColorModel getColorModel() const;
+    PrintQuality getPrintQuality() const;
     Q_INVOKABLE void printFile(const QUrl &url);
     void setColorModel(const int colorModel);
     void setCopies(const int copies);
@@ -76,7 +77,7 @@ public Q_SLOTS:
     void setPrinterName(const QString &printerName);
     void setPrintRange(const QString &printRange);
     void setPrintRangeMode(const PrinterEnum::PrintRange printRangeMode);
-    void setQuality(const PrinterEnum::Quality &quality);
+    void setQuality(const int &quality);
     void setTitle(const QString &title);
 private Q_SLOTS:
     void loadDefaults();
@@ -104,7 +105,7 @@ private:
     QString m_printer_name;
     QString m_print_range;
     PrinterEnum::PrintRange m_print_range_mode;
-    PrinterEnum::Quality m_quality;
+    int m_quality;
     PrinterEnum::State m_state;
     QString m_title;
 };

@@ -164,9 +164,6 @@ private Q_SLOTS:
     void testDefaultColorMode()
     {
         ColorModel colorModel;
-        ((MockCupsFacade*) m_mockcups)->printerOptions[m_printerName].insert(
-            "DefaultColorModel", QVariant::fromValue(colorModel));
-
         QCOMPARE(m_instance->defaultColorModel(), colorModel);
     }
     void testSupportedColorModels()
@@ -184,6 +181,27 @@ private Q_SLOTS:
             "ColorModels", QVariant::fromValue(models));
         Printer p(info, cups);
         QCOMPARE(p.supportedColorModels(), models);
+    }
+    void testDefaultPrintQuality()
+    {
+        PrintQuality quality;
+        QCOMPARE(m_instance->defaultPrintQuality(), quality);
+    }
+    void testSupportedQualities()
+    {
+        PrintQuality a;
+        a.name = "Poor";
+
+        PrintQuality b;
+        b.name = "Worse";
+        QList<PrintQuality> qualities({a, b});
+
+        PrinterInfo *info = new MockPrinterInfo(m_printerName);
+        CupsFacade *cups = new MockCupsFacade;
+        ((MockCupsFacade*) cups)->printerOptions[m_printerName].insert(
+            "PrintQualities", QVariant::fromValue(qualities));
+        Printer p(info, cups);
+        QCOMPARE(p.supportedPrintQualities(), qualities);
     }
     void testIsDefault_data()
     {

@@ -76,7 +76,8 @@ public:
     ) override;
     virtual QList<ColorModel> printerGetSupportedColorModels(
         const QString &name) const override;
-
+    virtual QList<PrintQuality> printerGetSupportedQualities(
+        const QString &name) const override;
     virtual cups_dest_t* makeDest(const QString &name,
                                   const PrinterJob *options) override;
 

@@ -25,12 +25,17 @@ struct PrinterPrivate
     explicit PrinterPrivate(Printer *q, PrinterInfo *info, CupsFacade *cups);
     ~PrinterPrivate();
     void loadColorModel();
+    void loadPrintQualities();
 
     CupsFacade *cups;
     Printer *q_ptr;
     PrinterInfo *info;
+
     ColorModel m_defaultColorModel;
     QList<ColorModel> m_supportedColorModels;
+
+    PrintQuality m_defaultPrintQuality;
+    QList<PrintQuality> m_supportedPrintQualities;
 };
 
 #endif // USC_PRINTERS_PRINTERPRIVATE_H

@@ -45,7 +45,6 @@ class PRINTERS_DECL_EXPORT Printer : public QObject
     Q_PROPERTY(QStringList supportedDuplexStrings READ supportedDuplexStrings CONSTANT)
     Q_PROPERTY(PrinterEnum::DuplexMode defaultDuplexMode READ defaultDuplexMode WRITE setDefaultDuplexMode NOTIFY defaultDuplexModeChanged)
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
-    Q_PROPERTY(PrinterEnum::Quality quality READ quality WRITE setQuality NOTIFY qualityChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
     Q_PROPERTY(QPageSize defaultPageSize READ defaultPageSize WRITE setDefaultPageSize NOTIFY pageSizeChanged)
     Q_PROPERTY(QList<QPageSize> supportedPageSizes READ supportedPageSizes CONSTANT)
@@ -69,7 +68,8 @@ public:
     QStringList supportedDuplexStrings() const;
     PrinterEnum::DuplexMode defaultDuplexMode() const;
     QString name() const;
-    PrinterEnum::Quality quality() const;
+    PrintQuality defaultPrintQuality() const;
+    QList<PrintQuality> supportedPrintQualities() const;
     QString description() const;
     QPageSize defaultPageSize() const;
     QList<QPageSize> supportedPageSizes() const;
@@ -87,7 +87,7 @@ public:
     void setEnabled(const bool enabled);
     void setErrorPolicy(const PrinterEnum::ErrorPolicy &errorPolicy);
     void setName(const QString &name);
-    void setQuality(const PrinterEnum::Quality &quality);
+    void setDefaultPrintQuality(const PrintQuality &quality);
     void setDefaultPageSize(const QPageSize &pageSize);
 
 public Q_SLOTS:

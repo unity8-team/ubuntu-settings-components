@@ -195,6 +195,12 @@ public:
         return printerOptions[name].value("ColorModels").value<QList<ColorModel>>();
     }
 
+    virtual QList<PrintQuality> printerGetSupportedQualities(
+        const QString &name) const override
+    {
+        return printerOptions[name].value("PrintQualities").value<QList<PrintQuality>>();
+    }
+
     virtual cups_dest_t* makeDest(const QString &name,
                                   const PrinterJob *options) override
     {

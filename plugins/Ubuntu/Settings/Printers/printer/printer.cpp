@@ -41,6 +41,7 @@ Printer::~Printer()
 PrinterPrivate::PrinterPrivate(Printer *q)
 {
     loadColorModel();
+    loadPrintQualities();
 }
 
 PrinterPrivate::PrinterPrivate(Printer *q, PrinterInfo *info, CupsFacade *cups)
@@ -49,6 +50,7 @@ PrinterPrivate::PrinterPrivate(Printer *q, PrinterInfo *info, CupsFacade *cups)
     this->cups = cups;
 
     loadColorModel();
+    loadPrintQualities();
 }
 
 PrinterPrivate::~PrinterPrivate()
@@ -70,6 +72,15 @@ void PrinterPrivate::loadColorModel()
     }
 }
 
+void PrinterPrivate::loadPrintQualities()
+{
+    QString name = this->info->printerName();
+
+    m_defaultPrintQuality = this->cups->printerGetOption(
+        name, "DefaultPrintQuality").value<PrintQuality>();
+    m_supportedPrintQualities = this->cups->printerGetSupportedQualities(name);
+}
+
 ColorModel Printer::defaultColorModel() const
 {
     Q_D(const Printer);
@@ -80,6 +91,18 @@ QList<ColorModel> Printer::supportedColorModels() const
 {
     Q_D(const Printer);
     return d->m_supportedColorModels;
+}
+
+PrintQuality Printer::defaultPrintQuality() const
+{
+    Q_D(const Printer);
+    return d->m_defaultPrintQuality;
+}
+
+QList<PrintQuality> Printer::supportedPrintQualities() const
+{
+    Q_D(const Printer);
+    return d->m_supportedPrintQualities;
 }
 
 int Printer::copies() const
@@ -128,12 +151,6 @@ QString Printer::name() const
 {
     Q_D(const Printer);
     return d->info->printerName();
-}
-
-PrinterEnum::Quality Printer::quality() const
-{
-    // FIXME: tmp return a valid quality
-    return PrinterEnum::Quality::NormalQuality;
 }
 
 QString Printer::description() const
@@ -203,7 +220,7 @@ void Printer::setDefaultColorModel(const ColorModel &colorModel)
         return;
     }
 
-    QStringList vals({Utils::colorModelToPpdColorModel(colorModel)});
+    QStringList vals({colorModel.name});
     QString reply = d->cups->printerAddOption(name(), "ColorModel", vals);
     Q_UNUSED(reply);
 }
@@ -251,9 +268,21 @@ void Printer::setName(const QString &name)
 
 }
 
-void Printer::setQuality(const PrinterEnum::Quality &quality)
+void Printer::setDefaultPrintQuality(const PrintQuality &quality)
 {
+    Q_D(Printer);
 
+    if (defaultPrintQuality() == quality) {
+        return;
+    }
+
+    if (!supportedPrintQualities().contains(quality)) {
+        qWarning() << Q_FUNC_INFO << "quality not supported.";
+        return;
+    }
+
+    QStringList vals({quality.name});
+    QString reply = d->cups->printerAddOption(name(), quality.originalOption, vals);
 }
 
 void Printer::setDefaultPageSize(const QPageSize &pageSize)

@@ -73,8 +73,6 @@ void PrinterPrivate::loadColorModel()
         }
     } else {
         ColorModel rgb = ColorModel();
-        rgb.colorOrganization = PrinterEnum::ColorOrganization::UnknownOrganization;
-        rgb.colorSpace = PrinterEnum::ColorSpace::RGBSpace;
         rgb.colorType = PrinterEnum::ColorModelType::ColorType;
         rgb.name = "RGB";
         rgb.text = "Color";

@@ -54,6 +54,7 @@ public:
     virtual PrinterInfo* printerInfo(const QString &printerName) = 0;
     virtual QString defaultPrinterName() = 0;
 
+    virtual void refresh() = 0;
 protected:
     const QString m_printerName;
 

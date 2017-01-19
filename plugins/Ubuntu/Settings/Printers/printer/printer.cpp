@@ -206,6 +206,9 @@ void Printer::setDefaultColorModel(const ColorModel &colorModel)
     QStringList vals({Utils::colorModelToPpdColorModel(colorModel)});
     QString reply = d->cups->printerAddOption(name(), "ColorModel", vals);
     Q_UNUSED(reply);
+
+    d->loadColorModel();
+    Q_EMIT defaultColorModelChanged();
 }
 
 void Printer::setAccessControl(const PrinterEnum::AccessControl &accessControl)
@@ -217,6 +220,9 @@ void Printer::setDescription(const QString &description)
 {
     Q_D(const Printer);
     QString answer = d->cups->printerSetInfo(d->info->printerName(), description);
+
+    d->info->refresh();
+    Q_EMIT descriptionChanged();
 }
 
 void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
@@ -234,6 +240,9 @@ void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
 
     QStringList vals({Utils::duplexModeToPpdChoice(duplexMode)});
     QString reply = d->cups->printerAddOption(name(), "Duplex", vals);
+
+    d->info->refresh();
+    Q_EMIT defaultDuplexModeChanged();
 }
 
 void Printer::setEnabled(const bool enabled)
@@ -276,6 +285,9 @@ void Printer::setDefaultPageSize(const QPageSize &pageSize)
 
     QStringList vals({pageSize.key()});
     QString reply = d->cups->printerAddOption(name(), "PageSize", vals);
+
+    d->info->refresh();
+    Q_EMIT defaultPageSizeChanged();
 }
 
 void Printer::addUser(const QString &username)

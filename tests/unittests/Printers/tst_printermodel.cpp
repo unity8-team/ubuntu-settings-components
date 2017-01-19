@@ -147,6 +147,39 @@ private Q_SLOTS:
         QCOMPARE(args.at(1).toInt(), 1);
         QCOMPARE(args.at(2).toInt(), 1);
     }
+    void testUpdateRemoveMulti()
+    {
+        // Setup four printers
+        PrinterInfo* printerA = new MockPrinterInfo("a-printer");
+        PrinterInfo* printerB = new MockPrinterInfo("b-printer");
+        PrinterInfo* printerC = new MockPrinterInfo("c-printer");
+        PrinterInfo* printerD = new MockPrinterInfo("d-printer");
+        ((MockPrinterInfo*) m_mock_info)->m_availablePrinters << printerA << printerB << printerC << printerD;
+
+        QTRY_COMPARE_WITH_TIMEOUT(m_model->count(), 4, 500);
+
+        // Setup spy and remove middle two printers
+        QSignalSpy countSpy(m_model, SIGNAL(countChanged()));
+        QSignalSpy removeSpy(m_model, SIGNAL(rowsRemoved(const QModelIndex&, int, int)));
+        ((MockPrinterInfo*) m_mock_info)->m_availablePrinters.removeAt(2);
+        ((MockPrinterInfo*) m_mock_info)->m_availablePrinters.removeAt(1);
+
+        // Wait until one count signal has been fired
+        // (to ensure this is only one iteration of update)
+        QTRY_COMPARE_WITH_TIMEOUT(countSpy.count(), 1, 500);
+        QCOMPARE(m_model->count(), 2);
+        QCOMPARE(removeSpy.count(), 2);
+
+        // Check items were removed from the middle
+        QList<QVariant> args;
+        args = removeSpy.at(0);
+        QCOMPARE(args.at(1).toInt(), 1);
+        QCOMPARE(args.at(2).toInt(), 1);
+
+        args = removeSpy.at(1);
+        QCOMPARE(args.at(1).toInt(), 1);
+        QCOMPARE(args.at(2).toInt(), 1);
+    }
 private:
     CupsFacade *m_mock_cups;
     PrinterInfo *m_mock_info;

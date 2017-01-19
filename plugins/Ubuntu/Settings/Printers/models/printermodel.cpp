@@ -89,6 +89,8 @@ void PrinterModel::update()
             beginRemoveRows(QModelIndex(), i, i);
             d->printers.removeAt(i);
             endRemoveRows();
+
+            i--;  // as we have removed an item decrement
         }
     }
 
@@ -305,16 +307,18 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
     return names;
 }
 
-QSharedPointer<Printer> PrinterModel::get(const int index)
+QVariantMap PrinterModel::get(const int row) const
 {
-    Q_D(const PrinterModel);
+    QHashIterator<int, QByteArray> iterator(roleNames());
+    QVariantMap result;
+    QModelIndex modelIndex = index(row, 0);
 
-    if (index > -1 && index < d->printers.count()) {
-        return d->printers.at(index);
-    } else {
-        qWarning() << "Invalid index:" << index;
-        return QSharedPointer<Printer>(Q_NULLPTR);
+    while (iterator.hasNext()) {
+        iterator.next();
+        result[iterator.value()] = modelIndex.data(iterator.key());
     }
+
+    return result;
 }
 
 QSharedPointer<Printer> PrinterModel::getPrinterFromName(const QString &name)
@@ -331,6 +335,20 @@ PrinterFilter::PrinterFilter(QObject *parent) : QSortFilterProxyModel(parent)
 PrinterFilter::~PrinterFilter()
 {
 
+}
+
+QVariantMap PrinterFilter::get(const int row) const
+{
+    QHashIterator<int, QByteArray> iterator(roleNames());
+    QVariantMap result;
+    QModelIndex modelIndex = index(row, 0);
+
+    while (iterator.hasNext()) {
+        iterator.next();
+        result[iterator.value()] = modelIndex.data(iterator.key());
+    }
+
+    return result;
 }
 
 void PrinterFilter::onSourceModelChanged()

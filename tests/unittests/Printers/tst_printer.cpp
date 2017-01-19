@@ -67,12 +67,12 @@ private Q_SLOTS:
         QTest::addColumn<QStringList>("strings");
         {
             QList<PrinterEnum::DuplexMode> modes({PrinterEnum::DuplexMode::DuplexNone});
-            QStringList strings({"None"});
+            QStringList strings({"One Sided"});
             QTest::newRow("one") << modes << strings;
         }
         {
             QList<PrinterEnum::DuplexMode> modes({PrinterEnum::DuplexMode::DuplexNone, PrinterEnum::DuplexMode::DuplexLongSide});
-            QStringList strings({"None", "Long edge (standard)"});
+            QStringList strings({"One Sided", "Long Edge (Standard)"});
             QTest::newRow("multiple") << modes << strings;
         }
     }

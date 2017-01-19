@@ -399,10 +399,10 @@ bool PrinterFilter::filterAcceptsRow(int sourceRow,
     }
 
     // If pdfEnabled is false we only want real printers
-    if (accepts && !m_pdfEnabled) {
+    if (accepts && m_pdfEnabled) {
         bool isPdf = (bool) childIndex.model()->data(
             childIndex, PrinterModel::IsPdfRole).toBool();
-        accepts = isPdf == m_pdfEnabled;
+        accepts = isPdf == m_pdf;
     }
 
     if (accepts && m_stateEnabled) {

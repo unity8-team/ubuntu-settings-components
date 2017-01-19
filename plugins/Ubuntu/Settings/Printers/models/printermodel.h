@@ -123,6 +123,7 @@ private:
     bool m_recent = false;
     bool m_recentEnabled = false;
     bool m_pdfEnabled = false;
+    bool m_pdf = false;
 };
 
 #endif // USC_PRINTER_MODEL_H

@@ -168,8 +168,13 @@ void PrinterJob::setColorModel(const int colorModel)
         m_color_model = colorModel;
 
         Q_EMIT colorModelChanged();
-        Q_EMIT colorModelTypeChanged();
     }
+
+    // Always emit colorModeType changed, as the underlying model could have
+    // changed but the int maybe the same
+    // eg if it was RGB, KGray and m_color_model was 1, then changing to
+    // KGray, RGB with m_color_model as 1, results in no change but colorModelType does.
+    Q_EMIT colorModelTypeChanged();
 }
 
 void PrinterJob::setCopies(const int copies)

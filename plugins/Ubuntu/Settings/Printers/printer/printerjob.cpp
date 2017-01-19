@@ -31,7 +31,7 @@ PrinterJob::PrinterJob(QObject *parent)
     , m_printer_name(QStringLiteral(""))
     , m_print_range(QStringLiteral(""))
     , m_print_range_mode(PrinterEnum::PrintRange::AllPages)
-    , m_quality()
+    , m_quality(0)
     // TODO: Do we need a separate Job state?
     // NotStarted, InQueue, Processing, Complete, Error ?
     , m_state(PrinterEnum::State::IdleState)
@@ -270,7 +270,7 @@ void PrinterJob::setPrintRangeMode(const PrinterEnum::PrintRange printRangeMode)
     }
 }
 
-void PrinterJob::setQuality(const int &quality)
+void PrinterJob::setQuality(const int quality)
 {
     if (m_quality != quality) {
         m_quality = quality;

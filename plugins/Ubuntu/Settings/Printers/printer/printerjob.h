@@ -77,7 +77,7 @@ public Q_SLOTS:
     void setPrinterName(const QString &printerName);
     void setPrintRange(const QString &printRange);
     void setPrintRangeMode(const PrinterEnum::PrintRange printRangeMode);
-    void setQuality(const int &quality);
+    void setQuality(const int quality);
     void setTitle(const QString &title);
 private Q_SLOTS:
     void loadDefaults();

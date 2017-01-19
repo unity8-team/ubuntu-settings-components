@@ -303,6 +303,7 @@ void Printer::setDefaultPrintQuality(const PrintQuality &quality)
 
     QStringList vals({quality.name});
     QString reply = d->cups->printerAddOption(name(), quality.originalOption, vals);
+    d->loadPrintQualities();
 }
 
 void Printer::setDefaultPageSize(const QPageSize &pageSize)

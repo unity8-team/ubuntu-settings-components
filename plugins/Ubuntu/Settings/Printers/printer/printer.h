@@ -64,7 +64,6 @@ public:
     bool enabled() const;
     ColorModel defaultColorModel() const;
     QList<ColorModel> supportedColorModels() const;
-    int copies() const;
     QList<PrinterEnum::DuplexMode> supportedDuplexModes() const;
     QStringList supportedDuplexStrings() const;
     PrinterEnum::DuplexMode defaultDuplexMode() const;
@@ -79,6 +78,7 @@ public:
     PrinterEnum::State state() const;
     QString lastStateMessage() const;
     bool isDefault();
+    bool isPdf();
 
     void setAccessControl(const PrinterEnum::AccessControl &accessControl);
     void setDefaultColorModel(const ColorModel &colorModel);

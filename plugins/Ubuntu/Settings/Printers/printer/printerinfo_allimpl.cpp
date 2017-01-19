@@ -14,26 +14,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef USC_PRINTERS_PRIVATE_H
-#define USC_PRINTERS_PRIVATE_H
+#include "printer/printerinfo_allimpl.h"
 
-#include "models/printermodel.h"
+#include "printer/printerinfo_impl.h"
+#include "printer/printerinfo_pdfimpl.h"
 
-struct PrintersPrivate
+PrinterInfoAllImpl::PrinterInfoAllImpl(const QString &name) : PrinterInfo(name)
 {
-    Q_DISABLE_COPY(PrintersPrivate)
-    Q_DECLARE_PUBLIC(Printers)
-    explicit PrintersPrivate(Printers *q, int printerUpdateIntervalMSecs);
-    explicit PrintersPrivate(Printers *q, PrinterInfo *info, CupsFacade *cups,
-                             int printerUpdateIntervalMSecs);
-    ~PrintersPrivate();
-    CupsFacade *cups;
-    Printers *q_ptr;
-    PrinterInfo *info;
-    PrinterModel model;
-    PrinterFilter allPrinters;
-    PrinterFilter allPrintersWithPdf;
-    PrinterFilter recentPrinters;
-};
+    m_pdf_printers = new PrinterInfoPdfImpl();
+    m_qt_printers = new PrinterInfoImpl();
+}
 
-#endif // USC_PRINTERS_PRIVATE_H
+PrinterInfoAllImpl::~PrinterInfoAllImpl()
+{
+
+}
+
+QList<PrinterInfo*> PrinterInfoAllImpl::availablePrinters()
+{
+    QList<PrinterInfo*> list;
+    list += m_pdf_printers->availablePrinters();
+    list += m_qt_printers->availablePrinters();
+    return list;
+}

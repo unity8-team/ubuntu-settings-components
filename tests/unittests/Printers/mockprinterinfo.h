@@ -129,6 +129,11 @@ public:
         return m_defaultPrinterName;
     }
 
+    virtual bool isPdf() const override
+    {
+        return false;
+    }
+
     virtual void refresh() override
     {
 

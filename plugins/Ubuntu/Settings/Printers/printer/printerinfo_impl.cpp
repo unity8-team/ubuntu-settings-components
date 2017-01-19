@@ -137,6 +137,11 @@ QString PrinterInfoImpl::defaultPrinterName()
     return QPrinterInfo::defaultPrinterName();
 }
 
+bool PrinterInfoImpl::isPdf() const
+{
+    return false;
+}
+
 void PrinterInfoImpl::refresh()
 {
     if (m_printerName.isEmpty()) {

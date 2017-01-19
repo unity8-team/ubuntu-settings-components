@@ -88,20 +88,29 @@ Q_SIGNALS:
     void countChanged();
 };
 
-class PrinterFilter : public QSortFilterProxyModel
+class PRINTERS_DECL_EXPORT PrinterFilter : public QSortFilterProxyModel
 {
     Q_OBJECT
+    Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
-    explicit PrinterFilter();
+    explicit PrinterFilter(QObject *parent = Q_NULLPTR);
     ~PrinterFilter();
     void filterOnState(const PrinterEnum::State &state);
     void filterOnRecent(const bool recent);
-
+    int count() const;
 protected:
     virtual bool filterAcceptsRow(
         int sourceRow, const QModelIndex &sourceParent) const override;
     virtual bool lessThan(const QModelIndex &left,
                           const QModelIndex &right) const override;
+
+Q_SIGNALS:
+    void countChanged();
+
+private Q_SLOTS:
+    void onSourceModelChanged();
+    void onSourceModelCountChanged();
+
 private:
     PrinterEnum::State m_state = PrinterEnum::State::IdleState;
     bool m_stateEnabled = false;

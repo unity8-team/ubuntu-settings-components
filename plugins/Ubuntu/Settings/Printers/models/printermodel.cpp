@@ -323,14 +323,32 @@ QSharedPointer<Printer> PrinterModel::getPrinterFromName(const QString &name)
     return QSharedPointer<Printer>(nullptr);
 }
 
-PrinterFilter::PrinterFilter()
+PrinterFilter::PrinterFilter(QObject *parent) : QSortFilterProxyModel(parent)
 {
-
+    connect(this, SIGNAL(sourceModelChanged()), SLOT(onSourceModelChanged()));
 }
 
 PrinterFilter::~PrinterFilter()
 {
 
+}
+
+void PrinterFilter::onSourceModelChanged()
+{
+    connect((PrinterModel*) sourceModel(),
+            SIGNAL(countChanged()),
+            this,
+            SIGNAL(countChanged()));
+}
+
+void PrinterFilter::onSourceModelCountChanged()
+{
+    Q_EMIT countChanged();
+}
+
+int PrinterFilter::count() const
+{
+    return rowCount();
 }
 
 void PrinterFilter::filterOnState(const PrinterEnum::State &state)

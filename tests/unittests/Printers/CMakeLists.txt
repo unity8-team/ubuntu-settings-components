@@ -25,3 +25,7 @@ add_test(tst_printers testPrintersPrinters)
 add_executable(testPrintersPrinterModel tst_printermodel.cpp ${MOCK_SOURCES})
 target_link_libraries(testPrintersPrinterModel UbuntuSettingsPrintersQml Qt5::Test Qt5::Gui)
 add_test(tst_printermodel testPrintersPrinterModel)
+
+add_executable(testPrintersPrinterFilter tst_printerfilter.cpp ${MOCK_SOURCES})
+target_link_libraries(testPrintersPrinterFilter UbuntuSettingsPrintersQml Qt5::Test Qt5::Gui)
+add_test(tst_printerfilter testPrintersPrinterFilter)

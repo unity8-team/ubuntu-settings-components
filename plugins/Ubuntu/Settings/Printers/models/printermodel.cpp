@@ -337,11 +337,6 @@ PrinterFilter::~PrinterFilter()
 
 }
 
-int PrinterFilter::count() const
-{
-    return rowCount();
-}
-
 QVariantMap PrinterFilter::get(const int row)
 {
     QHashIterator<int, QByteArray> iterator(roleNames());

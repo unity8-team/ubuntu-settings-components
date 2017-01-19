@@ -95,7 +95,6 @@ public:
     explicit PrinterFilter();
     ~PrinterFilter();
 
-    int count() const;
     Q_INVOKABLE QVariantMap get(const int row);
 
     void filterOnState(const PrinterEnum::State &state);

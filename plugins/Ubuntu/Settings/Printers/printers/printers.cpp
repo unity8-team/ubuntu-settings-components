@@ -54,12 +54,11 @@ PrintersPrivate::PrintersPrivate(Printers *q, PrinterInfo *info,
 
     allPrinters.setSourceModel(&model);
     allPrinters.setSortRole(PrinterModel::Roles::DefaultPrinterRole);
-    allPrinters.filterOnPdf(true);
+    allPrinters.filterOnPdf(false);
     allPrinters.sort(0, Qt::DescendingOrder);
 
     allPrintersWithPdf.setSourceModel(&model);
     allPrintersWithPdf.setSortRole(PrinterModel::Roles::DefaultPrinterRole);
-    allPrintersWithPdf.filterOnPdf(false);
     allPrintersWithPdf.sort(0, Qt::DescendingOrder);
 }
 

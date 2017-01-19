@@ -385,7 +385,8 @@ void PrinterFilter::filterOnRecent(const bool recent)
 
 void PrinterFilter::filterOnPdf(const bool pdf)
 {
-    m_pdfEnabled = pdf;
+    m_pdfEnabled = true;
+    m_pdf = pdf;
 }
 
 bool PrinterFilter::filterAcceptsRow(int sourceRow,

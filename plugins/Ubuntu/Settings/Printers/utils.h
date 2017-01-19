@@ -55,11 +55,11 @@ public:
         // TODO: translate
         switch (mode) {
         case PrinterEnum::DuplexMode::DuplexNone:
-            return "None";
+            return "One Sided";
         case PrinterEnum::DuplexMode::DuplexShortSide:
-            return "Short edge (flip)";
+            return "Short Edge (Flip)";
         case PrinterEnum::DuplexMode::DuplexLongSide:
-            return "Long edge (standard)";
+            return "Long Edge (Standard)";
         }
     }
 
@@ -84,7 +84,7 @@ public:
         ret.text = text;
         ret.originalOption = optionName;
 
-        if (ret.name.contains("Gray")) {
+        if (ret.name.contains("Gray") || ret.name.contains("Black")) {
             ret.colorType = PrinterEnum::ColorModelType::GrayType;
         } else {
             ret.colorType = PrinterEnum::ColorModelType::ColorType;

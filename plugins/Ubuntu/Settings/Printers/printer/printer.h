@@ -46,7 +46,7 @@ class PRINTERS_DECL_EXPORT Printer : public QObject
     Q_PROPERTY(PrinterEnum::DuplexMode defaultDuplexMode READ defaultDuplexMode WRITE setDefaultDuplexMode NOTIFY defaultDuplexModeChanged)
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
-    Q_PROPERTY(QPageSize defaultPageSize READ defaultPageSize WRITE setDefaultPageSize NOTIFY pageSizeChanged)
+    Q_PROPERTY(QPageSize defaultPageSize READ defaultPageSize WRITE setDefaultPageSize NOTIFY defaultPageSizeChanged)
     Q_PROPERTY(QList<QPageSize> supportedPageSizes READ supportedPageSizes CONSTANT)
     Q_PROPERTY(PrinterEnum::AccessControl accessControl READ accessControl WRITE setAccessControl NOTIFY accessControlChanged)
     Q_PROPERTY(PrinterEnum::ErrorPolicy errorPolicy READ errorPolicy WRITE setErrorPolicy NOTIFY errorPolicyChanged)
@@ -63,7 +63,6 @@ public:
     bool enabled() const;
     ColorModel defaultColorModel() const;
     QList<ColorModel> supportedColorModels() const;
-    int copies() const;
     QList<PrinterEnum::DuplexMode> supportedDuplexModes() const;
     QStringList supportedDuplexStrings() const;
     PrinterEnum::DuplexMode defaultDuplexMode() const;
@@ -79,6 +78,7 @@ public:
     PrinterEnum::State state() const;
     QString lastStateMessage() const;
     bool isDefault();
+    bool isPdf();
 
     void setAccessControl(const PrinterEnum::AccessControl &accessControl);
     void setDefaultColorModel(const ColorModel &colorModel);
@@ -108,7 +108,7 @@ Q_SIGNALS:
     void nameChanged();
     void enabledChanged();
     void descriptionChanged();
-    void pageSizeChanged();
+    void defaultPageSizeChanged();
     void defaultDuplexModeChanged();
     void defaultColorModelChanged();
     void qualityChanged();

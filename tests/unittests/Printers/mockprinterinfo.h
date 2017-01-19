@@ -129,6 +129,16 @@ public:
         return m_defaultPrinterName;
     }
 
+    virtual bool isPdf() const override
+    {
+        return false;
+    }
+
+    virtual void refresh() override
+    {
+
+    }
+
     QString m_description = QString::null;
     QString m_location = QString::null;
     QString m_makeAndModel = QString::null;

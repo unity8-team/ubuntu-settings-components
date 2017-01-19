@@ -19,7 +19,7 @@
 #include "cups/cupsfacade_impl.h"
 #include "models/printermodel.h"
 #include "models/printermodel_p.h"
-#include "printer/printerinfo_impl.h"
+#include "printer/printerinfo_allimpl.h"
 
 #include <QDebug>
 
@@ -41,7 +41,7 @@ PrinterModel::PrinterModel(PrinterInfo *info, CupsFacade *cups, int timerMsec, Q
 
 PrinterModelPrivate::PrinterModelPrivate(PrinterModel *q)
 {
-    this->info = new PrinterInfoImpl;
+    this->info = new PrinterInfoAllImpl;
     this->cups = new CupsFacadeImpl;
 }
 
@@ -89,6 +89,8 @@ void PrinterModel::update()
             beginRemoveRows(QModelIndex(), i, i);
             d->printers.removeAt(i);
             endRemoveRows();
+
+            i--;  // as we have removed an item decrement
         }
     }
 
@@ -230,6 +232,9 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
             // TODO: figure out how crazy this is...
             ret = QVariant::fromValue(printer.data());
             break;
+        case IsPdfRole:
+            ret = printer->isPdf();
+            break;
         // case LastStateMessageRole:
         //     ret = printer->lastStateMessage();
         //     break;
@@ -315,22 +320,25 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
         names[UsersRole] = "users";
         names[StateRole] = "state";
         names[PrinterRole] = "printer";
+        names[IsPdfRole] = "isPdf";
         names[LastStateMessageRole] = "lastStateMessage";
     }
 
     return names;
 }
 
-QSharedPointer<Printer> PrinterModel::get(const int index)
+QVariantMap PrinterModel::get(const int row) const
 {
-    Q_D(const PrinterModel);
+    QHashIterator<int, QByteArray> iterator(roleNames());
+    QVariantMap result;
+    QModelIndex modelIndex = index(row, 0);
 
-    if (index > -1 && index < d->printers.count()) {
-        return d->printers.at(index);
-    } else {
-        qWarning() << "Invalid index:" << index;
-        return QSharedPointer<Printer>(Q_NULLPTR);
+    while (iterator.hasNext()) {
+        iterator.next();
+        result[iterator.value()] = modelIndex.data(iterator.key());
     }
+
+    return result;
 }
 
 QSharedPointer<Printer> PrinterModel::getPrinterFromName(const QString &name)
@@ -347,6 +355,20 @@ PrinterFilter::PrinterFilter(QObject *parent) : QSortFilterProxyModel(parent)
 PrinterFilter::~PrinterFilter()
 {
 
+}
+
+QVariantMap PrinterFilter::get(const int row) const
+{
+    QHashIterator<int, QByteArray> iterator(roleNames());
+    QVariantMap result;
+    QModelIndex modelIndex = index(row, 0);
+
+    while (iterator.hasNext()) {
+        iterator.next();
+        result[iterator.value()] = modelIndex.data(iterator.key());
+    }
+
+    return result;
 }
 
 void PrinterFilter::onSourceModelChanged()
@@ -377,6 +399,12 @@ void PrinterFilter::filterOnRecent(const bool recent)
     Q_UNUSED(recent);
 }
 
+void PrinterFilter::filterOnPdf(const bool pdf)
+{
+    m_pdfEnabled = true;
+    m_pdf = pdf;
+}
+
 bool PrinterFilter::filterAcceptsRow(int sourceRow,
                                      const QModelIndex &sourceParent) const
 {
@@ -385,6 +413,13 @@ bool PrinterFilter::filterAcceptsRow(int sourceRow,
 
     if (accepts && m_recentEnabled) {
         // TODO: implement recent
+    }
+
+    // If pdfEnabled is false we only want real printers
+    if (accepts && m_pdfEnabled) {
+        bool isPdf = (bool) childIndex.model()->data(
+            childIndex, PrinterModel::IsPdfRole).toBool();
+        accepts = isPdf == m_pdf;
     }
 
     if (accepts && m_stateEnabled) {
@@ -403,7 +438,15 @@ bool PrinterFilter::lessThan(const QModelIndex &left,
     QVariant leftData = sourceModel()->data(left, sortRole());
     QVariant rightData = sourceModel()->data(right, sortRole());
     if ((QMetaType::Type) leftData.type() == QMetaType::Bool) {
-        return leftData.toInt() < rightData.toInt();
+        // FIXME: hack to put Pdf printer at the bottom
+        if (leftData.toInt() == rightData.toInt()) {
+            int leftPdf = sourceModel()->data(left, PrinterModel::IsPdfRole).toInt();
+            int rightPdf = sourceModel()->data(right, PrinterModel::IsPdfRole).toInt();
+
+            return leftPdf > rightPdf;
+        } else {
+            return leftData.toInt() < rightData.toInt();
+        }
     } else {
         return leftData < rightData;
     }

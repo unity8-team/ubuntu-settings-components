@@ -23,11 +23,7 @@
 
 PrinterInfoImpl::PrinterInfoImpl(const QString &name) : PrinterInfo(name)
 {
-    if (m_printerName.isEmpty()) {
-        m_info = QPrinterInfo();
-    } else {
-        m_info = QPrinterInfo::printerInfo(m_printerName);
-    }
+    refresh();
 }
 
 PrinterInfoImpl::PrinterInfoImpl(QPrinterInfo info)
@@ -139,4 +135,18 @@ PrinterInfo* PrinterInfoImpl::printerInfo(const QString &printerName)
 QString PrinterInfoImpl::defaultPrinterName()
 {
     return QPrinterInfo::defaultPrinterName();
+}
+
+bool PrinterInfoImpl::isPdf() const
+{
+    return false;
+}
+
+void PrinterInfoImpl::refresh()
+{
+    if (m_printerName.isEmpty()) {
+        m_info = QPrinterInfo();
+    } else {
+        m_info = QPrinterInfo::printerInfo(m_printerName);
+    }
 }

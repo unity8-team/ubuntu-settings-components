@@ -51,6 +51,8 @@ public:
     virtual PrinterInfo* printerInfo(const QString &printerName) override;
     virtual QString defaultPrinterName() override;
 
+    virtual void refresh() override;
+
 private:
     QPrinterInfo m_info;
 };

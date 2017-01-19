@@ -140,3 +140,12 @@ QString PrinterInfoImpl::defaultPrinterName()
 {
     return QPrinterInfo::defaultPrinterName();
 }
+
+void PrinterInfoImpl::refresh()
+{
+    if (m_printerName.isEmpty()) {
+        m_info = QPrinterInfo();
+    } else {
+        m_info = QPrinterInfo::printerInfo(m_printerName);
+    }
+}

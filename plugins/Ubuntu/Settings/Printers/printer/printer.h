@@ -47,7 +47,7 @@ class PRINTERS_DECL_EXPORT Printer : public QObject
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
     Q_PROPERTY(PrinterEnum::Quality quality READ quality WRITE setQuality NOTIFY qualityChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
-    Q_PROPERTY(QPageSize defaultPageSize READ defaultPageSize WRITE setDefaultPageSize NOTIFY pageSizeChanged)
+    Q_PROPERTY(QPageSize defaultPageSize READ defaultPageSize WRITE setDefaultPageSize NOTIFY defaultPageSizeChanged)
     Q_PROPERTY(QList<QPageSize> supportedPageSizes READ supportedPageSizes CONSTANT)
     Q_PROPERTY(PrinterEnum::AccessControl accessControl READ accessControl WRITE setAccessControl NOTIFY accessControlChanged)
     Q_PROPERTY(PrinterEnum::ErrorPolicy errorPolicy READ errorPolicy WRITE setErrorPolicy NOTIFY errorPolicyChanged)
@@ -108,7 +108,7 @@ Q_SIGNALS:
     void nameChanged();
     void enabledChanged();
     void descriptionChanged();
-    void pageSizeChanged();
+    void defaultPageSizeChanged();
     void defaultDuplexModeChanged();
     void defaultColorModelChanged();
     void qualityChanged();

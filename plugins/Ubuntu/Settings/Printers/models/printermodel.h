@@ -63,6 +63,7 @@ public:
         StateRole,
         PrinterRole,
         LastStateMessageRole,
+        IsPdfRole,
         LastRole = LastStateMessageRole,
     };
 
@@ -100,6 +101,7 @@ public:
 
     void filterOnState(const PrinterEnum::State &state);
     void filterOnRecent(const bool recent);
+    void filterOnPdf(const bool pdf);
 
     int count() const;
 protected:
@@ -120,6 +122,7 @@ private:
     bool m_stateEnabled = false;
     bool m_recent = false;
     bool m_recentEnabled = false;
+    bool m_pdfEnabled = false;
 };
 
 #endif // USC_PRINTER_MODEL_H

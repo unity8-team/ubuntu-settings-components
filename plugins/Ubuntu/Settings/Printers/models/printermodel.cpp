@@ -19,7 +19,7 @@
 #include "cups/cupsfacade_impl.h"
 #include "models/printermodel.h"
 #include "models/printermodel_p.h"
-#include "printer/printerinfo_impl.h"
+#include "printer/printerinfo_allimpl.h"
 
 #include <QDebug>
 
@@ -41,7 +41,7 @@ PrinterModel::PrinterModel(PrinterInfo *info, CupsFacade *cups, int timerMsec, Q
 
 PrinterModelPrivate::PrinterModelPrivate(PrinterModel *q)
 {
-    this->info = new PrinterInfoImpl;
+    this->info = new PrinterInfoAllImpl;
     this->cups = new CupsFacadeImpl;
 }
 
@@ -225,6 +225,9 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
             // TODO: figure out how crazy this is...
             ret = QVariant::fromValue(printer.data());
             break;
+        case IsPdfRole:
+            ret = printer->isPdf();
+            break;
         // case LastStateMessageRole:
         //     ret = printer->lastStateMessage();
         //     break;
@@ -301,6 +304,7 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
         names[UsersRole] = "users";
         names[StateRole] = "state";
         names[PrinterRole] = "printer";
+        names[IsPdfRole] = "isPdf";
         names[LastStateMessageRole] = "lastStateMessage";
     }
 
@@ -379,6 +383,11 @@ void PrinterFilter::filterOnRecent(const bool recent)
     Q_UNUSED(recent);
 }
 
+void PrinterFilter::filterOnPdf(const bool pdf)
+{
+    m_pdfEnabled = pdf;
+}
+
 bool PrinterFilter::filterAcceptsRow(int sourceRow,
                                      const QModelIndex &sourceParent) const
 {
@@ -387,6 +396,13 @@ bool PrinterFilter::filterAcceptsRow(int sourceRow,
 
     if (accepts && m_recentEnabled) {
         // TODO: implement recent
+    }
+
+    // If pdfEnabled is false we only want real printers
+    if (accepts && !m_pdfEnabled) {
+        bool isPdf = (bool) childIndex.model()->data(
+            childIndex, PrinterModel::IsPdfRole).toBool();
+        accepts = isPdf == m_pdfEnabled;
     }
 
     if (accepts && m_stateEnabled) {
@@ -405,7 +421,15 @@ bool PrinterFilter::lessThan(const QModelIndex &left,
     QVariant leftData = sourceModel()->data(left, sortRole());
     QVariant rightData = sourceModel()->data(right, sortRole());
     if ((QMetaType::Type) leftData.type() == QMetaType::Bool) {
-        return leftData.toInt() < rightData.toInt();
+        // FIXME: hack to put Pdf printer at the bottom
+        if (leftData.toInt() == rightData.toInt()) {
+            int leftPdf = sourceModel()->data(left, PrinterModel::IsPdfRole).toInt();
+            int rightPdf = sourceModel()->data(right, PrinterModel::IsPdfRole).toInt();
+
+            return leftPdf > rightPdf;
+        } else {
+            return leftData.toInt() < rightData.toInt();
+        }
     } else {
         return leftData < rightData;
     }

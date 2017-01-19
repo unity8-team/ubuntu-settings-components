@@ -37,6 +37,7 @@ class PRINTERS_DECL_EXPORT Printers : public QObject
     Q_OBJECT
     Q_DECLARE_PRIVATE(Printers)
     Q_PROPERTY(QAbstractItemModel* allPrinters READ allPrinters CONSTANT)
+    Q_PROPERTY(QAbstractItemModel* allPrintersWithPdf READ allPrintersWithPdf CONSTANT)
     Q_PROPERTY(QAbstractItemModel* recentPrinters READ recentPrinters CONSTANT)
     Q_PROPERTY(QAbstractItemModel* printJobs READ printJobs CONSTANT)
     Q_PROPERTY(QString defaultPrinterName READ defaultPrinterName WRITE setDefaultPrinterName NOTIFY defaultPrinterNameChanged)
@@ -53,6 +54,7 @@ public:
     ~Printers();
 
     QAbstractItemModel* allPrinters();
+    QAbstractItemModel* allPrintersWithPdf();
     QAbstractItemModel* recentPrinters();
     QAbstractItemModel* printJobs();
     QString defaultPrinterName() const;

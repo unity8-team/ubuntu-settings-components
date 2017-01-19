@@ -15,7 +15,7 @@
  */
 
 #include "cups/cupsfacade_impl.h"
-#include "printer/printerinfo_impl.h"
+#include "printer/printerinfo_allimpl.h"
 #include "printers/printers.h"
 #include "printers/printers_p.h"
 
@@ -39,7 +39,7 @@ Printers::~Printers()
 }
 
 PrintersPrivate::PrintersPrivate(Printers *q, int printerUpdateIntervalMSecs)
-    : PrintersPrivate(q, new PrinterInfoImpl, new CupsFacadeImpl,
+    : PrintersPrivate(q, new PrinterInfoAllImpl, new CupsFacadeImpl,
                       printerUpdateIntervalMSecs)
 {
 }
@@ -54,7 +54,13 @@ PrintersPrivate::PrintersPrivate(Printers *q, PrinterInfo *info,
 
     allPrinters.setSourceModel(&model);
     allPrinters.setSortRole(PrinterModel::Roles::DefaultPrinterRole);
+    allPrinters.filterOnPdf(false);
     allPrinters.sort(0, Qt::DescendingOrder);
+
+    allPrintersWithPdf.setSourceModel(&model);
+    allPrintersWithPdf.setSortRole(PrinterModel::Roles::DefaultPrinterRole);
+    allPrintersWithPdf.filterOnPdf(true);
+    allPrintersWithPdf.sort(0, Qt::DescendingOrder);
 }
 
 PrintersPrivate::~PrintersPrivate()
@@ -67,6 +73,14 @@ QAbstractItemModel* Printers::allPrinters()
 {
     Q_D(Printers);
     auto ret = &d->allPrinters;
+    QQmlEngine::setObjectOwnership(ret, QQmlEngine::CppOwnership);
+    return ret;
+}
+
+QAbstractItemModel* Printers::allPrintersWithPdf()
+{
+    Q_D(Printers);
+    auto ret = &d->allPrintersWithPdf;
     QQmlEngine::setObjectOwnership(ret, QQmlEngine::CppOwnership);
     return ret;
 }

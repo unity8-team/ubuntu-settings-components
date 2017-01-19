@@ -19,7 +19,7 @@
 #include "cups/cupsfacade_impl.h"
 #include "models/printermodel.h"
 #include "printer/printerjob.h"
-#include "printer/printerinfo_impl.h"
+#include "printer/printerinfo_allimpl.h"
 
 PrinterJob::PrinterJob(QObject *parent)
     : QObject(parent)
@@ -217,9 +217,16 @@ void PrinterJob::setLandscape(const bool landscape)
 void PrinterJob::setPrinterName(const QString &printerName)
 {
     if (m_printer_name != printerName) {
-        PrinterInfo *info = new PrinterInfoImpl(printerName);
+        PrinterInfo *printers = new PrinterInfoAllImpl();
+        PrinterInfo *info = Q_NULLPTR;
 
-        if (info->holdsDefinition()) {
+        Q_FOREACH(PrinterInfo *printer, printers->availablePrinters()) {
+            if (printer->printerName() == printerName) {
+                info = printer;
+            }
+        }
+
+        if (info && info->holdsDefinition()) {
             m_printer_name = printerName;
             m_printer = new Printer(info, m_cups);
             loadDefaults();

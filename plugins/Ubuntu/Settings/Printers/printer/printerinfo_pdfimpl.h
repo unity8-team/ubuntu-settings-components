@@ -14,20 +14,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef USC_PRINTERS_PRINTERINFO_IMPL_H
-#define USC_PRINTERS_PRINTERINFO_IMPL_H
+#ifndef USC_PRINTERS_PRINTERINFO_PDFIMPL_H
+#define USC_PRINTERS_PRINTERINFO_PDFIMPL_H
 
-#include "cups/cupsfacade.h"
 #include "printer/printerinfo.h"
 
-#include <QPrinterInfo>
-
-class PrinterInfoImpl : public PrinterInfo
+class PrinterInfoPdfImpl : public PrinterInfo
 {
 public:
-    explicit PrinterInfoImpl(const QString &name = QString::null);
-    explicit PrinterInfoImpl(QPrinterInfo info);
-    virtual ~PrinterInfoImpl() override;
+    explicit PrinterInfoPdfImpl(const QString &name = QString::null);
+    virtual ~PrinterInfoPdfImpl() override;
 
     virtual bool holdsDefinition() const override;
 
@@ -36,27 +32,24 @@ public:
     virtual QString location() const override;
     virtual QString makeAndModel() const override;
 
-    virtual PrinterEnum::State state() const override;
+    virtual PrinterEnum::State state() const override {}
     virtual QList<QPageSize> supportedPageSizes() const override;
     virtual QPageSize defaultPageSize() const override;
-    virtual bool supportsCustomPageSizes() const override;
+    virtual bool supportsCustomPageSizes() const override {}
 
-    virtual QPageSize minimumPhysicalPageSize() const override;
-    virtual QPageSize maximumPhysicalPageSize() const override;
-    virtual QList<int> supportedResolutions() const override;
+    virtual QPageSize minimumPhysicalPageSize() const override {}
+    virtual QPageSize maximumPhysicalPageSize() const override {}
+    virtual QList<int> supportedResolutions() const override {}
     virtual PrinterEnum::DuplexMode defaultDuplexMode() const override;
     virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const override;
     virtual QList<PrinterInfo*> availablePrinters() override;
-    virtual QStringList availablePrinterNames() override;
-    virtual PrinterInfo* printerInfo(const QString &printerName) override;
+    virtual QStringList availablePrinterNames() override {}
+    virtual PrinterInfo* printerInfo(const QString &printerName) override {}
     virtual QString defaultPrinterName() override;
 
     virtual bool isPdf() const override;
 
-    virtual void refresh() override;
-
-private:
-    QPrinterInfo m_info;
+    virtual void refresh() override {}
 };
 
-#endif // USC_PRINTERS_PRINTERINFO_IMPL_H
+#endif // USC_PRINTERS_PRINTERINFO_PDFIMPL_H

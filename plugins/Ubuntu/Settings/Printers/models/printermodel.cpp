@@ -307,7 +307,7 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
     return names;
 }
 
-QVariantMap PrinterModel::get(const int row)
+QVariantMap PrinterModel::get(const int row) const
 {
     QHashIterator<int, QByteArray> iterator(roleNames());
     QVariantMap result;
@@ -337,7 +337,7 @@ PrinterFilter::~PrinterFilter()
 
 }
 
-QVariantMap PrinterFilter::get(const int row)
+QVariantMap PrinterFilter::get(const int row) const
 {
     QHashIterator<int, QByteArray> iterator(roleNames());
     QVariantMap result;

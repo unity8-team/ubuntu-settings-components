@@ -75,7 +75,7 @@ public:
 
     QSharedPointer<Printer> getPrinterFromName(const QString &name);
 
-    Q_INVOKABLE QVariantMap get(const int row);
+    Q_INVOKABLE QVariantMap get(const int row) const;
 private:
     QScopedPointer<PrinterModelPrivate> const d_ptr;
     QTimer m_update_timer;
@@ -95,7 +95,7 @@ public:
     explicit PrinterFilter();
     ~PrinterFilter();
 
-    Q_INVOKABLE QVariantMap get(const int row);
+    Q_INVOKABLE QVariantMap get(const int row) const;
 
     void filterOnState(const PrinterEnum::State &state);
     void filterOnRecent(const bool recent);

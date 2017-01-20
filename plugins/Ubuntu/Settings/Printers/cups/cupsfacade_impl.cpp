@@ -234,9 +234,8 @@ QMap<QString, QVariant> CupsFacadeImpl::printerGetOptions(
             }
             ret[option] = QVariant::fromValue(model);
         } else if (option == "DefaultPrintQuality") {
-            QStringList qualityOpts({"Quality", "PrintQuality", "HPPrintQuality", "StpQuality"});
             PrintQuality quality;
-            Q_FOREACH(const QString opt, qualityOpts) {
+            Q_FOREACH(const QString opt, m_knownQualityOptions) {
                 ppd_option_t *ppdQuality = ppdFindOption(ppd, opt.toUtf8());
                 if (ppdQuality) {
                     ppd_choice_t* def = ppdFindChoice(ppdQuality,
@@ -300,9 +299,7 @@ QList<PrintQuality> CupsFacadeImpl::printerGetSupportedQualities(const QString &
         return ret;
     }
 
-    QStringList opts({"Quality", "PrintQuality", "HPPrintQuality", "StpQuality"});
-
-    Q_FOREACH(const QString &opt, opts) {
+    Q_FOREACH(const QString &opt, m_knownQualityOptions) {
         ppd_option_t *qualityOpt = ppdFindOption(ppd, opt.toUtf8());
         if (qualityOpt) {
             for (int i = 0; i < qualityOpt->num_choices; ++i)
@@ -354,7 +351,9 @@ cups_dest_t* CupsFacadeImpl::makeDest(const QString &name,
         __CUPS_ADD_OPTION(dest, "page-ranges", options->printRange().toLocal8Bit());
     }
 
-    __CUPS_ADD_OPTION(dest, "OutputMode", options->getPrintQuality().name.toLocal8Bit());
+    PrintQuality quality = options->getPrintQuality();
+    __CUPS_ADD_OPTION(dest, quality.originalOption.toLocal8Bit(),
+                      quality.name.toLocal8Bit());
 
     return dest;
 }

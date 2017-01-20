@@ -88,6 +88,10 @@ private:
     QString getPrinterName(const QString &name) const;
     QString getPrinterInstance(const QString &name) const;
     QStringList parsePpdColorModel(const QString &colorModel);
+    const QStringList m_knownQualityOptions = QStringList({
+        "Quality", "PrintQuality", "HPPrintQuality", "StpQuality",
+        "OutputMode",
+    });
     CupsPkHelper helper;
 };
 

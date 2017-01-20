@@ -190,9 +190,9 @@ QString CupsFacadeImpl::printerAddOption(const QString &name,
 QVariant CupsFacadeImpl::printerGetOption(const QString &name,
                                           const QString &option)
 {
-    Q_UNUSED(name);
-    Q_UNUSED(option);
-    return QVariant();
+    QStringList opts({option});
+    auto res = printerGetOptions(name, opts);
+    return res[option];
 }
 
 QMap<QString, QVariant> CupsFacadeImpl::printerGetOptions(
@@ -222,17 +222,31 @@ QMap<QString, QVariant> CupsFacadeImpl::printerGetOptions(
     Q_FOREACH(const QString &option, options) {
         if (option == "DefaultColorModel") {
             ColorModel model;
-
-            ppd_option_t *defCModel = ppdFindOption(ppd, option.toUtf8());
-            if (defCModel) {
-                model = Utils::parsePpdColorModel(defCModel->choices[0].choice);
-            } else {
-                ppd_option_t *cModel = ppdFindOption(ppd, "ColorModel");
-                if (cModel) {
-                    model = Utils::parsePpdColorModel(cModel->defchoice);
+            ppd_option_t *ppdColorModel = ppdFindOption(ppd, "ColorModel");
+            if (ppdColorModel) {
+                ppd_choice_t* def = ppdFindChoice(ppdColorModel,
+                                                  ppdColorModel->defchoice);
+                if (def) {
+                    model = Utils::parsePpdColorModel(def->choice,
+                                                      def->text,
+                                                      "ColorModel");
                 }
             }
             ret[option] = QVariant::fromValue(model);
+        } else if (option == "DefaultPrintQuality") {
+            PrintQuality quality;
+            Q_FOREACH(const QString opt, m_knownQualityOptions) {
+                ppd_option_t *ppdQuality = ppdFindOption(ppd, opt.toUtf8());
+                if (ppdQuality) {
+                    ppd_choice_t* def = ppdFindChoice(ppdQuality,
+                                                      ppdQuality->defchoice);
+                    if (def) {
+                        quality = Utils::parsePpdPrintQuality(def->choice,
+                                                              def->text, opt);
+                    }
+                }
+            }
+            ret[option] = QVariant::fromValue(quality);
         } else {
             ppd_option_t *val = ppdFindOption(ppd, option.toUtf8());
 
@@ -246,7 +260,6 @@ QMap<QString, QVariant> CupsFacadeImpl::printerGetOptions(
 
     ppdClose(ppd);
     cupsFreeDests(1, dest);
-
     return ret;
 }
 
@@ -264,8 +277,36 @@ QList<ColorModel> CupsFacadeImpl::printerGetSupportedColorModels(
 
     ppd_option_t *colorModels = ppdFindOption(ppd, "ColorModel");
     if (colorModels) {
-        for (int i = 0; i < colorModels->num_choices; ++i)
-            ret.append(Utils::parsePpdColorModel(colorModels->choices[i].choice));
+        for (int i = 0; i < colorModels->num_choices; ++i) {
+            ret.append(Utils::parsePpdColorModel(colorModels->choices[i].choice,
+                                                 colorModels->choices[i].text,
+                                                 "ColorModel"));
+        }
+    }
+
+    ppdClose(ppd);
+    return ret;
+}
+
+QList<PrintQuality> CupsFacadeImpl::printerGetSupportedQualities(const QString &name) const
+{
+    QList<PrintQuality> ret;
+    ppd_file_t* ppd;
+
+    ppd = helper.getPpdFile(getPrinterName(name), getPrinterInstance(name));
+    if (!ppd) {
+        qCritical() << "Could not get PPD for" << name;
+        return ret;
+    }
+
+    Q_FOREACH(const QString &opt, m_knownQualityOptions) {
+        ppd_option_t *qualityOpt = ppdFindOption(ppd, opt.toUtf8());
+        if (qualityOpt) {
+            for (int i = 0; i < qualityOpt->num_choices; ++i)
+                ret.append(Utils::parsePpdPrintQuality(qualityOpt->choices[i].choice,
+                                                       qualityOpt->choices[i].text,
+                                                       opt));
+        }
     }
 
     ppdClose(ppd);
@@ -310,23 +351,9 @@ cups_dest_t* CupsFacadeImpl::makeDest(const QString &name,
         __CUPS_ADD_OPTION(dest, "page-ranges", options->printRange().toLocal8Bit());
     }
 
-    QString printQuality = "";
-    switch (options->quality()) {
-    case PrinterEnum::Quality::DraftQuality:
-        printQuality = "FastDraft";
-        break;
-    case PrinterEnum::Quality::BestQuality:
-        printQuality = "Best";
-        break;
-    case PrinterEnum::Quality::PhotoQuality:
-        printQuality = "Photo";
-        break;
-    case PrinterEnum::Quality::NormalQuality:
-    default:
-        printQuality = "Normal";
-        break;
-    }
-    __CUPS_ADD_OPTION(dest, "OutputMode", printQuality.toLocal8Bit());
+    PrintQuality quality = options->getPrintQuality();
+    __CUPS_ADD_OPTION(dest, quality.originalOption.toLocal8Bit(),
+                      quality.name.toLocal8Bit());
 
     return dest;
 }

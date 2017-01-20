@@ -121,11 +121,25 @@ MainView {
                             if (enabled)
                                 selectedIndex = printer.colorModel
                         }
+                    }
 
+                    ListItems.ValueSelector {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        visible: printer.supportedPrintQualities.length
+                        text: "Quality"
+                        values: printer.supportedPrintQualities
+                        enabled: values.length > 1
+                        onSelectedIndexChanged: printer.printQuality = selectedIndex
+                        Component.onCompleted: {
+                            if (enabled)
+                                selectedIndex = printer.printQuality
+                        }
                     }
                 }
             }
-
         }
     }
 

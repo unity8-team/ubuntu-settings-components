@@ -31,7 +31,7 @@ PrinterJob::PrinterJob(QObject *parent)
     , m_printer_name(QStringLiteral(""))
     , m_print_range(QStringLiteral(""))
     , m_print_range_mode(PrinterEnum::PrintRange::AllPages)
-    , m_quality(PrinterEnum::Quality::NormalQuality)
+    , m_quality(0)
     // TODO: Do we need a separate Job state?
     // NotStarted, InQueue, Processing, Complete, Error ?
     , m_state(PrinterEnum::State::IdleState)
@@ -88,11 +88,20 @@ int PrinterJob::duplexMode() const
 
 ColorModel PrinterJob::getColorModel() const
 {
+    ColorModel ret;
     if (m_printer && colorModel() > -1 && colorModel() < m_printer->supportedColorModels().count()) {
-        return m_printer->supportedColorModels().at(colorModel());
-    } else {
-        return ColorModel();
+        ret = m_printer->supportedColorModels().at(colorModel());
     }
+    return ret;
+}
+
+PrintQuality PrinterJob::getPrintQuality() const
+{
+    PrintQuality ret;
+    if (m_printer && quality() > -1 && quality() < m_printer->supportedPrintQualities().count()) {
+        ret = m_printer->supportedPrintQualities().at(quality());
+    }
+    return ret;
 }
 
 PrinterEnum::DuplexMode PrinterJob::getDuplexMode() const
@@ -115,7 +124,7 @@ void PrinterJob::loadDefaults()
         // Load defaults from printer
         setColorModel(m_printer->supportedColorModels().indexOf(m_printer->defaultColorModel()));
         setDuplexMode(m_printer->supportedDuplexModes().indexOf(m_printer->defaultDuplexMode()));
-        setQuality(m_printer->quality());
+        setQuality(m_printer->supportedPrintQualities().indexOf(m_printer->defaultPrintQuality()));
     }
 }
 
@@ -152,7 +161,7 @@ PrinterEnum::PrintRange PrinterJob::printRangeMode() const
     return m_print_range_mode;
 }
 
-PrinterEnum::Quality PrinterJob::quality() const
+int PrinterJob::quality() const
 {
     return m_quality;
 }
@@ -261,7 +270,7 @@ void PrinterJob::setPrintRangeMode(const PrinterEnum::PrintRange printRangeMode)
     }
 }
 
-void PrinterJob::setQuality(const PrinterEnum::Quality &quality)
+void PrinterJob::setQuality(const int quality)
 {
     if (m_quality != quality) {
         m_quality = quality;

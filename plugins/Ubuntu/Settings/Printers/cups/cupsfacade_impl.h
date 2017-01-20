@@ -76,7 +76,8 @@ public:
     ) override;
     virtual QList<ColorModel> printerGetSupportedColorModels(
         const QString &name) const override;
-
+    virtual QList<PrintQuality> printerGetSupportedQualities(
+        const QString &name) const override;
     virtual cups_dest_t* makeDest(const QString &name,
                                   const PrinterJob *options) override;
 
@@ -87,6 +88,10 @@ private:
     QString getPrinterName(const QString &name) const;
     QString getPrinterInstance(const QString &name) const;
     QStringList parsePpdColorModel(const QString &colorModel);
+    const QStringList m_knownQualityOptions = QStringList({
+        "Quality", "PrintQuality", "HPPrintQuality", "StpQuality",
+        "OutputMode",
+    });
     CupsPkHelper helper;
 };
 

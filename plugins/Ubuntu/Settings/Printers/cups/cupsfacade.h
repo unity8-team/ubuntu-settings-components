@@ -96,6 +96,8 @@ public:
 
     virtual QList<ColorModel> printerGetSupportedColorModels(
         const QString &name) const = 0;
+    virtual QList<PrintQuality> printerGetSupportedQualities(
+        const QString &name) const = 0;
     virtual int printFileToDest(const QString &filepath,
                                 const QString &title,
                                 const cups_dest_t *dest) = 0;

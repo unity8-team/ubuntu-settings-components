@@ -190,10 +190,17 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
         // case PdfModeRole:
         //     ret = printer->pdfMode();
         //     break;
-        // case QualityRole:
-        //     ret = printer->quality();
-        //     break;
-
+        case PrintQualityRole:
+            ret = printer->supportedPrintQualities().indexOf(printer->defaultPrintQuality());
+            break;
+        case SupportedPrintQualitiesRole: {
+                QStringList qualities;
+                Q_FOREACH(const PrintQuality &q, printer->supportedPrintQualities()) {
+                    qualities.append(q.text.isEmpty() ? q.name : q.text);
+                }
+                ret = qualities;
+            }
+            break;
         case DescriptionRole:
             ret = printer->description();
             break;
@@ -273,6 +280,14 @@ bool PrinterModel::setData(const QModelIndex &index, const QVariant &value, int 
                 }
             }
             break;
+        case PrintQualityRole: {
+                int index = value.toInt();
+                QList<PrintQuality> quals = printer->supportedPrintQualities();
+                if (index >= 0 && quals.size() > index) {
+                    printer->setDefaultPrintQuality(quals.at(index));
+                }
+            }
+            break;
         }
     }
 
@@ -295,7 +310,8 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
         names[PrintRangeRole] = "printRange";
         names[PrintRangeModeRole] = "printRangeMode";
         names[PdfModeRole] = "pdfMode";
-        names[QualityRole] = "quality";
+        names[PrintQualityRole] = "printQuality";
+        names[SupportedPrintQualitiesRole] = "supportedPrintQualities";
         names[DescriptionRole] = "description";
         names[PageSizeRole] = "pageSize";
         names[SupportedPageSizesRole] = "supportedPageSizes";

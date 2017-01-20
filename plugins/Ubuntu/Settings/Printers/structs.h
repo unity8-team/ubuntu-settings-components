@@ -36,18 +36,12 @@ public:
     QString text = QString::null;
     PrinterEnum::ColorModelType colorType
         = PrinterEnum::ColorModelType::UnknownType;
-    PrinterEnum::ColorSpace colorSpace
-        = PrinterEnum::ColorSpace::UnknownSpace;
-    PrinterEnum::ColorOrganization colorOrganization
-        = PrinterEnum::ColorOrganization::UnknownOrganization;
-    QString compressionMode = QString::null;
+
+    QString originalOption = QString::null;
 
     bool operator==(const ColorModel& a) const
     {
-        return (name == a.name && text == a.text && colorType == a.colorType &&
-                colorSpace == a.colorSpace &&
-                colorOrganization == a.colorOrganization &&
-                compressionMode == a.compressionMode);
+        return (name == a.name && originalOption == a.originalOption);
     }
     bool operator!=(const ColorModel& a) const
     {
@@ -56,16 +50,31 @@ public:
     void operator=(const ColorModel &m) {
         name = m.name;
         text = m.text;
-        colorType = m.colorType;
-        colorSpace = m.colorSpace;
-        colorOrganization = m.colorOrganization;
-        compressionMode = m.compressionMode;
+        originalOption = m.originalOption;
+    }
+};
+
+// [1] https://www.cups.org/doc/ppd-compiler.html#COLOR
+
+struct PrintQuality
+{
+public:
+    QString name = "Normal"; // TODO: translate
+    QString text = QString::null;
+
+    // PrintQuality, StpQuality, HPPrintQuality, etc.
+    QString originalOption = QString::null;
+
+    bool operator==(const PrintQuality& a) const
+    {
+        return (name == a.name && originalOption == a.originalOption);
     }
 };
 
 Q_DECLARE_TYPEINFO(ColorModel, Q_PRIMITIVE_TYPE);
 Q_DECLARE_METATYPE(ColorModel)
 
-// [1] https://www.cups.org/doc/ppd-compiler.html#COLOR
+Q_DECLARE_TYPEINFO(PrintQuality, Q_PRIMITIVE_TYPE);
+Q_DECLARE_METATYPE(PrintQuality)
 
 #endif // USC_PRINTERS_STRUCTS_H

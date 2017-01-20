@@ -41,6 +41,7 @@ Printer::~Printer()
 PrinterPrivate::PrinterPrivate(Printer *q)
 {
     loadColorModel();
+    loadPrintQualities();
 }
 
 PrinterPrivate::PrinterPrivate(Printer *q, PrinterInfo *info, CupsFacade *cups)
@@ -49,6 +50,7 @@ PrinterPrivate::PrinterPrivate(Printer *q, PrinterInfo *info, CupsFacade *cups)
     this->cups = cups;
 
     loadColorModel();
+    loadPrintQualities();
 }
 
 PrinterPrivate::~PrinterPrivate()
@@ -70,15 +72,30 @@ void PrinterPrivate::loadColorModel()
             m_supportedColorModels.append(m_defaultColorModel);
         }
     } else {
-        ColorModel rgb = ColorModel();
-        rgb.colorOrganization = PrinterEnum::ColorOrganization::UnknownOrganization;
-        rgb.colorSpace = PrinterEnum::ColorSpace::RGBSpace;
+        ColorModel rgb;
         rgb.colorType = PrinterEnum::ColorModelType::ColorType;
         rgb.name = "RGB";
         rgb.text = "Color";
 
         m_defaultColorModel = rgb;
         m_supportedColorModels = QList<ColorModel>{rgb};
+    }
+}
+
+void PrinterPrivate::loadPrintQualities()
+{
+    if (!this->info->isPdf()) {
+        QString name = this->info->printerName();
+        m_defaultPrintQuality = this->cups->printerGetOption(
+            name, "DefaultPrintQuality").value<PrintQuality>();
+        m_supportedPrintQualities = this->cups->printerGetSupportedQualities(name);
+    } else {
+        PrintQuality quality;
+        m_defaultPrintQuality = quality;
+        m_supportedPrintQualities = QList<PrintQuality>({quality});
+    }
+    if (m_supportedPrintQualities.size() == 0) {
+        m_supportedPrintQualities.append(m_defaultPrintQuality);
     }
 }
 
@@ -92,6 +109,18 @@ QList<ColorModel> Printer::supportedColorModels() const
 {
     Q_D(const Printer);
     return d->m_supportedColorModels;
+}
+
+PrintQuality Printer::defaultPrintQuality() const
+{
+    Q_D(const Printer);
+    return d->m_defaultPrintQuality;
+}
+
+QList<PrintQuality> Printer::supportedPrintQualities() const
+{
+    Q_D(const Printer);
+    return d->m_supportedPrintQualities;
 }
 
 QList<PrinterEnum::DuplexMode> Printer::supportedDuplexModes() const
@@ -135,12 +164,6 @@ QString Printer::name() const
 {
     Q_D(const Printer);
     return d->info->printerName();
-}
-
-PrinterEnum::Quality Printer::quality() const
-{
-    // FIXME: tmp return a valid quality
-    return PrinterEnum::Quality::NormalQuality;
 }
 
 QString Printer::description() const
@@ -216,7 +239,7 @@ void Printer::setDefaultColorModel(const ColorModel &colorModel)
         return;
     }
 
-    QStringList vals({Utils::colorModelToPpdColorModel(colorModel)});
+    QStringList vals({colorModel.name});
     QString reply = d->cups->printerAddOption(name(), "ColorModel", vals);
     Q_UNUSED(reply);
 
@@ -273,9 +296,22 @@ void Printer::setName(const QString &name)
 
 }
 
-void Printer::setQuality(const PrinterEnum::Quality &quality)
+void Printer::setDefaultPrintQuality(const PrintQuality &quality)
 {
+    Q_D(Printer);
 
+    if (defaultPrintQuality() == quality) {
+        return;
+    }
+
+    if (!supportedPrintQualities().contains(quality)) {
+        qWarning() << Q_FUNC_INFO << "quality not supported.";
+        return;
+    }
+
+    QStringList vals({quality.name});
+    QString reply = d->cups->printerAddOption(name(), quality.originalOption, vals);
+    d->loadPrintQualities();
 }
 
 void Printer::setDefaultPageSize(const QPageSize &pageSize)

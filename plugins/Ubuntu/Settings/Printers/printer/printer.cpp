@@ -72,7 +72,7 @@ void PrinterPrivate::loadColorModel()
             m_supportedColorModels.append(m_defaultColorModel);
         }
     } else {
-        ColorModel rgb = ColorModel();
+        ColorModel rgb;
         rgb.colorType = PrinterEnum::ColorModelType::ColorType;
         rgb.name = "RGB";
         rgb.text = "Color";
@@ -84,11 +84,19 @@ void PrinterPrivate::loadColorModel()
 
 void PrinterPrivate::loadPrintQualities()
 {
-    QString name = this->info->printerName();
-
-    m_defaultPrintQuality = this->cups->printerGetOption(
-        name, "DefaultPrintQuality").value<PrintQuality>();
-    m_supportedPrintQualities = this->cups->printerGetSupportedQualities(name);
+    if (!this->info->isPdf()) {
+        QString name = this->info->printerName();
+        m_defaultPrintQuality = this->cups->printerGetOption(
+            name, "DefaultPrintQuality").value<PrintQuality>();
+        m_supportedPrintQualities = this->cups->printerGetSupportedQualities(name);
+    } else {
+        PrintQuality quality;
+        m_defaultPrintQuality = quality;
+        m_supportedPrintQualities = QList<PrintQuality>({quality});
+    }
+    if (m_supportedPrintQualities.size() == 0) {
+        m_supportedPrintQualities.append(m_defaultPrintQuality);
+    }
 }
 
 ColorModel Printer::defaultColorModel() const

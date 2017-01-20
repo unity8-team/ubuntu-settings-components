@@ -59,7 +59,7 @@ public:
 struct PrintQuality
 {
 public:
-    QString name = QString::null;
+    QString name = "Normal"; // TODO: translate
     QString text = QString::null;
 
     // PrintQuality, StpQuality, HPPrintQuality, etc.

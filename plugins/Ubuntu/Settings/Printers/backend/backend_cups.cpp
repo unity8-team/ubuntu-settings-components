@@ -24,6 +24,8 @@
 PrinterCupsBackend::PrinterCupsBackend(QObject *parent)
     : PrinterCupsBackend(new CupsFacade(), QPrinterInfo(), parent)
 {
+    // If we create the CupsFacade, we're in charge of RAII.
+    m_cups->setParent(this);
 }
 
 PrinterCupsBackend::PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
@@ -32,7 +34,6 @@ PrinterCupsBackend::PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
     , m_cups(cups)
     , m_info(info)
 {
-
 }
 
 PrinterCupsBackend::~PrinterCupsBackend()
@@ -58,7 +59,6 @@ QString PrinterCupsBackend::printerAddWithPpd(const QString &name,
 
 }
 
-
 bool PrinterCupsBackend::holdsDefinition() const
 {
     return !m_info.isNull();
@@ -68,11 +68,13 @@ QString PrinterCupsBackend::printerDelete(const QString &name)
 {
 
 }
+
 QString PrinterCupsBackend::printerSetEnabled(const QString &name,
                                               const bool enabled)
 {
 
 }
+
 QString PrinterCupsBackend::printerSetAcceptJobs(
         const QString &name,
         const bool enabled,
@@ -80,27 +82,32 @@ QString PrinterCupsBackend::printerSetAcceptJobs(
 {
 
 }
+
 QString PrinterCupsBackend::printerSetInfo(const QString &name,
                                            const QString &info)
 {
     return m_cups->printerSetInfo(name, info);
 }
+
 QString PrinterCupsBackend::printerSetLocation(const QString &name,
                                                const QString &location)
 {
     return m_cups->printerSetLocation(name, location);
 }
+
 QString PrinterCupsBackend::printerSetShared(const QString &name,
                                              const bool shared)
 {
     return m_cups->printerSetShared(name, shared);
 }
+
 QString PrinterCupsBackend::printerSetJobSheets(const QString &name,
                                                 const QString &start,
                                                 const QString &end)
 {
     return m_cups->printerSetJobSheets(name, start, end);
 }
+
 QString PrinterCupsBackend::printerSetErrorPolicy(const QString &name,
                                                   const PrinterEnum::ErrorPolicy &policy)
 {
@@ -112,27 +119,32 @@ QString PrinterCupsBackend::printerSetOpPolicy(const QString &name,
 {
     return m_cups->printerSetOpPolicy(name, policy);
 }
+
 QString PrinterCupsBackend::printerSetUsersAllowed(const QString &name,
                                                    const QStringList &users)
 {
     return m_cups->printerSetUsersAllowed(name, users);
 }
+
 QString PrinterCupsBackend::printerSetUsersDenied(const QString &name,
                                                   const QStringList &users)
 {
     return m_cups->printerSetUsersDenied(name, users);
 }
+
 QString PrinterCupsBackend::printerAddOptionDefault(const QString &name,
                                                     const QString &option,
                                                     const QStringList &values)
 {
     return m_cups->printerAddOptionDefault(name, option, values);
 }
+
 QString PrinterCupsBackend::printerDeleteOptionDefault(const QString &name,
                                                        const QString &value)
 {
     return m_cups->printerDeleteOptionDefault(name, value);
 }
+
 QString PrinterCupsBackend::printerAddOption(const QString &name,
                                              const QString &option,
                                              const QStringList &values)

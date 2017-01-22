@@ -42,7 +42,7 @@ class PRINTERS_DECL_EXPORT Printers : public QObject
 public:
     explicit Printers(int printerUpdateIntervalMSecs = 5000, QObject *parent = nullptr);
 
-    // Printers takes ownership of backend.
+    // Note: Printers takes ownership of backend.
     explicit Printers(PrinterBackend *backend,
                       int printerUpdateIntervalMSecs = 5000,
                       QObject *parent = nullptr);

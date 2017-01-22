@@ -36,7 +36,7 @@ Printer::Printer(PrinterBackend *backend, QObject *parent)
 
 Printer::~Printer()
 {
-
+    m_backend->deleteLater();
 }
 
 void Printer::loadColorModel()

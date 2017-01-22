@@ -55,6 +55,11 @@ void PrinterModel::update()
     int oldCount = m_printers.size();
     QList<Printer*> newPrinters = m_backend->availablePrinters();
 
+    /* If any printers returned from the backend are irrelevant, we delete
+    them. This a list of indices that corresponds to printers scheduled for
+    deletion in newPrinters. */
+    QList<uint> forDeletion;
+
     // Go through the old model
     for (int i=0; i < m_printers.count(); i++) {
         // Determine if the old printer exists in the new model
@@ -70,7 +75,8 @@ void PrinterModel::update()
         // If it doesn't exist then remove it from the old model
         if (!exists) {
             beginRemoveRows(QModelIndex(), i, i);
-            m_printers.removeAt(i);
+            Printer *p = m_printers.takeAt(i);
+            p->deleteLater();
             endRemoveRows();
 
             i--;  // as we have removed an item decrement
@@ -86,6 +92,7 @@ void PrinterModel::update()
         for (j=0; j < m_printers.count(); j++) {
             if (m_printers.at(j)->name() == newPrinters.at(i)->name()) {
                 exists = true;
+                forDeletion << i;
                 break;
             }
         }
@@ -99,12 +106,19 @@ void PrinterModel::update()
                 m_printers.move(j, i);
                 endMoveRows();
             }
+
+            // We can safely delete the newPrinter as it already exists.
+            forDeletion << i;
         } else {
             // New printer does not exist insert into model
             beginInsertRows(QModelIndex(), i, i);
             m_printers.insert(i, newPrinters.at(i));
             endInsertRows();
         }
+    }
+
+    Q_FOREACH(const int &index, forDeletion) {
+        newPrinters.at(index)->deleteLater();
     }
 
     if (oldCount != m_printers.size()) {

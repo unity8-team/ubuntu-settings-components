@@ -38,11 +38,13 @@ Printers::Printers(PrinterBackend *backend, int printerUpdateIntervalMSecs,
     m_allPrintersWithPdf.setSourceModel(&m_model);
     m_allPrintersWithPdf.setSortRole(PrinterModel::Roles::DefaultPrinterRole);
     m_allPrintersWithPdf.sort(0, Qt::DescendingOrder);
+
+    // Let Qt be in charge of RAII.
+    m_backend->setParent(this);
 }
 
 Printers::~Printers()
 {
-    delete m_backend;
 }
 
 QAbstractItemModel* Printers::allPrinters()

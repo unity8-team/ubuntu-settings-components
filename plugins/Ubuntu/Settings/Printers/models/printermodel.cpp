@@ -19,7 +19,6 @@
 #include "backend/backend_cups.h"
 #include "cups/cupsfacade.h"
 #include "models/printermodel.h"
-// #include "printer/printerinfo_allimpl.h"
 
 #include <QDebug>
 
@@ -40,7 +39,6 @@ PrinterModel::PrinterModel(PrinterBackend *backend,
 
 PrinterModel::~PrinterModel()
 {
-
 }
 
 void PrinterModel::startUpdateTimer(const int &msecs)

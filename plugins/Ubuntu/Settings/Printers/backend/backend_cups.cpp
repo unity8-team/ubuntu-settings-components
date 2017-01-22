@@ -18,6 +18,9 @@
 #include "backend/backend_pdf.h"
 #include "utils.h"
 
+#include <exception>
+#include <stdexcept>
+
 PrinterCupsBackend::PrinterCupsBackend(QObject *parent)
     : PrinterCupsBackend(new CupsFacade(), QPrinterInfo(), parent)
 {
@@ -25,7 +28,7 @@ PrinterCupsBackend::PrinterCupsBackend(QObject *parent)
 
 PrinterCupsBackend::PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
                                        QObject *parent)
-    : PrinterBackend(parent)
+    : PrinterBackend(info.printerName(), parent)
     , m_cups(cups)
     , m_info(info)
 {
@@ -168,7 +171,6 @@ ColorModel PrinterCupsBackend::printerGetDefaultColorModel(
     return printerGetOption(name, "DefaultColorModel").value<ColorModel>();
 }
 
-
 QList<PrintQuality> PrinterCupsBackend::printerGetSupportedQualities(
         const QString &name) const
 {
@@ -296,7 +298,7 @@ PrinterBackend::BackendType PrinterCupsBackend::backendType() const
 void PrinterCupsBackend::refresh()
 {
     if (m_printerName.isEmpty()) {
-        m_info = QPrinterInfo();
+        throw std::invalid_argument("Trying to refresh unnamed printer.");
     } else {
         m_info = QPrinterInfo::printerInfo(m_printerName);
     }

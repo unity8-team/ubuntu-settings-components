@@ -37,7 +37,7 @@ private Q_SLOTS:
     {
         m_backend = new MockPrinterBackend(m_printer_name);
         m_mock_printer = new Printer(m_backend);
-        m_instance = new PrinterJob(m_mock_printer);
+        m_instance = new PrinterJob(m_mock_printer, m_backend);
     }
     void cleanup()
     {
@@ -57,7 +57,7 @@ private Q_SLOTS:
         m_instance->deleteLater();
         QTRY_COMPARE(destroyedSpy.count(), 1);
 
-        m_instance = new PrinterJob(m_mock_printer);
+        m_instance = new PrinterJob(m_mock_printer, m_backend);
     }
 
     void testCancel()

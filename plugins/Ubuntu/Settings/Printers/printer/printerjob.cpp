@@ -21,39 +21,33 @@
 #include "printer/printerjob.h"
 
 PrinterJob::PrinterJob(QObject *parent)
-    : QObject(parent)
-    , m_color_model(0)
-    , m_copies(1)
-    , m_backend(new PrinterCupsBackend())
-    , m_duplex_mode(0)
-    , m_printer(Q_NULLPTR)
-    , m_printer_name(QStringLiteral(""))
-    , m_print_range(QStringLiteral(""))
-    , m_print_range_mode(PrinterEnum::PrintRange::AllPages)
-    , m_quality(0)
-    // TODO: Do we need a separate Job state?
-    // NotStarted, InQueue, Processing, Complete, Error ?
-    , m_state(PrinterEnum::State::IdleState)
-    , m_title(QStringLiteral(""))
+    : PrinterJob(Q_NULLPTR, parent)
 {
-
 }
 
 PrinterJob::PrinterJob(Printer *printer, QObject *parent)
+    : PrinterJob(printer, new PrinterCupsBackend, parent)
+{
+}
+
+PrinterJob::PrinterJob(Printer *printer, PrinterBackend *backend,
+                       QObject *parent)
     : QObject(parent)
+    , m_color_model(0)
     , m_copies(1)
-    , m_backend(new PrinterCupsBackend())
+    , m_backend(backend)
+    , m_duplex_mode(0)
     , m_printer(printer)
     , m_printer_name(QStringLiteral(""))
     , m_print_range(QStringLiteral(""))
     , m_print_range_mode(PrinterEnum::PrintRange::AllPages)
-    // TODO: Do we need a separate Job state?
-    // NotStarted, InQueue, Processing, Complete, Error ?
+    , m_quality(0)
     , m_state(PrinterEnum::State::IdleState)
     , m_title(QStringLiteral(""))
 {
     loadDefaults();
 }
+
 
 PrinterJob::~PrinterJob()
 {

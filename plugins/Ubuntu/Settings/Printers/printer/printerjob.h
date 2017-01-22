@@ -49,6 +49,8 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
 public:
     explicit PrinterJob(QObject *parent=Q_NULLPTR);
     explicit PrinterJob(Printer *printer, QObject *parent=Q_NULLPTR);
+    explicit PrinterJob(Printer *printer, PrinterBackend *backend,
+                        QObject *parent=Q_NULLPTR);
     ~PrinterJob();
 
     int colorModel() const;

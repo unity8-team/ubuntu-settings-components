@@ -159,7 +159,7 @@ MainView {
             ListView {
                 id: printerList
                 anchors { fill: parent }
-                model: Printers.allPrinters
+                model: Printers.allPrintersWithPdf
                 delegate: ListItem {
                     height: modelLayout.height + (divider.visible ? divider.height : 0)
                     ListItemLayout {

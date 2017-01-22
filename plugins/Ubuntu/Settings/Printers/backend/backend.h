@@ -17,45 +17,137 @@
 #ifndef USC_PRINTERS_BACKEND_H
 #define USC_PRINTERS_BACKEND_H
 
-#include <QObject>
+#include "printer/printer.h"
+#include "printer/printerjob.h"
 
-class PrinterBackend : public QObject
+// TODO: remove cups specific things from this API
+#include <cups/cups.h>
+
+#include <QObject>
+#include <QPageSize>
+#include <QList>
+#include <QString>
+#include <QStringList>
+
+class Printer;
+class PrinterJob;
+class PRINTERS_DECL_EXPORT PrinterBackend : public QObject
 {
     Q_OBJECT
 public:
-    explicit PrinterBackend(QObject *parent = Q_NULLPTR) {};
-    explicit PrinterBackend() {};
-    virtual ~PrinterBackend() {};
+    explicit PrinterBackend(QObject *parent = Q_NULLPTR);
+    explicit PrinterBackend(const QString &printerName,
+                            QObject *parent = Q_NULLPTR);
+    virtual ~PrinterBackend();
 
-    virtual QString printerName() const = 0;
-    virtual QString description() const = 0;
-    virtual QString location() const = 0;
-    virtual QString makeAndModel() const = 0;
+    enum class BackendType
+    {
+        DefaultType = 0,
+        CupsType,
+        PdfType,
+    };
+    Q_ENUM(BackendType);
 
-    virtual PrinterEnum::State state() const = 0;
-    virtual QList<QPageSize> supportedPageSizes() const = 0;
-    virtual QPageSize defaultPageSize() const = 0;
-    virtual bool supportsCustomPageSizes() const = 0;
+    virtual bool holdsDefinition() const;
 
-    virtual QPageSize minimumPhysicalPageSize() const = 0;
-    virtual QPageSize maximumPhysicalPageSize() const = 0;
-    virtual QList<int> supportedResolutions() const = 0;
-    virtual PrinterEnum::DuplexMode defaultDuplexMode() const = 0;
-    virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const = 0;
+    virtual QString printerAdd(const QString &name,
+                               const QUrl &uri,
+                               const QUrl &ppdFile,
+                               const QString &info,
+                               const QString &location);
+    virtual QString printerAddWithPpd(const QString &name,
+                                      const QUrl &uri,
+                                      const QString &ppdFileName,
+                                      const QString &info,
+                                      const QString &location);
+    virtual QString printerDelete(const QString &name);
+    virtual QString printerSetEnabled(const QString &name,
+                                      const bool enabled);
+    virtual QString printerSetAcceptJobs(
+        const QString &name,
+        const bool enabled,
+        const QString &reason = QString::null);
+    virtual QString printerSetInfo(const QString &name,
+                                   const QString &info);
+    virtual QString printerSetLocation(const QString &name,
+                                       const QString &location);
+    virtual QString printerSetShared(const QString &name,
+                                     const bool shared);
+    virtual QString printerSetJobSheets(const QString &name,
+                                        const QString &start,
+                                        const QString &end);
+    virtual QString printerSetErrorPolicy(const QString &name,
+                                          const PrinterEnum::ErrorPolicy &policy);
 
-    virtual QList<PrinterInfo*> availablePrinters() = 0;
-    virtual QStringList availablePrinterNames() = 0;
-    virtual PrinterInfo* printerInfo(const QString &printerName) = 0;
-    virtual QString defaultPrinterName() = 0;
+    virtual QString printerSetOpPolicy(const QString &name,
+                                       const PrinterEnum::OperationPolicy &policy);
+    virtual QString printerSetUsersAllowed(const QString &name,
+                                           const QStringList &users);
+    virtual QString printerSetUsersDenied(const QString &name,
+                                          const QStringList &users);
+    virtual QString printerAddOptionDefault(const QString &name,
+                                            const QString &option,
+                                            const QStringList &values);
+    virtual QString printerDeleteOptionDefault(const QString &name,
+                                               const QString &value);
+    virtual QString printerAddOption(const QString &name,
+                                     const QString &option,
+                                     const QStringList &values);
 
-    virtual bool isPdf() const = 0;
+    // TODO: const for both these getters (if possible)!
+    virtual QVariant printerGetOption(const QString &name,
+                                      const QString &option) const;
+    virtual QMap<QString, QVariant> printerGetOptions(
+        const QString &name, const QStringList &options
+    );
+    // FIXME: maybe have a PrinterDest iface that has a CupsDest impl?
+    virtual cups_dest_t* makeDest(const QString &name,
+                                  const PrinterJob *options);
 
-    virtual void refresh() = 0;
+    virtual QList<ColorModel> printerGetSupportedColorModels(
+        const QString &name) const;
+    virtual ColorModel printerGetDefaultColorModel(const QString &name) const;
+    virtual QList<PrintQuality> printerGetSupportedQualities(
+        const QString &name) const;
+    virtual PrintQuality printerGetDefaultQuality(const QString &name) const;
+    virtual int printFileToDest(const QString &filepath,
+                                const QString &title,
+                                const cups_dest_t *dest);
+
+    virtual QString printerName() const;
+    virtual QString description() const;
+    virtual QString location() const;
+    virtual QString makeAndModel() const;
+
+    virtual PrinterEnum::State state() const;
+    virtual QList<QPageSize> supportedPageSizes() const;
+    virtual QPageSize defaultPageSize() const;
+    virtual bool supportsCustomPageSizes() const;
+
+    virtual QPageSize minimumPhysicalPageSize() const;
+    virtual QPageSize maximumPhysicalPageSize() const;
+    virtual QList<int> supportedResolutions() const;
+    virtual PrinterEnum::DuplexMode defaultDuplexMode() const;
+    virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const;
+
+    virtual QList<Printer*> availablePrinters();
+    virtual QStringList availablePrinterNames();
+    virtual Printer* getPrinter(const QString &printerName);
+    virtual QString defaultPrinterName();
+
+    virtual BackendType backendType() const;
+
+public Q_SLOT:
+    virtual void refresh();
+
+Q_SIGNALS:
+    void printerAdded(const QString &name);
+    void printerModified(const QString &name, const bool ppdChanged);
+    void printerDeleted(const QString &name);
+    void printerStateChanged(const QString &name);
+
 protected:
     const QString m_printerName;
-
 };
-
-Q_DECLARE_TYPEINFO(PrinterInfo, Q_MOVABLE_TYPE);
 
 #endif // USC_PRINTERS_BACKEND_H

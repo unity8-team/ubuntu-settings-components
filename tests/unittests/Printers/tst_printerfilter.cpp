@@ -14,8 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mockcupsfacade.h"
-#include "mockprinterinfo.h"
+#include "mockbackend.h"
 
 #include "models/printermodel.h"
 
@@ -24,8 +23,7 @@
 #include <QScopedPointer>
 #include <QTest>
 
-Q_DECLARE_METATYPE(CupsFacade*)
-Q_DECLARE_METATYPE(PrinterInfo*)
+Q_DECLARE_METATYPE(PrinterBackend*)
 Q_DECLARE_METATYPE(PrinterJob*)
 
 class TestPrinterFilter : public QObject
@@ -34,9 +32,8 @@ class TestPrinterFilter : public QObject
 private Q_SLOTS:
     void testEmptyCount()
     {
-        QScopedPointer<CupsFacade> cups(new MockCupsFacade);
-        QScopedPointer<PrinterInfo> info(new MockPrinterInfo);
-        PrinterModel model(info.data(), cups.data(), 100);
+        QScopedPointer<PrinterBackend> backend(new MockPrinterBackend);
+        PrinterModel model(backend.data(), 100);
 
         PrinterFilter filter;
         filter.setSourceModel(&model);
@@ -44,14 +41,15 @@ private Q_SLOTS:
     }
     void testNonEmptyCount()
     {
-        QScopedPointer<CupsFacade> cups(new MockCupsFacade);
-        QScopedPointer<PrinterInfo> info(new MockPrinterInfo);
-        PrinterModel model(info.data(), cups.data(), 100);
+        QScopedPointer<PrinterBackend> backend(new MockPrinterBackend);
+        PrinterModel model(backend.data(), 100);
 
-        PrinterInfo* printerA = new MockPrinterInfo("a-printer");
-        PrinterInfo* printerB = new MockPrinterInfo("b-printer");
+        PrinterBackend* printerABackend = new MockPrinterBackend("a-printer");
+        PrinterBackend* printerBBackend = new MockPrinterBackend("b-printer");
+        Printer printerA(printerABackend);
+        Printer printerB(printerBBackend);
 
-        ((MockPrinterInfo*) info.data())->m_availablePrinters << printerA << printerB;
+        ((MockPrinterBackend*) backend.data())->m_availablePrinters << &printerA << &printerB;
 
         PrinterFilter filter;
         filter.setSourceModel(&model);
@@ -60,14 +58,15 @@ private Q_SLOTS:
     }
     void testCountChanged()
     {
-        QScopedPointer<CupsFacade> cups(new MockCupsFacade);
-        QScopedPointer<PrinterInfo> info(new MockPrinterInfo);
-        PrinterModel model(info.data(), cups.data(), 100);
+        QScopedPointer<PrinterBackend> backend(new MockPrinterBackend);
+        PrinterModel model(backend.data(), 100);
 
-        PrinterInfo* printerA = new MockPrinterInfo("a-printer");
-        PrinterInfo* printerB = new MockPrinterInfo("b-printer");
+        PrinterBackend* printerABackend = new MockPrinterBackend("a-printer");
+        PrinterBackend* printerBBackend = new MockPrinterBackend("b-printer");
+        Printer printerA(printerABackend);
+        Printer printerB(printerBBackend);
 
-        ((MockPrinterInfo*) info.data())->m_availablePrinters << printerA << printerB;
+        ((MockPrinterBackend*) backend.data())->m_availablePrinters << &printerA << &printerB;
 
         PrinterFilter filter;
         filter.setSourceModel(&model);

@@ -29,15 +29,14 @@
 #include <QTimer>
 #include <QVariant>
 
-class PrinterModelPrivate;
 class PRINTERS_DECL_EXPORT PrinterModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(PrinterModel)
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
-    explicit PrinterModel(int timerMsec=5000, QObject *parent = 0);
-    explicit PrinterModel(PrinterInfo *info, CupsFacade *cups, int timerMsec=5000, QObject *parent = 0);
+    explicit PrinterModel(const int updateIntervalMSecs=5000, QObject *parent = Q_NULLPTR);
+    explicit PrinterModel(PrinterBackend *backend, const int updateIntervalMSecs=5000,
+                          QObject *parent = Q_NULLPTR);
     ~PrinterModel();
 
     enum Roles
@@ -75,15 +74,19 @@ public:
 
     int count() const;
 
-    QSharedPointer<Printer> getPrinterFromName(const QString &name);
+    Printer* getPrinterFromName(const QString &name);
 
     Q_INVOKABLE QVariantMap get(const int row) const;
 private:
-    QScopedPointer<PrinterModelPrivate> const d_ptr;
     QTimer m_update_timer;
+    PrinterBackend *m_backend;
+
+    /* FIXME: there's currently no need to share the Printer obj with QML, so
+    this should be normal pointers that are deletedLater. */
+    QList<Printer*> m_printers;
 
 private Q_SLOTS:
-    void startUpdateTimer(int msecs);
+    void startUpdateTimer(const int &msecs);
     void update();
 
 Q_SIGNALS:

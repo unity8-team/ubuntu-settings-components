@@ -16,39 +16,26 @@
 
 #include "utils.h"
 
-#include "cups/cupsfacade_impl.h"
+#include "backend/backend_cups.h"
+#include "cups/cupsfacade.h"
 #include "models/printermodel.h"
-#include "models/printermodel_p.h"
-#include "printer/printerinfo_allimpl.h"
+// #include "printer/printerinfo_allimpl.h"
 
 #include <QDebug>
 
-PrinterModel::PrinterModel(int timerMsec, QObject *parent)
+PrinterModel::PrinterModel(const int updateIntervalMSecs, QObject *parent)
+    : PrinterModel(new PrinterCupsBackend, updateIntervalMSecs, parent)
+{
+}
+
+PrinterModel::PrinterModel(PrinterBackend *backend,
+                           const int updateIntervalMSecs,
+                           QObject *parent)
     : QAbstractListModel(parent)
-    , d_ptr(new PrinterModelPrivate(this))
+    , m_backend(backend)
 {
     update();
-    startUpdateTimer(timerMsec);
-}
-
-PrinterModel::PrinterModel(PrinterInfo *info, CupsFacade *cups, int timerMsec, QObject *parent)
-    : QAbstractListModel(parent)
-    , d_ptr(new PrinterModelPrivate(this, info, cups))
-{
-    update();
-    startUpdateTimer(timerMsec);
-}
-
-PrinterModelPrivate::PrinterModelPrivate(PrinterModel *q)
-{
-    this->info = new PrinterInfoAllImpl;
-    this->cups = new CupsFacadeImpl;
-}
-
-PrinterModelPrivate::PrinterModelPrivate(PrinterModel *q, PrinterInfo *info, CupsFacade *cups)
-{
-    this->info = info;
-    this->cups = cups;
+    startUpdateTimer(updateIntervalMSecs);
 }
 
 PrinterModel::~PrinterModel()
@@ -56,7 +43,7 @@ PrinterModel::~PrinterModel()
 
 }
 
-void PrinterModel::startUpdateTimer(int msecs)
+void PrinterModel::startUpdateTimer(const int &msecs)
 {
     // Start a timer to poll for changes in the printers
     m_update_timer.setParent(this);
@@ -66,19 +53,17 @@ void PrinterModel::startUpdateTimer(int msecs)
 
 void PrinterModel::update()
 {
-    Q_D(PrinterModel);
-
     // Store the old count and get the new printers
-    int oldCount = d->printers.size();
-    QList<PrinterInfo *> newPrinters = d->info->availablePrinters();
+    int oldCount = m_printers.size();
+    QList<Printer*> newPrinters = m_backend->availablePrinters();
 
     // Go through the old model
-    for (int i=0; i < d->printers.count(); i++) {
+    for (int i=0; i < m_printers.count(); i++) {
         // Determine if the old printer exists in the new model
         bool exists = false;
 
-        Q_FOREACH(PrinterInfo *p, newPrinters) {
-            if (p->printerName() == d->printers.at(i)->name()) {
+        Q_FOREACH(Printer *p, newPrinters) {
+            if (p->name() == m_printers.at(i)->name()) {
                 exists = true;
                 break;
             }
@@ -87,7 +72,7 @@ void PrinterModel::update()
         // If it doesn't exist then remove it from the old model
         if (!exists) {
             beginRemoveRows(QModelIndex(), i, i);
-            d->printers.removeAt(i);
+            m_printers.removeAt(i);
             endRemoveRows();
 
             i--;  // as we have removed an item decrement
@@ -100,8 +85,8 @@ void PrinterModel::update()
         bool exists = false;
         int j;
 
-        for (j=0; j < d->printers.count(); j++) {
-            if (d->printers.at(j)->name() == newPrinters.at(i)->printerName()) {
+        for (j=0; j < m_printers.count(); j++) {
+            if (m_printers.at(j)->name() == newPrinters.at(i)->name()) {
                 exists = true;
                 break;
             }
@@ -113,21 +98,18 @@ void PrinterModel::update()
             } else {
                 // New printer does exist but needs to be moved in old model
                 beginMoveRows(QModelIndex(), j, 1, QModelIndex(), i);
-                d->printers.move(j, i);
+                m_printers.move(j, i);
                 endMoveRows();
             }
         } else {
             // New printer does not exist insert into model
             beginInsertRows(QModelIndex(), i, i);
-            QSharedPointer<Printer> printer = QSharedPointer<Printer>(
-                new Printer(newPrinters.at(i), d->cups)
-            );
-            d->printers.insert(i, printer);
+            m_printers.insert(i, newPrinters.at(i));
             endInsertRows();
         }
     }
 
-    if (oldCount != d->printers.size()) {
+    if (oldCount != m_printers.size()) {
         Q_EMIT countChanged();
     }
 }
@@ -135,8 +117,7 @@ void PrinterModel::update()
 int PrinterModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    Q_D(const PrinterModel);
-    return d->printers.size();
+    return m_printers.size();
 }
 
 int PrinterModel::count() const
@@ -146,12 +127,11 @@ int PrinterModel::count() const
 
 QVariant PrinterModel::data(const QModelIndex &index, int role) const
 {
-    Q_D(const PrinterModel);
     QVariant ret;
 
-    if ((0<=index.row()) && (index.row()<d->printers.size())) {
+    if ((0<=index.row()) && (index.row()<m_printers.size())) {
 
-        auto printer = d->printers[index.row()];
+        auto printer = m_printers[index.row()];
 
         switch (role) {
         case NameRole:
@@ -229,8 +209,7 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
         //     ret = printer->state();
         //     break;
         case PrinterRole:
-            // TODO: figure out how crazy this is...
-            ret = QVariant::fromValue(printer.data());
+            ret = QVariant::fromValue(printer);
             break;
         case IsPdfRole:
             ret = printer->isPdf();
@@ -244,13 +223,12 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
     return ret;
 }
 
-bool PrinterModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool PrinterModel::setData(const QModelIndex &index,
+                           const QVariant &value, int role)
 {
-    Q_D(const PrinterModel);
+    if ((0<=index.row()) && (index.row()<m_printers.size())) {
 
-    if ((0<=index.row()) && (index.row()<d->printers.size())) {
-
-        auto printer = d->printers[index.row()];
+        auto printer = m_printers[index.row()];
 
         switch (role) {
         case ColorModelRole: {
@@ -341,10 +319,10 @@ QVariantMap PrinterModel::get(const int row) const
     return result;
 }
 
-QSharedPointer<Printer> PrinterModel::getPrinterFromName(const QString &name)
+Printer* PrinterModel::getPrinterFromName(const QString &name)
 {
     Q_UNUSED(name);
-    return QSharedPointer<Printer>(nullptr);
+    return Q_NULLPTR;
 }
 
 PrinterFilter::PrinterFilter(QObject *parent) : QSortFilterProxyModel(parent)

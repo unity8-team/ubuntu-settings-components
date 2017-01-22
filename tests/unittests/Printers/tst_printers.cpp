@@ -14,10 +14,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mockcupsfacade.h"
-#include "mockprinterinfo.h"
+#include "mockbackend.h"
 
-#include "cups/cupsfacade.h"
+#include "backend/backend.h"
 #include "printers/printers.h"
 
 #include <QDebug>
@@ -25,9 +24,8 @@
 #include <QSignalSpy>
 #include <QTest>
 
-Q_DECLARE_METATYPE(CupsFacade*)
-Q_DECLARE_METATYPE(PrinterInfo*)
-Q_DECLARE_METATYPE(QList<PrinterInfo*>)
+Q_DECLARE_METATYPE(PrinterBackend*)
+Q_DECLARE_METATYPE(QList<Printer*>)
 
 class TestPrinters : public QObject
 {
@@ -35,33 +33,31 @@ class TestPrinters : public QObject
 private Q_SLOTS:
     void testInstantiation_data()
     {
-        QTest::addColumn<CupsFacade*>("cups");
-        QTest::addColumn<PrinterInfo*>("info");
+        QTest::addColumn<PrinterBackend*>("backend");
 
         {
-            CupsFacade* cups = new MockCupsFacade;
-            PrinterInfo* info = new MockPrinterInfo;
-            QTest::newRow("no printers") << cups << info;
+            PrinterBackend* backend = new MockPrinterBackend;
+            QTest::newRow("no printers") << backend;
         }
     }
     void testInstantiation()
     {
-        QFETCH(CupsFacade*, cups);
-        QFETCH(PrinterInfo*, info);
-
-        Printers printers(info, cups);
+        QFETCH(PrinterBackend*, backend);
+        Printers printers(backend);
     }
     void testAllPrintersFilter_data()
     {
-        QTest::addColumn<QList<PrinterInfo*>>("in");
-        QTest::addColumn<QList<PrinterInfo*>>("out");
+        QTest::addColumn<QList<Printer*>>("in");
+        QTest::addColumn<QList<Printer*>>("out");
 
         {
-            auto in = QList<PrinterInfo*>();
-            auto out = QList<PrinterInfo*>();
+            auto in = QList<Printer*>();
+            auto out = QList<Printer*>();
 
-            auto a = new MockPrinterInfo("printer-a");
-            auto b = new MockPrinterInfo("printer-b");
+            auto aBackend = new MockPrinterBackend("printer-a");
+            auto a = new Printer(aBackend);
+            auto bBackend = new MockPrinterBackend("printer-b");
+            auto b = new Printer(bBackend);
 
             in << a << b;
             out << a << b;
@@ -69,12 +65,14 @@ private Q_SLOTS:
             QTest::newRow("no defaults") << in << out;
         }
         {
-            auto in = QList<PrinterInfo*>();
-            auto out = QList<PrinterInfo*>();
+            auto in = QList<Printer*>();
+            auto out = QList<Printer*>();
 
-            auto a = new MockPrinterInfo("printer-a");
-            auto b = new MockPrinterInfo("printer-b");
-            b->m_defaultPrinterName = "printer-b";
+            auto aBackend = new MockPrinterBackend("printer-a");
+            auto a = new Printer(aBackend);
+            auto bBackend = new MockPrinterBackend("printer-b");
+            auto b = new Printer(bBackend);
+            bBackend->m_defaultPrinterName = "printer-b";
 
             in << a << b;
             out << b << a;
@@ -84,22 +82,20 @@ private Q_SLOTS:
     }
     void testAllPrintersFilter()
     {
-        QFETCH(QList<PrinterInfo*>, in);
-        QFETCH(QList<PrinterInfo*>, out);
+        QFETCH(QList<Printer*>, in);
+        QFETCH(QList<Printer*>, out);
 
-        CupsFacade* cups = new MockCupsFacade;
-        PrinterInfo* info = new MockPrinterInfo;
+        PrinterBackend* backend = new MockPrinterBackend;
+        ((MockPrinterBackend*) backend)->m_availablePrinters = in;
 
-        ((MockPrinterInfo*) info)->m_availablePrinters = in;
-
-        Printers printers(info, cups, 100);
+        Printers printers(backend, 100);
         auto all = printers.allPrinters();
 
         QTRY_COMPARE_WITH_TIMEOUT(all->rowCount(), out.size(), 101);
         for (int i = 0; i < all->rowCount(); i++) {
             QCOMPARE(
                  all->data(all->index(i, 0)).toString(),
-                 out.at(i)->printerName()
+                 out.at(i)->name()
             );
         }
     }

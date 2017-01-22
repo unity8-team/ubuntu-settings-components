@@ -6,8 +6,7 @@ find_package(Qt5Gui REQUIRED)
 find_package(Qt5Test REQUIRED)
 
 set(MOCK_SOURCES
-    mockcupsfacade.h
-    mockprinterinfo.h
+    mockbackend.h
 )
 
 add_executable(testPrintersPrinter tst_printer.cpp ${MOCK_SOURCES})

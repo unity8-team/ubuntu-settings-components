@@ -16,7 +16,7 @@
 
 #include "utils.h"
 
-#include "cups/cupsfacade_impl.h"
+#include "cups/cupsfacade.h"
 
 #include <cups/http.h>
 #include <cups/ipp.h>
@@ -27,21 +27,20 @@
 #define __CUPS_ADD_OPTION(dest, name, value) dest->num_options = \
     cupsAddOption(name, value, dest->num_options, &dest->options);
 
-CupsFacadeImpl::CupsFacadeImpl(QObject *parent) : CupsFacade(parent)
+CupsFacade::CupsFacade(QObject *parent) : QObject(parent)
+{
+}
+
+CupsFacade::~CupsFacade()
 {
 
 }
 
-CupsFacadeImpl::~CupsFacadeImpl()
-{
-
-}
-
-QString CupsFacadeImpl::printerAdd(const QString &name,
-                                   const QUrl &uri,
-                                   const QUrl &ppdFile,
-                                   const QString &info,
-                                   const QString &location)
+QString CupsFacade::printerAdd(const QString &name,
+                               const QUrl &uri,
+                               const QUrl &ppdFile,
+                               const QString &info,
+                               const QString &location)
 {
     Q_UNUSED(name);
     Q_UNUSED(uri);
@@ -51,11 +50,11 @@ QString CupsFacadeImpl::printerAdd(const QString &name,
     return QString();
 }
 
-QString CupsFacadeImpl::printerAddWithPpd(const QString &name,
-                                          const QUrl &uri,
-                                          const QString &ppdFileName,
-                                          const QString &info,
-                                          const QString &location)
+QString CupsFacade::printerAddWithPpd(const QString &name,
+                                      const QUrl &uri,
+                                      const QString &ppdFileName,
+                                      const QString &info,
+                                      const QString &location)
 {
     Q_UNUSED(name);
     Q_UNUSED(uri);
@@ -65,21 +64,20 @@ QString CupsFacadeImpl::printerAddWithPpd(const QString &name,
     return QString();
 }
 
-QString CupsFacadeImpl::printerDelete(const QString &name)
+QString CupsFacade::printerDelete(const QString &name)
 {
     Q_UNUSED(name);
     return QString();
 }
 
-QString CupsFacadeImpl::printerSetEnabled(const QString &name,
-                                          const bool enabled)
+QString CupsFacade::printerSetEnabled(const QString &name, const bool enabled)
 {
     Q_UNUSED(name);
     Q_UNUSED(enabled);
     return QString();
 }
 
-QString CupsFacadeImpl::printerSetAcceptJobs(
+QString CupsFacade::printerSetAcceptJobs(
         const QString &name,
         const bool enabled,
         const QString &reason)
@@ -90,8 +88,7 @@ QString CupsFacadeImpl::printerSetAcceptJobs(
     return QString();
 }
 
-QString CupsFacadeImpl::printerSetInfo(const QString &name,
-                                       const QString &info)
+QString CupsFacade::printerSetInfo(const QString &name, const QString &info)
 {
     if (!helper.printerClassSetInfo(name, info)) {
         return helper.getLastError();
@@ -99,25 +96,24 @@ QString CupsFacadeImpl::printerSetInfo(const QString &name,
     return QString();
 }
 
-QString CupsFacadeImpl::printerSetLocation(const QString &name,
-                                           const QString &location)
+QString CupsFacade::printerSetLocation(const QString &name,
+                                       const QString &location)
 {
     Q_UNUSED(name);
     Q_UNUSED(location);
     return QString();
 }
 
-QString CupsFacadeImpl::printerSetShared(const QString &name,
-                                         const bool shared)
+QString CupsFacade::printerSetShared(const QString &name, const bool shared)
 {
     Q_UNUSED(name);
     Q_UNUSED(shared);
     return QString();
 }
 
-QString CupsFacadeImpl::printerSetJobSheets(const QString &name,
-                                            const QString &start,
-                                            const QString &end)
+QString CupsFacade::printerSetJobSheets(const QString &name,
+                                        const QString &start,
+                                        const QString &end)
 {
     Q_UNUSED(name);
     Q_UNUSED(start);
@@ -125,41 +121,41 @@ QString CupsFacadeImpl::printerSetJobSheets(const QString &name,
     return QString();
 }
 
-QString CupsFacadeImpl::printerSetErrorPolicy(const QString &name,
-                                              const PrinterEnum::ErrorPolicy &policy)
+QString CupsFacade::printerSetErrorPolicy(const QString &name,
+                                          const PrinterEnum::ErrorPolicy &policy)
 {
     Q_UNUSED(name);
     Q_UNUSED(policy);
     return QString();
 }
 
-QString CupsFacadeImpl::printerSetOpPolicy(const QString &name,
-                                           const PrinterEnum::OperationPolicy &policy)
+QString CupsFacade::printerSetOpPolicy(const QString &name,
+                                       const PrinterEnum::OperationPolicy &policy)
 {
     Q_UNUSED(name);
     Q_UNUSED(policy);
     return QString();
 }
 
-QString CupsFacadeImpl::printerSetUsersAllowed(const QString &name,
-                                               const QStringList &users)
+QString CupsFacade::printerSetUsersAllowed(const QString &name,
+                                           const QStringList &users)
 {
     Q_UNUSED(name);
     Q_UNUSED(users);
     return QString();
 }
 
-QString CupsFacadeImpl::printerSetUsersDenied(const QString &name,
-                                              const QStringList &users)
+QString CupsFacade::printerSetUsersDenied(const QString &name,
+                                          const QStringList &users)
 {
     Q_UNUSED(name);
     Q_UNUSED(users);
     return QString();
 }
 
-QString CupsFacadeImpl::printerAddOptionDefault(const QString &name,
-                                                const QString &option,
-                                                const QStringList &values)
+QString CupsFacade::printerAddOptionDefault(const QString &name,
+                                            const QString &option,
+                                            const QStringList &values)
 {
     Q_UNUSED(name);
     Q_UNUSED(option);
@@ -167,17 +163,17 @@ QString CupsFacadeImpl::printerAddOptionDefault(const QString &name,
     return QString();
 }
 
-QString CupsFacadeImpl::printerDeleteOptionDefault(const QString &name,
-                                                   const QString &value)
+QString CupsFacade::printerDeleteOptionDefault(const QString &name,
+                                               const QString &value)
 {
     Q_UNUSED(name);
     Q_UNUSED(value);
     return QString();
 }
 
-QString CupsFacadeImpl::printerAddOption(const QString &name,
-                                         const QString &option,
-                                         const QStringList &values)
+QString CupsFacade::printerAddOption(const QString &name,
+                                     const QString &option,
+                                     const QStringList &values)
 {
     if (!helper.printerClassSetOption(name, option, values)) {
         return helper.getLastError();
@@ -187,15 +183,15 @@ QString CupsFacadeImpl::printerAddOption(const QString &name,
     return QString();
 }
 
-QVariant CupsFacadeImpl::printerGetOption(const QString &name,
-                                          const QString &option)
+QVariant CupsFacade::printerGetOption(const QString &name,
+                                      const QString &option)
 {
     QStringList opts({option});
     auto res = printerGetOptions(name, opts);
     return res[option];
 }
 
-QMap<QString, QVariant> CupsFacadeImpl::printerGetOptions(
+QMap<QString, QVariant> CupsFacade::printerGetOptions(
     const QString &name, const QStringList &options)
 {
     QMap<QString, QVariant> ret;
@@ -263,7 +259,7 @@ QMap<QString, QVariant> CupsFacadeImpl::printerGetOptions(
     return ret;
 }
 
-QList<ColorModel> CupsFacadeImpl::printerGetSupportedColorModels(
+QList<ColorModel> CupsFacade::printerGetSupportedColorModels(
     const QString &name) const
 {
     QList<ColorModel> ret;
@@ -288,7 +284,8 @@ QList<ColorModel> CupsFacadeImpl::printerGetSupportedColorModels(
     return ret;
 }
 
-QList<PrintQuality> CupsFacadeImpl::printerGetSupportedQualities(const QString &name) const
+QList<PrintQuality> CupsFacade::printerGetSupportedQualities(
+    const QString &name) const
 {
     QList<PrintQuality> ret;
     ppd_file_t* ppd;
@@ -313,13 +310,13 @@ QList<PrintQuality> CupsFacadeImpl::printerGetSupportedQualities(const QString &
     return ret;
 }
 
-QString CupsFacadeImpl::getPrinterName(const QString &name) const
+QString CupsFacade::getPrinterName(const QString &name) const
 {
     const auto parts = name.splitRef(QLatin1Char('/'));
     return parts.at(0).toString();
 }
 
-QString CupsFacadeImpl::getPrinterInstance(const QString &name) const
+QString CupsFacade::getPrinterInstance(const QString &name) const
 {
     const auto parts = name.splitRef(QLatin1Char('/'));
     QString instance;
@@ -329,8 +326,8 @@ QString CupsFacadeImpl::getPrinterInstance(const QString &name) const
     return instance;
 }
 
-cups_dest_t* CupsFacadeImpl::makeDest(const QString &name,
-                                      const PrinterJob *options)
+cups_dest_t* CupsFacade::makeDest(const QString &name,
+                                  const PrinterJob *options)
 {
     // Get the cups dest
     cups_dest_t *dest = helper.getDest(getPrinterName(name), getPrinterInstance(name));
@@ -358,9 +355,8 @@ cups_dest_t* CupsFacadeImpl::makeDest(const QString &name,
     return dest;
 }
 
-int CupsFacadeImpl::printFileToDest(const QString &filepath,
-                                    const QString &title,
-                                    const cups_dest_t *dest)
+int CupsFacade::printFileToDest(const QString &filepath, const QString &title,
+                                const cups_dest_t *dest)
 {
     qDebug() << "Printing:" << filepath << title << dest->name << dest->num_options;
     return cupsPrintFile(dest->name,

@@ -17,11 +17,10 @@
 #ifndef USC_PRINTERS_CUPSFACADE_H
 #define USC_PRINTERS_CUPSFACADE_H
 
-#include "printers_global.h"
-
 #include "enums.h"
 #include "structs.h"
 
+#include "cups/cupspkhelper.h"
 #include "printer/printerjob.h"
 
 #include <cups/cups.h>
@@ -34,79 +33,78 @@
 #include <QUrl>
 #include <QVariant>
 
-class PRINTERS_DECL_EXPORT CupsFacade : public QObject
+class PrinterJob;
+class CupsFacade : public QObject
 {
     Q_OBJECT
 public:
-    explicit CupsFacade(QObject *parent = nullptr) : QObject(parent) {};
-    virtual ~CupsFacade() {};
-    virtual QString printerAdd(const QString &name,
-                               const QUrl &uri,
-                               const QUrl &ppdFile,
-                               const QString &info,
-                               const QString &location) = 0;
-    virtual QString printerAddWithPpd(const QString &name,
-                                      const QUrl &uri,
-                                      const QString &ppdFileName,
-                                      const QString &info,
-                                      const QString &location) = 0;
-    virtual QString printerDelete(const QString &name) = 0;
-    virtual QString printerSetEnabled(const QString &name,
-                                      const bool enabled) = 0;
-    virtual QString printerSetAcceptJobs(
+    explicit CupsFacade(QObject *parent = Q_NULLPTR);
+    ~CupsFacade();
+    QString printerAdd(const QString &name,
+                       const QUrl &uri,
+                       const QUrl &ppdFile,
+                       const QString &info,
+                       const QString &location);
+    QString printerAddWithPpd(const QString &name,
+                              const QUrl &uri,
+                              const QString &ppdFileName,
+                              const QString &info,
+                              const QString &location);
+    QString printerDelete(const QString &name);
+    QString printerSetEnabled(const QString &name, const bool enabled);
+    QString printerSetAcceptJobs(
         const QString &name,
         const bool enabled,
-        const QString &reason = QString::null) = 0;
-    virtual QString printerSetInfo(const QString &name,
-                                   const QString &info) = 0;
-    virtual QString printerSetLocation(const QString &name,
-                                       const QString &location) = 0;
-    virtual QString printerSetShared(const QString &name,
-                                     const bool shared) = 0;
-    virtual QString printerSetJobSheets(const QString &name,
-                                        const QString &start,
-                                        const QString &end) = 0;
-    virtual QString printerSetErrorPolicy(const QString &name,
-                                          const PrinterEnum::ErrorPolicy &policy) = 0;
+        const QString &reason = QString::null);
+    QString printerSetInfo(const QString &name, const QString &info);
+    QString printerSetLocation(const QString &name, const QString &location);
+    QString printerSetShared(const QString &name, const bool shared);
+    QString printerSetJobSheets(const QString &name, const QString &start,
+                                const QString &end);
+    QString printerSetErrorPolicy(const QString &name,
+                                  const PrinterEnum::ErrorPolicy &policy);
 
-    virtual QString printerSetOpPolicy(const QString &name,
-                                       const PrinterEnum::OperationPolicy &policy) = 0;
-    virtual QString printerSetUsersAllowed(const QString &name,
-                                           const QStringList &users) = 0;
-    virtual QString printerSetUsersDenied(const QString &name,
-                                          const QStringList &users) = 0;
-    virtual QString printerAddOptionDefault(const QString &name,
-                                            const QString &option,
-                                            const QStringList &values) = 0;
-    virtual QString printerDeleteOptionDefault(const QString &name,
-                                               const QString &value) = 0;
-    virtual QString printerAddOption(const QString &name,
-                                     const QString &option,
-                                     const QStringList &values) = 0;
+    QString printerSetOpPolicy(const QString &name,
+                               const PrinterEnum::OperationPolicy &policy);
+    QString printerSetUsersAllowed(const QString &name,
+                                   const QStringList &users);
+    QString printerSetUsersDenied(const QString &name,
+                                  const QStringList &users);
+    QString printerAddOptionDefault(const QString &name,
+                                    const QString &option,
+                                    const QStringList &values);
+    QString printerDeleteOptionDefault(const QString &name,
+                                       const QString &value);
+    QString printerAddOption(const QString &name,
+                             const QString &option,
+                             const QStringList &values);
 
     // TODO: const for both these getters (if possible)!
-    virtual QVariant printerGetOption(const QString &name,
-                                      const QString &option) = 0;
-    virtual QMap<QString, QVariant> printerGetOptions(
-        const QString &name, const QStringList &options
-    ) = 0;
+    QVariant printerGetOption(const QString &name, const QString &option);
+    QMap<QString, QVariant> printerGetOptions(const QString &name,
+                                              const QStringList &options);
     // FIXME: maybe have a PrinterDest iface that has a CupsDest impl?
-    virtual cups_dest_t* makeDest(const QString &name,
-                                  const PrinterJob *options) = 0;
+    cups_dest_t* makeDest(const QString &name, const PrinterJob *options);
 
-    virtual QList<ColorModel> printerGetSupportedColorModels(
-        const QString &name) const = 0;
-    virtual QList<PrintQuality> printerGetSupportedQualities(
-        const QString &name) const = 0;
-    virtual int printFileToDest(const QString &filepath,
-                                const QString &title,
-                                const cups_dest_t *dest) = 0;
-
+    QList<ColorModel> printerGetSupportedColorModels(const QString &name) const;
+    QList<PrintQuality> printerGetSupportedQualities(const QString &name) const;
+    int printFileToDest(const QString &filepath, const QString &title,
+                        const cups_dest_t *dest);
 Q_SIGNALS:
     void printerAdded(const QString &name);
     void printerModified(const QString &name, const bool ppdChanged);
     void printerDeleted(const QString &name);
     void printerStateChanged(const QString &name);
+
+private:
+    QString getPrinterName(const QString &name) const;
+    QString getPrinterInstance(const QString &name) const;
+    QStringList parsePpdColorModel(const QString &colorModel);
+    const QStringList m_knownQualityOptions = QStringList({
+        "Quality", "PrintQuality", "HPPrintQuality", "StpQuality",
+        "OutputMode",
+    });
+    CupsPkHelper helper;
 };
 
 #endif // USC_PRINTERS_CUPSFACADE_H

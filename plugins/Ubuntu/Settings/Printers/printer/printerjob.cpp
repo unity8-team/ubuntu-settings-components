@@ -16,45 +16,38 @@
 
 #include <QtCore/QDebug>
 
-#include "cups/cupsfacade_impl.h"
+#include "backend/backend_cups.h"
 #include "models/printermodel.h"
 #include "printer/printerjob.h"
-#include "printer/printerinfo_allimpl.h"
 
 PrinterJob::PrinterJob(QObject *parent)
-    : QObject(parent)
-    , m_color_model(0)
-    , m_copies(1)
-    , m_cups(new CupsFacadeImpl())
-    , m_duplex_mode(0)
-    , m_printer(Q_NULLPTR)
-    , m_printer_name(QStringLiteral(""))
-    , m_print_range(QStringLiteral(""))
-    , m_print_range_mode(PrinterEnum::PrintRange::AllPages)
-    , m_quality(0)
-    // TODO: Do we need a separate Job state?
-    // NotStarted, InQueue, Processing, Complete, Error ?
-    , m_state(PrinterEnum::State::IdleState)
-    , m_title(QStringLiteral(""))
+    : PrinterJob(Q_NULLPTR, parent)
 {
-
 }
 
 PrinterJob::PrinterJob(Printer *printer, QObject *parent)
+    : PrinterJob(printer, new PrinterCupsBackend, parent)
+{
+}
+
+PrinterJob::PrinterJob(Printer *printer, PrinterBackend *backend,
+                       QObject *parent)
     : QObject(parent)
+    , m_color_model(0)
     , m_copies(1)
-    , m_cups(new CupsFacadeImpl())
+    , m_backend(backend)
+    , m_duplex_mode(0)
     , m_printer(printer)
     , m_printer_name(QStringLiteral(""))
     , m_print_range(QStringLiteral(""))
     , m_print_range_mode(PrinterEnum::PrintRange::AllPages)
-    // TODO: Do we need a separate Job state?
-    // NotStarted, InQueue, Processing, Complete, Error ?
+    , m_quality(0)
     , m_state(PrinterEnum::State::IdleState)
     , m_title(QStringLiteral(""))
 {
     loadDefaults();
 }
+
 
 PrinterJob::~PrinterJob()
 {
@@ -88,11 +81,11 @@ int PrinterJob::duplexMode() const
 
 ColorModel PrinterJob::getColorModel() const
 {
-    ColorModel ret;
     if (m_printer && colorModel() > -1 && colorModel() < m_printer->supportedColorModels().count()) {
-        ret = m_printer->supportedColorModels().at(colorModel());
+        return m_printer->supportedColorModels().at(colorModel());
+    } else {
+        return ColorModel();
     }
-    return ret;
 }
 
 PrintQuality PrinterJob::getPrintQuality() const
@@ -230,25 +223,19 @@ void PrinterJob::setLandscape(const bool landscape)
 
 void PrinterJob::setPrinterName(const QString &printerName)
 {
+    // Please note the return inside the foreach.
     if (m_printer_name != printerName) {
-        PrinterInfo *printers = new PrinterInfoAllImpl();
-        PrinterInfo *info = Q_NULLPTR;
-
-        Q_FOREACH(PrinterInfo *printer, printers->availablePrinters()) {
-            if (printer->printerName() == printerName) {
-                info = printer;
+        Q_FOREACH(Printer *printer, m_backend->availablePrinters()) {
+            if (printer->name() == printerName) {
+                m_printer_name = printerName;
+                m_printer = printer;
+                loadDefaults();
+                Q_EMIT printerNameChanged();
+                return;
             }
         }
 
-        if (info && info->holdsDefinition()) {
-            m_printer_name = printerName;
-            m_printer = new Printer(info, m_cups);
-            loadDefaults();
-
-            Q_EMIT printerNameChanged();
-        } else {
-            qWarning() << "Unknown printer:" << printerName;
-        }
+        qWarning() << "Unknown printer:" << printerName;
     }
 }
 

@@ -16,10 +16,9 @@
 
 #include "utils.h"
 
-#include "mockcupsfacade.h"
-#include "mockprinterinfo.h"
+#include "mockbackend.h"
 
-#include "cups/cupsfacade.h"
+#include "backend/backend.h"
 #include "printer/printer.h"
 #include "printer/printerjob.h"
 
@@ -36,10 +35,9 @@ class TestPrinterJob : public QObject
 private Q_SLOTS:
     void init()
     {
-        m_mock_cups = new MockCupsFacade;
-        m_mock_info = new MockPrinterInfo(m_printer_name);
-        m_mock_printer = new Printer(m_mock_info, m_mock_cups);
-        m_instance = new PrinterJob(m_mock_printer);
+        m_backend = new MockPrinterBackend(m_printer_name);
+        m_mock_printer = new Printer(m_backend);
+        m_instance = new PrinterJob(m_mock_printer, m_backend);
     }
     void cleanup()
     {
@@ -51,7 +49,7 @@ private Q_SLOTS:
         m_mock_printer->deleteLater();
         QTRY_COMPARE(destroyedSpy.count(), 1);
 
-        delete m_mock_cups;
+        delete m_backend;
     }
     void refreshInstance()
     {
@@ -59,7 +57,7 @@ private Q_SLOTS:
         m_instance->deleteLater();
         QTRY_COMPARE(destroyedSpy.count(), 1);
 
-        m_instance = new PrinterJob(m_mock_printer);
+        m_instance = new PrinterJob(m_mock_printer, m_backend);
     }
 
     void testCancel()
@@ -109,9 +107,9 @@ private Q_SLOTS:
                 PrinterEnum::DuplexMode::DuplexLongSide,
                 PrinterEnum::DuplexMode::DuplexShortSide
         };
-        ((MockPrinterInfo *) m_mock_info)->m_supportedDuplexModes = modes;
+        ((MockPrinterBackend *) m_backend)->m_supportedDuplexModes = modes;
 
-        ((MockPrinterInfo *) m_mock_info)->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexNone;
+        ((MockPrinterBackend *) m_backend)->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexNone;
         refreshInstance();
         QCOMPARE(m_instance->duplexMode(), modes.indexOf(PrinterEnum::DuplexMode::DuplexNone));
         QCOMPARE(m_instance->getDuplexMode(), PrinterEnum::DuplexMode::DuplexNone);
@@ -120,7 +118,7 @@ private Q_SLOTS:
         QCOMPARE(m_instance->duplexMode(), modes.indexOf(PrinterEnum::DuplexMode::DuplexLongSide));
         QCOMPARE(m_instance->getDuplexMode(), PrinterEnum::DuplexMode::DuplexLongSide);
 
-        ((MockPrinterInfo *) m_mock_info)->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexShortSide;
+        ((MockPrinterBackend *) m_backend)->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexShortSide;
         refreshInstance();
         QCOMPARE(m_instance->duplexMode(), modes.indexOf(PrinterEnum::DuplexMode::DuplexShortSide));
         QCOMPARE(m_instance->getDuplexMode(), PrinterEnum::DuplexMode::DuplexShortSide);
@@ -160,8 +158,7 @@ private Q_SLOTS:
     }
 private:
     PrinterJob *m_instance = nullptr;
-    CupsFacade *m_mock_cups = nullptr;
-    PrinterInfo *m_mock_info = nullptr;
+    PrinterBackend *m_backend = nullptr;
     Printer *m_mock_printer = nullptr;
     QString m_printer_name = "my-printer";
 };

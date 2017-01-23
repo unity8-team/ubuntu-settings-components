@@ -14,42 +14,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef USC_PRINTERS_PRINTERINFO_PDFIMPL_H
-#define USC_PRINTERS_PRINTERINFO_PDFIMPL_H
+#ifndef USC_PRINTERS_PDF_BACKEND_H
+#define USC_PRINTERS_PDF_BACKEND_H
 
-#include "printer/printerinfo.h"
+#include "backend/backend.h"
 
-class PrinterInfoPdfImpl : public PrinterInfo
+class PRINTERS_DECL_EXPORT PrinterPdfBackend : public PrinterBackend
 {
 public:
-    explicit PrinterInfoPdfImpl(const QString &name = QString::null);
-    virtual ~PrinterInfoPdfImpl() override;
-
-    virtual bool holdsDefinition() const override;
+    explicit PrinterPdfBackend(const QString &printerName,
+                               QObject *parent = Q_NULLPTR);
+    virtual QList<ColorModel> printerGetSupportedColorModels(
+        const QString &name) const override;
+    virtual ColorModel printerGetDefaultColorModel(const QString &name) const;
+    virtual QList<PrintQuality> printerGetSupportedQualities(
+        const QString &name) const override;
+    virtual PrintQuality printerGetDefaultQuality(const QString &name) const;
 
     virtual QString printerName() const override;
     virtual QString description() const override;
     virtual QString location() const override;
     virtual QString makeAndModel() const override;
 
-    virtual PrinterEnum::State state() const override {}
+    virtual PrinterEnum::State state() const override;
     virtual QList<QPageSize> supportedPageSizes() const override;
     virtual QPageSize defaultPageSize() const override;
-    virtual bool supportsCustomPageSizes() const override {}
+    virtual bool supportsCustomPageSizes() const override;
 
-    virtual QPageSize minimumPhysicalPageSize() const override {}
-    virtual QPageSize maximumPhysicalPageSize() const override {}
-    virtual QList<int> supportedResolutions() const override {}
+    virtual QPageSize minimumPhysicalPageSize() const override;
+    virtual QPageSize maximumPhysicalPageSize() const override;
+    virtual QList<int> supportedResolutions() const override;
     virtual PrinterEnum::DuplexMode defaultDuplexMode() const override;
     virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const override;
-    virtual QList<PrinterInfo*> availablePrinters() override;
-    virtual QStringList availablePrinterNames() override {}
-    virtual PrinterInfo* printerInfo(const QString &printerName) override {}
-    virtual QString defaultPrinterName() override;
 
-    virtual bool isPdf() const override;
-
-    virtual void refresh() override {}
+    virtual PrinterBackend::BackendType backendType() const override;
 };
 
-#endif // USC_PRINTERS_PRINTERINFO_PDFIMPL_H
+#endif // USC_PRINTERS_PDF_BACKEND_H

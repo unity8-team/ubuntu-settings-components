@@ -22,7 +22,6 @@
 #include "cups/cupsfacade.h"
 #include "models/printermodel.h"
 #include "printer/printer.h"
-#include "printer/printerinfo.h"
 
 #include <QAbstractItemModel>
 #include <QObject>
@@ -31,24 +30,20 @@
 #include <QString>
 #include <QUrl>
 
-class PrintersPrivate;
 class PRINTERS_DECL_EXPORT Printers : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(Printers)
     Q_PROPERTY(QAbstractItemModel* allPrinters READ allPrinters CONSTANT)
     Q_PROPERTY(QAbstractItemModel* allPrintersWithPdf READ allPrintersWithPdf CONSTANT)
     Q_PROPERTY(QAbstractItemModel* recentPrinters READ recentPrinters CONSTANT)
     Q_PROPERTY(QAbstractItemModel* printJobs READ printJobs CONSTANT)
     Q_PROPERTY(QString defaultPrinterName READ defaultPrinterName WRITE setDefaultPrinterName NOTIFY defaultPrinterNameChanged)
 
-    QScopedPointer<PrintersPrivate> const d_ptr;
-
 public:
     explicit Printers(int printerUpdateIntervalMSecs = 5000, QObject *parent = nullptr);
 
-    // Printers takes ownership of info and cups objects.
-    explicit Printers(PrinterInfo *info, CupsFacade *cups,
+    // Note: Printers takes ownership of backend.
+    explicit Printers(PrinterBackend *backend,
                       int printerUpdateIntervalMSecs = 5000,
                       QObject *parent = nullptr);
     ~Printers();
@@ -80,6 +75,13 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void defaultPrinterNameChanged();
+
+private:
+    PrinterBackend *m_backend;
+    PrinterModel m_model;
+    PrinterFilter m_allPrinters;
+    PrinterFilter m_allPrintersWithPdf;
+    PrinterFilter m_recentPrinters;
 };
 
 #endif // USC_PRINTERS_H

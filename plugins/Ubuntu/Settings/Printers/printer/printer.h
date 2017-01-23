@@ -19,9 +19,8 @@
 
 #include "printers_global.h"
 
-#include "cups/cupsfacade.h"
+#include "backend/backend.h"
 #include "enums.h"
-#include "printer/printerinfo.h"
 #include "printer/printerjob.h"
 #include "structs.h"
 
@@ -32,32 +31,14 @@
 #include <QString>
 #include <QStringList>
 
-class CupsFacade;
+class PrinterBackend;
 class PrinterJob;
-
-class PrinterPrivate;
 class PRINTERS_DECL_EXPORT Printer : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(Printer)
-    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(ColorModel defaultColorModel READ defaultColorModel WRITE setDefaultColorModel NOTIFY defaultColorModelChanged)
-    Q_PROPERTY(QStringList supportedDuplexStrings READ supportedDuplexStrings CONSTANT)
-    Q_PROPERTY(PrinterEnum::DuplexMode defaultDuplexMode READ defaultDuplexMode WRITE setDefaultDuplexMode NOTIFY defaultDuplexModeChanged)
-    Q_PROPERTY(QString name READ name NOTIFY nameChanged)
-    Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
-    Q_PROPERTY(QPageSize defaultPageSize READ defaultPageSize WRITE setDefaultPageSize NOTIFY defaultPageSizeChanged)
-    Q_PROPERTY(QList<QPageSize> supportedPageSizes READ supportedPageSizes CONSTANT)
-    Q_PROPERTY(PrinterEnum::AccessControl accessControl READ accessControl WRITE setAccessControl NOTIFY accessControlChanged)
-    Q_PROPERTY(PrinterEnum::ErrorPolicy errorPolicy READ errorPolicy WRITE setErrorPolicy NOTIFY errorPolicyChanged)
-    Q_PROPERTY(QStringList users READ users NOTIFY usersChanged)
-    Q_PROPERTY(PrinterEnum::State state READ state NOTIFY stateChanged)
-    Q_PROPERTY(QString lastStateMessage READ lastStateMessage NOTIFY lastStateMessageChanged)
-
-    QScopedPointer<PrinterPrivate> const d_ptr;
 public:
     explicit Printer(QObject *parent = nullptr);
-    explicit Printer(PrinterInfo *info, CupsFacade *cups, QObject *parent = nullptr);
+    explicit Printer(PrinterBackend *backend, QObject *parent = nullptr);
     ~Printer();
 
     bool enabled() const;
@@ -124,6 +105,16 @@ Q_SIGNALS:
 
     // Signals that some printer setting was changed.
     void printerChanged();
+
+private:
+    void loadColorModel();
+    void loadPrintQualities();
+
+    PrinterBackend *m_backend;
+    ColorModel m_defaultColorModel;
+    QList<ColorModel> m_supportedColorModels;
+    PrintQuality m_defaultPrintQuality;
+    QList<PrintQuality> m_supportedPrintQualities;
 };
 
 // FIXME: not necessary outside tests

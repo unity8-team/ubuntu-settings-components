@@ -14,72 +14,49 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "cups/cupsfacade_impl.h"
-#include "printer/printerinfo_allimpl.h"
+#include "backend/backend_cups.h"
 #include "printers/printers.h"
-#include "printers/printers_p.h"
 
 #include <QQmlEngine>
 
 Printers::Printers(int printerUpdateIntervalMSecs, QObject *parent)
-    : QObject(parent)
-    , d_ptr(new PrintersPrivate(this, printerUpdateIntervalMSecs))
+    : Printers(new PrinterCupsBackend, printerUpdateIntervalMSecs, parent)
 {
 }
 
-Printers::Printers(PrinterInfo *info, CupsFacade *cups,
-                   int printerUpdateIntervalMSecs, QObject *parent)
+Printers::Printers(PrinterBackend *backend, int printerUpdateIntervalMSecs,
+                   QObject *parent)
     : QObject(parent)
-    , d_ptr(new PrintersPrivate(this, info, cups, printerUpdateIntervalMSecs))
+    , m_backend(backend)
+    , m_model(backend, printerUpdateIntervalMSecs)
 {
+    m_allPrinters.setSourceModel(&m_model);
+    m_allPrinters.setSortRole(PrinterModel::Roles::DefaultPrinterRole);
+    m_allPrinters.filterOnPdf(false);
+    m_allPrinters.sort(0, Qt::DescendingOrder);
+
+    m_allPrintersWithPdf.setSourceModel(&m_model);
+    m_allPrintersWithPdf.setSortRole(PrinterModel::Roles::DefaultPrinterRole);
+    m_allPrintersWithPdf.sort(0, Qt::DescendingOrder);
+
+    // Let Qt be in charge of RAII.
+    m_backend->setParent(this);
 }
 
 Printers::~Printers()
 {
 }
 
-PrintersPrivate::PrintersPrivate(Printers *q, int printerUpdateIntervalMSecs)
-    : PrintersPrivate(q, new PrinterInfoAllImpl, new CupsFacadeImpl,
-                      printerUpdateIntervalMSecs)
-{
-}
-
-PrintersPrivate::PrintersPrivate(Printers *q, PrinterInfo *info,
-                                 CupsFacade *cups,
-                                 int printerUpdateIntervalMSecs)
-    : model(info, cups, printerUpdateIntervalMSecs)
-{
-    this->info = info;
-    this->cups = cups;
-
-    allPrinters.setSourceModel(&model);
-    allPrinters.setSortRole(PrinterModel::Roles::DefaultPrinterRole);
-    allPrinters.filterOnPdf(false);
-    allPrinters.sort(0, Qt::DescendingOrder);
-
-    allPrintersWithPdf.setSourceModel(&model);
-    allPrintersWithPdf.setSortRole(PrinterModel::Roles::DefaultPrinterRole);
-    allPrintersWithPdf.sort(0, Qt::DescendingOrder);
-}
-
-PrintersPrivate::~PrintersPrivate()
-{
-    delete cups;
-    delete info;
-}
-
 QAbstractItemModel* Printers::allPrinters()
 {
-    Q_D(Printers);
-    auto ret = &d->allPrinters;
+    auto ret = &m_allPrinters;
     QQmlEngine::setObjectOwnership(ret, QQmlEngine::CppOwnership);
     return ret;
 }
 
 QAbstractItemModel* Printers::allPrintersWithPdf()
 {
-    Q_D(Printers);
-    auto ret = &d->allPrintersWithPdf;
+    auto ret = &m_allPrintersWithPdf;
     QQmlEngine::setObjectOwnership(ret, QQmlEngine::CppOwnership);
     return ret;
 }

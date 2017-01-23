@@ -22,13 +22,13 @@
 #include "enums.h"
 #include "structs.h"
 
-#include "cups/cupsfacade.h"
+#include "backend/backend.h"
 #include "printer/printer.h"
 
 #include <QtCore/QObject>
 
-class CupsFacade;
 class Printer;
+class PrinterBackend;
 
 class PRINTERS_DECL_EXPORT PrinterJob : public QObject
 {
@@ -49,6 +49,8 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
 public:
     explicit PrinterJob(QObject *parent=Q_NULLPTR);
     explicit PrinterJob(Printer *printer, QObject *parent=Q_NULLPTR);
+    explicit PrinterJob(Printer *printer, PrinterBackend *backend,
+                        QObject *parent=Q_NULLPTR);
     ~PrinterJob();
 
     int colorModel() const;
@@ -98,7 +100,7 @@ Q_SIGNALS:
 private:
     int m_color_model;
     int m_copies;
-    CupsFacade *m_cups;
+    PrinterBackend *m_backend; // TODO: Maybe use the printer's backend?
     int m_duplex_mode;
     bool m_landscape;
     Printer *m_printer;

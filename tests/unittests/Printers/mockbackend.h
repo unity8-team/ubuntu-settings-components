@@ -335,12 +335,6 @@ public:
         Q_EMIT printerStateChanged(name);
     }
 
-public Q_SLOT:
-    virtual void refresh() override
-    {
-
-    }
-
     QString returnValue = QString::null;
 
     // Map from printer to key/val.
@@ -370,6 +364,10 @@ public Q_SLOT:
     QList<Printer*> m_availablePrinters;
     PrinterBackend::BackendType m_backendType;
 
+public Q_SLOT:
+    virtual void refresh() override
+    {
+    }
 };
 
 #endif // USC_PRINTERS_MOCK_BACKEND_H

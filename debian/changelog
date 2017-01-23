@@ -1,9 +1,22 @@
-ubuntu-settings-components (0.12+17.04.20161201-0ubuntu2) UNRELEASED; urgency=medium
+ubuntu-settings-components (0.13+17.04.20161201-0ubuntu2) UNRELEASED; urgency=medium
 
   * packaging: suggest cups, depend on libcups2-dev
   * adds cups bindings for printer/job management
 
  -- Jonas G. Drange <jonas.drange@canonical.com>  Mon, 23 Jan 2017 14:46:41 +0100
+
+ubuntu-settings-components (0.12+17.04.20170104-0ubuntu1) zesty; urgency=medium
+
+  * Allows Fingerprint and VPN modules to work well with APL and pagestacks.
+  * Bumps version to 0.12 so that consumers can migrate to APL safely.
+
+ -- Jonas G. Drange <jonas.drange@canonical.com>  Wed, 04 Jan 2017 23:19:33 +0000
+
+ubuntu-settings-components (0.11+17.04.20161223-0ubuntu1) zesty; urgency=medium
+
+  * CMake: use find_package(QmlPlugins) instead of include(QmlPlugins)
+
+ -- Marco Trevisan (Treviño) <mail@3v1n0.net>  Fri, 23 Dec 2016 14:30:08 +0000
 
 ubuntu-settings-components (0.11+17.04.20161201-0ubuntu1) zesty; urgency=medium
 

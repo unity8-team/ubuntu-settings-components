@@ -107,6 +107,31 @@ Page {
         }
     }
 
+    // Pushes onto a pageStack or an APL.
+    function pushShim(page, opts) {
+        var incubator;
+        if (typeof opts === 'undefined')
+            opts = {};
+        if (pageStack.push) {
+            return pageStack.push(page, opts);
+        } else {
+            page = Qt.createComponent(page);
+            incubator = pageStack.addPageToNextColumn(root, page, opts);
+            incubator.forceCompletion();
+            return incubator.object;
+        }
+    }
+
+    /* Pops a pageStack or APL. The page argument is only effective if the
+    pageStack is an APL, in which case all child pages of page are removed. */
+    function popShim(page) {
+        if (pageStack.pop) {
+            pageStack.pop();
+        } else {
+            pageStack.removePages(page);
+        }
+    }
+
     signal requestPasscode()
 
     Component.onCompleted: {
@@ -231,7 +256,7 @@ Page {
 
                     ListItem {
                         height: fpLayout.height + (divider.visible ? divider.height : 0)
-                        onClicked: _fpInstancePage = pageStack.push(
+                        onClicked: _fpInstancePage = pushShim(
                                 Qt.resolvedUrl("Fingerprint.qml"), {
                                 name: modelData.name,
                                 templateId: modelData.templateId
@@ -261,7 +286,7 @@ Page {
                 ListItem {
                     height: addFpLayout.height + (divider.visible ? divider.height : 0)
                     onClicked: {
-                        _setupPage = pageStack.push(Qt.resolvedUrl("Setup.qml"));
+                        _setupPage = pushShim(Qt.resolvedUrl("Setup.qml"));
                         root.enroll();
                     }
                     enabled: parent.enabled
@@ -342,7 +367,11 @@ Page {
     Connections {
         target: _setupPage
         onEnroll: root.enroll()
-        onCancel: root.cancel()
+        onCancel: {
+            root.cancel();
+            popShim(root);
+        }
+        onDone: popShim(root)
     }
 
     Connections {
@@ -353,6 +382,7 @@ Page {
             _removalOperation.start(removalObserver);
         }
         onRequestRename: renameTemplate(templateId, name)
+        onDone: popShim(root)
     }
 
     Observer {
@@ -404,8 +434,15 @@ Page {
         onCanceled: _removalOperation = null
         onSucceeded: {
             _removalOperation = null;
-            if (pageStack.currentPage === _fpInstancePage)
-                pageStack.pop();
+            /* If we have a currentPage, pop one page. If not, pop every child
+            of root. */
+            if (pageStack.currentPage) {
+                if (pageStack.currentPage === _fpInstancePage) {
+                    popShim();
+                }
+            } else {
+                popShim(root);
+            }
             root.removeTemplate(result);
         }
     }

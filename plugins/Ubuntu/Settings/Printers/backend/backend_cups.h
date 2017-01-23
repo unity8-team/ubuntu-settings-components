@@ -119,7 +119,7 @@ public:
 
     virtual PrinterBackend::BackendType backendType() const override;
 
-public Q_SLOT:
+public Q_SLOTS:
     virtual void refresh() override;
 
 private:

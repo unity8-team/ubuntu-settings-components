@@ -46,7 +46,7 @@ public:
         CupsType,
         PdfType,
     };
-    Q_ENUM(BackendType);
+    Q_ENUM(BackendType)
 
     virtual bool holdsDefinition() const;
 
@@ -137,7 +137,7 @@ public:
 
     virtual BackendType backendType() const;
 
-public Q_SLOT:
+public Q_SLOTS:
     virtual void refresh();
 
 Q_SIGNALS:

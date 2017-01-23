@@ -81,11 +81,11 @@ int PrinterJob::duplexMode() const
 
 ColorModel PrinterJob::getColorModel() const
 {
-    ColorModel ret;
     if (m_printer && colorModel() > -1 && colorModel() < m_printer->supportedColorModels().count()) {
-        ret = m_printer->supportedColorModels().at(colorModel());
+        return m_printer->supportedColorModels().at(colorModel());
+    } else {
+        return ColorModel();
     }
-    return ret;
 }
 
 PrintQuality PrinterJob::getPrintQuality() const

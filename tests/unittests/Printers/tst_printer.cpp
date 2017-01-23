@@ -220,7 +220,11 @@ private Q_SLOTS:
         QCOMPARE(p.defaultPageSize(), QPageSize(QPageSize::A4));
         QCOMPARE(p.defaultDuplexMode(), PrinterEnum::DuplexMode::DuplexNone);
         QCOMPARE(p.isPdf(), true);
-
+    }
+    void testState()
+    {
+        getBackend()->m_state = PrinterEnum::State::AbortedState;
+        QCOMPARE(m_instance->state(), getBackend()->m_state);
     }
 private:
     QString m_printerName = "my-printer";

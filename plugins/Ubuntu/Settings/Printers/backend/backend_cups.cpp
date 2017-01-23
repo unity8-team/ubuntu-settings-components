@@ -224,7 +224,16 @@ QString PrinterCupsBackend::makeAndModel() const
 
 PrinterEnum::State PrinterCupsBackend::state() const
 {
-
+    switch (m_info.state()) {
+        case QPrinter::Idle:
+            return PrinterEnum::State::IdleState;
+        case QPrinter::Active:
+            return PrinterEnum::State::ActiveState;
+        case QPrinter::Aborted:
+            return PrinterEnum::State::AbortedState;
+        case QPrinter::Error:
+            return PrinterEnum::State::ErrorState;
+    }
 }
 
 QList<QPageSize> PrinterCupsBackend::supportedPageSizes() const

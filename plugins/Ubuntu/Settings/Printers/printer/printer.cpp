@@ -153,7 +153,7 @@ QStringList Printer::users() const
 
 PrinterEnum::State Printer::state() const
 {
-
+    return m_backend->state();
 }
 
 QString Printer::lastStateMessage() const

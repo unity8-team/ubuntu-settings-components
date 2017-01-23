@@ -8,6 +8,8 @@ include(GNUInstallDirs)
 
 include(FindPkgConfig)
 
+include(FindCups)
+
 find_package(Qt5Quick REQUIRED)
 
 set(QT_IMPORTS_DIR ${CMAKE_INSTALL_LIBDIR}/qt5/qml)
@@ -17,6 +19,11 @@ find_package(Qt5Qml REQUIRED)
 find_package(Qt5Quick REQUIRED)
 find_package(Qt5Test REQUIRED)
 find_package(Qt5Widgets REQUIRED)
+
+if(NOT CUPS_FOUND)
+message(FATAL_ERROR "Could not find cups.")
+endif()
+
 add_definitions(-DQT_NO_KEYWORDS)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

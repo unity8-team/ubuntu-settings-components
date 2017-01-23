@@ -1,0 +1,130 @@
+/*
+ * Copyright (C) 2017 Canonical, Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef USC_PRINTERS_CUPS_BACKEND_H
+#define USC_PRINTERS_CUPS_BACKEND_H
+
+#include "backend/backend.h"
+#include "cups/cupsfacade.h"
+
+#include <QPrinterInfo>
+
+class PRINTERS_DECL_EXPORT PrinterCupsBackend : public PrinterBackend
+{
+public:
+    explicit PrinterCupsBackend(QObject *parent = Q_NULLPTR);
+    explicit PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
+                                QObject *parent = Q_NULLPTR);
+    virtual ~PrinterCupsBackend() override;
+
+    virtual bool holdsDefinition() const override;
+
+    virtual QString printerAdd(const QString &name,
+                               const QUrl &uri,
+                               const QUrl &ppdFile,
+                               const QString &info,
+                               const QString &location) override;
+    virtual QString printerAddWithPpd(const QString &name,
+                                      const QUrl &uri,
+                                      const QString &ppdFileName,
+                                      const QString &info,
+                                      const QString &location) override;
+    virtual QString printerDelete(const QString &name) override;
+    virtual QString printerSetEnabled(const QString &name,
+                                      const bool enabled) override;
+    virtual QString printerSetAcceptJobs(
+        const QString &name,
+        const bool enabled,
+        const QString &reason = QString::null) override;
+    virtual QString printerSetInfo(const QString &name,
+                                   const QString &info) override;
+    virtual QString printerSetLocation(const QString &name,
+                                       const QString &location) override;
+    virtual QString printerSetShared(const QString &name,
+                                     const bool shared) override;
+    virtual QString printerSetJobSheets(const QString &name,
+                                        const QString &start,
+                                        const QString &end) override;
+    virtual QString printerSetErrorPolicy(const QString &name,
+                                          const PrinterEnum::ErrorPolicy &policy) override;
+
+    virtual QString printerSetOpPolicy(const QString &name,
+                                       const PrinterEnum::OperationPolicy &policy) override;
+    virtual QString printerSetUsersAllowed(const QString &name,
+                                           const QStringList &users) override;
+    virtual QString printerSetUsersDenied(const QString &name,
+                                          const QStringList &users) override;
+    virtual QString printerAddOptionDefault(const QString &name,
+                                            const QString &option,
+                                            const QStringList &values) override;
+    virtual QString printerDeleteOptionDefault(const QString &name,
+                                               const QString &value) override;
+    virtual QString printerAddOption(const QString &name,
+                                     const QString &option,
+                                     const QStringList &values) override;
+
+    // TODO: const for both these getters (if possible)!
+    virtual QVariant printerGetOption(const QString &name,
+                                      const QString &option) const override;
+    virtual QMap<QString, QVariant> printerGetOptions(
+        const QString &name, const QStringList &options
+    ) override;
+    // FIXME: maybe have a PrinterDest iface that has a CupsDest impl?
+    virtual cups_dest_t* makeDest(const QString &name,
+                                  const PrinterJob *options) override;
+
+    virtual QList<ColorModel> printerGetSupportedColorModels(
+        const QString &name) const override;
+    virtual ColorModel printerGetDefaultColorModel(const QString &name) const;
+    virtual QList<PrintQuality> printerGetSupportedQualities(
+        const QString &name) const override;
+    virtual PrintQuality printerGetDefaultQuality(const QString &name) const;
+    virtual int printFileToDest(const QString &filepath,
+                                const QString &title,
+                                const cups_dest_t *dest) override;
+
+    virtual QString printerName() const override;
+    virtual QString description() const override;
+    virtual QString location() const override;
+    virtual QString makeAndModel() const override;
+
+    virtual PrinterEnum::State state() const override;
+    virtual QList<QPageSize> supportedPageSizes() const override;
+    virtual QPageSize defaultPageSize() const override;
+    virtual bool supportsCustomPageSizes() const override;
+
+    virtual QPageSize minimumPhysicalPageSize() const override;
+    virtual QPageSize maximumPhysicalPageSize() const override;
+    virtual QList<int> supportedResolutions() const override;
+    virtual PrinterEnum::DuplexMode defaultDuplexMode() const override;
+    virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const override;
+
+    virtual QList<Printer*> availablePrinters() override;
+    virtual QStringList availablePrinterNames() override;
+    virtual Printer* getPrinter(const QString &printerName) override;
+    virtual QString defaultPrinterName() override;
+
+    virtual PrinterBackend::BackendType backendType() const override;
+
+public Q_SLOTS:
+    virtual void refresh() override;
+
+private:
+    CupsFacade *m_cups;
+    QPrinterInfo m_info;
+};
+
+#endif // USC_PRINTERS_CUPS_BACKEND_H

@@ -29,6 +29,7 @@ xgettext \
     --keyword=tag \
     --keyword=tag:1c,2 \
     --keyword=dgettext_datetime \
+    --keyword=__ \
     --package-name="ubuntu-settings-components" \
     --copyright-holder="Canonical Ltd." \
     --from-code="UTF-8"

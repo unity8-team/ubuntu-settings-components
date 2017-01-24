@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "i18n.h"
 #include "backend/backend_pdf.h"
 
 PrinterPdfBackend::PrinterPdfBackend(const QString &printerName,
@@ -35,7 +36,7 @@ ColorModel PrinterPdfBackend::printerGetDefaultColorModel(
     ColorModel rgb;
     rgb.colorType = PrinterEnum::ColorModelType::ColorType;
     rgb.name = "RGB";
-    rgb.text = "Color"; // TODO: translate
+    rgb.text = __("Color");
     return rgb;
 }
 
@@ -49,7 +50,9 @@ PrintQuality PrinterPdfBackend::printerGetDefaultQuality(
         const QString &name) const
 {
     Q_UNUSED(name);
-    return PrintQuality();
+    PrintQuality quality;
+    quality.name = __("Normal");
+    return quality;
 }
 
 QString PrinterPdfBackend::printerName() const

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authored by Andrea Cimitan <andrea.cimitan@canonical.com>
+ *             Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
@@ -21,16 +22,28 @@ import Ubuntu.Components 1.3
 
 StandardMenu {
     id: menu
-    property string buttonText
+    property alias buttonText: buttonLabel.text
+    signal buttonClicked()
 
-    component: Component {
+    slots: [
         Button {
-            id: button
             objectName: "button"
-            text: menu.buttonText
-            width: Math.max(units.gu(5), implicitWidth)
+            color: menuStyle.buttonColor
+            width: Math.max(units.gu(menu.pointerMode ? 5 : 8), buttonLabel.paintedWidth + units.gu(4))
+            height: menuStyle.buttonHeight
 
-            onClicked: menu.clicked()
+            Label {
+                id: buttonLabel
+                font.pixelSize: menuStyle.buttonFontSize
+                color: theme.palette.normal.foregroundText
+                anchors.centerIn: parent
+                scale: parent.pressed ? 0.98 : 1
+            }
+
+            onClicked: {
+                menu.buttonClicked()
+                menu.clicked()
+            }
         }
-    }
+    ]
 }

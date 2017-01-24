@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,58 +13,109 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Authored by Andrea Cimitan <andrea.cimitan@canonical.com>
+ * Authors:
+ *      Andrea Cimitan <andrea.cimitan@canonical.com>
+ *      Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 import Ubuntu.Settings.Components 0.1
 
-ListItem.Empty {
+BaseMenu {
     id: menu
 
-    property alias collapsed: calendar.collapsed
     property alias currentDate: calendar.currentDate
     property alias firstDayOfWeek: calendar.firstDayOfWeek
-    property alias maximumDate: calendar.maximumDate
-    property alias minimumDate: calendar.minimumDate
     property alias selectedDate: calendar.selectedDate
+    property alias showWeekNumbers: calendar.showWeekNumbers
+    property alias eventDays: calendar.eventDays
 
-    __height: column.height
+    menuHeight: layout.height
+    highlightWhenPressed: false
 
     Column {
-        id: column
+        id: layout
 
-        height: childrenRect.height + units.gu(1.5)
         anchors {
-            top: parent.top
             left: parent.left
             right: parent.right
-            topMargin: units.gu(1)
-            leftMargin: menu.__contentsMargins
-            rightMargin: menu.__contentsMargins
         }
-        spacing: units.gu(1)
 
-        Label {
-            id: label
-            anchors {
-                left: parent.left
-                right: parent.right
+        ListItemLayout {
+            id: monthLayout
+            objectName: "monthLayout"
+
+            padding {
+                top: menuStyle.padding.top
+                bottom: menuStyle.padding.bottom
+                leading: menuStyle.padding.leading
+                trailing: menuStyle.padding.trailing
             }
-            fontSize: "large"
-            text: i18n.ctr("%1=month name, %2=4-digit year", "%1 %2")
-                      .arg(Qt.locale().standaloneMonthName(calendar.currentDate.getMonth(), Locale.LongFormat))
-                      .arg(calendar.currentDate.getFullYear())
+
+            title.horizontalAlignment: Text.AlignHCenter
+            title.font.pixelSize: menuStyle.fontSize
+            title.color: menuStyle.foregroundColor
+            title.text: i18n.ctr("%1=month name, %2=4-digit year", "%1 %2")
+                            .arg(Qt.locale().standaloneMonthName(calendar.currentDate.getMonth(), Locale.LongFormat))
+                            .arg(calendar.currentDate.getFullYear())
+
+            title.children: [
+                AbstractButton {
+                    x: (parent.width - width) / 2
+                    width: parent.contentWidth
+                    height: parent.contentHeight
+                    onClicked: calendar.selectFistDayOfTheMonth()
+                }
+            ]
+
+            Icon {
+                objectName: "goPreviousMonth"
+                name: "go-previous"
+                width: menuStyle.iconSize
+                height: menuStyle.iconSize
+                color: menuStyle.iconColor
+                SlotsLayout.position: SlotsLayout.Leading
+
+                AbstractButton {
+                    anchors.fill: parent
+                    onClicked: calendar.moveToMonth(-1)
+                }
+            }
+
+            Icon {
+                objectName: "goNextMonth"
+                name: "go-next"
+                width: menuStyle.iconSize
+                height: menuStyle.iconSize
+                color: menuStyle.iconColor
+                SlotsLayout.position: SlotsLayout.Trailing
+
+                AbstractButton {
+                    anchors.fill: parent
+                    onClicked: calendar.moveToMonth(1)
+                }
+            }
         }
 
-        Calendar {
-            id: calendar
-            objectName: "calendar"
-            anchors {
-                left: parent.left
-                right: parent.right
+        StyledSlotsLayout {
+            id: slotsLayout
+            objectName: "calenderMenuSlotsLayout"
+            style: menuStyle
+
+            mainSlot: Item {
+                // XXX: this extra Item seems to be needed by Qt 5.4,
+                //      we can remove it once migrated to new versions
+                height: calendar.height
+                Calendar {
+                    id: calendar
+                    objectName: "calendar"
+                    interactive: !pointerMode
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                }
             }
         }
     }

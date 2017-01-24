@@ -49,7 +49,7 @@ Depends: gsettings-ubuntu-schemas (>= 0.0.7),
          suru-icon-theme,
          ${misc:Depends},
          ${shlibs:Depends},
-Breaks: qtdeclarative5-ubuntu-settings-components (<< 0.9),
+Breaks: qtdeclarative5-ubuntu-settings-components (<< 0.9), unity8 (<< 8.15)
 Replaces: qtdeclarative5-ubuntu-settings-components (<< 0.9),
 Description: Ubuntu settings Components
  Ubuntu settings components for Unity8

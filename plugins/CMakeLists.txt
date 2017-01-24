@@ -1,4 +1,4 @@
-include(QmlPlugins)
+find_package(QmlPlugins)
 
 macro(add_usc_plugin PLUGIN VERSION PATH)
     export_qmlfiles(${PLUGIN} ${PATH} DESTINATION ${QT_IMPORTS_DIR} ${ARGN})

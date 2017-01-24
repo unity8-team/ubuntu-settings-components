@@ -55,17 +55,56 @@ Rectangle {
 
         function init() {
             calendar.selectedDate = new Date(2013, 4, 10);
-            calendar.maximumDate = undefined;
-            calendar.minimumDate = undefined;
         }
 
-        function test_collapsed() {
-            calendar.collapsed = true;
-            compare(calendar.interactive, false, "Calendar should not be interactive");
-            var collapsedHeight = calendar.height;
-            calendar.collapsed = false;
-            verify(calendar.height > collapsedHeight * 4 && calendar.height < collapsedHeight * 6, "Height did not expand properly");
-            compare(calendar.interactive, true, "Calendar should be interactive");
+        function test_daysInMonth_data() {
+            var tests = []
+
+            for (var year = 2000; year <= 2016; ++year) {
+                for (var month = 1; month <= 12; ++month) {
+                    tests.push({tag: year+"/"+month, year: year, month: month })
+                }
+            }
+
+            return tests
+        }
+
+        function test_daysInMonth(data) {
+            switch (data.month) {
+                case 2:
+                    var expected = Date.leapYear(data.year) ? 29 : 28
+                    break
+                case 4:
+                case 6:
+                case 9:
+                case 11:
+                    var expected = 30
+                    break
+                default:
+                    var expected = 31
+            }
+
+            compare(Date.daysInMonth(data.year, data.month-1), expected)
+        }
+
+        function test_addMonthsFromLastDay_data() {
+            var tests = []
+            for (var i = 0; i <= 25; ++i) {
+                tests.push({tag: "previous "+i, delta: -i })
+                tests.push({tag: "next "+i, delta: i })
+            }
+            return tests
+        }
+
+        function test_addMonthsFromLastDay(data) {
+            var date = new Date(2016, 4, 31)
+            var newDate = date.addMonths(data.delta)
+            var monthDelta = date.getMonth() + data.delta
+            var monthNumber = monthDelta % 12
+
+            compare(newDate.getFullYear(), Math.floor(date.getFullYear() + monthDelta / 12))
+            compare(newDate.getMonth(), monthNumber < 0 ? 12 + monthNumber : monthNumber)
+            compare(newDate.getDate(), Date.daysInMonth(newDate.getFullYear(), newDate.getMonth()))
         }
 
         function test_selectedDate_data() {
@@ -79,8 +118,8 @@ Rectangle {
         function test_selectedDate(data) {
             calendar.selectedDate = data.date;
 
-            compare(calendar.currentItem.monthStart.year, data.date.getFullYear(), "Current year does no correspond to set date");
-            compare(calendar.currentItem.monthStart.month, data.date.getMonth(), "Current month does no correspond to set date");
+            compare(calendar.currentItem.month.firstDay().year, data.date.getFullYear(), "Current year does no correspond to set date");
+            compare(calendar.currentItem.month.firstDay().month, data.date.getMonth(), "Current month does no correspond to set date");
         }
 
         function test_firstDayOfWeek_data() {
@@ -102,29 +141,96 @@ Rectangle {
             }
         }
 
-        function test_minMaxDate_data() {
+        function test_selectedDateUpdatesCurrent_data() {
             return [
-                {tag: "Min=-0", date: new Date(), minDate: new Date(), maxDate: undefined, count: 3},
-                {tag: "Min=-1", date: new Date(), minDate: new Date().addMonths(-1), maxDate: undefined, count: 4},
-                {tag: "Min=-22", date: new Date(), minDate: new Date().addMonths(-22), maxDate: undefined, count: 5}, // max out at +-2
-
-                {tag: "Max=+0", date: new Date(), minDate: undefined, maxDate: new Date(), count: 3},
-                {tag: "Max=+1", date: new Date(), minDate: undefined, maxDate: new Date().addMonths(1), count: 4},
-                {tag: "Max=+22", date: new Date(), minDate: undefined, maxDate: new Date().addMonths(22), count: 5}, // max out at +-2
-
-                {tag: "Min=-0,Max=+0", date: new Date(), minDate: new Date(), maxDate: new Date(), count: 1},
-                {tag: "Min=-1,Max=+1", date: new Date(), minDate: new Date().addMonths(-1), maxDate: new Date().addMonths(1), count: 3},
-                {tag: "Min=-22,Max=+1", date: new Date(), minDate: new Date().addMonths(-22), maxDate: new Date().addMonths(1), count: 4}, // max out at +-2
-                {tag: "Min=-1,Max=+22", date: new Date(), minDate: new Date().addMonths(-1), maxDate: new Date().addMonths(22), count: 4}, // max out at +-2
-                {tag: "Min=-22,Max=+22", date: new Date(), minDate: new Date().addMonths(-22), maxDate: new Date().addMonths(22), count: 5}, // max out at +-2
+                { date: new Date(2010, 4, 10) },
+                { date: new Date() },
+                { date: new Date(2020, 10, 31)},
             ];
         }
 
-        function test_minMaxDate(data) {
-            calendar.selectedDate = data.date;
-            calendar.minimumDate = data.minDate;
-            calendar.maximumDate = data.maxDate;
-            compare(calendar.count, data.count, "The number of months should have changed");
+        function test_selectedDateUpdatesCurrent(data) {
+            calendar.selectedDate = data.date
+            compare(calendar.currentDate, data.date)
+        }
+
+        function test_eventsMarker_data()
+        {
+            var values = []
+            for (var i = 0; i < 20; ++i) {
+                values.push({tag: "eventDay "+i+": "+(i % 2 != 0), idx: i, dayEvent: (i % 2 != 0)})
+            }
+
+            return values
+        }
+
+        function test_eventsMarker(data) {
+            var eventMarkerLoader = findChild(calendar, "eventMarkerLoader"+data.idx)
+            verify(eventMarkerLoader)
+
+            var expected = data.dayEvent
+
+            if (data.dayEvent) {
+                var dayItem = findChild(calendar, "dayItem"+data.idx)
+                verify(dayItem)
+
+                calendar.eventDays = [dayItem.dayStart.day]
+                expected = dayItem.isCurrentMonth
+            }
+
+            compare(eventMarkerLoader.visible, expected)
+            var eventMarker = findChild(eventMarkerLoader, "eventMarker"+data.idx)
+            verify(expected ? eventMarker : eventMarker === undefined)
+        }
+
+        function test_showWeeksNumber_data() {
+            return [{tag: "visible", visible: true}, {tag: "not visible", visible: false}]
+        }
+
+        function test_showWeeksNumber(data) {
+            var weekNumbersLoader = findChild(calendar, "weekNumbersLoader"+calendar.currentIndex)
+            verify(weekNumbersLoader)
+
+            calendar.showWeekNumbers = data.visible
+            var weekNumbersColumn = findChild(weekNumbersLoader, "weekNumbersColumn"+calendar.currentIndex)
+            verify(data.visible ? weekNumbersColumn !== undefined : weekNumbersColumn === undefined)
+        }
+
+        function test_isToday() {
+            for (var i = 0; i < 7*6; ++i) {
+                var dayItem = findChild(calendar, "dayItem"+i)
+                verify(dayItem)
+                var todayMarkerLoader = findChild(dayItem, "todayMarkerLoader"+i)
+                verify(todayMarkerLoader)
+
+                compare(todayMarkerLoader.visible, dayItem.isToday)
+                compare(todayMarkerLoader.active, dayItem.isToday)
+            }
+        }
+
+        function test_moveToMonth_data() {
+            var tests = []
+
+            for (var i = 1; i <= 15; ++i) {
+                tests.push({tag: "previous "+i, delta: -i })
+                tests.push({tag: "next "+i, delta: i })
+            }
+
+            return tests
+        }
+
+        function test_moveToMonth(data) {
+            var expected = calendar.currentDate.addMonths(data.delta)
+            var now = new Date()
+
+            if (expected.getFullYear() != now.getFullYear() || expected.getMonth() != now.getMonth()) {
+                expected.setDate(1)
+            } else {
+                expected.setDate(now.getDate())
+            }
+
+            calendar.moveToMonth(data.delta)
+            compare(calendar.currentDate, expected)
         }
     }
 }

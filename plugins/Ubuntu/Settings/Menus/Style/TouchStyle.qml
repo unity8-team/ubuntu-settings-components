@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 Canonical Ltd.
+ * Copyright 2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,23 +13,28 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Authors:
- *      Renato Araujo Oliveira Filho <renato@canonical.com>
- *      Marco Trevisan <marco.trevisan@canonical.com>
+ * Author: Marco Trevisan <marco.trevisan@canonical.com>
  */
 
+pragma Singleton
 import QtQuick 2.4
 import Ubuntu.Components 1.3
 
-StandardMenu {
-    id: menuItem
-    property alias busy: indicator.running
-    divider.visible: true
+BaseStyle {
+    id: style
 
-    slots: ActivityIndicator {
-        id: indicator
-        objectName: "indicator"
+    readonly property SlotsLayout __reference_layout: SlotsLayout {}
 
-        width: height
+    padding {
+        top: __reference_layout.padding.top
+        bottom: __reference_layout.padding.bottom
+        leading: __reference_layout.padding.leading
+        trailing: __reference_layout.padding.trailing
     }
+
+    minimumHeight: units.gu(5.9)
+    fontSize: units.gu(2)
+    iconSize: units.gu(2.5)
+    buttonFontSize: units.gu(1.7)
+    buttonHeight: units.gu(3)
 }

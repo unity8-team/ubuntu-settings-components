@@ -3,6 +3,8 @@ plugin UbuntuSettingsMenusQml
 typeinfo Menus.qmltypes
 
 AccessPointMenu 0.1 AccessPointMenu.qml
+BaseMenu 0.1 BaseMenu.qml
+BaseLayoutMenu 0.1 BaseLayoutMenu.qml
 ButtonMenu 0.1 ButtonMenu.qml
 CalendarMenu 0.1 CalendarMenu.qml
 CheckableMenu 0.1 CheckableMenu.qml
@@ -13,6 +15,7 @@ ModemInfoItem 0.1 ModemInfoItem.qml
 PlaybackItemMenu 0.1 PlaybackItemMenu.qml
 ProgressBarMenu 0.1 ProgressBarMenu.qml
 ProgressValueMenu 0.1 ProgressValueMenu.qml
+RadioMenu 0.1 RadioMenu.qml
 SectionMenu 0.1 SectionMenu.qml
 SeparatorMenu 0.1 SeparatorMenu.qml
 SimpleMessageMenu 0.1 SimpleMessageMenu.qml

@@ -22,7 +22,9 @@ import Ubuntu.Settings.Components 0.1
 import Ubuntu.Settings.Menus 0.1
 
 Item {
+    id: page
     property string title: "MessageComponents"
+    property bool pointerMode: false
 
     width: units.gu(42)
     height: units.gu(75)
@@ -44,6 +46,14 @@ Item {
             time: "Yesterday, 10:00"
             icon: "image://theme/message"
             avatar: "artwork/beach.jpg"
+        }
+        ListElement {
+            type: "simple"
+            title: "Simple Text Message with Unknown Time"
+            body: "Going short, coming from the Void"
+            time: ""
+            icon: "image://theme/message"
+            avatar: "artwork/farm.jpg"
         }
         ListElement {
             type: "snap"
@@ -80,6 +90,11 @@ Item {
                     body: model.body
                     time: model.time
                     removable: true
+                    pointerMode: page.pointerMode
+
+                    onIconActivated: {
+                        print("Icon Activated")
+                    }
                 }
             }
 
@@ -91,8 +106,13 @@ Item {
                     title: model.title
                     body: model.body
                     time: model.time
+                    pointerMode: page.pointerMode
                     removable: true
                     replyHintText: "Reply"
+
+                    onIconActivated: {
+                        print("Icon Activated")
+                    }
 
                     onTriggered: {
                         selected = !selected;
@@ -108,11 +128,20 @@ Item {
                     title: model.title
                     body: model.body
                     time: model.time
+                    pointerMode: page.pointerMode
                     removable: true
                     replyHintText: "Reply"
 
+                    onIconActivated: {
+                        print("Icon Activated")
+                    }
+
                     onTriggered: {
                         selected = !selected;
+                    }
+
+                    onReplied: {
+                        print("Got reply: '" + value + "'")
                     }
                 }
             }

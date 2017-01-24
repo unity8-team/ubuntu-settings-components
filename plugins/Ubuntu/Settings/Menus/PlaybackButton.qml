@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 Canonical Ltd.
+ * Copyright 2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,23 +13,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Authors:
- *      Renato Araujo Oliveira Filho <renato@canonical.com>
- *      Marco Trevisan <marco.trevisan@canonical.com>
+ * Author: Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
 
-StandardMenu {
-    id: menuItem
-    property alias busy: indicator.running
-    divider.visible: true
+AbstractButton {
+    id: button
+    objectName: "playbackButton"
 
-    slots: ActivityIndicator {
-        id: indicator
-        objectName: "indicator"
+    property real size: units.gu(3)
+    property alias iconName: icon.name
 
-        width: height
+    width: size
+    height: width
+
+    Icon {
+        id: icon
+        anchors.fill: parent
+
+        name: button.name
+        enabled: button.enabled
+        color: {
+            if (!enabled)
+                return theme.palette.disabled.backgroundText;
+            return button.pressed ? theme.palette.highlighted.backgroundText : theme.palette.normal.backgroundText;
+        }
     }
 }

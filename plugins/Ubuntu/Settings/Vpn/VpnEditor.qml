@@ -31,6 +31,7 @@ Page {
 
     signal typeChanged(var connection, int type)
     signal reconnectionPrompt()
+    signal done()
 
     function commit () {
         editorLoader.item.state = 'committing';
@@ -130,7 +131,7 @@ Page {
                     if (editor.isNew) {
                         connection.remove();
                     }
-                    pageStack.pop();
+                    done();
                 }
                 Layout.fillWidth: true
             }
@@ -180,7 +181,7 @@ Page {
             if (connection.active) {
                 editor.reconnectionPrompt();
             }
-            pageStack.pop();
+            done();
         }
     }
 }

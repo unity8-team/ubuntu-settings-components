@@ -20,23 +20,22 @@
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 
 StandardMenu {
     id: menu
 
-    property string count: "0"
+    property alias count: label.text
 
     signal dismissed()
 
     iconSource: Qt.resolvedUrl("image://theme/message")
 
-    component: Component {
+    slots: [
         UbuntuShape {
             implicitHeight: label.implicitHeight + units.gu(2)
             implicitWidth: label.implicitWidth + units.gu(2)
 
-            color: theme.palette.normal.backgroundText
+            color: theme.palette.normal.background
             radius: "medium"
 
             Label {
@@ -49,13 +48,13 @@ StandardMenu {
                 }
                 horizontalAlignment: Text.AlignRight
                 font.weight: Font.DemiBold
-                fontSize: "medium"
-                text: menu.count
+                font.pixelSize: menuStyle.fontSize
+                text: "0"
 
-                color: theme.palette.normal.foregroundText
+                color: theme.palette.normal.foreground
             }
         }
-    }
+    ]
 
     onItemRemoved: {
         menu.dismissed();

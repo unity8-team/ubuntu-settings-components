@@ -22,7 +22,12 @@ import Ubuntu.Settings.Components 0.1
 import Ubuntu.Settings.Menus 0.1
 
 Item {
+    id: page
     property string title: "Settings Components"
+    property bool pointerMode: false
+
+    width: parent && parent.width ? parent.width : units.gu(42)
+    height: parent && parent.width ? parent.height : units.gu(75)
 
     ListModel {
         id: mediaPlayerModel
@@ -60,19 +65,40 @@ Item {
 
             StandardMenu {
                 text: i18n.tr("Standard Menu\nLook at me, I'm a new line.")
+                onTriggered: console.log("Triggered")
+            }
+
+            ButtonMenu {
+                text: i18n.tr("Toggle divider menu.")
+                buttonText: divider.visible ? i18n.tr("Hide") : i18n.tr("Show")
+                onButtonClicked: divider.visible = !divider.visible
             }
 
             StandardMenu {
-                iconSource: "image://theme/calendar"
-                iconColor: "red"
-                text: i18n.tr("Standard Menu")
-                component: Component {
-                    Button {
-                        text: "Press Me"
-                    }
-                }
-                backColor: Qt.rgba(1,1,1,0.1)
+                text: i18n.tr("Removable menu.")
+                removable: true
+                onItemRemoved: console.log("Item removed");
             }
+
+            StandardMenu {
+                text: i18n.tr("Inverted colors Version")
+                backColor: theme.palette.normal.baseText
+                foregroundColor: theme.palette.normal.base
+                highlightColor: theme.palette.highlighted.backgroundText
+            }
+
+            StandardMenu {
+                iconName: "calendar"
+                iconColor: "red"
+                text: i18n.tr("Standard Menu with Component")
+                slots: Button {
+                    text: "Press Me"
+                    onClicked: print("Button pressed!")
+                    color: theme.palette.normal.foreground
+                }
+            }
+
+            SeparatorMenu {}
 
             SliderMenu {
                 id: slider
@@ -97,6 +123,8 @@ Item {
                 value: slider.value
             }
 
+            SeparatorMenu {}
+
             ButtonMenu {
                 text: i18n.tr("Button")
                 buttonText: i18n.tr("Hello world!")
@@ -105,11 +133,15 @@ Item {
             CheckableMenu {
                 text: i18n.tr("Checkable")
                 checked: true
+                onCheckedChanged: print("Checked status is", checked);
+                onTriggered: print("Triggered", value)
             }
 
             SwitchMenu {
                 text: i18n.tr("Switch")
                 checked: true
+                onCheckedChanged: print("Checked status is", checked);
+                onTriggered: print("Triggered", value)
             }
 
             SectionMenu {
@@ -121,12 +153,20 @@ Item {
 
             CalendarMenu {
                 id: calendar
+                eventDays: currentDate.getMonth() % 2 ? [5, 20] : []
+            }
+
+            SwitchMenu {
+                text: i18n.tr("Show week numbers in calendar")
+                checked: calendar.showWeekNumbers
+                onCheckedChanged: calendar.showWeekNumbers = checked
             }
 
             UserSessionMenu {
                 name: i18n.tr("Lola Chang")
                 iconSource: "image://theme/contact"
                 active: true
+                onTriggered: active = !active
             }
 
             MediaPlayerMenu {
@@ -180,11 +220,46 @@ Item {
             }
 
             ModemInfoItem {
+                simIdentifierText: "SIM 1"
                 statusText: "EE 4G"
                 statusIcon: "gsm-3g-full"
                 roaming: true
                 locked: false
+                onTriggered: roaming = !roaming
             }
+
+            ModemInfoItem {
+                simIdentifierText: "SIM 2"
+                statusText: "Ubuntu 5G"
+                statusIcon: "gsm-3g-medium-secure"
+                roaming: false
+                locked: true
+                onUnlock: locked = false
+                onTriggered: {
+                    if (locked) {
+                        roaming = !roaming
+                    } else {
+                        locked = true
+                    }
+                }
+            }
+
+            SeparatorMenu {}
+
+            RadioMenu {
+                id: applesRadio
+                text: i18n.tr("Apples")
+                checked: true
+                onTriggered: orangesRadio.checked = !checked
+            }
+
+            RadioMenu {
+                id: orangesRadio
+                text: i18n.tr("Oranges")
+                onTriggered: applesRadio.checked = !checked
+            }
+
+            SeparatorMenu {}
 
             GroupedMessageMenu {
                 text: "Group Message"
@@ -203,6 +278,7 @@ Item {
                     TimeZoneMenu {
                         city: model.city
                         time: model.time
+                        pointerMode: page.pointerMode
                     }
                 }
             }
@@ -222,6 +298,15 @@ Item {
                         eventColor: model.eventColor
                         time: model.time
                         enabled: false
+                        pointerMode: page.pointerMode
+                    }
+                }
+            }
+
+            Component.onCompleted: {
+                for (var i = 0; i < children.length; ++i) {
+                    if (children[i].pointerMode !== undefined) {
+                        children[i].pointerMode = Qt.binding(function() { return page.pointerMode })
                     }
                 }
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Canonical Ltd.
+ * Copyright 2013-2016 Canonical Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,81 +15,44 @@
  *
  * Authors:
  *      Renato Araujo Oliveira Filho <renato@canonical.com>
+ *      Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 
-ListItem.Empty {
-    id: menu
-    __height: units.gu(5.5)
-
+StandardMenu {
+    id: ap
     property bool active: false
-    property bool secure: false
     property bool adHoc: false
     property int signalStrength: 0
-    property alias text: label.text
+    property alias secure: iconSecure.visible
 
-    Icon {
-        id: iconSignal
-        objectName: "iconSignal"
-
-        color: active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
-
-        width: height
-        height: Math.min(units.gu(3), parent.height - units.gu(1))
-        anchors {
-            left: parent.left
-            leftMargin: menu.__contentsMargins
-            verticalCenter: parent.verticalCenter
+    icon.objectName: "iconSignal"
+    iconColor: ap.active ? theme.palette.normal.positive : menuStyle.iconColor
+    iconName: {
+        if (adHoc) {
+            return "nm-adhoc";
+        } else if (signalStrength <= 0) {
+            return "nm-signal-00";
+        } else if (signalStrength <= 25) {
+            return "nm-signal-25";
+        } else if (signalStrength <= 50) {
+            return "nm-signal-50";
+        } else if (signalStrength <= 75) {
+            return "nm-signal-75";
         }
 
-        name: {
-            var imageName = "nm-signal-100"
-
-            if (adHoc) {
-                imageName = "nm-adhoc";
-            } else if (signalStrength <= 0) {
-                imageName = "nm-signal-00";
-            } else if (signalStrength <= 25) {
-                imageName = "nm-signal-25";
-            } else if (signalStrength <= 50) {
-                imageName = "nm-signal-50";
-            } else if (signalStrength <= 75) {
-                imageName = "nm-signal-75";
-            }
-            return imageName;
-        }
+        return "nm-signal-100";
     }
 
-    Label {
-        id: label
-        anchors {
-            left: iconSignal.right
-            leftMargin: units.gu(1)
-            verticalCenter: parent.verticalCenter
-            right: iconSecure.visible ? iconSecure.left : parent.right
-            rightMargin: menu.__contentsMargins
-        }
-        elide: Text.ElideRight
-        color: active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
-    }
-
-    Icon {
+    slots: Icon {
         id: iconSecure
         objectName: "iconSecure"
-        visible: secure
+        visible: false
         name: "network-secure"
-
-        color: active ? theme.palette.normal.positive : theme.palette.normal.backgroundText
-
+        color: ap.active ? theme.palette.normal.positive : menuStyle.iconColor
         width: height
-        height: Math.min(units.gu(3), parent.height - units.gu(1))
-        anchors {
-            right: parent.right
-            rightMargin: menu.__contentsMargins
-            verticalCenter: parent.verticalCenter
-        }
+        height: menuStyle.iconSize
     }
 }

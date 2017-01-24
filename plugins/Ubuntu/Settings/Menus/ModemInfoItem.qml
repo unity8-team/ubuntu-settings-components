@@ -12,18 +12,16 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Author: Marco Trevisan <marco.trevisan@canonical.com>
  */
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.3
-import Ubuntu.Components.ListItems 1.3 as ListItem
 
-ListItem.Empty {
+BaseMenu {
     id: menu
-    implicitHeight:   mainColumn.implicitHeight
-                    + mainColumn.anchors.topMargin
-                    + mainColumn.anchors.bottomMargin
 
     property alias statusIcon: statusIcon.name
     property alias statusText: labelStatus.text
@@ -33,92 +31,107 @@ ListItem.Empty {
     property bool roaming: false
     signal unlock
 
-    ColumnLayout {
-        id: mainColumn
-        anchors.fill: parent
-        anchors.margins: menu.__contentsMargins
-        spacing: units.gu(0.5)
+    menuHeight: slotsLayout.height
 
-        Label {
-            id: labelSimIdentifier
-            elide: Text.ElideRight
-            visible: text !== ""
-            font.bold: true
-            opacity: menu.locked ? 0.6 : 1.0
-        }
+    StyledSlotsLayout {
+        id: slotsLayout
+        objectName: "menuItemInfoSlotsLayout"
+        style: menuStyle
 
-        Row {
-            id: statusRow
-            spacing: units.gu(1)
+        LayoutMirroring.enabled: Qt.application.layoutDirection == Qt.RightToLeft
+        LayoutMirroring.childrenInherit: true
 
-            height: labelStatus.height
-            width: parent.width
+        mainSlot: ColumnLayout {
+            spacing: units.gu(0.5)
 
             Label {
-                id: labelStatus
+                id: labelSimIdentifier
                 elide: Text.ElideRight
-                opacity: 0.6
+                visible: text !== ""
+                opacity: menu.locked ? 0.6 : 1.0
+                color: menu.foregroundColor
+                font.bold: true
+                font.pixelSize: menuStyle.fontSize
             }
 
             Row {
-                spacing: units.gu(0.5)
-                height: parent.height
-                Icon {
-                    id: statusIcon
-                    color: theme.palette.normal.backgroundText
-
-                    height: labelStatus.height
-                    width: height
-
-                    visible: name !== ""
-                }
-
-                Icon {
-                    id: iconConnectivity
-                    color: theme.palette.normal.backgroundText
-
-                    width: statusIcon.width // fix lp:1585645 by breaking the binding loop
-                    height: width
-
-                    visible: name !== ""
-                }
-            }
-
-            Row {
-                spacing: units.gu(0.5)
-                height: parent.height
+                id: statusRow
+                spacing: units.gu(1)
+                height: labelStatus.height
 
                 Label {
-                    id: labelRoaming
-                    visible: menu.roaming
+                    id: labelStatus
                     elide: Text.ElideRight
-                    fontSize: "x-small"
-                    text: i18n.dtr("ubuntu-settings-components", "Roaming")
                     opacity: 0.6
+                    color: menu.foregroundColor
+                    font.pixelSize: menuStyle.fontSize
                 }
 
-                Icon {
-                    id: iconRoaming
-                    color: theme.palette.normal.backgroundText
-                    visible: menu.roaming
+                Row {
+                    spacing: units.gu(0.5)
+                    height: parent.height
+                    Icon {
+                        id: statusIcon
+                        color: menuStyle.iconColor
 
-                    height: labelStatus.height
-                    width: height
+                        height: menuStyle.iconSize
+                        width: height
 
-                    name: "network-cellular-roaming"
+                        visible: name !== ""
+                    }
+
+                    Icon {
+                        id: iconConnectivity
+                        color: menuStyle.iconColor
+
+                        width: menuStyle.iconSize
+                        height: width
+
+                        visible: name !== ""
+                    }
+                }
+
+                Row {
+                    spacing: units.gu(0.5)
+                    height: parent.height
+
+                    Label {
+                        id: labelRoaming
+                        visible: menu.roaming
+                        elide: Text.ElideRight
+                        text: i18n.dtr("ubuntu-settings-components", "Roaming")
+                        font.pixelSize: menuStyle.subtitleFontSize
+                        color: menu.foregroundColor
+                        opacity: 0.6
+                    }
+
+                    Icon {
+                        id: iconRoaming
+                        color: menuStyle.iconColor
+                        visible: menu.roaming
+
+                        height: menuStyle.iconSize
+                        width: height
+
+                        name: "network-cellular-roaming"
+                    }
                 }
             }
-        }
 
-        Button {
-            id: buttonUnlock
-            objectName: "buttonUnlockSim"
-            visible: menu.locked
+            Button {
+                id: buttonUnlock
+                objectName: "buttonUnlockSim"
+                visible: menu.locked
+                color: menuStyle.buttonColor
 
-            text: i18n.dtr("ubuntu-settings-components", "Unlock SIM")
-            Layout.preferredWidth: implicitWidth + units.gu(5)
+                text: i18n.dtr("ubuntu-settings-components", "Unlock SIM")
+                font.pixelSize: menuStyle.buttonFontSize
+                Layout.preferredWidth: implicitWidth + units.gu(5)
+                Layout.preferredHeight: menuStyle.buttonHeight
+                height: menuStyle.buttonHeight
 
-            onTriggered: menu.unlock()
+                onTriggered: menu.unlock()
+            }
         }
     }
 }

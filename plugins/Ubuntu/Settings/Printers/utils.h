@@ -18,6 +18,7 @@
 #define USC_PRINTERS_UTILS_H
 
 #include "enums.h"
+#include "i18n.h"
 #include "structs.h"
 
 #include <cups/ppd.h>
@@ -52,14 +53,13 @@ public:
 
     static const QString duplexModeToUIString(const PrinterEnum::DuplexMode &mode)
     {
-        // TODO: translate
         switch (mode) {
         case PrinterEnum::DuplexMode::DuplexNone:
-            return "One Sided";
+            return __("One Sided");
         case PrinterEnum::DuplexMode::DuplexShortSide:
-            return "Short Edge (Flip)";
+            return __("Short Edge (Flip)");
         case PrinterEnum::DuplexMode::DuplexLongSide:
-            return "Long Edge (Standard)";
+            return __("Long Edge (Standard)");
         }
     }
 

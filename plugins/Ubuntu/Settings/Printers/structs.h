@@ -18,6 +18,7 @@
 #define USC_PRINTERS_STRUCTS_H
 
 #include "enums.h"
+#include "i18n.h"
 
 #include <QtCore/QMap>
 #include <QDebug>
@@ -59,7 +60,7 @@ public:
 struct PrintQuality
 {
 public:
-    QString name = "Normal"; // TODO: translate
+    QString name = QString::null;
     QString text = QString::null;
 
     // PrintQuality, StpQuality, HPPrintQuality, etc.

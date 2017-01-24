@@ -17,6 +17,7 @@
 #include "plugin.h"
 
 #include "enums.h"
+#include "i18n.h"
 // #include "models/printermodel.h"
 #include "printer/printer.h"
 #include "printer/printerjob.h"
@@ -24,6 +25,8 @@
 
 #include <QtQml/qqml.h>
 #include <QSharedPointer>
+
+#define I18N_DOMAIN "ubuntu-settings-components"
 
 static QObject* p_singletonprovider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
@@ -35,6 +38,8 @@ static QObject* p_singletonprovider(QQmlEngine *engine, QJSEngine *scriptEngine)
 
 void UbuntuSettingsComponentsPrintersPlugin::registerTypes(const char *uri)
 {
+    initTr(I18N_DOMAIN, NULL);
+
     qmlRegisterSingletonType<Printers>(
         uri, 0, 1, "Printers", p_singletonprovider
     );

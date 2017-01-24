@@ -197,11 +197,40 @@ MainView {
     Component {
         id: addPrinterPageComponent
         Page {
+            id: addPrinterPage
+            states: [
+                State {
+                    name: "success"
+                    PropertyChanges {
+                        target: okAction
+                        enabled: false
+                    }
+                    PropertyChanges {
+                        target: closeAction
+                        enabled: false
+                    }
+                    PropertyChanges {
+                        target: addPrinterCol
+                        enabled: false
+                    }
+                    StateChangeScript {
+                        script: okTimer.start()
+                    }
+                },
+                State {
+                    name: "failure"
+                    PropertyChanges {
+                        target: errorMessageContainer
+                        visible: true
+                    }
+                }
+            ]
             header: PageHeader {
                 title: "Add printer"
                 flickable: addPrinterFlickable
                 leadingActionBar.actions: [
                     Action {
+                        id: closeAction
                         iconName: "close"
                         text: "Abort"
                         onTriggered: pageStack.pop()
@@ -210,18 +239,139 @@ MainView {
                 trailingActionBar {
                     actions: [
                         Action {
+                            id: okAction
                             iconName: "ok"
                             text: "Complete"
                             onTriggered: {
-                                console.log("adding printer");
+                                var ret = Printers.addPrinterWithPpdFile(
+                                    printerName.text,
+                                    printerPpd.text,
+                                    printerUri.text,
+                                    printerDescription.text,
+                                    printerLocation.text
+                                );
+                                if (ret) {
+                                    addPrinterPage.state = "success"
+                                } else {
+                                    errorMessage.text = Printers.lastMessage;
+                                    addPrinterPage.state = "failure"
+                                }
                             }
                         }
                     ]
                 }
             }
 
+            Timer {
+                id: okTimer
+                interval: 2000
+                onTriggered: pageStack.pop();
+            }
+
             Flickable {
                 id: addPrinterFlickable
+                anchors.fill: parent
+
+                Column {
+                    id: addPrinterCol
+                    property bool enabled: true
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+
+                    spacing: units.gu(2)
+
+                    Item {
+                        id: errorMessageContainer
+                        visible: false
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            margins: units.gu(2)
+                        }
+                        height: units.gu(6)
+                        Label {
+                            id: errorMessage
+                            anchors {
+                                top: parent.top
+                                topMargin: units.gu(2)
+                                horizontalCenter: parent.horizontalCenter
+                            }
+                        }
+
+                    }
+
+                    ListItems.ValueSelector {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Choose driver"
+                        values: [
+                            "Provide PPD file",
+                            "Select printer from database"
+                        ]
+                        enabled: false
+                    }
+
+                    ListItems.Standard {
+                        text: "Device URI"
+                        control: TextField {
+                            id: printerUri
+                            placeholderText: "e.g. ipp://server.local/my-queue"
+                        }
+                        enabled: parent.enabled
+                    }
+
+                    ListItems.Standard {
+                        text: "PPD File"
+                        control: TextField {
+                            id: printerPpd
+                            placeholderText: "e.g. /usr/share/cups/foo.ppd"
+                        }
+                        enabled: parent.enabled
+                    }
+
+                    ListItems.Standard {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Printer name"
+                        control: TextField {
+                            id: printerName
+                            placeholderText: "e.g. laserjet"
+                        }
+                        enabled: parent.enabled
+                    }
+
+                    ListItems.Standard {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Description (optional)"
+                        control: TextField {
+                            id: printerDescription
+                            placeholderText: "e.g. HP Laserjet with Duplexer"
+                        }
+                        enabled: parent.enabled
+                    }
+
+                    ListItems.Standard {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Location (optional)"
+                        control: TextField {
+                            id: printerLocation
+                            placeholderText: "e.g. Lab 1"
+                        }
+                        enabled: parent.enabled
+                    }
+                }
             }
         }
     }

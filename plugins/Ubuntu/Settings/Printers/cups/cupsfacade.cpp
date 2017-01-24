@@ -42,11 +42,9 @@ QString CupsFacade::printerAdd(const QString &name,
                                const QString &info,
                                const QString &location)
 {
-    Q_UNUSED(name);
-    Q_UNUSED(uri);
-    Q_UNUSED(ppdFile);
-    Q_UNUSED(info);
-    Q_UNUSED(location);
+    if (!helper.printerAdd(name, uri, ppdFile, info, location)) {
+        return helper.getLastError();
+    }
     return QString();
 }
 
@@ -56,11 +54,9 @@ QString CupsFacade::printerAddWithPpd(const QString &name,
                                       const QString &info,
                                       const QString &location)
 {
-    Q_UNUSED(name);
-    Q_UNUSED(uri);
-    Q_UNUSED(ppdFileName);
-    Q_UNUSED(info);
-    Q_UNUSED(location);
+    if (!helper.printerAddWithPpdFile(name, uri, ppdFileName, info, location)) {
+        return helper.getLastError();
+    }
     return QString();
 }
 

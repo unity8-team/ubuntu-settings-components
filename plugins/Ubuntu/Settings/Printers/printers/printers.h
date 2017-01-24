@@ -37,6 +37,7 @@ class PRINTERS_DECL_EXPORT Printers : public QObject
     Q_PROPERTY(QAbstractItemModel* recentPrinters READ recentPrinters CONSTANT)
     Q_PROPERTY(QAbstractItemModel* printJobs READ printJobs CONSTANT)
     Q_PROPERTY(QString defaultPrinterName READ defaultPrinterName WRITE setDefaultPrinterName NOTIFY defaultPrinterNameChanged)
+    Q_PROPERTY(QString lastMessage READ lastMessage CONSTANT)
 
 public:
     explicit Printers(int printerUpdateIntervalMSecs = 5000, QObject *parent = nullptr);
@@ -52,6 +53,7 @@ public:
     QAbstractItemModel* recentPrinters();
     QAbstractItemModel* printJobs();
     QString defaultPrinterName() const;
+    QString lastMessage() const;
 
     void setDefaultPrinterName(const QString &name);
 
@@ -59,16 +61,13 @@ public Q_SLOTS:
     QSharedPointer<Printer> getPrinterByName(const QString &name);
     QSharedPointer<Printer> getJobOwner(const int &jobId);
 
-    QSharedPointer<Printer> addPrinter(const QString &name,
-                                       const QString &ppd,
-                                       const QString &device,
-                                       const QString &description,
-                                       const QString &location);
-    QSharedPointer<Printer> addPrinterWithPpdFile(const QString &name,
-                                                  const QString &ppdFileName,
-                                                  const QString &device,
-                                                  const QString &description,
-                                                  const QString &location);
+    bool addPrinter(const QString &name, const QString &ppd,
+                    const QString &device, const QString &description,
+                    const QString &location);
+    bool addPrinterWithPpdFile(const QString &name, const QString &ppdFileName,
+                               const QString &device,
+                               const QString &description,
+                               const QString &location);
 
     bool removePrinter(const QString &name);
 
@@ -81,6 +80,7 @@ private:
     PrinterFilter m_allPrinters;
     PrinterFilter m_allPrintersWithPdf;
     PrinterFilter m_recentPrinters;
+    QString m_lastMessage;
 };
 
 #endif // USC_PRINTERS_H

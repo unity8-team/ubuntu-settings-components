@@ -76,6 +76,11 @@ QString Printers::defaultPrinterName() const
 
 }
 
+QString Printers::lastMessage() const
+{
+    return m_lastMessage;
+}
+
 void Printers::setDefaultPrinterName(const QString &name)
 {
 
@@ -90,24 +95,32 @@ QSharedPointer<Printer> Printers::getJobOwner(const int &jobId)
 
 }
 
-QSharedPointer<Printer> Printers::addPrinter(const QString &name,
-                                             const QString &ppd,
-                                             const QString &device,
-                                             const QString &description,
-                                             const QString &location)
+bool Printers::addPrinter(const QString &name, const QString &ppd,
+                          const QString &device, const QString &description,
+                          const QString &location)
 {
     QString reply = m_backend->printerAdd(name, device, ppd, description,
                                           location);
+    if (!reply.isEmpty()) {
+        m_lastMessage = reply;
+        return false;
+    }
+    return true;
 }
 
-QSharedPointer<Printer> Printers::addPrinterWithPpdFile(const QString &name,
-                                                        const QString &ppdFileName,
-                                                        const QString &device,
-                                                        const QString &description,
-                                                        const QString &location)
+bool Printers::addPrinterWithPpdFile(const QString &name,
+                                     const QString &ppdFileName,
+                                     const QString &device,
+                                     const QString &description,
+                                     const QString &location)
 {
     QString reply = m_backend->printerAddWithPpd(name, device, ppdFileName,
                                                  description, location);
+    if (!reply.isEmpty()) {
+        m_lastMessage = reply;
+        return false;
+    }
+    return true;
 }
 
 bool Printers::removePrinter(const QString &name)

@@ -18,8 +18,6 @@
 #include "backend/backend_pdf.h"
 #include "utils.h"
 
-#include <exception>
-#include <stdexcept>
 
 PrinterCupsBackend::PrinterCupsBackend(QObject *parent)
     : PrinterCupsBackend(new CupsFacade(), QPrinterInfo(), parent)
@@ -38,7 +36,6 @@ PrinterCupsBackend::PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
 
 PrinterCupsBackend::~PrinterCupsBackend()
 {
-
 }
 
 QString PrinterCupsBackend::printerAdd(const QString &name,
@@ -47,7 +44,7 @@ QString PrinterCupsBackend::printerAdd(const QString &name,
                                        const QString &info,
                                        const QString &location)
 {
-
+    return m_cups->printerAdd(name, uri, ppdFile, info, location);
 }
 
 QString PrinterCupsBackend::printerAddWithPpd(const QString &name,
@@ -56,7 +53,7 @@ QString PrinterCupsBackend::printerAddWithPpd(const QString &name,
                                               const QString &info,
                                               const QString &location)
 {
-
+    return m_cups->printerAddWithPpd(name, uri, ppdFileName, info, location);
 }
 
 bool PrinterCupsBackend::holdsDefinition() const

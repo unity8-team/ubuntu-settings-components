@@ -37,8 +37,8 @@ CupsFacade::~CupsFacade()
 }
 
 QString CupsFacade::printerAdd(const QString &name,
-                               const QUrl &uri,
-                               const QUrl &ppdFile,
+                               const QString &uri,
+                               const QString &ppdFile,
                                const QString &info,
                                const QString &location)
 {
@@ -51,7 +51,7 @@ QString CupsFacade::printerAdd(const QString &name,
 }
 
 QString CupsFacade::printerAddWithPpd(const QString &name,
-                                      const QUrl &uri,
+                                      const QString &uri,
                                       const QString &ppdFileName,
                                       const QString &info,
                                       const QString &location)

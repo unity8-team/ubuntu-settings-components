@@ -50,13 +50,16 @@ public:
 
     virtual bool holdsDefinition() const;
 
+    // Add a printer using an already existing ppd.
     virtual QString printerAdd(const QString &name,
-                               const QUrl &uri,
-                               const QUrl &ppdFile,
+                               const QString &uri,
+                               const QString &ppdFile,
                                const QString &info,
                                const QString &location);
+
+    // Add a printer and provide a ppd file.
     virtual QString printerAddWithPpd(const QString &name,
-                                      const QUrl &uri,
+                                      const QString &uri,
                                       const QString &ppdFileName,
                                       const QString &info,
                                       const QString &location);

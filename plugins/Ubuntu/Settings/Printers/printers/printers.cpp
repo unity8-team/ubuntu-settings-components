@@ -91,20 +91,23 @@ QSharedPointer<Printer> Printers::getJobOwner(const int &jobId)
 }
 
 QSharedPointer<Printer> Printers::addPrinter(const QString &name,
-                                             const QUrl &ppd,
-                                             const QUrl &device,
+                                             const QString &ppd,
+                                             const QString &device,
                                              const QString &description,
                                              const QString &location)
 {
-
+    QString reply = m_backend->printerAdd(name, device, ppd, description,
+                                          location);
 }
 
-QSharedPointer<Printer> Printers::addPrinter(const QString &name,
-                                             const QUrl &device,
-                                             const QString &description,
-                                             const QString &location)
+QSharedPointer<Printer> Printers::addPrinterWithPpdFile(const QString &name,
+                                                        const QString &ppdFileName,
+                                                        const QString &device,
+                                                        const QString &description,
+                                                        const QString &location)
 {
-
+    QString reply = m_backend->printerAddWithPpd(name, device, ppdFileName,
+                                                 description, location);
 }
 
 bool Printers::removePrinter(const QString &name)

@@ -28,7 +28,6 @@
 #include <QScopedPointer>
 #include <QSharedPointer>
 #include <QString>
-#include <QUrl>
 
 class PRINTERS_DECL_EXPORT Printers : public QObject
 {
@@ -61,15 +60,15 @@ public Q_SLOTS:
     QSharedPointer<Printer> getJobOwner(const int &jobId);
 
     QSharedPointer<Printer> addPrinter(const QString &name,
-                                       const QUrl &ppd,
-                                       const QUrl &device,
+                                       const QString &ppd,
+                                       const QString &device,
                                        const QString &description,
                                        const QString &location);
-
-    QSharedPointer<Printer> addPrinter(const QString &name,
-                                       const QUrl &device,
-                                       const QString &description,
-                                       const QString &location);
+    QSharedPointer<Printer> addPrinterWithPpdFile(const QString &name,
+                                                  const QString &ppdFileName,
+                                                  const QString &device,
+                                                  const QString &description,
+                                                  const QString &location);
 
     bool removePrinter(const QString &name);
 

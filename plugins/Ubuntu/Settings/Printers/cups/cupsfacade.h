@@ -30,7 +30,6 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
-#include <QUrl>
 #include <QVariant>
 
 class PrinterJob;
@@ -41,12 +40,12 @@ public:
     explicit CupsFacade(QObject *parent = Q_NULLPTR);
     ~CupsFacade();
     QString printerAdd(const QString &name,
-                       const QUrl &uri,
-                       const QUrl &ppdFile,
+                       const QString &uri,
+                       const QString &ppdFile,
                        const QString &info,
                        const QString &location);
     QString printerAddWithPpd(const QString &name,
-                              const QUrl &uri,
+                              const QString &uri,
                               const QString &ppdFileName,
                               const QString &info,
                               const QString &location);

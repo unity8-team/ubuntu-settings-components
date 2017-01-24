@@ -43,6 +43,16 @@ public:
     explicit CupsPkHelper();
     ~CupsPkHelper();
 
+    bool printerAdd(const QString &printerName,
+                    const QString &printerUri,
+                    const QString &ppdFile,
+                    const QString &info,
+                    const QString &location);
+    bool printerAddWithPpdFile(const QString &printerName,
+                               const QString &printerUri,
+                               const QString &ppdFileName,
+                               const QString &info,
+                               const QString &location);
     bool printerClassSetInfo(const QString &name, const QString &info);
     bool printerClassSetOption(const QString &name, const QString &option,
                                const QStringList &values);
@@ -74,7 +84,6 @@ private:
                               const int maxLength = 512);
     static bool isStringPrintable(const QString &string, const bool checkNull,
                                   const int maxLength);
-
     QString preparePpdForOptions(const QString &ppdfile,
                                  cups_option_t *options,
                                  int numOptions);

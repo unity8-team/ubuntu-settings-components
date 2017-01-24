@@ -35,8 +35,8 @@ MainView {
             visible: false
             property var printer
             header: PageHeader {
-               title: printer.name
-               flickable: printerFlickable
+                title: printer.name
+                flickable: printerFlickable
             }
 
             Flickable {
@@ -153,6 +153,15 @@ MainView {
             header: PageHeader {
                 title: "Printers"
                 flickable: printerList
+                trailingActionBar {
+                    actions: [
+                        Action {
+                            iconName: "add"
+                            text: "Add printer"
+                            onTriggered: pageStack.push(addPrinterPageComponent)
+                        }
+                    ]
+                }
             }
             visible: false
 
@@ -181,6 +190,38 @@ MainView {
                     onClicked: pageStack.push(printerPage, { printer: model })
                     Component.onCompleted: console.log("printer", model.name)
                 }
+            }
+        }
+    }
+
+    Component {
+        id: addPrinterPageComponent
+        Page {
+            header: PageHeader {
+                title: "Add printer"
+                flickable: addPrinterFlickable
+                leadingActionBar.actions: [
+                    Action {
+                        iconName: "close"
+                        text: "Abort"
+                        onTriggered: pageStack.pop()
+                    }
+                ]
+                trailingActionBar {
+                    actions: [
+                        Action {
+                            iconName: "ok"
+                            text: "Complete"
+                            onTriggered: {
+                                console.log("adding printer");
+                            }
+                        }
+                    ]
+                }
+            }
+
+            Flickable {
+                id: addPrinterFlickable
             }
         }
     }

@@ -309,6 +309,11 @@ public:
         return m_defaultPrinterName;
     }
 
+    virtual QList<PrinterDriver> availablePrinterDrivers() override
+    {
+        return m_availableDrivers;
+    }
+
     virtual BackendType backendType() const override
     {
         return m_backendType;
@@ -362,6 +367,7 @@ public:
 
     QStringList m_availablePrinterNames;
     QList<Printer*> m_availablePrinters;
+    QList<PrinterDriver> m_availableDrivers;
     PrinterBackend::BackendType m_backendType;
 
 public Q_SLOT:

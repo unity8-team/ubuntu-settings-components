@@ -89,6 +89,15 @@ public:
     QList<PrintQuality> printerGetSupportedQualities(const QString &name) const;
     int printFileToDest(const QString &filepath, const QString &title,
                         const cups_dest_t *dest);
+    QList<PrinterDriver> getPrinterDrivers(
+        const QString &deviceId = "",
+        const QString &language = "",
+        const QString &makeModel = "",
+        const QString &product = "",
+        const QStringList &includeSchemes = QStringList(),
+        const QStringList &excludeSchemes = QStringList()
+    );
+
 Q_SIGNALS:
     void printerAdded(const QString &name);
     void printerModified(const QString &name, const bool ppdChanged);

@@ -116,6 +116,7 @@ public:
     virtual QStringList availablePrinterNames() override;
     virtual Printer* getPrinter(const QString &printerName) override;
     virtual QString defaultPrinterName() override;
+    virtual QList<PrinterDriver> availablePrinterDrivers() override;
 
     virtual PrinterBackend::BackendType backendType() const override;
 

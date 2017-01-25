@@ -361,3 +361,13 @@ int CupsFacade::printFileToDest(const QString &filepath, const QString &title,
                          dest->num_options,
                          dest->options);
 }
+
+QList<PrinterDriver> CupsFacade::getPrinterDrivers(
+    const QString &deviceId, const QString &language, const QString &makeModel,
+    const QString &product, const QStringList &includeSchemes,
+    const QStringList &excludeSchemes
+)
+{
+    return helper.getPrinterDrivers(deviceId, language, makeModel, product,
+                                    includeSchemes, excludeSchemes);
+}

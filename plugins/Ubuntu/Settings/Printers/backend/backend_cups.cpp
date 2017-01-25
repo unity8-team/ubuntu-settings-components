@@ -308,6 +308,11 @@ QString PrinterCupsBackend::defaultPrinterName()
     return QPrinterInfo::defaultPrinterName();
 }
 
+QList<PrinterDriver> PrinterCupsBackend::availablePrinterDrivers()
+{
+    return m_cups->getPrinterDrivers();
+}
+
 PrinterBackend::BackendType PrinterCupsBackend::backendType() const
 {
     return PrinterBackend::BackendType::CupsType;

@@ -281,6 +281,11 @@ QString PrinterBackend::defaultPrinterName()
     return QString();
 }
 
+QList<PrinterDriver> PrinterBackend::availablePrinterDrivers()
+{
+    return QList<PrinterDriver>();
+}
+
 PrinterBackend::BackendType PrinterBackend::backendType() const
 {
     return BackendType::DefaultType;

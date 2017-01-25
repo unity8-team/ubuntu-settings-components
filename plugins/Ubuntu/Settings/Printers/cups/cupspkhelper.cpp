@@ -703,3 +703,118 @@ cups_dest_t* CupsPkHelper::getDest(const QString &name,
                             instance.toUtf8());
     return dest;
 }
+
+QList<PrinterDriver> CupsPkHelper::getPrinterDrivers(
+    const QString &deviceId, const QString &language, const QString &makeModel,
+    const QString &product, const QStringList &includeSchemes,
+    const QStringList &excludeSchemes
+)
+{
+    ipp_t *request;
+    ipp_t *response;
+    ipp_attribute_t *attr;
+
+    QByteArray ppdDeviceId;
+    QByteArray ppdLanguage;
+    QByteArray ppdMakeModel;
+    QByteArray ppdName;
+
+    // cups_option_t option;
+    QList<PrinterDriver> models;
+
+    request = ippNewRequest(CUPS_GET_PPDS);
+
+    if (!deviceId.isEmpty())
+    ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_TEXT, "ppd-device-id",
+                 NULL, deviceId.toUtf8());
+    if (!language.isEmpty())
+    ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_LANGUAGE, "ppd-language",
+                 NULL, language.toUtf8());
+    if (!makeModel.isEmpty())
+    ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_TEXT, "ppd-make-and-model",
+                 NULL, makeModel.toUtf8());
+    if (!product.isEmpty())
+    ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_TEXT, "ppd-product",
+                 NULL, product.toUtf8());
+
+    // TODO: implement schema restrictions
+    // // if (includeSchemes) {
+    // //     option.name  = "include-schemes";
+    // //     option.value = (char *)include_schemes;
+
+    // //     cupsEncodeOptions2(request, 1, &option, IPP_TAG_OPERATION);
+    // // }
+
+    // // if (excludeSchemes) {
+    // //     option.name  = "exclude-schemes";
+    // //     option.value = (char *)exclude_schemes;
+
+    // //     cupsEncodeOptions2(request, 1, &option, IPP_TAG_OPERATION);
+    // // }
+
+    // Do the request and get back a response...
+    const QString resourceChar = getResource(CphResourceRoot);
+    response = cupsDoRequest(m_connection, request,
+                             resourceChar.toUtf8());
+
+    if (!isReplyOk(response, true)) {
+        return models;
+    }
+
+    for (attr = ippFirstAttribute(response); attr != NULL; attr = ippNextAttribute(response)) {
+
+        while (attr != NULL && ippGetGroupTag(attr) != IPP_TAG_PRINTER)
+            attr = ippNextAttribute(response);
+
+        if (attr == NULL)
+            break;
+
+        // Pull the needed attributes from this PPD...
+        ppdDeviceId = "NONE";
+        ppdLanguage.clear();
+        ppdMakeModel.clear();
+        ppdName.clear();
+
+        while (attr != NULL && ippGetGroupTag(attr) == IPP_TAG_PRINTER) {
+            if (!strcmp(ippGetName(attr), "ppd-device-id") &&
+                 ippGetValueTag(attr) == IPP_TAG_TEXT) {
+                ppdDeviceId = ippGetString(attr, 0, NULL);
+            } else if (!strcmp(ippGetName(attr), "ppd-natural-language") &&
+                       ippGetValueTag(attr) == IPP_TAG_LANGUAGE) {
+                ppdLanguage = ippGetString(attr, 0, NULL);
+
+            } else if (!strcmp(ippGetName(attr), "ppd-make-and-model") &&
+                       ippGetValueTag(attr) == IPP_TAG_TEXT) {
+                ppdMakeModel = ippGetString(attr, 0, NULL);
+            } else if (!strcmp(ippGetName(attr), "ppd-name") &&
+                       ippGetValueTag(attr) == IPP_TAG_NAME) {
+
+                ppdName = ippGetString(attr, 0, NULL);
+            }
+
+            attr = ippNextAttribute(response);
+        }
+
+        // See if we have everything needed...
+
+        if (ppdLanguage.isEmpty() || ppdMakeModel.isEmpty() ||
+            ppdName.isEmpty()) {
+            if (attr == NULL)
+                break;
+            else
+                continue;
+        }
+
+        PrinterDriver m;
+        m.name = ppdName;
+        m.deviceId = ppdDeviceId;
+        m.makeModel = ppdMakeModel;
+        m.language = ppdLanguage;
+
+        models.append(m);
+    }
+
+    ippDelete(response);
+
+    return models;
+}

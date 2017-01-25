@@ -13,12 +13,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "structs.h"
 
 #include <cups/cups.h>
 #include <cups/http.h>
 #include <cups/ipp.h>
 #include <cups/ppd.h>
-
 
 #include <QString>
 #include <QStringList>
@@ -60,6 +60,14 @@ public:
     cups_dest_t* getDest(const QString &name, const QString &instance) const;
 
     QString getLastError() const;
+    QList<PrinterDriver> getPrinterDrivers(
+        const QString &deviceId = "",
+        const QString &language = "",
+        const QString &makeModel = "",
+        const QString &product = "",
+        const QStringList &includeSchemes = QStringList(),
+        const QStringList &excludeSchemes = QStringList()
+    );
 
 private:
     enum CphResource

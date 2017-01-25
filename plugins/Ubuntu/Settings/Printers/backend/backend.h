@@ -138,6 +138,8 @@ public:
     virtual Printer* getPrinter(const QString &printerName);
     virtual QString defaultPrinterName();
 
+    virtual QList<PrinterDriver> availablePrinterDrivers();
+
     virtual BackendType backendType() const;
 
 public Q_SLOTS:

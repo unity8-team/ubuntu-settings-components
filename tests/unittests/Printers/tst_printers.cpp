@@ -99,6 +99,13 @@ private Q_SLOTS:
             );
         }
     }
+    void testPrinterDrivers()
+    {
+        PrinterBackend* backend = new MockPrinterBackend;
+        // ((MockPrinterBackend*) backend)->m_ = in;
+
+        Printers printers(backend);
+    }
 };
 
 QTEST_GUILESS_MAIN(TestPrinters)

@@ -71,10 +71,22 @@ public:
     }
 };
 
+struct PrinterDriver
+{
+public:
+    QByteArray name;
+    QByteArray deviceId;
+    QByteArray language;
+    QByteArray makeModel;
+};
+
 Q_DECLARE_TYPEINFO(ColorModel, Q_PRIMITIVE_TYPE);
 Q_DECLARE_METATYPE(ColorModel)
 
 Q_DECLARE_TYPEINFO(PrintQuality, Q_PRIMITIVE_TYPE);
 Q_DECLARE_METATYPE(PrintQuality)
+
+Q_DECLARE_TYPEINFO(PrinterDriver, Q_PRIMITIVE_TYPE);
+Q_DECLARE_METATYPE(PrinterDriver)
 
 #endif // USC_PRINTERS_STRUCTS_H

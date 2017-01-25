@@ -65,6 +65,13 @@ private Q_SLOTS:
         QSKIP("Not implemented yet!");
     }
 
+    void testCollate()
+    {
+        QCOMPARE(m_instance->collate(), true);
+        m_instance->setCollate(false);
+        QCOMPARE(m_instance->collate(), false);
+    }
+
     void testColorModel()
     {
         QSKIP("Not implemented yet!");
@@ -150,6 +157,13 @@ private Q_SLOTS:
     void testQuality()
     {
         QSKIP("Not implemented yet!");
+    }
+
+    void testReverse()
+    {
+        QCOMPARE(m_instance->reverse(), false);
+        m_instance->setReverse(true);
+        QCOMPARE(m_instance->reverse(), true);
     }
 
     void testState()

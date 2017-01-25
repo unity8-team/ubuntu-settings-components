@@ -34,6 +34,7 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool collate READ collate WRITE setCollate NOTIFY collateChanged)
     Q_PROPERTY(int colorModel READ colorModel WRITE setColorModel NOTIFY colorModelChanged)
     Q_PROPERTY(PrinterEnum::ColorModelType colorModelType READ colorModelType NOTIFY colorModelTypeChanged)
     Q_PROPERTY(int copies READ copies WRITE setCopies NOTIFY copiesChanged)
@@ -44,6 +45,7 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
     Q_PROPERTY(QString printRange READ printRange WRITE setPrintRange NOTIFY printRangeChanged)
     Q_PROPERTY(PrinterEnum::PrintRange printRangeMode READ printRangeMode WRITE setPrintRangeMode NOTIFY printRangeModeChanged)
     Q_PROPERTY(int quality READ quality WRITE setQuality NOTIFY qualityChanged)
+    Q_PROPERTY(bool reverse READ reverse WRITE setReverse NOTIFY reverseChanged)
     Q_PROPERTY(PrinterEnum::State state READ state NOTIFY stateChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
 public:
@@ -53,6 +55,7 @@ public:
                         QObject *parent=Q_NULLPTR);
     ~PrinterJob();
 
+    bool collate() const;
     int colorModel() const;
     PrinterEnum::ColorModelType colorModelType() const;
     int copies() const;
@@ -63,6 +66,7 @@ public:
     QString printRange() const;
     PrinterEnum::PrintRange printRangeMode() const;
     int quality() const;
+    bool reverse() const;
     PrinterEnum::State state() const;
     QString title() const;
 public Q_SLOTS:
@@ -71,6 +75,7 @@ public Q_SLOTS:
     ColorModel getColorModel() const;
     PrintQuality getPrintQuality() const;
     Q_INVOKABLE void printFile(const QUrl &url);
+    void setCollate(const bool collate);
     void setColorModel(const int colorModel);
     void setCopies(const int copies);
     void setDuplexMode(const int duplexMode);
@@ -80,11 +85,13 @@ public Q_SLOTS:
     void setPrintRange(const QString &printRange);
     void setPrintRangeMode(const PrinterEnum::PrintRange printRangeMode);
     void setQuality(const int quality);
+    void setReverse(const bool reverse);
     void setTitle(const QString &title);
 private Q_SLOTS:
     void loadDefaults();
     void setState(const PrinterEnum::State &state);
 Q_SIGNALS:
+    void collateChanged();
     void colorModelChanged();
     void colorModelTypeChanged();
     void copiesChanged();
@@ -95,9 +102,11 @@ Q_SIGNALS:
     void printRangeChanged();
     void printRangeModeChanged();
     void qualityChanged();
+    void reverseChanged();
     void stateChanged();
     void titleChanged();
 private:
+    bool m_collate;
     int m_color_model;
     int m_copies;
     PrinterBackend *m_backend; // TODO: Maybe use the printer's backend?
@@ -108,6 +117,7 @@ private:
     QString m_print_range;
     PrinterEnum::PrintRange m_print_range_mode;
     int m_quality;
+    bool m_reverse;
     PrinterEnum::State m_state;
     QString m_title;
 };

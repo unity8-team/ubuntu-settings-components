@@ -3,7 +3,7 @@ Section: misc
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Build-Depends: cmake,
-               cmake-extras (>= 0.6),
+               cmake-extras (>= 0.10),
                debhelper (>= 9),
                libglib2.0-dev (>= 2.37.92),
                pkg-config,

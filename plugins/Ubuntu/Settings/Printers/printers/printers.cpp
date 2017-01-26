@@ -28,6 +28,7 @@ Printers::Printers(PrinterBackend *backend, int printerUpdateIntervalMSecs,
                    QObject *parent)
     : QObject(parent)
     , m_backend(backend)
+    , m_drivers(backend)
     , m_model(backend, printerUpdateIntervalMSecs)
 {
     m_allPrinters.setSourceModel(&m_model);
@@ -71,6 +72,23 @@ QAbstractItemModel* Printers::printJobs()
 
 }
 
+QAbstractItemModel* Printers::drivers()
+{
+    auto ret = &m_drivers;
+    QQmlEngine::setObjectOwnership(ret, QQmlEngine::CppOwnership);
+    return ret;
+}
+
+QString Printers::driverFilter() const
+{
+    return m_drivers.filter();
+}
+
+void Printers::setDriverFilter(const QString &filter)
+{
+    m_drivers.setFilter(filter);
+}
+
 QString Printers::defaultPrinterName() const
 {
 
@@ -93,6 +111,11 @@ QSharedPointer<Printer> Printers::getPrinterByName(const QString &name)
 QSharedPointer<Printer> Printers::getJobOwner(const int &jobId)
 {
 
+}
+
+void Printers::prepareToAddPrinter()
+{
+    m_drivers.load();
 }
 
 bool Printers::addPrinter(const QString &name, const QString &ppd,

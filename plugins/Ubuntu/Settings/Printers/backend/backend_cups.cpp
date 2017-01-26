@@ -24,6 +24,9 @@ PrinterCupsBackend::PrinterCupsBackend(QObject *parent)
 {
     // If we create the CupsFacade, we're in charge of RAII.
     m_cups->setParent(this);
+
+    connect(m_cups, SIGNAL(printerDriversLoaded(const QList<PrinterDriver>&)),
+            this, SIGNAL(printerDriversLoaded(const QList<PrinterDriver>&)));
 }
 
 PrinterCupsBackend::PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
@@ -308,9 +311,9 @@ QString PrinterCupsBackend::defaultPrinterName()
     return QPrinterInfo::defaultPrinterName();
 }
 
-QList<PrinterDriver> PrinterCupsBackend::availablePrinterDrivers()
+void PrinterCupsBackend::requestAvailablePrinterDrivers()
 {
-    return m_cups->getPrinterDrivers();
+    return m_cups->requestPrinterDrivers();
 }
 
 PrinterBackend::BackendType PrinterCupsBackend::backendType() const

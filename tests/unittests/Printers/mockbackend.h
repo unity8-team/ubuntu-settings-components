@@ -309,9 +309,9 @@ public:
         return m_defaultPrinterName;
     }
 
-    virtual QList<PrinterDriver> availablePrinterDrivers() override
+    virtual void requestAvailablePrinterDrivers() override
     {
-        return m_availableDrivers;
+        Q_EMIT printerDriversLoaded(m_availableDrivers);
     }
 
     virtual BackendType backendType() const override

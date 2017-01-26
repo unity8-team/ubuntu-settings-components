@@ -17,13 +17,14 @@
 #include "plugin.h"
 
 #include "enums.h"
+#include "structs.h"
 // #include "models/printermodel.h"
 #include "printer/printer.h"
 #include "printer/printerjob.h"
 #include "printers/printers.h"
 
 #include <QtQml/qqml.h>
-#include <QSharedPointer>
+#include <QList>
 
 static QObject* p_singletonprovider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
@@ -44,4 +45,5 @@ void UbuntuSettingsComponentsPrintersPlugin::registerTypes(const char *uri)
     qmlRegisterType<PrinterJob>(uri, 0, 1, "PrinterJob");
 
     qmlRegisterUncreatableType<PrinterEnum>(uri, 0, 1, "PrinterEnum", "Is an enum");
+    qRegisterMetaType<QList<PrinterDriver>>("QList<PrinterDriver>");
 }

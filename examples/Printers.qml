@@ -262,6 +262,10 @@ MainView {
                 }
             }
 
+            Component.onCompleted: {
+                Printers.prepareToAddPrinter();
+            }
+
             Timer {
                 id: okTimer
                 interval: 2000
@@ -302,33 +306,71 @@ MainView {
 
                     }
 
+                    ListItems.Standard {
+                        text: "Device URI"
+                        control: TextField {
+                            id: printerUri
+                            placeholderText: "ipp://server.local/my-queue"
+                        }
+                        enabled: parent.enabled
+                    }
+
                     ListItems.ValueSelector {
+                        id: driverSelector
                         anchors {
                             left: parent.left
                             right: parent.right
                         }
                         text: "Choose driver"
                         values: [
-                            "Provide PPD file",
-                            "Select printer from database"
+                            "Select printer from database",
+                            "Provide PPD file"
                         ]
-                        enabled: false
                     }
 
                     ListItems.Standard {
-                        text: "Device URI"
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Filter drivers"
                         control: TextField {
-                            id: printerUri
-                            placeholderText: "e.g. ipp://server.local/my-queue"
+                            id: driverFilter
                         }
                         enabled: parent.enabled
+                        onTextChanged: {
+                            if (text.length >= 2) {
+                                Printers.driverFilter = text
+                            }
+                        }
+                    }
+
+                    ListView {
+                        id: driversView
+                        visible: driverSelector.selectedIndex == 0
+                        model: Printers.drivers
+                        anchors { left: parent.left; right: parent.right }
+                        height: units.gu(30)
+                        clip: true
+                        delegate: ListItem {
+                            height: driverLayout.height + (divider.visible ? divider.height : 0)
+                            ListItemLayout {
+                                id: driverLayout
+                                title.text: displayName
+                                subtitle.text: name
+                                summary.text: deviceId
+                            }
+                            // onClicked: pageStack.push(printerPage, { printer: model })
+                            // Component.onCompleted: console.log("printer", model.name)
+                        }
                     }
 
                     ListItems.Standard {
                         text: "PPD File"
+                        visible: driverSelector.selectedIndex == 1
                         control: TextField {
                             id: printerPpd
-                            placeholderText: "e.g. /usr/share/cups/foo.ppd"
+                            placeholderText: "/usr/share/cups/foo.ppd"
                         }
                         enabled: parent.enabled
                     }
@@ -341,7 +383,7 @@ MainView {
                         text: "Printer name"
                         control: TextField {
                             id: printerName
-                            placeholderText: "e.g. laserjet"
+                            placeholderText: "laserjet"
                         }
                         enabled: parent.enabled
                     }
@@ -354,7 +396,7 @@ MainView {
                         text: "Description (optional)"
                         control: TextField {
                             id: printerDescription
-                            placeholderText: "e.g. HP Laserjet with Duplexer"
+                            placeholderText: "HP Laserjet with Duplexer"
                         }
                         enabled: parent.enabled
                     }
@@ -367,7 +409,7 @@ MainView {
                         text: "Location (optional)"
                         control: TextField {
                             id: printerLocation
-                            placeholderText: "e.g. Lab 1"
+                            placeholderText: "Lab 1"
                         }
                         enabled: parent.enabled
                     }

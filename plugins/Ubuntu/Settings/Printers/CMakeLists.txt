@@ -15,6 +15,7 @@ add_library(UbuntuSettingsPrintersQml SHARED
     cups/cupsfacade.cpp
     cups/cupspkhelper.cpp
     enums.h
+    models/drivermodel.cpp
     models/printermodel.cpp
     printer/printer.cpp
     printer/printerjob.cpp

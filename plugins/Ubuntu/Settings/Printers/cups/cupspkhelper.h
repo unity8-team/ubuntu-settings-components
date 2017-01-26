@@ -13,6 +13,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+#ifndef USC_PRINTERS_CUPSPKHELPER_H
+#define USC_PRINTERS_CUPSPKHELPER_H
+
 #include "structs.h"
 
 #include <cups/cups.h>
@@ -31,11 +35,10 @@
 
 /* This code is only a shim for systems not running the daemon provided by
 cups-pk-helper. Once provided on all platforms, this code should be replaced
-by proper dbus bindings, and subsequently be set on fire. */
+by proper dbus bindings, and subsequently be set on fire.
 
-/* TODO: rename to CupsPkHelperShim to emphasize its transient nature.
-   FIXME: set m_internalStatus to mutable and make most of the "is..." methods
-          const.
+TODO: rename to CupsPkHelperShim to emphasize its transient nature.
+FIXME: make most of the "is..." methods const.
 */
 class CupsPkHelper
 {
@@ -60,7 +63,9 @@ public:
     cups_dest_t* getDest(const QString &name, const QString &instance) const;
 
     QString getLastError() const;
-    QList<PrinterDriver> getPrinterDrivers(
+
+    // This response needs to be free by the caller.
+    ipp_t* createPrinterDriversRequest(
         const QString &deviceId = "",
         const QString &language = "",
         const QString &makeModel = "",
@@ -108,3 +113,6 @@ private:
     ipp_status_t m_lastStatus = IPP_OK;
     mutable QString m_internalStatus = QString::null;
 };
+
+
+#endif // USC_PRINTERS_CUPSPKHELPER_H

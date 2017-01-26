@@ -138,7 +138,7 @@ public:
     virtual Printer* getPrinter(const QString &printerName);
     virtual QString defaultPrinterName();
 
-    virtual QList<PrinterDriver> availablePrinterDrivers();
+    virtual void requestAvailablePrinterDrivers();
 
     virtual BackendType backendType() const;
 
@@ -150,6 +150,8 @@ Q_SIGNALS:
     void printerModified(const QString &name, const bool ppdChanged);
     void printerDeleted(const QString &name);
     void printerStateChanged(const QString &name);
+
+    void printerDriversLoaded(const QList<PrinterDriver> &drivers);
 
 protected:
     const QString m_printerName;

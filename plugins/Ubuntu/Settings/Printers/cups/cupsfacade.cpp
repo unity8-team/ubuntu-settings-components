@@ -329,6 +329,12 @@ cups_dest_t* CupsFacade::makeDest(const QString &name,
     // Get the cups dest
     cups_dest_t *dest = helper.getDest(getPrinterName(name), getPrinterInstance(name));
 
+    if (options->collate()) {
+        __CUPS_ADD_OPTION(dest, "Collate", "True");
+    } else {
+        __CUPS_ADD_OPTION(dest, "Collate", "False");
+    }
+
     if (options->copies() > 1) {
         __CUPS_ADD_OPTION(dest, "copies", QString::number(options->copies()).toLocal8Bit());
     }
@@ -348,6 +354,12 @@ cups_dest_t* CupsFacade::makeDest(const QString &name,
     PrintQuality quality = options->getPrintQuality();
     __CUPS_ADD_OPTION(dest, quality.originalOption.toLocal8Bit(),
                       quality.name.toLocal8Bit());
+
+    if (options->reverse()) {
+        __CUPS_ADD_OPTION(dest, "OutputOrder", "Reverse");
+    } else {
+        __CUPS_ADD_OPTION(dest, "OutputOrder", "Normal");
+    }
 
     return dest;
 }

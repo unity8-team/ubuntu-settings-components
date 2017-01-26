@@ -16,6 +16,7 @@
 
 #include "backend/backend_cups.h"
 #include "backend/backend_pdf.h"
+#include "i18n.h"
 #include "utils.h"
 
 
@@ -291,7 +292,7 @@ QList<Printer*> PrinterCupsBackend::availablePrinters()
 
     // Cups allows a faux PDF printer.
     // TODO: Translate.
-    list.append(new Printer(new PrinterPdfBackend("Create PDF")));
+    list.append(new Printer(new PrinterPdfBackend(__("Create PDF"))));
 
     return list;
 }

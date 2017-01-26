@@ -34,6 +34,7 @@ PrinterJob::PrinterJob(Printer *printer, QObject *parent)
 PrinterJob::PrinterJob(Printer *printer, PrinterBackend *backend,
                        QObject *parent)
     : QObject(parent)
+    , m_collate(true)
     , m_color_model(0)
     , m_copies(1)
     , m_backend(backend)
@@ -44,6 +45,7 @@ PrinterJob::PrinterJob(Printer *printer, PrinterBackend *backend,
     , m_print_range_mode(PrinterEnum::PrintRange::AllPages)
     , m_quality(0)
     , m_state(PrinterEnum::State::IdleState)
+    , m_reverse(false)
     , m_title(QStringLiteral(""))
 {
     loadDefaults();
@@ -58,6 +60,11 @@ PrinterJob::~PrinterJob()
 void PrinterJob::cancel()
 {
 
+}
+
+bool PrinterJob::collate() const
+{
+    return m_collate;
 }
 
 int PrinterJob::colorModel() const
@@ -160,9 +167,23 @@ int PrinterJob::quality() const
     return m_quality;
 }
 
+bool PrinterJob::reverse() const
+{
+    return m_reverse;
+}
+
 PrinterEnum::State PrinterJob::state() const
 {
     return m_state;
+}
+
+void PrinterJob::setCollate(const bool collate)
+{
+    if (m_collate != collate) {
+        m_collate = collate;
+
+        Q_EMIT collateChanged();
+    }
 }
 
 void PrinterJob::setColorModel(const int colorModel)
@@ -264,6 +285,15 @@ void PrinterJob::setQuality(const int quality)
         m_quality = quality;
 
         Q_EMIT qualityChanged();
+    }
+}
+
+void PrinterJob::setReverse(const bool reverse)
+{
+    if (m_reverse != reverse) {
+        m_reverse = reverse;
+
+        Q_EMIT reverseChanged();
     }
 }
 

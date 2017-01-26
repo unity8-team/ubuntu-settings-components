@@ -7,6 +7,7 @@ include_directories(${CUPS_INCLUDE_DIR})
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5PrintSupport REQUIRED)
 find_package(Qt5Qml REQUIRED)
+find_package(Qt5Concurrent REQUIRED)
 
 add_library(UbuntuSettingsPrintersQml SHARED
     backend/backend.cpp
@@ -30,6 +31,7 @@ target_link_libraries(UbuntuSettingsPrintersQml
     Qt5::Gui
     Qt5::PrintSupport
     Qt5::Qml
+    Qt5::Concurrent
     ${CUPS_LIBRARIES}
 )
 

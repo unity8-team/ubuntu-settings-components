@@ -336,13 +336,14 @@ MainView {
                         text: "Filter drivers"
                         control: TextField {
                             id: driverFilter
-                        }
-                        enabled: parent.enabled
-                        onTextChanged: {
-                            if (text.length >= 2) {
-                                Printers.driverFilter = text
+                            onTextChanged: {
+                                console.log('filter onTextChanged', text);
+                                if (text.length >= 2) {
+                                    Printers.driverFilter = text
+                                }
                             }
                         }
+                        enabled: parent.enabled
                     }
 
                     ListView {

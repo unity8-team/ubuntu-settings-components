@@ -430,6 +430,7 @@ void PrinterDriverLoader::process()
     );
 
     // Note: if the response somehow fails, we return.
+    // FIXME: use helper's own isReplyOk
     if (!response || ippGetStatusCode(response) > IPP_OK_CONFLICT) {
         QString err(cupsLastErrorString());
         qWarning() << __PRETTY_FUNCTION__ << "Cups HTTP error:" << err;

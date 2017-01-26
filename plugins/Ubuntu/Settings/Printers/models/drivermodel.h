@@ -64,6 +64,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void printerDriversLoaded(const QList<PrinterDriver> &drivers);
+    void filterFinished();
 
 Q_SIGNALS:
     void countChanged();

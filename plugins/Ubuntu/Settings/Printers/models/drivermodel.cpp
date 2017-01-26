@@ -19,6 +19,7 @@
 #include "models/drivermodel.h"
 
 #include <QDebug>
+#include <QtConcurrent>
 
 DriverModel::DriverModel(QObject *parent)
     : DriverModel(new PrinterCupsBackend, parent)
@@ -31,6 +32,12 @@ DriverModel::DriverModel(PrinterBackend *backend, QObject *parent)
 {
     connect(m_backend, SIGNAL(printerDriversLoaded(const QList<PrinterDriver>&)),
             this, SLOT(printerDriversLoaded(const QList<PrinterDriver>&)));
+
+    QObject::connect(&m_watcher,
+                     &QFutureWatcher<PrinterDriver>::finished,
+                     this,
+                     &DriverModel::filterFinished);
+
 }
 
 DriverModel::~DriverModel()
@@ -95,36 +102,34 @@ QHash<int, QByteArray> DriverModel::roleNames() const
 
 void DriverModel::setFilter(const QString& pattern)
 {
+    QString filter = pattern.toLower();
+    // QStringList filter = pattern.toLower().split(" ");
     QList<PrinterDriver> list;
 
     if (m_watcher.isRunning())
         m_watcher.cancel();
 
-
-    if (pattern.isEmpty() || pattern.isNull()) {
+    if (filter.isEmpty() || filter.isNull()) {
         setModel(m_originalDrivers);
         m_filter = pattern;
         return;
     }
 
-    if (!m_pattern.isEmpty() && !m_locations.isEmpty() &&
-            pattern.startsWith(m_pattern))
+    if (!m_filter.isEmpty() && !m_drivers.isEmpty() &&
+            pattern.startsWith(m_filter))
         list = m_drivers; // search in the smaller list
     else
         list = m_originalDrivers; //search in the whole list
 
-    m_pattern = pattern;
+    m_filter = pattern;
 
     QFuture<PrinterDriver> future(QtConcurrent::filtered(list,
-            [pattern] (const PrinterDriver& driver) {
-                return driver.toString().contains(pattern);
-        // return g_str_match_string (pattern.toStdString().c_str(),
-        //         display.arg(tz.city)
-        //             .arg(tz.full_country.isEmpty() ? tz.country
-        //                                            : tz.full_country)
-        //             .toStdString().c_str(),
-        //         TRUE);
-    }));
+            [filter] (const PrinterDriver &driver) {
+                QByteArray search = driver.makeModel.toLower();
+                return search.contains(filter.toUtf8());
+            }
+        )
+    );
 
     Q_EMIT filterBegin();
 
@@ -134,6 +139,11 @@ void DriverModel::setFilter(const QString& pattern)
 QString DriverModel::filter() const
 {
     return m_filter;
+}
+
+void DriverModel::filterFinished()
+{
+    setModel(m_watcher.future().results());
 }
 
 void DriverModel::load()
@@ -159,7 +169,7 @@ void DriverModel::setModel(const QList<PrinterDriver> &drivers)
     m_drivers = drivers;
     endResetModel();
 
-    Q_EMIT(filterComplete());
+    Q_EMIT filterComplete();
 }
 
 // DriverMatches::DriverMatches(const QString &string)

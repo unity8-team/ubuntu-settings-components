@@ -39,6 +39,7 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
     Q_PROPERTY(PrinterEnum::ColorModelType colorModelType READ colorModelType NOTIFY colorModelTypeChanged)
     Q_PROPERTY(int copies READ copies WRITE setCopies NOTIFY copiesChanged)
     Q_PROPERTY(int duplexMode READ duplexMode WRITE setDuplexMode NOTIFY duplexModeChanged)
+    Q_PROPERTY(bool isTwoSided READ isTwoSided NOTIFY isTwoSidedChanged)
     Q_PROPERTY(bool landscape READ landscape WRITE setLandscape NOTIFY landscapeChanged)
 //    Q_PROPERTY(Printer *printer READ printer WRITE setPrinter NOTIFY printerChanged)
     Q_PROPERTY(QString printerName READ printerName WRITE setPrinterName NOTIFY printerNameChanged)
@@ -60,6 +61,7 @@ public:
     PrinterEnum::ColorModelType colorModelType() const;
     int copies() const;
     int duplexMode() const;
+    bool isTwoSided() const;
     bool landscape() const;
 //    Printer *printer() const;
     QString printerName() const;
@@ -89,6 +91,7 @@ public Q_SLOTS:
     void setTitle(const QString &title);
 private Q_SLOTS:
     void loadDefaults();
+    void setIsTwoSided(const bool isTwoSided);
     void setState(const PrinterEnum::State &state);
 Q_SIGNALS:
     void collateChanged();
@@ -96,6 +99,7 @@ Q_SIGNALS:
     void colorModelTypeChanged();
     void copiesChanged();
     void duplexModeChanged();
+    void isTwoSidedChanged();
     void landscapeChanged();
 //    void printerChanged();
     void printerNameChanged();
@@ -111,6 +115,7 @@ private:
     int m_copies;
     PrinterBackend *m_backend; // TODO: Maybe use the printer's backend?
     int m_duplex_mode;
+    bool m_is_two_sided;
     bool m_landscape;
     Printer *m_printer;
     QString m_printer_name;

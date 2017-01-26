@@ -38,6 +38,7 @@ PrinterJob::PrinterJob(Printer *printer, PrinterBackend *backend,
     , m_copies(1)
     , m_backend(backend)
     , m_duplex_mode(0)
+    , m_is_two_sided(false)
     , m_printer(printer)
     , m_printer_name(QStringLiteral(""))
     , m_print_range(QStringLiteral(""))
@@ -111,6 +112,11 @@ PrinterEnum::DuplexMode PrinterJob::getDuplexMode() const
     } else {
         return PrinterEnum::DuplexMode::DuplexNone;
     }
+}
+
+bool PrinterJob::isTwoSided() const
+{
+    return m_is_two_sided;
 }
 
 bool PrinterJob::landscape() const
@@ -219,6 +225,19 @@ void PrinterJob::setDuplexMode(const int duplexMode)
         m_duplex_mode = duplexMode;
 
         Q_EMIT duplexModeChanged();
+    }
+
+    // Always try to set the duplexMode as this was an int and the underlying
+    // model may be in a different order resulting in the same int being given
+    setIsTwoSided(getDuplexMode() != PrinterEnum::DuplexMode::DuplexNone);
+}
+
+void PrinterJob::setIsTwoSided(const bool isTwoSided)
+{
+    if (m_is_two_sided != isTwoSided) {
+        m_is_two_sided = isTwoSided;
+
+        Q_EMIT isTwoSidedChanged();
     }
 }
 

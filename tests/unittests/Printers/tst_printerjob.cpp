@@ -135,6 +135,34 @@ private Q_SLOTS:
         QCOMPARE(m_instance->getDuplexMode(), PrinterEnum::DuplexMode::DuplexLongSide);
     }
 
+    void testIsTwoSided()
+    {
+        QList<PrinterEnum::DuplexMode> modes = {
+                PrinterEnum::DuplexMode::DuplexNone,
+                PrinterEnum::DuplexMode::DuplexLongSide,
+                PrinterEnum::DuplexMode::DuplexShortSide
+        };
+        ((MockPrinterBackend *) m_backend)->m_supportedDuplexModes = modes;
+
+        ((MockPrinterBackend *) m_backend)->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexNone;
+        refreshInstance();
+        QCOMPARE(m_instance->duplexMode(), modes.indexOf(PrinterEnum::DuplexMode::DuplexNone));
+        QCOMPARE(m_instance->getDuplexMode(), PrinterEnum::DuplexMode::DuplexNone);
+        QCOMPARE(m_instance->isTwoSided(), false);
+
+        m_instance->setDuplexMode(modes.indexOf(PrinterEnum::DuplexMode::DuplexLongSide));
+
+        QCOMPARE(m_instance->duplexMode(), modes.indexOf(PrinterEnum::DuplexMode::DuplexLongSide));
+        QCOMPARE(m_instance->getDuplexMode(), PrinterEnum::DuplexMode::DuplexLongSide);
+        QCOMPARE(m_instance->isTwoSided(), true);
+
+        m_instance->setDuplexMode(modes.indexOf(PrinterEnum::DuplexMode::DuplexShortSide));
+
+        QCOMPARE(m_instance->duplexMode(), modes.indexOf(PrinterEnum::DuplexMode::DuplexShortSide));
+        QCOMPARE(m_instance->getDuplexMode(), PrinterEnum::DuplexMode::DuplexShortSide);
+        QCOMPARE(m_instance->isTwoSided(), true);
+    }
+
     void testPrintFile()
     {
         QSKIP("Not implemented yet!");

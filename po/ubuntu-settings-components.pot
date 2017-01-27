@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ubuntu-settings-components\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-18 15:20+0000\n"
+"POT-Creation-Date: 2017-01-25 14:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,10 +16,34 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: plugins/Ubuntu/Settings/Components/Calendar.qml:232
 msgctxt "Header text: keep it short and upper case"
 msgid "WEEK"
+msgstr ""
+
+#: plugins/Ubuntu/Settings/Components/FilePicker.qml:105
+msgid "Device"
+msgstr ""
+
+#: plugins/Ubuntu/Settings/Components/FilePicker.qml:112
+#, qt-format
+msgid "%1 (%2 file)"
+msgid_plural "%1 (%2 files)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugins/Ubuntu/Settings/Components/FilePicker.qml:183
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:336
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:355
+#: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:129
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:104
+msgid "Cancel"
+msgstr ""
+
+#: plugins/Ubuntu/Settings/Components/FilePicker.qml:191
+msgid "Accept"
 msgstr ""
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:82
@@ -37,7 +61,7 @@ msgstr ""
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:131
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:362
 #: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:138
-#: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:149
+#: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:142
 msgid "OK"
 msgstr ""
 
@@ -72,14 +96,6 @@ msgstr ""
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:327
 msgid "Are you sure you want to forget all stored fingerprints?"
-msgstr ""
-
-#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:336
-#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:355
-#: plugins/Ubuntu/Settings/Vpn/DialogFile.qml:161
-#: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:136
-#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:104
-msgid "Cancel"
 msgstr ""
 
 #: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:343
@@ -148,15 +164,11 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: plugins/Ubuntu/Settings/Vpn/DialogFile.qml:170
-msgid "Accept"
-msgstr ""
-
-#: plugins/Ubuntu/Settings/Vpn/FileSelector.qml:25
+#: plugins/Ubuntu/Settings/Vpn/FileSelector.qml:26
 msgid "Choose…"
 msgstr ""
 
-#: plugins/Ubuntu/Settings/Vpn/FileSelector.qml:34
+#: plugins/Ubuntu/Settings/Vpn/FileSelector.qml:35
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:431
 #: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:513
 msgid "None"

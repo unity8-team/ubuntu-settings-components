@@ -17,6 +17,7 @@
 // local
 #include "plugin.h"
 #include "serverpropertysynchroniser.h"
+#include "filepickerhelper.h"
 
 // Qt
 #include <QtQml/qqml.h>
@@ -33,9 +34,15 @@ public:
     Q_INVOKABLE QString formattedWeekNumber(const QDate &date) const { return QString("%1").arg(date.weekNumber(), 2, 10, QChar('0')); }
 };
 
+static QObject* filepickerhelperProvider(QQmlEngine*, QJSEngine*)
+{
+    return new FilePickerHelper;
+}
+
 void UbuntuSettingsComponentsPlugin::registerTypes(const char *uri)
 {
     qmlRegisterType<ServerPropertySynchroniser>(uri, 0, 1, "ServerPropertySynchroniser");
+    qmlRegisterSingletonType<FilePickerHelper>(uri, 0, 1, "FilePickerHelper", filepickerhelperProvider);
     qmlRegisterSingletonType<QtDateFunctions>(uri, 0, 1, "QtDateFunctions",
                                               [](QQmlEngine*, QJSEngine*) -> QObject* { return new QtDateFunctions; });
 }

@@ -128,9 +128,9 @@ void DriverModel::setFilter(const QString& pattern)
 
     QFuture<PrinterDriver> future(QtConcurrent::filtered(list,
             [needles] (const PrinterDriver &driver) {
-                QByteArray search = driver.makeModel.toLower();
+                QByteArray haystack = driver.makeModel.toLower();
                 Q_FOREACH(const QByteArray needle, needles) {
-                    if (!search.contains(needle)) {
+                    if (!haystack.contains(needle)) {
                         return false;
                     }
                 }

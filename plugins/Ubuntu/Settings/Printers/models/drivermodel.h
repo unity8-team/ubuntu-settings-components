@@ -22,10 +22,10 @@
 #include "structs.h"
 
 #include <QAbstractListModel>
+#include <QFutureWatcher>
 #include <QModelIndex>
 #include <QObject>
 #include <QVariant>
-#include <QFutureWatcher>
 
 class PRINTERS_DECL_EXPORT DriverModel : public QAbstractListModel
 {

@@ -101,10 +101,12 @@ private Q_SLOTS:
     }
     void testPrinterDrivers()
     {
-        PrinterBackend* backend = new MockPrinterBackend;
-        // ((MockPrinterBackend*) backend)->m_ = in;
+        QString targetFilter("foo");
+        Printers printers(new MockPrinterBackend);
+        printers.setDriverFilter(targetFilter);
 
-        Printers printers(backend);
+        DriverModel *drivers = (DriverModel*) printers.drivers();
+        QCOMPARE(drivers->filter(), targetFilter);
     }
 };
 

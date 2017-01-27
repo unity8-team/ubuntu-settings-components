@@ -5,6 +5,13 @@ ubuntu-settings-components (0.13+17.04.20161201-0ubuntu2) UNRELEASED; urgency=me
 
  -- Jonas G. Drange <jonas.drange@canonical.com>  Mon, 23 Jan 2017 14:46:41 +0100
 
+ubuntu-settings-components (0.12+17.04.20170118-0ubuntu1) zesty; urgency=medium
+
+  [ Pete Woods ]
+  * Compatibility with unversioned cmake-extras modules (LP: #1563573)
+
+ -- Jonas G. Drange <jonas.drange@canonical.com>  Wed, 18 Jan 2017 15:19:59 +0000
+
 ubuntu-settings-components (0.12+17.04.20170104-0ubuntu1) zesty; urgency=medium
 
   * Allows Fingerprint and VPN modules to work well with APL and pagestacks.

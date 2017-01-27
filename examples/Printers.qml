@@ -188,7 +188,6 @@ MainView {
                         ProgressionSlot {}
                     }
                     onClicked: pageStack.push(printerPage, { printer: model })
-                    Component.onCompleted: console.log("printer", model.name)
                 }
             }
         }
@@ -243,13 +242,24 @@ MainView {
                             iconName: "ok"
                             text: "Complete"
                             onTriggered: {
-                                var ret = Printers.addPrinterWithPpdFile(
-                                    printerName.text,
-                                    printerPpd.text,
-                                    printerUri.text,
-                                    printerDescription.text,
-                                    printerLocation.text
-                                );
+                                var ret;
+                                if (driverSelector.selectedIndex == 0) {
+                                    ret = Printers.addPrinter(
+                                        printerName.text,
+                                        driversView.selectedDriver,
+                                        printerUri.text,
+                                        printerDescription.text,
+                                        printerLocation.text
+                                    );
+                                } else {
+                                    ret = Printers.addPrinterWithPpdFile(
+                                        printerName.text,
+                                        printerPpd.text,
+                                        printerUri.text,
+                                        printerDescription.text,
+                                        printerLocation.text
+                                    );
+                                }
                                 if (ret) {
                                     addPrinterPage.state = "success"
                                 } else {
@@ -283,8 +293,6 @@ MainView {
                         left: parent.left
                         right: parent.right
                     }
-
-                    spacing: units.gu(2)
 
                     Item {
                         id: errorMessageContainer
@@ -337,7 +345,6 @@ MainView {
                         control: TextField {
                             id: driverFilter
                             onTextChanged: {
-                                console.log('filter onTextChanged', text);
                                 if (text.length >= 2) {
                                     Printers.driverFilter = text
                                 }
@@ -348,11 +355,21 @@ MainView {
 
                     ListView {
                         id: driversView
+                        property string selectedDriver
+                        property bool loading: true
                         visible: driverSelector.selectedIndex == 0
                         model: Printers.drivers
                         anchors { left: parent.left; right: parent.right }
                         height: units.gu(30)
                         clip: true
+                        highlightFollowsCurrentItem: false
+                        highlight: Rectangle {
+                            z: 0
+                            y: driversView.currentItem.y
+                            width: driversView.currentItem.width
+                            height: driversView.currentItem.height
+                            color: theme.palette.selected.background
+                        }
                         delegate: ListItem {
                             height: driverLayout.height + (divider.visible ? divider.height : 0)
                             ListItemLayout {
@@ -361,8 +378,23 @@ MainView {
                                 subtitle.text: name
                                 summary.text: deviceId
                             }
-                            // onClicked: pageStack.push(printerPage, { printer: model })
-                            // Component.onCompleted: console.log("printer", model.name)
+                            onClicked: {
+                                driversView.selectedDriver = name
+                                driversView.currentIndex = index
+                            }
+                        }
+
+                        ActivityIndicator {
+                            anchors.centerIn: parent
+                            running: parent.loading
+                        }
+
+                        Connections {
+                            target: driversView
+                            onCountChanged: {
+                                target = null;
+                                driversView.loading = false;
+                            }
                         }
                     }
 

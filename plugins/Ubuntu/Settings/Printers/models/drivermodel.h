@@ -80,14 +80,4 @@ private:
     QFutureWatcher<PrinterDriver> m_watcher;
 };
 
-// struct DriverMatches
-// {
-//     DriverMatches(const QString &string);
-//     typedef bool result_type;
-
-//     bool operator()(const DriverModel &driver);
-// private:
-//     QString m_query;
-// };
-
 #endif // USC_PRINTER_DRIVERMODEL_H

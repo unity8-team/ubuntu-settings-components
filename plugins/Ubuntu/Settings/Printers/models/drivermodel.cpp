@@ -42,6 +42,7 @@ DriverModel::DriverModel(PrinterBackend *backend, QObject *parent)
 
 DriverModel::~DriverModel()
 {
+    cancel();
 }
 
 int DriverModel::rowCount(const QModelIndex &parent) const
@@ -102,14 +103,16 @@ QHash<int, QByteArray> DriverModel::roleNames() const
 
 void DriverModel::setFilter(const QString& pattern)
 {
-    QString filter = pattern.toLower();
-    // QStringList filter = pattern.toLower().split(" ");
+    QList<QByteArray> needles;
+    Q_FOREACH(const QString patternPart, pattern.toLower().split(" ")) {
+        needles.append(patternPart.toUtf8());
+    }
     QList<PrinterDriver> list;
 
     if (m_watcher.isRunning())
         m_watcher.cancel();
 
-    if (filter.isEmpty() || filter.isNull()) {
+    if (pattern.isEmpty()) {
         setModel(m_originalDrivers);
         m_filter = pattern;
         return;
@@ -124,9 +127,14 @@ void DriverModel::setFilter(const QString& pattern)
     m_filter = pattern;
 
     QFuture<PrinterDriver> future(QtConcurrent::filtered(list,
-            [filter] (const PrinterDriver &driver) {
+            [needles] (const PrinterDriver &driver) {
                 QByteArray search = driver.makeModel.toLower();
-                return search.contains(filter.toUtf8());
+                Q_FOREACH(const QByteArray needle, needles) {
+                    if (!search.contains(needle)) {
+                        return false;
+                    }
+                }
+                return true;
             }
         )
     );
@@ -153,7 +161,8 @@ void DriverModel::load()
 
 void DriverModel::cancel()
 {
-
+    if (m_watcher.isRunning())
+        m_watcher.cancel();
 }
 
 void DriverModel::printerDriversLoaded(const QList<PrinterDriver> &drivers)
@@ -171,13 +180,3 @@ void DriverModel::setModel(const QList<PrinterDriver> &drivers)
 
     Q_EMIT filterComplete();
 }
-
-// DriverMatches::DriverMatches(const QString &string)
-//     : m_query(string)
-// {
-// }
-
-// bool DriverMatches::operator()(const DriverModel &driver)
-// {
-//     return true;
-// }

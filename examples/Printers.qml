@@ -351,6 +351,7 @@ MainView {
                                 }
                             }
                         }
+                        visible: driverSelector.selectedIndex == 0
                         enabled: parent.enabled
                     }
 

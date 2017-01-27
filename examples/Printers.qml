@@ -345,11 +345,7 @@ MainView {
                         text: "Filter drivers"
                         control: TextField {
                             id: driverFilter
-                            onTextChanged: {
-                                if (text.length >= 2) {
-                                    Printers.driverFilter = text
-                                }
-                            }
+                            onTextChanged: Printers.driverFilter = text
                         }
                         visible: driverSelector.selectedIndex == 0
                         enabled: parent.enabled

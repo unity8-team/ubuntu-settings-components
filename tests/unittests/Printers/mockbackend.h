@@ -311,7 +311,6 @@ public:
 
     virtual void requestAvailablePrinterDrivers() override
     {
-        Q_EMIT printerDriversLoaded(m_availableDrivers);
     }
 
     virtual BackendType backendType() const override
@@ -338,6 +337,16 @@ public:
     void mockPrinterStateChanged(const QString &name)
     {
         Q_EMIT printerStateChanged(name);
+    }
+
+    void mockDriversLoaded(const QList<PrinterDriver> &drivers)
+    {
+        Q_EMIT printerDriversLoaded(drivers);
+    }
+
+    void mockDriversLoaded(const QString &errorMessage)
+    {
+        Q_EMIT printerDriversFailedToLoad(errorMessage);
     }
 
     QString returnValue = QString::null;
@@ -367,7 +376,6 @@ public:
 
     QStringList m_availablePrinterNames;
     QList<Printer*> m_availablePrinters;
-    QList<PrinterDriver> m_availableDrivers;
     PrinterBackend::BackendType m_backendType;
 
 public Q_SLOT:

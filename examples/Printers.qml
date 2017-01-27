@@ -334,6 +334,7 @@ MainView {
                             "Select printer from database",
                             "Provide PPD file"
                         ]
+                        enabled: parent.enabled
                     }
 
                     ListItems.Standard {
@@ -362,6 +363,7 @@ MainView {
                         anchors { left: parent.left; right: parent.right }
                         height: units.gu(30)
                         clip: true
+                        enabled: parent.enabled
                         highlightFollowsCurrentItem: false
                         highlight: Rectangle {
                             z: 0

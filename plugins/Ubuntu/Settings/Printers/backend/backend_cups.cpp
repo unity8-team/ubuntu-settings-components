@@ -28,6 +28,8 @@ PrinterCupsBackend::PrinterCupsBackend(QObject *parent)
 
     connect(m_cups, SIGNAL(printerDriversLoaded(const QList<PrinterDriver>&)),
             this, SIGNAL(printerDriversLoaded(const QList<PrinterDriver>&)));
+    connect(m_cups, SIGNAL(printerDriversFailedToLoad(const QString&)),
+            this, SIGNAL(printerDriversFailedToLoad(const QString&)));
 }
 
 PrinterCupsBackend::PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,

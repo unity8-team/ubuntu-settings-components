@@ -152,6 +152,7 @@ Q_SIGNALS:
     void printerStateChanged(const QString &name);
 
     void printerDriversLoaded(const QList<PrinterDriver> &drivers);
+    void printerDriversFailedToLoad(const QString &errorMessage);
 
 protected:
     const QString m_printerName;

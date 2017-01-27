@@ -167,7 +167,6 @@ void DriverModel::cancel()
 
 void DriverModel::printerDriversLoaded(const QList<PrinterDriver> &drivers)
 {
-    qWarning() << Q_FUNC_INFO << drivers.size();
     m_originalDrivers = drivers;
     setModel(m_originalDrivers);
 }

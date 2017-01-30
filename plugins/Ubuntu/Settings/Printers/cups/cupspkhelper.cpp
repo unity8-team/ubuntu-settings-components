@@ -710,8 +710,10 @@ ipp_t* CupsPkHelper::createPrinterDriversRequest(
     const QStringList &excludeSchemes
 )
 {
+    Q_UNUSED(includeSchemes);
+    Q_UNUSED(excludeSchemes);
+
     ipp_t *request;
-    ipp_t *response;
 
     request = ippNewRequest(CUPS_GET_PPDS);
 
@@ -727,21 +729,6 @@ ipp_t* CupsPkHelper::createPrinterDriversRequest(
     if (!product.isEmpty())
     ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_TEXT, "ppd-product",
                  NULL, product.toUtf8());
-
-    // TODO: implement schema restrictions
-    // // if (includeSchemes) {
-    // //     option.name  = "include-schemes";
-    // //     option.value = (char *)include_schemes;
-
-    // //     cupsEncodeOptions2(request, 1, &option, IPP_TAG_OPERATION);
-    // // }
-
-    // // if (excludeSchemes) {
-    // //     option.name  = "exclude-schemes";
-    // //     option.value = (char *)exclude_schemes;
-
-    // //     cupsEncodeOptions2(request, 1, &option, IPP_TAG_OPERATION);
-    // // }
 
     // Do the request and get return the response.
     const QString resourceChar = getResource(CphResourceRoot);

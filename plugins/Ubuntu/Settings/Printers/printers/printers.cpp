@@ -42,6 +42,9 @@ Printers::Printers(PrinterBackend *backend, int printerUpdateIntervalMSecs,
 
     // Let Qt be in charge of RAII.
     m_backend->setParent(this);
+
+    connect(&m_drivers, SIGNAL(filterComplete()),
+            this, SIGNAL(driverFilterChanged()));
 }
 
 Printers::~Printers()

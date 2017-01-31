@@ -99,6 +99,15 @@ private Q_SLOTS:
             );
         }
     }
+    void testPrinterDrivers()
+    {
+        QString targetFilter("foo");
+        Printers printers(new MockPrinterBackend);
+        printers.setDriverFilter(targetFilter);
+
+        DriverModel *drivers = (DriverModel*) printers.drivers();
+        QCOMPARE(drivers->filter(), targetFilter);
+    }
 };
 
 QTEST_GUILESS_MAIN(TestPrinters)

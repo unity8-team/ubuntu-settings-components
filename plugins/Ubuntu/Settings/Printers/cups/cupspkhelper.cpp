@@ -44,6 +44,127 @@ CupsPkHelper::~CupsPkHelper()
         httpClose(m_connection);
 }
 
+bool CupsPkHelper::printerAdd(const QString &printerName,
+                              const QString &printerUri,
+                              const QString &ppdFile,
+                              const QString &info,
+                              const QString &location)
+{
+    ipp_t *request;
+
+    if (!isPrinterNameValid(printerName)) {
+        setInternalStatus(QString("%1 is not a valid printer name.").arg(printerName));
+        return false;
+    }
+
+    if (!isStringValid(info)) {
+        setInternalStatus(QString("%1 is not a valid description.").arg(info));
+        return false;
+    }
+
+    if (!isStringValid(location)) {
+        setInternalStatus(QString("%1 is not a valid location.").arg(location));
+        return false;
+    }
+
+    if (!isStringValid(ppdFile)) {
+        setInternalStatus(QString("%1 is not a valid ppd file.").arg(ppdFile));
+        return false;
+    }
+
+    if (!isStringValid(printerUri)) {
+        setInternalStatus(QString("%1 is not a valid printer uri.").arg(printerUri));
+        return false;
+    }
+
+
+    request = ippNewRequest (CUPS_ADD_MODIFY_PRINTER);
+    addPrinterUri(request, printerName);
+    addRequestingUsername(request, NULL);
+
+    ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_NAME,
+                 "printer-name", NULL, printerName.toUtf8());
+
+    if (!ppdFile.isEmpty()) {
+        ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_NAME,
+                     "ppd-name", NULL, ppdFile.toUtf8());
+    }
+    if (!printerUri.isEmpty()) {
+        ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_URI,
+                     "device-uri", NULL, printerUri.toUtf8());
+    }
+    if (!info.isEmpty()) {
+        ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_TEXT,
+                     "printer-info", NULL, info.toUtf8());
+    }
+    if (!location.isEmpty()) {
+            ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_TEXT,
+                         "printer-location", NULL, location.toUtf8());
+    }
+
+    return sendRequest(request, CphResourceAdmin);
+}
+
+bool CupsPkHelper::printerAddWithPpdFile(const QString &printerName,
+                                         const QString &printerUri,
+                                         const QString &ppdFileName,
+                                         const QString &info,
+                                         const QString &location)
+{
+    ipp_t *request;
+
+    if (!isPrinterNameValid(printerName)) {
+        setInternalStatus(QString("%1 is not a valid printer name.").arg(printerName));
+        return false;
+    }
+
+    if (!isStringValid(info)) {
+        setInternalStatus(QString("%1 is not a valid description.").arg(info));
+        return false;
+    }
+
+    if (!isStringValid(location)) {
+        setInternalStatus(QString("%1 is not a valid location.").arg(location));
+        return false;
+    }
+
+    if (!isStringValid(ppdFileName)) {
+        setInternalStatus(QString("%1 is not a valid ppd file name.").arg(ppdFileName));
+        return false;
+    }
+
+    if (!isStringValid(printerUri)) {
+        setInternalStatus(QString("%1 is not a valid printer uri.").arg(printerUri));
+        return false;
+    }
+
+    request = ippNewRequest(CUPS_ADD_MODIFY_PRINTER);
+    addPrinterUri(request, printerName);
+    addRequestingUsername(request, NULL);
+
+    ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_NAME,
+                 "printer-name", NULL, printerName.toUtf8());
+
+    /* In this specific case of ADD_MODIFY, the URI can be NULL/empty since
+     * we provide a complete PPD. And cups fails if we pass an empty
+     * string. */
+    if (!printerUri.isEmpty()) {
+        ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_URI,
+                     "device-uri", NULL, printerUri.toUtf8());
+    }
+
+    if (!info.isEmpty()) {
+        ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_TEXT,
+                     "printer-info", NULL, info.toUtf8());
+    }
+    if (!location.isEmpty()) {
+            ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_TEXT,
+                         "printer-location", NULL, location.toUtf8());
+    }
+
+    return postRequest(request, ppdFileName.toUtf8(), CphResourceAdmin);
+}
+
 bool CupsPkHelper::printerClassSetInfo(const QString &name,
                                        const QString &info)
 {
@@ -581,4 +702,36 @@ cups_dest_t* CupsPkHelper::getDest(const QString &name,
     dest = cupsGetNamedDest(m_connection, name.toUtf8(),
                             instance.toUtf8());
     return dest;
+}
+
+ipp_t* CupsPkHelper::createPrinterDriversRequest(
+    const QString &deviceId, const QString &language, const QString &makeModel,
+    const QString &product, const QStringList &includeSchemes,
+    const QStringList &excludeSchemes
+)
+{
+    Q_UNUSED(includeSchemes);
+    Q_UNUSED(excludeSchemes);
+
+    ipp_t *request;
+
+    request = ippNewRequest(CUPS_GET_PPDS);
+
+    if (!deviceId.isEmpty())
+    ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_TEXT, "ppd-device-id",
+                 NULL, deviceId.toUtf8());
+    if (!language.isEmpty())
+    ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_LANGUAGE, "ppd-language",
+                 NULL, language.toUtf8());
+    if (!makeModel.isEmpty())
+    ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_TEXT, "ppd-make-and-model",
+                 NULL, makeModel.toUtf8());
+    if (!product.isEmpty())
+    ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_TEXT, "ppd-product",
+                 NULL, product.toUtf8());
+
+    // Do the request and get return the response.
+    const QString resourceChar = getResource(CphResourceRoot);
+    return cupsDoRequest(m_connection, request,
+                         resourceChar.toUtf8());
 }

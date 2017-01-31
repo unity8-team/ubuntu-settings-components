@@ -35,8 +35,8 @@ public:
     }
 
     virtual QString printerAdd(const QString &name,
-                               const QUrl &uri,
-                               const QUrl &ppdFile,
+                               const QString &uri,
+                               const QString &ppdFile,
                                const QString &info,
                                const QString &location) override
     {
@@ -49,7 +49,7 @@ public:
     }
 
     virtual QString printerAddWithPpd(const QString &name,
-                                      const QUrl &uri,
+                                      const QString &uri,
                                       const QString &ppdFileName,
                                       const QString &info,
                                       const QString &location) override
@@ -309,6 +309,10 @@ public:
         return m_defaultPrinterName;
     }
 
+    virtual void requestAvailablePrinterDrivers() override
+    {
+    }
+
     virtual BackendType backendType() const override
     {
         return m_backendType;
@@ -333,6 +337,16 @@ public:
     void mockPrinterStateChanged(const QString &name)
     {
         Q_EMIT printerStateChanged(name);
+    }
+
+    void mockDriversLoaded(const QList<PrinterDriver> &drivers)
+    {
+        Q_EMIT printerDriversLoaded(drivers);
+    }
+
+    void mockDriversLoaded(const QString &errorMessage)
+    {
+        Q_EMIT printerDriversFailedToLoad(errorMessage);
     }
 
     QString returnValue = QString::null;

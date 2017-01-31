@@ -20,6 +20,7 @@
 #include "printers_global.h"
 
 #include "cups/cupsfacade.h"
+#include "models/drivermodel.h"
 #include "models/printermodel.h"
 #include "printer/printer.h"
 
@@ -28,7 +29,6 @@
 #include <QScopedPointer>
 #include <QSharedPointer>
 #include <QString>
-#include <QUrl>
 
 class PRINTERS_DECL_EXPORT Printers : public QObject
 {
@@ -37,7 +37,10 @@ class PRINTERS_DECL_EXPORT Printers : public QObject
     Q_PROPERTY(QAbstractItemModel* allPrintersWithPdf READ allPrintersWithPdf CONSTANT)
     Q_PROPERTY(QAbstractItemModel* recentPrinters READ recentPrinters CONSTANT)
     Q_PROPERTY(QAbstractItemModel* printJobs READ printJobs CONSTANT)
+    Q_PROPERTY(QAbstractItemModel* drivers READ drivers CONSTANT)
+    Q_PROPERTY (QString driverFilter READ driverFilter WRITE setDriverFilter NOTIFY driverFilterChanged)
     Q_PROPERTY(QString defaultPrinterName READ defaultPrinterName WRITE setDefaultPrinterName NOTIFY defaultPrinterNameChanged)
+    Q_PROPERTY(QString lastMessage READ lastMessage CONSTANT)
 
 public:
     explicit Printers(int printerUpdateIntervalMSecs = 5000, QObject *parent = nullptr);
@@ -52,36 +55,46 @@ public:
     QAbstractItemModel* allPrintersWithPdf();
     QAbstractItemModel* recentPrinters();
     QAbstractItemModel* printJobs();
+    QAbstractItemModel* drivers();
+    QString driverFilter() const;
     QString defaultPrinterName() const;
+    QString lastMessage() const;
 
     void setDefaultPrinterName(const QString &name);
+    void setDriverFilter(const QString &filter);
 
 public Q_SLOTS:
     QSharedPointer<Printer> getPrinterByName(const QString &name);
     QSharedPointer<Printer> getJobOwner(const int &jobId);
 
-    QSharedPointer<Printer> addPrinter(const QString &name,
-                                       const QUrl &ppd,
-                                       const QUrl &device,
-                                       const QString &description,
-                                       const QString &location);
+    /* Instructs us to start loading drivers and what have you. In most cases,
+    the user is likely to merely configure existing printers/jobs. Loading
+    (at least) 12.000 drivers isn't relevant to those scenarios, so in order to
+    add printers, this method should be called first. */
+    void prepareToAddPrinter();
 
-    QSharedPointer<Printer> addPrinter(const QString &name,
-                                       const QUrl &device,
-                                       const QString &description,
-                                       const QString &location);
+    bool addPrinter(const QString &name, const QString &ppd,
+                    const QString &device, const QString &description,
+                    const QString &location);
+    bool addPrinterWithPpdFile(const QString &name, const QString &ppdFileName,
+                               const QString &device,
+                               const QString &description,
+                               const QString &location);
 
     bool removePrinter(const QString &name);
 
 Q_SIGNALS:
     void defaultPrinterNameChanged();
+    void driverFilterChanged();
 
 private:
     PrinterBackend *m_backend;
+    DriverModel m_drivers;
     PrinterModel m_model;
     PrinterFilter m_allPrinters;
     PrinterFilter m_allPrintersWithPdf;
     PrinterFilter m_recentPrinters;
+    QString m_lastMessage;
 };
 
 #endif // USC_PRINTERS_H

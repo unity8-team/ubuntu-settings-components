@@ -15,6 +15,7 @@
  */
 
 #include <QtCore/QDebug>
+#include <QUrl>
 
 #include "backend/backend_cups.h"
 #include "models/printermodel.h"

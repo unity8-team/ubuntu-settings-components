@@ -23,6 +23,7 @@
 #include <cups/ppd.h>
 
 #include <QDebug>
+#include <QThread>
 
 #define __CUPS_ADD_OPTION(dest, name, value) dest->num_options = \
     cupsAddOption(name, value, dest->num_options, &dest->options);
@@ -33,34 +34,30 @@ CupsFacade::CupsFacade(QObject *parent) : QObject(parent)
 
 CupsFacade::~CupsFacade()
 {
-
+    cancelPrinterDriverRequest();
 }
 
 QString CupsFacade::printerAdd(const QString &name,
-                               const QUrl &uri,
-                               const QUrl &ppdFile,
+                               const QString &uri,
+                               const QString &ppdFile,
                                const QString &info,
                                const QString &location)
 {
-    Q_UNUSED(name);
-    Q_UNUSED(uri);
-    Q_UNUSED(ppdFile);
-    Q_UNUSED(info);
-    Q_UNUSED(location);
+    if (!helper.printerAdd(name, uri, ppdFile, info, location)) {
+        return helper.getLastError();
+    }
     return QString();
 }
 
 QString CupsFacade::printerAddWithPpd(const QString &name,
-                                      const QUrl &uri,
+                                      const QString &uri,
                                       const QString &ppdFileName,
                                       const QString &info,
                                       const QString &location)
 {
-    Q_UNUSED(name);
-    Q_UNUSED(uri);
-    Q_UNUSED(ppdFileName);
-    Q_UNUSED(info);
-    Q_UNUSED(location);
+    if (!helper.printerAddWithPpdFile(name, uri, ppdFileName, info, location)) {
+        return helper.getLastError();
+    }
     return QString();
 }
 
@@ -376,4 +373,143 @@ int CupsFacade::printFileToDest(const QString &filepath, const QString &title,
                          title.toLocal8Bit(),
                          dest->num_options,
                          dest->options);
+}
+
+void CupsFacade::requestPrinterDrivers(
+    const QString &deviceId, const QString &language, const QString &makeModel,
+    const QString &product, const QStringList &includeSchemes,
+    const QStringList &excludeSchemes
+)
+{
+    auto thread = new QThread;
+    auto loader = new PrinterDriverLoader(deviceId, language, makeModel,
+                                          product, includeSchemes,
+                                          excludeSchemes);
+    loader->moveToThread(thread);
+    connect(loader, SIGNAL(error(const QString&)),
+            this, SIGNAL(printerDriversFailedToLoad(const QString&)));
+    connect(this, SIGNAL(requestPrinterDriverCancel()), loader, SLOT(cancel()));
+    connect(thread, SIGNAL(started()), loader, SLOT(process()));
+    connect(loader, SIGNAL(finished()), thread, SLOT(quit()));
+    connect(loader, SIGNAL(finished()), loader, SLOT(deleteLater()));
+    connect(loader, SIGNAL(loaded(const QList<PrinterDriver>&)),
+            this, SIGNAL(printerDriversLoaded(const QList<PrinterDriver>&)));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    thread->start();
+ }
+
+void CupsFacade::cancelPrinterDriverRequest()
+{
+    Q_EMIT requestPrinterDriverCancel();
+}
+
+PrinterDriverLoader::PrinterDriverLoader(
+        const QString &deviceId, const QString &language,
+        const QString &makeModel, const QString &product,
+        const QStringList &includeSchemes, const QStringList &excludeSchemes)
+    : m_deviceId(deviceId)
+    , m_language(language)
+    , m_makeModel(makeModel)
+    , m_product(product)
+    , m_includeSchemes(includeSchemes)
+    , m_excludeSchemes(excludeSchemes)
+{
+}
+
+PrinterDriverLoader::~PrinterDriverLoader()
+{
+}
+
+void PrinterDriverLoader::process()
+{
+    m_running = true;
+
+    ipp_t* response = helper.createPrinterDriversRequest(
+        m_deviceId, m_language, m_makeModel, m_product, m_includeSchemes,
+        m_excludeSchemes
+    );
+
+    // Note: if the response somehow fails, we return.
+    if (!response || ippGetStatusCode(response) > IPP_OK_CONFLICT) {
+        QString err(cupsLastErrorString());
+        qWarning() << __PRETTY_FUNCTION__ << "Cups HTTP error:" << err;
+
+        if (response)
+            ippDelete(response);
+
+        Q_EMIT error(err);
+        Q_EMIT finished();
+        return;
+    }
+
+    ipp_attribute_t *attr;
+    QByteArray ppdDeviceId;
+    QByteArray ppdLanguage;
+    QByteArray ppdMakeModel;
+    QByteArray ppdName;
+
+    // cups_option_t option;
+    QList<PrinterDriver> drivers;
+
+    for (attr = ippFirstAttribute(response); attr != NULL && m_running; attr = ippNextAttribute(response)) {
+
+        while (attr != NULL && ippGetGroupTag(attr) != IPP_TAG_PRINTER)
+            attr = ippNextAttribute(response);
+
+        if (attr == NULL)
+            break;
+
+        // Pull the needed attributes from this PPD...
+        ppdDeviceId = "NONE";
+        ppdLanguage.clear();
+        ppdMakeModel.clear();
+        ppdName.clear();
+
+        while (attr != NULL && ippGetGroupTag(attr) == IPP_TAG_PRINTER) {
+            if (!strcmp(ippGetName(attr), "ppd-device-id") &&
+                 ippGetValueTag(attr) == IPP_TAG_TEXT) {
+                ppdDeviceId = ippGetString(attr, 0, NULL);
+            } else if (!strcmp(ippGetName(attr), "ppd-natural-language") &&
+                       ippGetValueTag(attr) == IPP_TAG_LANGUAGE) {
+                ppdLanguage = ippGetString(attr, 0, NULL);
+
+            } else if (!strcmp(ippGetName(attr), "ppd-make-and-model") &&
+                       ippGetValueTag(attr) == IPP_TAG_TEXT) {
+                ppdMakeModel = ippGetString(attr, 0, NULL);
+            } else if (!strcmp(ippGetName(attr), "ppd-name") &&
+                       ippGetValueTag(attr) == IPP_TAG_NAME) {
+
+                ppdName = ippGetString(attr, 0, NULL);
+            }
+
+            attr = ippNextAttribute(response);
+        }
+
+        // See if we have everything needed...
+        if (ppdLanguage.isEmpty() || ppdMakeModel.isEmpty() ||
+            ppdName.isEmpty()) {
+            if (attr == NULL)
+                break;
+            else
+                continue;
+        }
+
+        PrinterDriver m;
+        m.name = ppdName;
+        m.deviceId = ppdDeviceId;
+        m.makeModel = ppdMakeModel;
+        m.language = ppdLanguage;
+
+        drivers.append(m);
+    }
+
+    ippDelete(response);
+
+    Q_EMIT loaded(drivers);
+    Q_EMIT finished();
+}
+
+void PrinterDriverLoader::cancel()
+{
+    m_running = false;
 }

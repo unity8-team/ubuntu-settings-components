@@ -18,13 +18,15 @@
 
 #include "enums.h"
 #include "i18n.h"
+#include "structs.h"
+
 // #include "models/printermodel.h"
 #include "printer/printer.h"
 #include "printer/printerjob.h"
 #include "printers/printers.h"
 
 #include <QtQml/qqml.h>
-#include <QSharedPointer>
+#include <QList>
 
 #define I18N_DOMAIN "ubuntu-settings-components"
 
@@ -49,4 +51,5 @@ void UbuntuSettingsComponentsPrintersPlugin::registerTypes(const char *uri)
     qmlRegisterType<PrinterJob>(uri, 0, 1, "PrinterJob");
 
     qmlRegisterUncreatableType<PrinterEnum>(uri, 0, 1, "PrinterEnum", "Is an enum");
+    qRegisterMetaType<QList<PrinterDriver>>("QList<PrinterDriver>");
 }

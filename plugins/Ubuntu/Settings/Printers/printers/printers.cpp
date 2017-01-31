@@ -28,6 +28,7 @@ Printers::Printers(PrinterBackend *backend, int printerUpdateIntervalMSecs,
                    QObject *parent)
     : QObject(parent)
     , m_backend(backend)
+    , m_drivers(backend)
     , m_model(backend, printerUpdateIntervalMSecs)
 {
     m_allPrinters.setSourceModel(&m_model);
@@ -41,6 +42,9 @@ Printers::Printers(PrinterBackend *backend, int printerUpdateIntervalMSecs,
 
     // Let Qt be in charge of RAII.
     m_backend->setParent(this);
+
+    connect(&m_drivers, SIGNAL(filterComplete()),
+            this, SIGNAL(driverFilterChanged()));
 }
 
 Printers::~Printers()
@@ -71,9 +75,31 @@ QAbstractItemModel* Printers::printJobs()
 
 }
 
+QAbstractItemModel* Printers::drivers()
+{
+    auto ret = &m_drivers;
+    QQmlEngine::setObjectOwnership(ret, QQmlEngine::CppOwnership);
+    return ret;
+}
+
+QString Printers::driverFilter() const
+{
+    return m_drivers.filter();
+}
+
+void Printers::setDriverFilter(const QString &filter)
+{
+    m_drivers.setFilter(filter);
+}
+
 QString Printers::defaultPrinterName() const
 {
 
+}
+
+QString Printers::lastMessage() const
+{
+    return m_lastMessage;
 }
 
 void Printers::setDefaultPrinterName(const QString &name)
@@ -90,21 +116,37 @@ QSharedPointer<Printer> Printers::getJobOwner(const int &jobId)
 
 }
 
-QSharedPointer<Printer> Printers::addPrinter(const QString &name,
-                                             const QUrl &ppd,
-                                             const QUrl &device,
-                                             const QString &description,
-                                             const QString &location)
+void Printers::prepareToAddPrinter()
 {
-
+    m_drivers.load();
 }
 
-QSharedPointer<Printer> Printers::addPrinter(const QString &name,
-                                             const QUrl &device,
-                                             const QString &description,
-                                             const QString &location)
+bool Printers::addPrinter(const QString &name, const QString &ppd,
+                          const QString &device, const QString &description,
+                          const QString &location)
 {
+    QString reply = m_backend->printerAdd(name, device, ppd, description,
+                                          location);
+    if (!reply.isEmpty()) {
+        m_lastMessage = reply;
+        return false;
+    }
+    return true;
+}
 
+bool Printers::addPrinterWithPpdFile(const QString &name,
+                                     const QString &ppdFileName,
+                                     const QString &device,
+                                     const QString &description,
+                                     const QString &location)
+{
+    QString reply = m_backend->printerAddWithPpd(name, device, ppdFileName,
+                                                 description, location);
+    if (!reply.isEmpty()) {
+        m_lastMessage = reply;
+        return false;
+    }
+    return true;
 }
 
 bool Printers::removePrinter(const QString &name)

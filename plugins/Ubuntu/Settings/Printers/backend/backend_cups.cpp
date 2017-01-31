@@ -19,14 +19,17 @@
 #include "i18n.h"
 #include "utils.h"
 
-#include <exception>
-#include <stdexcept>
 
 PrinterCupsBackend::PrinterCupsBackend(QObject *parent)
     : PrinterCupsBackend(new CupsFacade(), QPrinterInfo(), parent)
 {
     // If we create the CupsFacade, we're in charge of RAII.
     m_cups->setParent(this);
+
+    connect(m_cups, SIGNAL(printerDriversLoaded(const QList<PrinterDriver>&)),
+            this, SIGNAL(printerDriversLoaded(const QList<PrinterDriver>&)));
+    connect(m_cups, SIGNAL(printerDriversFailedToLoad(const QString&)),
+            this, SIGNAL(printerDriversFailedToLoad(const QString&)));
 }
 
 PrinterCupsBackend::PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
@@ -39,25 +42,24 @@ PrinterCupsBackend::PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
 
 PrinterCupsBackend::~PrinterCupsBackend()
 {
-
 }
 
 QString PrinterCupsBackend::printerAdd(const QString &name,
-                                       const QUrl &uri,
-                                       const QUrl &ppdFile,
+                                       const QString &uri,
+                                       const QString &ppdFile,
                                        const QString &info,
                                        const QString &location)
 {
-
+    return m_cups->printerAdd(name, uri, ppdFile, info, location);
 }
 
 QString PrinterCupsBackend::printerAddWithPpd(const QString &name,
-                                              const QUrl &uri,
+                                              const QString &uri,
                                               const QString &ppdFileName,
                                               const QString &info,
                                               const QString &location)
 {
-
+    return m_cups->printerAddWithPpd(name, uri, ppdFileName, info, location);
 }
 
 bool PrinterCupsBackend::holdsDefinition() const
@@ -318,6 +320,11 @@ Printer* PrinterCupsBackend::getPrinter(const QString &printerName)
 QString PrinterCupsBackend::defaultPrinterName()
 {
     return QPrinterInfo::defaultPrinterName();
+}
+
+void PrinterCupsBackend::requestAvailablePrinterDrivers()
+{
+    return m_cups->requestPrinterDrivers();
 }
 
 PrinterBackend::BackendType PrinterCupsBackend::backendType() const

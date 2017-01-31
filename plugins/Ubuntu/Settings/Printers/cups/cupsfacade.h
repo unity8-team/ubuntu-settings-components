@@ -30,7 +30,6 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
-#include <QUrl>
 #include <QVariant>
 
 class PrinterJob;
@@ -41,12 +40,12 @@ public:
     explicit CupsFacade(QObject *parent = Q_NULLPTR);
     ~CupsFacade();
     QString printerAdd(const QString &name,
-                       const QUrl &uri,
-                       const QUrl &ppdFile,
+                       const QString &uri,
+                       const QString &ppdFile,
                        const QString &info,
                        const QString &location);
     QString printerAddWithPpd(const QString &name,
-                              const QUrl &uri,
+                              const QString &uri,
                               const QString &ppdFileName,
                               const QString &info,
                               const QString &location);
@@ -90,11 +89,27 @@ public:
     QList<PrintQuality> printerGetSupportedQualities(const QString &name) const;
     int printFileToDest(const QString &filepath, const QString &title,
                         const cups_dest_t *dest);
+
+public Q_SLOTS:
+    void requestPrinterDrivers(
+        const QString &deviceId = "",
+        const QString &language = "",
+        const QString &makeModel = "",
+        const QString &product = "",
+        const QStringList &includeSchemes = QStringList(),
+        const QStringList &excludeSchemes = QStringList()
+    );
+    void cancelPrinterDriverRequest();
+
 Q_SIGNALS:
     void printerAdded(const QString &name);
     void printerModified(const QString &name, const bool ppdChanged);
     void printerDeleted(const QString &name);
     void printerStateChanged(const QString &name);
+
+    void requestPrinterDriverCancel();
+    void printerDriversLoaded(const QList<PrinterDriver> &drivers);
+    void printerDriversFailedToLoad(const QString &errorMessage);
 
 private:
     QString getPrinterName(const QString &name) const;
@@ -106,5 +121,40 @@ private:
     });
     CupsPkHelper helper;
 };
+
+class PrinterDriverLoader : public QObject
+{
+    Q_OBJECT
+public:
+    PrinterDriverLoader(
+        const QString &deviceId = "",
+        const QString &language = "",
+        const QString &makeModel = "",
+        const QString &product = "",
+        const QStringList &includeSchemes = QStringList(),
+        const QStringList &excludeSchemes = QStringList());
+    ~PrinterDriverLoader();
+
+public Q_SLOTS:
+    void process();
+    void cancel();
+
+Q_SIGNALS:
+    void finished();
+    void loaded(const QList<PrinterDriver> &drivers);
+    void error(const QString &error);
+
+private:
+    QString m_deviceId = QString::null;
+    QString m_language = QString::null;
+    QString m_makeModel = QString::null;
+    QString m_product = QString::null;
+    QStringList m_includeSchemes;
+    QStringList m_excludeSchemes;
+
+    bool m_running = false;
+    CupsPkHelper helper;
+};
+
 
 #endif // USC_PRINTERS_CUPSFACADE_H

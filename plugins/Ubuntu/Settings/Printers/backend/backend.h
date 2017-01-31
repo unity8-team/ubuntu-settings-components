@@ -50,13 +50,16 @@ public:
 
     virtual bool holdsDefinition() const;
 
+    // Add a printer using an already existing ppd.
     virtual QString printerAdd(const QString &name,
-                               const QUrl &uri,
-                               const QUrl &ppdFile,
+                               const QString &uri,
+                               const QString &ppdFile,
                                const QString &info,
                                const QString &location);
+
+    // Add a printer and provide a ppd file.
     virtual QString printerAddWithPpd(const QString &name,
-                                      const QUrl &uri,
+                                      const QString &uri,
                                       const QString &ppdFileName,
                                       const QString &info,
                                       const QString &location);
@@ -135,6 +138,8 @@ public:
     virtual Printer* getPrinter(const QString &printerName);
     virtual QString defaultPrinterName();
 
+    virtual void requestAvailablePrinterDrivers();
+
     virtual BackendType backendType() const;
 
 public Q_SLOTS:
@@ -145,6 +150,9 @@ Q_SIGNALS:
     void printerModified(const QString &name, const bool ppdChanged);
     void printerDeleted(const QString &name);
     void printerStateChanged(const QString &name);
+
+    void printerDriversLoaded(const QList<PrinterDriver> &drivers);
+    void printerDriversFailedToLoad(const QString &errorMessage);
 
 protected:
     const QString m_printerName;

@@ -35,8 +35,8 @@ MainView {
             visible: false
             property var printer
             header: PageHeader {
-               title: printer.name
-               flickable: printerFlickable
+                title: printer.name
+                flickable: printerFlickable
             }
 
             Flickable {
@@ -153,6 +153,15 @@ MainView {
             header: PageHeader {
                 title: "Printers"
                 flickable: printerList
+                trailingActionBar {
+                    actions: [
+                        Action {
+                            iconName: "add"
+                            text: "Add printer"
+                            onTriggered: pageStack.push(addPrinterPageComponent)
+                        }
+                    ]
+                }
             }
             visible: false
 
@@ -179,7 +188,263 @@ MainView {
                         ProgressionSlot {}
                     }
                     onClicked: pageStack.push(printerPage, { printer: model })
-                    Component.onCompleted: console.log("printer", model.name)
+                }
+            }
+        }
+    }
+
+    Component {
+        id: addPrinterPageComponent
+        Page {
+            id: addPrinterPage
+            states: [
+                State {
+                    name: "success"
+                    PropertyChanges {
+                        target: okAction
+                        enabled: false
+                    }
+                    PropertyChanges {
+                        target: closeAction
+                        enabled: false
+                    }
+                    PropertyChanges {
+                        target: addPrinterCol
+                        enabled: false
+                    }
+                    StateChangeScript {
+                        script: okTimer.start()
+                    }
+                },
+                State {
+                    name: "failure"
+                    PropertyChanges {
+                        target: errorMessageContainer
+                        visible: true
+                    }
+                }
+            ]
+            header: PageHeader {
+                title: "Add printer"
+                flickable: addPrinterFlickable
+                leadingActionBar.actions: [
+                    Action {
+                        id: closeAction
+                        iconName: "close"
+                        text: "Abort"
+                        onTriggered: pageStack.pop()
+                    }
+                ]
+                trailingActionBar {
+                    actions: [
+                        Action {
+                            id: okAction
+                            iconName: "ok"
+                            text: "Complete"
+                            onTriggered: {
+                                var ret;
+                                if (driverSelector.selectedIndex == 0) {
+                                    ret = Printers.addPrinter(
+                                        printerName.text,
+                                        driversView.selectedDriver,
+                                        printerUri.text,
+                                        printerDescription.text,
+                                        printerLocation.text
+                                    );
+                                } else {
+                                    ret = Printers.addPrinterWithPpdFile(
+                                        printerName.text,
+                                        printerPpd.text,
+                                        printerUri.text,
+                                        printerDescription.text,
+                                        printerLocation.text
+                                    );
+                                }
+                                if (ret) {
+                                    addPrinterPage.state = "success"
+                                } else {
+                                    errorMessage.text = Printers.lastMessage;
+                                    addPrinterPage.state = "failure"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+
+            Component.onCompleted: {
+                Printers.prepareToAddPrinter();
+            }
+
+            Timer {
+                id: okTimer
+                interval: 2000
+                onTriggered: pageStack.pop();
+            }
+
+            Flickable {
+                id: addPrinterFlickable
+                anchors.fill: parent
+
+                Column {
+                    id: addPrinterCol
+                    property bool enabled: true
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+
+                    Item {
+                        id: errorMessageContainer
+                        visible: false
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            margins: units.gu(2)
+                        }
+                        height: units.gu(6)
+                        Label {
+                            id: errorMessage
+                            anchors {
+                                top: parent.top
+                                topMargin: units.gu(2)
+                                horizontalCenter: parent.horizontalCenter
+                            }
+                        }
+
+                    }
+
+                    ListItems.Standard {
+                        text: "Device URI"
+                        control: TextField {
+                            id: printerUri
+                            placeholderText: "ipp://server.local/my-queue"
+                        }
+                        enabled: parent.enabled
+                    }
+
+                    ListItems.ValueSelector {
+                        id: driverSelector
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Choose driver"
+                        values: [
+                            "Select printer from database",
+                            "Provide PPD file"
+                        ]
+                        enabled: parent.enabled
+                    }
+
+                    ListItems.Standard {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Filter drivers"
+                        control: TextField {
+                            id: driverFilter
+                            onTextChanged: Printers.driverFilter = text
+                        }
+                        visible: driverSelector.selectedIndex == 0
+                        enabled: parent.enabled
+                    }
+
+                    ListView {
+                        id: driversView
+                        property string selectedDriver
+                        property bool loading: true
+                        visible: driverSelector.selectedIndex == 0
+                        model: Printers.drivers
+                        anchors { left: parent.left; right: parent.right }
+                        height: units.gu(30)
+                        clip: true
+                        enabled: parent.enabled
+                        highlightFollowsCurrentItem: false
+                        highlight: Rectangle {
+                            z: 0
+                            y: driversView.currentItem.y
+                            width: driversView.currentItem.width
+                            height: driversView.currentItem.height
+                            color: theme.palette.selected.background
+                        }
+                        delegate: ListItem {
+                            height: driverLayout.height + (divider.visible ? divider.height : 0)
+                            ListItemLayout {
+                                id: driverLayout
+                                title.text: displayName
+                                subtitle.text: name
+                                summary.text: deviceId
+                            }
+                            onClicked: {
+                                driversView.selectedDriver = name
+                                driversView.currentIndex = index
+                            }
+                        }
+
+                        ActivityIndicator {
+                            anchors.centerIn: parent
+                            running: parent.loading
+                        }
+
+                        Connections {
+                            target: driversView
+                            onCountChanged: {
+                                target = null;
+                                driversView.loading = false;
+                            }
+                        }
+                    }
+
+                    ListItems.Standard {
+                        text: "PPD File"
+                        visible: driverSelector.selectedIndex == 1
+                        control: TextField {
+                            id: printerPpd
+                            placeholderText: "/usr/share/cups/foo.ppd"
+                        }
+                        enabled: parent.enabled
+                    }
+
+                    ListItems.Standard {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Printer name"
+                        control: TextField {
+                            id: printerName
+                            placeholderText: "laserjet"
+                        }
+                        enabled: parent.enabled
+                    }
+
+                    ListItems.Standard {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Description (optional)"
+                        control: TextField {
+                            id: printerDescription
+                            placeholderText: "HP Laserjet with Duplexer"
+                        }
+                        enabled: parent.enabled
+                    }
+
+                    ListItems.Standard {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Location (optional)"
+                        control: TextField {
+                            id: printerLocation
+                            placeholderText: "Lab 1"
+                        }
+                        enabled: parent.enabled
+                    }
                 }
             }
         }

@@ -37,8 +37,8 @@ bool PrinterBackend::holdsDefinition() const
 }
 
 QString PrinterBackend::printerAdd(const QString &name,
-                                   const QUrl &uri,
-                                   const QUrl &ppdFile,
+                                   const QString &uri,
+                                   const QString &ppdFile,
                                    const QString &info,
                                    const QString &location)
 {
@@ -46,7 +46,7 @@ QString PrinterBackend::printerAdd(const QString &name,
 }
 
 QString PrinterBackend::printerAddWithPpd(const QString &name,
-                                          const QUrl &uri,
+                                          const QString &uri,
                                           const QString &ppdFileName,
                                           const QString &info,
                                           const QString &location)
@@ -279,6 +279,10 @@ Printer* PrinterBackend::getPrinter(const QString &printerName)
 QString PrinterBackend::defaultPrinterName()
 {
     return QString();
+}
+
+void PrinterBackend::requestAvailablePrinterDrivers()
+{
 }
 
 PrinterBackend::BackendType PrinterBackend::backendType() const

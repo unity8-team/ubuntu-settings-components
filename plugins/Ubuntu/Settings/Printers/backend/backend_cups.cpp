@@ -286,8 +286,16 @@ QList<PrinterEnum::DuplexMode> PrinterCupsBackend::supportedDuplexModes() const
 QList<Printer*> PrinterCupsBackend::availablePrinters()
 {
     QList<Printer*> list;
-    Q_FOREACH(QPrinterInfo info, QPrinterInfo::availablePrinters()) {
-        list.append(new Printer(new PrinterCupsBackend(m_cups, info)));
+
+    // Use availablePrinterNames as this gives us a name for even null printers
+    Q_FOREACH(QString name, QPrinterInfo::availablePrinterNames()) {
+        QPrinterInfo info = QPrinterInfo::printerInfo(name);
+
+        if (!info.isNull()) {
+            list.append(new Printer(new PrinterCupsBackend(m_cups, info)));
+        } else {
+            qWarning() << "Printer is null so skipping (" << name << ")";
+        }
     }
 
     // Cups allows a faux PDF printer.

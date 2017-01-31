@@ -361,6 +361,9 @@ cups_dest_t* CupsFacade::makeDest(const QString &name,
         __CUPS_ADD_OPTION(dest, "OutputOrder", "Normal");
     }
 
+    // Always scale to fit the page for now
+    __CUPS_ADD_OPTION(dest, "fit-to-page", "True");
+
     return dest;
 }
 

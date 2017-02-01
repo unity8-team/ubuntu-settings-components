@@ -367,6 +367,15 @@ cups_dest_t* CupsFacade::makeDest(const QString &name,
     return dest;
 }
 
+void CupsFacade::cancelJob(const QString &name, const int jobId)
+{
+    int ret = cupsCancelJob(name.toLocal8Bit(), jobId);
+
+    if (!ret) {
+        qWarning() << "Failed to cancel job:" << jobId << "for" << name;
+    }
+}
+
 int CupsFacade::printFileToDest(const QString &filepath, const QString &title,
                                 const cups_dest_t *dest)
 {

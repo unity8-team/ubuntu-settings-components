@@ -92,6 +92,8 @@ public:
     virtual QList<PrintQuality> printerGetSupportedQualities(
         const QString &name) const override;
     virtual PrintQuality printerGetDefaultQuality(const QString &name) const;
+
+    virtual void cancelJob(const QString &name, const int jobId) override;
     virtual int printFileToDest(const QString &filepath,
                                 const QString &title,
                                 const cups_dest_t *dest) override;

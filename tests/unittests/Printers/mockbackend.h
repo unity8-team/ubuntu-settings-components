@@ -210,6 +210,11 @@ public:
         return printerOptions[name].value("PrintQualities").value<QList<PrintQuality>>();
     }
 
+    virtual void cancelJob(const QString &name, const int jobId) override
+    {
+
+    }
+
     virtual int printFileToDest(const QString &filepath,
                                 const QString &title,
                                 const cups_dest_t *dest) override

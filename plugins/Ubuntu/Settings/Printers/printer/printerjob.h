@@ -72,7 +72,6 @@ public:
     PrinterEnum::State state() const;
     QString title() const;
 public Q_SLOTS:
-    Q_INVOKABLE void cancel();
     PrinterEnum::DuplexMode getDuplexMode() const;
     ColorModel getColorModel() const;
     PrintQuality getPrintQuality() const;

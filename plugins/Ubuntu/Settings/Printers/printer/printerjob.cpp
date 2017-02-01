@@ -58,11 +58,6 @@ PrinterJob::~PrinterJob()
 
 }
 
-void PrinterJob::cancel()
-{
-
-}
-
 bool PrinterJob::collate() const
 {
     return m_collate;

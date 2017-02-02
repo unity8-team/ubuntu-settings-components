@@ -60,11 +60,6 @@ private Q_SLOTS:
         m_instance = new PrinterJob(m_mock_printer, m_backend);
     }
 
-    void testCancel()
-    {
-        QSKIP("Not implemented yet!");
-    }
-
     void testCollate()
     {
         QCOMPARE(m_instance->collate(), true);

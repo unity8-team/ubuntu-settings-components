@@ -60,6 +60,8 @@ public:
     QString defaultPrinterName() const;
     QString lastMessage() const;
 
+    Q_INVOKABLE void cancelJob(const QString &printerName, const int jobId);
+
     void setDefaultPrinterName(const QString &name);
     void setDriverFilter(const QString &filter);
 

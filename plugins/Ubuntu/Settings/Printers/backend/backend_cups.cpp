@@ -198,6 +198,11 @@ PrintQuality PrinterCupsBackend::printerGetDefaultQuality(
     return printerGetOption(name, "DefaultPrintQuality").value<PrintQuality>();
 }
 
+void PrinterCupsBackend::cancelJob(const QString &name, const int jobId)
+{
+    m_cups->cancelJob(name, jobId);
+}
+
 int PrinterCupsBackend::printFileToDest(const QString &filepath,
                                         const QString &title,
                                         const cups_dest_t *dest)

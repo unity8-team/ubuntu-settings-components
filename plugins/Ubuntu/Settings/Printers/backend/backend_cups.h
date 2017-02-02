@@ -97,7 +97,7 @@ public:
     virtual int printFileToDest(const QString &filepath,
                                 const QString &title,
                                 const cups_dest_t *dest) override;
-    virtual QList<PrinterJob *> printerGetJobs(const QString &name) override;
+    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs(const QString &name) override;
 
     virtual QString printerName() const override;
     virtual QString description() const override;

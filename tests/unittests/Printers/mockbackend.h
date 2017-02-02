@@ -222,7 +222,7 @@ public:
 
     }
 
-    virtual QList<PrinterJob *> printerGetJobs(const QString &name) override
+    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs(const QString &name) override
     {
 
     }

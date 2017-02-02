@@ -53,7 +53,6 @@ public:
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
     virtual QHash<int, QByteArray> roleNames() const override;
 
     int count() const;
@@ -64,9 +63,7 @@ private:
     PrinterBackend *m_backend;
     QString m_printer_name;
 
-    /* FIXME: there's currently no need to share the PrinterJob obj with QML, so
-    this should be normal pointers that are deletedLater. */
-    QList<PrinterJob *> m_jobs;
+    QList<QSharedPointer<PrinterJob>> m_jobs;
 private Q_SLOTS:
     void startUpdateTimer(const int &msecs);
     void update();

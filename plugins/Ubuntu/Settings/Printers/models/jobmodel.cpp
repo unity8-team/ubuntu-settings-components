@@ -55,7 +55,7 @@ void JobModel::update()
 {
     // Store the old count and get the new printers
     int oldCount = m_jobs.size();
-    QList<PrinterJob *> newJobs = m_backend->printerGetJobs(m_printer_name);
+    QList<QSharedPointer<PrinterJob>> newJobs = m_backend->printerGetJobs(m_printer_name);
 
     /* If any printers returned from the backend are irrelevant, we delete
     them. This a list of indices that corresponds to printers scheduled for
@@ -67,7 +67,7 @@ void JobModel::update()
         // Determine if the old printer exists in the new model
         bool exists = false;
 
-        Q_FOREACH(PrinterJob *p, newJobs) {
+        Q_FOREACH(QSharedPointer<PrinterJob> p, newJobs) {
             // TODO: update status here
             if (p->jobId() == m_jobs.at(i)->jobId()) {
                 exists = true;
@@ -78,7 +78,7 @@ void JobModel::update()
         // If it doesn't exist then remove it from the old model
         if (!exists) {
             beginRemoveRows(QModelIndex(), i, i);
-            PrinterJob *p = m_jobs.takeAt(i);
+            QSharedPointer<PrinterJob> p = m_jobs.takeAt(i);
             p->deleteLater();
             endRemoveRows();
 
@@ -189,21 +189,6 @@ QVariant JobModel::data(const QModelIndex &index, int role) const
     }
 
     return ret;
-}
-
-bool JobModel::setData(const QModelIndex &index,
-                        const QVariant &value, int role)
-{
-    if ((0<=index.row()) && (index.row()<m_jobs.size())) {
-
-        auto job = m_jobs[index.row()];
-
-        switch (role) {
-
-        }
-    }
-
-    return true;
 }
 
 QHash<int, QByteArray> JobModel::roleNames() const

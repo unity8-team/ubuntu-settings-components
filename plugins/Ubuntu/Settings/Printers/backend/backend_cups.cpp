@@ -46,38 +46,24 @@ PrinterCupsBackend::PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
     connect(m_cups, SIGNAL(printerDriversFailedToLoad(const QString&)),
             this, SIGNAL(printerDriversFailedToLoad(const QString&)));
 
-    connect(m_notifier, SIGNAL(JobCompleted(const QString&, const QString&, const QString&, uint, const QString&, bool, uint, uint, const QString&, const QString&, uint)),
-            this, SIGNAL(jobCompleted(const QString&, const QString&, const QString&, uint, const QString&, bool, uint, uint, const QString&, const QString&, uint)));
-    connect(m_notifier, SIGNAL(JobCreated(const QString&, const QString&, const QString&, uint, const QString&, bool, uint, uint, const QString&, const QString&, uint)),
-            this, SIGNAL(jobCreated(const QString&, const QString&, const QString&, uint, const QString&, bool, uint, uint, const QString&, const QString&, uint)));
-    connect(m_notifier, SIGNAL(JobState(const QString&, const QString&, const QString&, uint, const QString&, bool, uint, uint, const QString&, const QString&, uint)),
-            this, SIGNAL(jobState(const QString&, const QString&, const QString&, uint, const QString&, bool, uint, uint, const QString&, const QString&, uint)));
-    connect(m_notifier, SIGNAL(PrinterAdded(const QString&, const QString&, const QString&, uint, const QString&, bool)),
-            this, SIGNAL(printerAdded(const QString&, const QString&, const QString&, uint, const QString&, bool)));
-    connect(m_notifier, SIGNAL(PrinterDeleted(const QString&, const QString&, const QString&, uint, const QString&, bool)),
-            this, SIGNAL(printerDeleted(const QString&, const QString&, const QString&, uint, const QString&, bool)));
-    connect(m_notifier, SIGNAL(PrinterFinishingsChanged(const QString&, const QString&, const QString&, uint, const QString&, bool)),
-            this, SIGNAL(printerFinishingsChanged(const QString&, const QString&, const QString&, uint, const QString&, bool)));
-    connect(m_notifier, SIGNAL(PrinterMediaChanged(const QString&, const QString&, const QString&, uint, const QString&, bool)),
-            this, SIGNAL(printerMediaChanged(const QString&, const QString&, const QString&, uint, const QString&, bool)));
-    connect(m_notifier, SIGNAL(PrinterModified(const QString&, const QString&, const QString&, uint, const QString&, bool)),
-            this, SIGNAL(printerModified(const QString&, const QString&, const QString&, uint, const QString&, bool)));
-    connect(m_notifier, SIGNAL(PrinterRestarted(const QString&, const QString&, const QString&, uint, const QString&, bool)),
-            this, SIGNAL(printerRestarted(const QString&, const QString&, const QString&, uint, const QString&, bool)));
-    connect(m_notifier, SIGNAL(PrinterShutdown(const QString&, const QString&, const QString&, uint, const QString&, bool)),
-            this, SIGNAL(printerShutdown(const QString&, const QString&, const QString&, uint, const QString&, bool)));
-    connect(m_notifier, SIGNAL(PrinterStateChanged(const QString&, const QString&, const QString&, uint, const QString&, bool)),
-            this, SIGNAL(printerStateChanged(const QString&, const QString&, const QString&, uint, const QString&, bool)));
-    connect(m_notifier, SIGNAL(PrinterStopped(const QString&, const QString&, const QString&, uint, const QString&, bool)),
-            this, SIGNAL(printerStopped(const QString&, const QString&, const QString&, uint, const QString&, bool)));
-    connect(m_notifier, SIGNAL(ServerAudit(const QString&)),
-            this, SIGNAL(serverAudit(const QString&)));
-    connect(m_notifier, SIGNAL(ServerRestarted(const QString&)),
-            this, SIGNAL(serverRestarted(const QString&)));
-    connect(m_notifier, SIGNAL(ServerStarted(const QString&)),
-            this, SIGNAL(serverStarted(const QString&)));
-    connect(m_notifier, SIGNAL(ServerStopped(const QString&)),
-            this, SIGNAL(serverStopped(const QString&)));
+    connect(m_notifier, SIGNAL(PrinterAdded(const QString&, const QString&,
+                                            const QString&, uint,
+                                            const QString&, bool)),
+            this, SIGNAL(printerAdded(const QString&, const QString&,
+                                      const QString&, uint,
+                                      const QString&, bool)));
+    connect(m_notifier, SIGNAL(PrinterDeleted(const QString&, const QString&,
+                                              const QString&, uint,
+                                              const QString&, bool)),
+            this, SIGNAL(printerDeleted(const QString&, const QString&,
+                                        const QString&, uint,
+                                        const QString&, bool)));
+    connect(m_notifier, SIGNAL(PrinterModified(const QString&, const QString&,
+                                               const QString&, uint,
+                                               const QString&, bool)),
+            this, SIGNAL(printerModified(const QString&, const QString&,
+                                         const QString&, uint,
+                                         const QString&, bool)));
 }
 
 PrinterCupsBackend::~PrinterCupsBackend()

@@ -355,18 +355,6 @@ public:
         Q_EMIT printerDeleted(text, printerUri, printerName, printerState, printerStateReason, acceptingJobs);
     }
 
-    void mockPrinterStateChanged(
-        const QString &text,
-        const QString &printerUri,
-        const QString &printerName,
-        uint printerState,
-        const QString &printerStateReason,
-        bool acceptingJobs
-    )
-    {
-        Q_EMIT printerStateChanged(text, printerUri, printerName, printerState, printerStateReason, acceptingJobs);
-    }
-
     void mockDriversLoaded(const QList<PrinterDriver> &drivers)
     {
         Q_EMIT printerDriversLoaded(drivers);

@@ -149,45 +149,6 @@ Q_SIGNALS:
     void printerDriversLoaded(const QList<PrinterDriver> &drivers);
     void printerDriversFailedToLoad(const QString &errorMessage);
 
-    void jobCompleted(
-        const QString &text,
-        const QString &printerUri,
-        const QString &printerName,
-        uint printerState,
-        const QString &printerStateReason,
-        bool acceptingJobs,
-        uint jobId,
-        uint jobState,
-        const QString &jobStateReason,
-        const QString &job_name,
-        uint jobImpressionsCompleted
-    );
-    void jobCreated(
-        const QString &text,
-        const QString &printerUri,
-        const QString &printerName,
-        uint printerState,
-        const QString &printerStateReason,
-        bool acceptingJobs,
-        uint jobId,
-        uint jobState,
-        const QString &jobStateReason,
-        const QString &job_name,
-        uint jobImpressionsCompleted
-    );
-    void jobState(
-        const QString &text,
-        const QString &printerUri,
-        const QString &printerName,
-        uint printerState,
-        const QString &printerStateReason,
-        bool acceptingJobs,
-        uint jobId,
-        uint jobState,
-        const QString &jobStateReason,
-        const QString &job_name,
-        uint jobImpressionsCompleted
-    );
     void printerAdded(
         const QString &text,
         const QString &printerUri,
@@ -204,22 +165,6 @@ Q_SIGNALS:
         const QString &printerStateReason,
         bool acceptingJobs
     );
-    void printerFinishingsChanged(
-        const QString &text,
-        const QString &printerUri,
-        const QString &printerName,
-        uint printerState,
-        const QString &printerStateReason,
-        bool acceptingJobs
-    );
-    void printerMediaChanged(
-        const QString &text,
-        const QString &printerUri,
-        const QString &printerName,
-        uint printerState,
-        const QString &printerStateReason,
-        bool acceptingJobs
-    );
     void printerModified(
         const QString &text,
         const QString &printerUri,
@@ -228,42 +173,6 @@ Q_SIGNALS:
         const QString &printerStateReason,
         bool acceptingJobs
     );
-    void printerRestarted(
-        const QString &text,
-        const QString &printerUri,
-        const QString &printerName,
-        uint printerState,
-        const QString &printerStateReason,
-        bool acceptingJobs
-    );
-    void printerShutdown(
-        const QString &text,
-        const QString &printerUri,
-        const QString &printerName,
-        uint printerState,
-        const QString &printerStateReason,
-        bool acceptingJobs
-    );
-    void printerStateChanged(
-        const QString &text,
-        const QString &printerUri,
-        const QString &printerName,
-        uint printerState,
-        const QString &printerStateReason,
-        bool acceptingJobs
-    );
-    void printerStopped(
-        const QString &text,
-        const QString &printerUri,
-        const QString &printerName,
-        uint printerState,
-        const QString &printerStateReason,
-        bool acceptingJobs
-    );
-    void serverAudit(const QString &text);
-    void serverRestarted(const QString &text);
-    void serverStarted(const QString &text);
-    void serverStopped(const QString &text);
 
 protected:
     const QString m_printerName;

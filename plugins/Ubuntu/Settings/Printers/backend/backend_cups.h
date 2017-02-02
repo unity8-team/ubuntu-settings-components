@@ -23,9 +23,7 @@
 
 #include <QPrinterInfo>
 
-#define CUPSD_NOTIFIER_DBUS_NAME "org.cups.cupsd.Notifier"
 #define CUPSD_NOTIFIER_DBUS_PATH "/org/cups/cupsd/Notifier"
-#define CUPSD_NOTIFIER_DBUS_INTERFACE "org.cups.cupsd.Notifier"
 
 class PRINTERS_DECL_EXPORT PrinterCupsBackend : public PrinterBackend
 {
@@ -130,11 +128,8 @@ public Q_SLOTS:
     virtual void refresh() override;
     void createSubscription();
 
-private Q_SLOTS:
-    void renewSubscription();
-    void cancelSubscription();
-
 private:
+    void cancelSubscription();
     CupsFacade *m_cups;
     QPrinterInfo m_info;
     OrgCupsCupsdNotifierInterface *m_notifier;

@@ -770,10 +770,6 @@ int CupsPkHelper::createSubscription()
 
     ippDelete (resp);
 
-    // // Set up to renew the subscription a minute before it expires
-    // g_timeout_add_seconds(NOTIFY_LEASE_DURATION - 60,
-    //                       on_subscription_timeout,
-    //                       this);
     return subscriptionId;
 }
 

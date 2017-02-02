@@ -33,8 +33,6 @@
  */
 #define CPH_STR_MAXLEN 512
 
-#define NOTIFY_LEASE_DURATION (24 * 60 * 60)
-
 /* This code is only a shim for systems not running the daemon provided by
 cups-pk-helper. Once provided on all platforms, this code should be replaced
 by proper dbus bindings, and subsequently be set on fire.

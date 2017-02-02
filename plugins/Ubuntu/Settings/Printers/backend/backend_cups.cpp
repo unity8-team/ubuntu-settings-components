@@ -370,12 +370,6 @@ void PrinterCupsBackend::refresh()
 void PrinterCupsBackend::createSubscription()
 {
     m_cupsSubscriptionId = m_cups->createSubscription();
-    qWarning() << "cups subscription id" << m_cupsSubscriptionId;
-}
-
-void PrinterCupsBackend::renewSubscription()
-{
-
 }
 
 void PrinterCupsBackend::cancelSubscription()

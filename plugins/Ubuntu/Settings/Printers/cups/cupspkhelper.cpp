@@ -735,3 +735,68 @@ ipp_t* CupsPkHelper::createPrinterDriversRequest(
     return cupsDoRequest(m_connection, request,
                          resourceChar.toUtf8());
 }
+
+int CupsPkHelper::createSubscription()
+{
+    ipp_t *req;
+    ipp_t *resp;
+    ipp_attribute_t *attr;
+    int subscriptionId = -1;
+
+    req = ippNewRequest(IPP_CREATE_PRINTER_SUBSCRIPTION);
+    ippAddString(req, IPP_TAG_OPERATION, IPP_TAG_URI,
+                 "printer-uri", NULL, "/");
+    ippAddString(req, IPP_TAG_SUBSCRIPTION, IPP_TAG_KEYWORD,
+                 "notify-events", NULL, "all");
+    ippAddString(req, IPP_TAG_SUBSCRIPTION, IPP_TAG_URI,
+                 "notify-recipient-uri", NULL, "dbus://");
+    ippAddInteger(req, IPP_TAG_SUBSCRIPTION, IPP_TAG_INTEGER,
+                  "notify-lease-duration", 0);
+
+    resp = cupsDoRequest(m_connection, req,
+                         getResource(CphResourceRoot).toUtf8());
+    if (!isReplyOk(resp, true)) {
+        return subscriptionId;
+    }
+
+    attr = ippFindAttribute(resp, "notify-subscription-id", IPP_TAG_INTEGER);
+
+    if (!attr) {
+        qWarning() << "ipp-create-printer-subscription response doesn't"
+                       "  contain subscription id.";
+    } else {
+        subscriptionId = ippGetInteger(attr, 0);
+    }
+
+    ippDelete (resp);
+
+    // // Set up to renew the subscription a minute before it expires
+    // g_timeout_add_seconds(NOTIFY_LEASE_DURATION - 60,
+    //                       on_subscription_timeout,
+    //                       this);
+    return subscriptionId;
+}
+
+void CupsPkHelper::cancelSubscription(const int &subscriptionId)
+{
+    ipp_t *req;
+    ipp_t *resp;
+
+    if (subscriptionId <= 0) {
+        return;
+    }
+
+    req = ippNewRequest(IPP_CANCEL_SUBSCRIPTION);
+    ippAddString(req, IPP_TAG_OPERATION, IPP_TAG_URI,
+                 "printer-uri", NULL, "/");
+    ippAddInteger(req, IPP_TAG_OPERATION, IPP_TAG_INTEGER,
+                  "notify-subscription-id", subscriptionId);
+
+    resp = cupsDoRequest(m_connection, req,
+                         getResource(CphResourceRoot).toUtf8());
+    if (!isReplyOk(resp, true)) {
+        return;
+    }
+
+    ippDelete(resp);
+}

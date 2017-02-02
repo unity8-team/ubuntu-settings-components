@@ -34,9 +34,8 @@ class PRINTERS_DECL_EXPORT PrinterModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
-    explicit PrinterModel(const int updateIntervalMSecs=5000, QObject *parent = Q_NULLPTR);
-    explicit PrinterModel(PrinterBackend *backend, const int updateIntervalMSecs=5000,
-                          QObject *parent = Q_NULLPTR);
+    explicit PrinterModel(QObject *parent = Q_NULLPTR);
+    explicit PrinterModel(PrinterBackend *backend, QObject *parent = Q_NULLPTR);
     ~PrinterModel();
 
     enum Roles
@@ -78,7 +77,6 @@ public:
 
     Q_INVOKABLE QVariantMap get(const int row) const;
 private:
-    QTimer m_update_timer;
     PrinterBackend *m_backend;
 
     /* FIXME: there's currently no need to share the Printer obj with QML, so
@@ -86,8 +84,10 @@ private:
     QList<Printer*> m_printers;
 
 private Q_SLOTS:
-    void startUpdateTimer(const int &msecs);
     void update();
+    void printerSignalCatchall(const QString &text, const QString &printerUri,
+        const QString &printerName, uint printerState,
+        const QString &printerStateReason, bool acceptingJobs);
 
 Q_SIGNALS:
     void countChanged();

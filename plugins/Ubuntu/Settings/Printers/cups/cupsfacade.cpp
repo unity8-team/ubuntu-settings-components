@@ -406,6 +406,16 @@ void CupsFacade::cancelPrinterDriverRequest()
     Q_EMIT requestPrinterDriverCancel();
 }
 
+int CupsFacade::createSubscription()
+{
+    return helper.createSubscription();
+}
+
+void CupsFacade::cancelSubscription(const int &subscriptionId)
+{
+    helper.cancelSubscription(subscriptionId);
+}
+
 PrinterDriverLoader::PrinterDriverLoader(
         const QString &deviceId, const QString &language,
         const QString &makeModel, const QString &product,

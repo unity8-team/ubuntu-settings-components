@@ -319,24 +319,52 @@ public:
     }
 
 
-    void mockPrinterAdded(const QString &name)
+    void mockPrinterAdded(
+        const QString &text,
+        const QString &printerUri,
+        const QString &printerName,
+        uint printerState,
+        const QString &printerStateReason,
+        bool acceptingJobs
+    )
     {
-        Q_EMIT printerAdded(name);
+        Q_EMIT printerAdded(text, printerUri, printerName, printerState, printerStateReason, acceptingJobs);
     }
 
-    void mockPrinterModified(const QString &name, const bool ppdChanged)
+    void mockPrinterModified(
+        const QString &text,
+        const QString &printerUri,
+        const QString &printerName,
+        uint printerState,
+        const QString &printerStateReason,
+        bool acceptingJobs
+    )
     {
-        Q_EMIT printerModified(name, ppdChanged);
+        Q_EMIT printerModified(text, printerUri, printerName, printerState, printerStateReason, acceptingJobs);
     }
 
-    void mockPrinterDeleted(const QString &name)
+    void mockPrinterDeleted(
+        const QString &text,
+        const QString &printerUri,
+        const QString &printerName,
+        uint printerState,
+        const QString &printerStateReason,
+        bool acceptingJobs
+    )
     {
-        Q_EMIT printerDeleted(name);
+        Q_EMIT printerDeleted(text, printerUri, printerName, printerState, printerStateReason, acceptingJobs);
     }
 
-    void mockPrinterStateChanged(const QString &name)
+    void mockPrinterStateChanged(
+        const QString &text,
+        const QString &printerUri,
+        const QString &printerName,
+        uint printerState,
+        const QString &printerStateReason,
+        bool acceptingJobs
+    )
     {
-        Q_EMIT printerStateChanged(name);
+        Q_EMIT printerStateChanged(text, printerUri, printerName, printerState, printerStateReason, acceptingJobs);
     }
 
     void mockDriversLoaded(const QList<PrinterDriver> &drivers)

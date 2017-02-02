@@ -89,6 +89,8 @@ public:
     QList<PrintQuality> printerGetSupportedQualities(const QString &name) const;
     int printFileToDest(const QString &filepath, const QString &title,
                         const cups_dest_t *dest);
+    int createSubscription();
+    void cancelSubscription(const int &subscriptionId);
 
 public Q_SLOTS:
     void requestPrinterDrivers(

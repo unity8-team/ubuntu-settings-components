@@ -43,12 +43,10 @@ class PRINTERS_DECL_EXPORT Printers : public QObject
     Q_PROPERTY(QString lastMessage READ lastMessage CONSTANT)
 
 public:
-    explicit Printers(int printerUpdateIntervalMSecs = 5000, QObject *parent = nullptr);
+    explicit Printers(QObject *parent = Q_NULLPTR);
 
     // Note: Printers takes ownership of backend.
-    explicit Printers(PrinterBackend *backend,
-                      int printerUpdateIntervalMSecs = 5000,
-                      QObject *parent = nullptr);
+    explicit Printers(PrinterBackend *backend, QObject *parent = Q_NULLPTR);
     ~Printers();
 
     QAbstractItemModel* allPrinters();

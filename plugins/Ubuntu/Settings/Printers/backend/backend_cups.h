@@ -19,14 +19,20 @@
 
 #include "backend/backend.h"
 #include "cups/cupsfacade.h"
+#include "cupsdnotifier.h" // Note: this file was generated.
 
 #include <QPrinterInfo>
+
+#define CUPSD_NOTIFIER_DBUS_NAME "org.cups.cupsd.Notifier"
+#define CUPSD_NOTIFIER_DBUS_PATH "/org/cups/cupsd/Notifier"
+#define CUPSD_NOTIFIER_DBUS_INTERFACE "org.cups.cupsd.Notifier"
 
 class PRINTERS_DECL_EXPORT PrinterCupsBackend : public PrinterBackend
 {
 public:
     explicit PrinterCupsBackend(QObject *parent = Q_NULLPTR);
     explicit PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
+                                OrgCupsCupsdNotifierInterface* notifier,
                                 QObject *parent = Q_NULLPTR);
     virtual ~PrinterCupsBackend() override;
 
@@ -122,10 +128,17 @@ public:
 
 public Q_SLOTS:
     virtual void refresh() override;
+    void createSubscription();
+
+private Q_SLOTS:
+    void renewSubscription();
+    void cancelSubscription();
 
 private:
     CupsFacade *m_cups;
     QPrinterInfo m_info;
+    OrgCupsCupsdNotifierInterface *m_notifier;
+    int m_cupsSubscriptionId = -1;
 };
 
 #endif // USC_PRINTERS_CUPS_BACKEND_H

@@ -14,12 +14,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Authored by Jonas G. Drange <jonas.drange@canonical.com>
+ *             Andrew Hayzen <andrew.hayzen@canonical.com>
  */
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.3
-import Ubuntu.Components.Popups 1.3
 import Ubuntu.Components.ListItems 1.3 as ListItems
 import Ubuntu.Settings.Components 0.1
 import Ubuntu.Settings.Printers 0.1

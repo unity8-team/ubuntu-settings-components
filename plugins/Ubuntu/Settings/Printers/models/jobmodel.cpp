@@ -53,13 +53,9 @@ void JobModel::startUpdateTimer(const int &msecs)
 
 void JobModel::update()
 {
-    qDebug() << "Updating!!!" << m_printer_name;
-
     // Store the old count and get the new printers
     int oldCount = m_jobs.size();
     QList<PrinterJob *> newJobs = m_backend->printerGetJobs(m_printer_name);
-
-    qDebug() << "newJobs" << newJobs.size();
 
     /* If any printers returned from the backend are irrelevant, we delete
     them. This a list of indices that corresponds to printers scheduled for

@@ -18,6 +18,7 @@ add_library(UbuntuSettingsPrintersQml SHARED
     enums.h
     i18n.cpp
     models/drivermodel.cpp
+    models/jobmodel.cpp
     models/printermodel.cpp
     printer/printer.cpp
     printer/printerjob.cpp

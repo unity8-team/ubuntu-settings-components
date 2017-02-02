@@ -40,16 +40,31 @@ PrinterJob::PrinterJob(Printer *printer, PrinterBackend *backend,
     , m_backend(backend)
     , m_duplex_mode(0)
     , m_is_two_sided(false)
+    , m_job_id(-1)
     , m_printer(printer)
     , m_printer_name(QStringLiteral(""))
     , m_print_range(QStringLiteral(""))
     , m_print_range_mode(PrinterEnum::PrintRange::AllPages)
     , m_quality(0)
-    , m_state(PrinterEnum::State::IdleState)
+    , m_state(PrinterEnum::JobState::Pending)
     , m_reverse(false)
     , m_title(QStringLiteral(""))
 {
+    if (m_printer) {
+        m_printer_name = printer->name();
+    }
+
     loadDefaults();
+}
+
+PrinterJob::PrinterJob(const QString &name, PrinterBackend *backend, int jobId, QObject *parent)
+    : QObject(parent)
+    , m_backend(backend)
+    , m_job_id(jobId)
+{
+    setPrinterName(name);
+
+    // TODO: load other options from job
 }
 
 
@@ -115,6 +130,11 @@ bool PrinterJob::isTwoSided() const
     return m_is_two_sided;
 }
 
+int PrinterJob::jobId() const
+{
+    return m_job_id;
+}
+
 bool PrinterJob::landscape() const
 {
     return m_landscape;
@@ -143,11 +163,7 @@ QString PrinterJob::printerName() const
 void PrinterJob::printFile(const QUrl &url)
 {
     if (m_printer) {
-        int jobId = m_printer->printFile(url.toLocalFile(), this);
-
-        // TODO: should we track the job and state of it here?
-        // so then we can do cancel() and show in the UI when the job is done?
-        Q_UNUSED(jobId);
+        m_job_id = m_printer->printFile(url.toLocalFile(), this);
     } else {
         qWarning() << "No valid printer in PrinterJob";
     }
@@ -173,7 +189,7 @@ bool PrinterJob::reverse() const
     return m_reverse;
 }
 
-PrinterEnum::State PrinterJob::state() const
+PrinterEnum::JobState PrinterJob::state() const
 {
     return m_state;
 }
@@ -311,7 +327,7 @@ void PrinterJob::setReverse(const bool reverse)
     }
 }
 
-void PrinterJob::setState(const PrinterEnum::State &state)
+void PrinterJob::setState(const PrinterEnum::JobState &state)
 {
     if (m_state != state) {
         m_state = state;

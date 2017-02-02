@@ -222,6 +222,11 @@ public:
 
     }
 
+    virtual QList<PrinterJob *> printerGetJobs(const QString &name) override
+    {
+
+    }
+
 
     virtual QString printerName() const override
     {

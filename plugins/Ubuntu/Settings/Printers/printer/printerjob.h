@@ -47,13 +47,16 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
     Q_PROPERTY(PrinterEnum::PrintRange printRangeMode READ printRangeMode WRITE setPrintRangeMode NOTIFY printRangeModeChanged)
     Q_PROPERTY(int quality READ quality WRITE setQuality NOTIFY qualityChanged)
     Q_PROPERTY(bool reverse READ reverse WRITE setReverse NOTIFY reverseChanged)
-    Q_PROPERTY(PrinterEnum::State state READ state NOTIFY stateChanged)
+    Q_PROPERTY(PrinterEnum::JobState state READ state NOTIFY stateChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+
+    friend class PrinterCupsBackend;
 public:
     explicit PrinterJob(QObject *parent=Q_NULLPTR);
     explicit PrinterJob(Printer *printer, QObject *parent=Q_NULLPTR);
     explicit PrinterJob(Printer *printer, PrinterBackend *backend,
                         QObject *parent=Q_NULLPTR);
+    explicit PrinterJob(const QString &name, PrinterBackend *backend, int jobId, QObject *parent=Q_NULLPTR);
     ~PrinterJob();
 
     bool collate() const;
@@ -62,6 +65,7 @@ public:
     int copies() const;
     int duplexMode() const;
     bool isTwoSided() const;
+    int jobId() const;  // TODO: implement
     bool landscape() const;
 //    Printer *printer() const;
     QString printerName() const;
@@ -69,7 +73,7 @@ public:
     PrinterEnum::PrintRange printRangeMode() const;
     int quality() const;
     bool reverse() const;
-    PrinterEnum::State state() const;
+    PrinterEnum::JobState state() const;
     QString title() const;
 public Q_SLOTS:
     PrinterEnum::DuplexMode getDuplexMode() const;
@@ -91,7 +95,7 @@ public Q_SLOTS:
 private Q_SLOTS:
     void loadDefaults();
     void setIsTwoSided(const bool isTwoSided);
-    void setState(const PrinterEnum::State &state);
+    void setState(const PrinterEnum::JobState &state);
 Q_SIGNALS:
     void collateChanged();
     void colorModelChanged();
@@ -115,6 +119,7 @@ private:
     PrinterBackend *m_backend; // TODO: Maybe use the printer's backend?
     int m_duplex_mode;
     bool m_is_two_sided;
+    int m_job_id;
     bool m_landscape;
     Printer *m_printer;
     QString m_printer_name;
@@ -122,7 +127,7 @@ private:
     PrinterEnum::PrintRange m_print_range_mode;
     int m_quality;
     bool m_reverse;
-    PrinterEnum::State m_state;
+    PrinterEnum::JobState m_state;
     QString m_title;
 };
 

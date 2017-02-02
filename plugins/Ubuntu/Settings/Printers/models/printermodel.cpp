@@ -18,9 +18,11 @@
 
 #include "backend/backend_cups.h"
 #include "cups/cupsfacade.h"
+#include "models/jobmodel.h"
 #include "models/printermodel.h"
 
 #include <QDebug>
+#include <QQmlEngine>
 
 PrinterModel::PrinterModel(const int updateIntervalMSecs, QObject *parent)
     : PrinterModel(new PrinterCupsBackend, updateIntervalMSecs, parent)
@@ -76,7 +78,11 @@ void PrinterModel::update()
         if (!exists) {
             beginRemoveRows(QModelIndex(), i, i);
             Printer *p = m_printers.takeAt(i);
+            JobModel *jobModel = m_job_models.take(p->name());
+
             p->deleteLater();
+            jobModel->deleteLater();
+
             endRemoveRows();
 
             i--;  // as we have removed an item decrement
@@ -112,7 +118,13 @@ void PrinterModel::update()
         } else {
             // New printer does not exist insert into model
             beginInsertRows(QModelIndex(), i, i);
+
             m_printers.insert(i, newPrinters.at(i));
+
+            JobModel *model = new JobModel(newPrinters.at(i)->name(), m_backend, 5000, this);
+            QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
+            m_job_models.insert(newPrinters.at(i)->name(), model);
+
             endInsertRows();
         }
     }
@@ -226,6 +238,10 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
         case IsPdfRole:
             ret = printer->isPdf();
             break;
+        case JobRole: {
+            ret = QVariant::fromValue(m_job_models.value(printer->name()));
+            break;
+        }
         // case LastStateMessageRole:
         //     ret = printer->lastStateMessage();
         //     break;
@@ -311,6 +327,7 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
         names[StateRole] = "state";
         names[PrinterRole] = "printer";
         names[IsPdfRole] = "isPdf";
+        names[JobRole] = "jobs";
         names[LastStateMessageRole] = "lastStateMessage";
     }
 

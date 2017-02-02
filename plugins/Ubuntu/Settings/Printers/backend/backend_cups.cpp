@@ -210,6 +210,23 @@ int PrinterCupsBackend::printFileToDest(const QString &filepath,
     return m_cups->printFileToDest(filepath, title, dest);
 }
 
+QList<QSharedPointer<PrinterJob>> PrinterCupsBackend::printerGetJobs(const QString &name)
+{
+    auto jobs = m_cups->printerGetJobs(name);
+    QList<QSharedPointer<PrinterJob>> list;
+
+    Q_FOREACH(auto job, jobs) {
+        auto newJob = QSharedPointer<PrinterJob>(new PrinterJob(name, this, job->id));
+
+        newJob->setState(static_cast<PrinterEnum::JobState>(job->state));
+        newJob->setTitle(QString::fromLocal8Bit(job->title));
+
+        list.append(newJob);
+    }
+
+    return list;
+}
+
 QString PrinterCupsBackend::printerName() const
 {
     return m_info.printerName();

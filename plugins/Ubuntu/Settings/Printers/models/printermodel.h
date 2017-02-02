@@ -19,6 +19,7 @@
 
 #include "printers_global.h"
 
+#include "models/jobmodel.h"
 #include "printer/printer.h"
 
 #include <QAbstractListModel>
@@ -64,6 +65,7 @@ public:
         PrinterRole,
         LastStateMessageRole,
         IsPdfRole,
+        JobRole,
         LastRole = LastStateMessageRole,
     };
 
@@ -84,6 +86,7 @@ private:
     /* FIXME: there's currently no need to share the Printer obj with QML, so
     this should be normal pointers that are deletedLater. */
     QList<Printer*> m_printers;
+    QMap<QString, JobModel *> m_job_models;
 
 private Q_SLOTS:
     void startUpdateTimer(const int &msecs);

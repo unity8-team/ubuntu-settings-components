@@ -202,6 +202,13 @@ int PrinterBackend::printFileToDest(const QString &filepath,
     return -1;
 }
 
+QList<QSharedPointer<PrinterJob>> PrinterBackend::printerGetJobs(const QString &name)
+{
+    Q_UNUSED(name);
+
+    return QList<QSharedPointer<PrinterJob>>{};
+}
+
 QString PrinterBackend::printerName() const
 {
     return QString();

@@ -185,9 +185,6 @@ void Printer::setDefaultColorModel(const ColorModel &colorModel)
     QStringList vals({colorModel.name});
     QString reply = m_backend->printerAddOption(name(), "ColorModel", vals);
     Q_UNUSED(reply);
-
-    loadColorModel();
-    Q_EMIT defaultColorModelChanged();
 }
 
 void Printer::setAccessControl(const PrinterEnum::AccessControl &accessControl)
@@ -243,8 +240,6 @@ void Printer::setDefaultPrintQuality(const PrintQuality &quality)
 
     QStringList vals({quality.name});
     QString reply = m_backend->printerAddOption(name(), quality.originalOption, vals);
-    loadPrintQualities();
-    Q_EMIT defaultPrintQualityChanged();
 }
 
 void Printer::setDefaultPageSize(const QPageSize &pageSize)
@@ -293,13 +288,17 @@ bool Printer::updateFrom(Printer* newPrinter)
     if (defaultColorModel() != newPrinter->defaultColorModel()) {
         loadColorModel();
 
-        changed |= true;
+        Q_EMIT defaultColorModelChanged();
+
+        changed = true;
     }
 
     if (defaultPrintQuality() != newPrinter->defaultPrintQuality()) {
         loadPrintQualities();
 
-        changed |= true;
+        Q_EMIT defaultPrintQualityChanged();
+
+        changed = true;
     }
 
     if (description() != newPrinter->description()
@@ -307,7 +306,11 @@ bool Printer::updateFrom(Printer* newPrinter)
             || defaultPageSize() != newPrinter->defaultPageSize()) {
         m_backend->refresh();
 
-        changed |= true;
+        Q_EMIT descriptionChanged();
+        Q_EMIT defaultDuplexModeChanged();
+        Q_EMIT defaultPageSizeChanged();
+
+        changed = true;
     }
 
     // TODO: accessControl

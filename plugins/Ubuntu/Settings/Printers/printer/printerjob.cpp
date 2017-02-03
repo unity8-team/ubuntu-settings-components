@@ -352,19 +352,64 @@ QString PrinterJob::title() const
 
 bool PrinterJob::updateFrom(QSharedPointer<PrinterJob> newPrinterJob)
 {
-    // jobId and printerName will be the same
-    setCollate(newPrinterJob->collate());
-    setColorModel(newPrinterJob->colorModel());
-    setCopies(newPrinterJob->copies());
-    setDuplexMode(newPrinterJob->duplexMode());
-    setLandscape(newPrinterJob->landscape());
-    setPrintRange(newPrinterJob->printRange());
-    setPrintRangeMode(newPrinterJob->printRangeMode());
-    setQuality(newPrinterJob->quality());
-    setReverse(newPrinterJob->reverse());
-    setState(newPrinterJob->state());
-    setTitle(newPrinterJob->title());
+    bool changed = false;
 
-    // FIXME: for now always force a change
-    return true;
+    // jobId and printerName will be the same
+
+    if (collate() != newPrinterJob->collate()) {
+        setCollate(newPrinterJob->collate());
+        changed = true;
+    }
+
+    if (colorModel() != newPrinterJob->colorModel()) {
+        setColorModel(newPrinterJob->colorModel());
+        changed = true;
+    }
+
+    if (copies() != newPrinterJob->copies()) {
+        setCopies(newPrinterJob->copies());
+        changed = true;
+    }
+
+    if (duplexMode() != newPrinterJob->duplexMode()) {
+        setDuplexMode(newPrinterJob->duplexMode());
+        changed = true;
+    }
+
+    if (landscape() != newPrinterJob->landscape()) {
+        setLandscape(newPrinterJob->landscape());
+        changed = true;
+    }
+
+    if (printRange() != newPrinterJob->printRange()) {
+        setPrintRange(newPrinterJob->printRange());
+        changed = true;
+    }
+
+    if (printRangeMode() != newPrinterJob->printRangeMode()) {
+        setPrintRangeMode(newPrinterJob->printRangeMode());
+        changed = true;
+    }
+
+    if (quality() != newPrinterJob->quality()) {
+        setQuality(newPrinterJob->quality());
+        changed = true;
+    }
+
+    if (reverse() != newPrinterJob->reverse()) {
+        setReverse(newPrinterJob->reverse());
+        changed = true;
+    }
+
+    if (state() != newPrinterJob->state()) {
+        setState(newPrinterJob->state());
+        changed = true;
+    }
+
+    if (title() != newPrinterJob->title()) {
+        setTitle(newPrinterJob->title());
+        changed = true;
+    }
+
+    return changed;
 }

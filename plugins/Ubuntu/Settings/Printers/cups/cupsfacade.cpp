@@ -367,6 +367,33 @@ cups_dest_t* CupsFacade::makeDest(const QString &name,
     return dest;
 }
 
+void CupsFacade::cancelJob(const QString &name, const int jobId)
+{
+    int ret = cupsCancelJob(name.toLocal8Bit(), jobId);
+
+    if (!ret) {
+        qWarning() << "Failed to cancel job:" << jobId << "for" << name;
+    }
+}
+
+QList<cups_job_t *> CupsFacade::printerGetJobs(const QString &name)
+{
+    QList<cups_job_t *> list;
+    cups_job_t *jobs;
+
+    // Get a list of the jobs that are 'mine' and only active ones
+    // https://www.cups.org/doc/api-cups.html#cupsGetJobs
+    int count = cupsGetJobs(&jobs, name.toLocal8Bit(), 1, CUPS_WHICHJOBS_ACTIVE);
+
+    for (int i=0; i < count; i++) {
+        list.append(&jobs[i]);
+    }
+
+    // FIXME: needs to run cupsFreeJobs();
+
+    return list;
+}
+
 int CupsFacade::printFileToDest(const QString &filepath, const QString &title,
                                 const cups_dest_t *dest)
 {

@@ -113,9 +113,12 @@ public:
     virtual QList<PrintQuality> printerGetSupportedQualities(
         const QString &name) const;
     virtual PrintQuality printerGetDefaultQuality(const QString &name) const;
+
+    virtual void cancelJob(const QString &name, const int jobId);
     virtual int printFileToDest(const QString &filepath,
                                 const QString &title,
                                 const cups_dest_t *dest);
+    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs(const QString &name);
 
     virtual QString printerName() const;
     virtual QString description() const;

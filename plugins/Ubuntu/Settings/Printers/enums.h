@@ -93,6 +93,19 @@ public:
     };
     Q_ENUM(ErrorPolicy)
 
+    // Match enums from ipp_jstate_t
+    enum class JobState
+    {
+        Pending = 3,
+        Held,
+        Processing,
+        Stopped,
+        Canceled,
+        Aborted,
+        Complete,
+    };
+    Q_ENUM(JobState)
+
     enum class OperationPolicy
     {
         DefaultOperation = 0,

@@ -225,11 +225,33 @@ PrintQuality PrinterCupsBackend::printerGetDefaultQuality(
     return printerGetOption(name, "DefaultPrintQuality").value<PrintQuality>();
 }
 
+void PrinterCupsBackend::cancelJob(const QString &name, const int jobId)
+{
+    m_cups->cancelJob(name, jobId);
+}
+
 int PrinterCupsBackend::printFileToDest(const QString &filepath,
                                         const QString &title,
                                         const cups_dest_t *dest)
 {
     return m_cups->printFileToDest(filepath, title, dest);
+}
+
+QList<QSharedPointer<PrinterJob>> PrinterCupsBackend::printerGetJobs(const QString &name)
+{
+    auto jobs = m_cups->printerGetJobs(name);
+    QList<QSharedPointer<PrinterJob>> list;
+
+    Q_FOREACH(auto job, jobs) {
+        auto newJob = QSharedPointer<PrinterJob>(new PrinterJob(name, this, job->id));
+
+        newJob->setState(static_cast<PrinterEnum::JobState>(job->state));
+        newJob->setTitle(QString::fromLocal8Bit(job->title));
+
+        list.append(newJob);
+    }
+
+    return list;
 }
 
 QString PrinterCupsBackend::printerName() const

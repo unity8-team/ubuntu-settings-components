@@ -104,6 +104,11 @@ QString Printers::lastMessage() const
     return m_lastMessage;
 }
 
+void Printers::cancelJob(const QString &printerName, const int jobId)
+{
+    m_backend->cancelJob(printerName, jobId);
+}
+
 void Printers::setDefaultPrinterName(const QString &name)
 {
 

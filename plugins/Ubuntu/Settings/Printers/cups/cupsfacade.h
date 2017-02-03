@@ -87,6 +87,9 @@ public:
 
     QList<ColorModel> printerGetSupportedColorModels(const QString &name) const;
     QList<PrintQuality> printerGetSupportedQualities(const QString &name) const;
+
+    void cancelJob(const QString &name, const int jobId);
+    QList<cups_job_t *> printerGetJobs(const QString &name);
     int printFileToDest(const QString &filepath, const QString &title,
                         const cups_dest_t *dest);
     int createSubscription();

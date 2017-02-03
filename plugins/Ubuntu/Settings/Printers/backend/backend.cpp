@@ -189,11 +189,24 @@ PrintQuality PrinterBackend::printerGetDefaultQuality(
     return PrintQuality();
 }
 
+void PrinterBackend::cancelJob(const QString &name, const int jobId)
+{
+    Q_UNUSED(jobId);
+    Q_UNUSED(name);
+}
+
 int PrinterBackend::printFileToDest(const QString &filepath,
                             const QString &title,
                             const cups_dest_t *dest)
 {
     return -1;
+}
+
+QList<QSharedPointer<PrinterJob>> PrinterBackend::printerGetJobs(const QString &name)
+{
+    Q_UNUSED(name);
+
+    return QList<QSharedPointer<PrinterJob>>{};
 }
 
 QString PrinterBackend::printerName() const

@@ -80,6 +80,14 @@ void PrinterModel::update()
         Q_FOREACH(Printer *p, newPrinters) {
             if (p->name() == m_printers.at(i)->name()) {
                 exists = true;
+
+                // Ensure the other properties of the Printer are up to date
+                if (!m_printers.at(i)->deepCompare(p)) {
+                    m_printers.at(i)->updateFrom(p);
+
+                    Q_EMIT dataChanged(index(i), index(i));
+                }
+
                 break;
             }
         }
@@ -460,7 +468,15 @@ bool PrinterFilter::lessThan(const QModelIndex &left,
             int leftPdf = sourceModel()->data(left, PrinterModel::IsPdfRole).toInt();
             int rightPdf = sourceModel()->data(right, PrinterModel::IsPdfRole).toInt();
 
-            return leftPdf > rightPdf;
+            // If Pdf is also same then sort by name
+            if (leftPdf == rightPdf) {
+                QString leftName = sourceModel()->data(left, PrinterModel::NameRole).toString();
+                QString rightName = sourceModel()->data(right, PrinterModel::NameRole).toString();
+
+                return leftName > rightName;
+            } else {
+                return leftPdf > rightPdf;
+            }
         } else {
             return leftData.toInt() < rightData.toInt();
         }

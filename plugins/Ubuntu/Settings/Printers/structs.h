@@ -70,6 +70,10 @@ public:
     {
         return (name == a.name && originalOption == a.originalOption);
     }
+    bool operator !=(const PrintQuality& a) const
+    {
+        return !(operator ==(a));
+    }
 };
 
 struct PrinterDriver

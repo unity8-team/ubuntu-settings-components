@@ -349,3 +349,39 @@ QString PrinterJob::title() const
 {
     return m_title;
 }
+
+bool PrinterJob::deepCompare(QSharedPointer<PrinterJob> other) const
+{
+    // jobId and printerName will be the same
+
+    bool changed = false;
+
+    changed |= collate() != newPrinterJob->collate();
+    changed |= colorModel() != newPrinterJob->colorModel();
+    changed |= copies() != newPrinterJob->copies();
+    changed |= duplexMode() != newPrinterJob->duplexMode();
+    changed |= landscape() != newPrinterJob->landscape();
+    changed |= printRange() != newPrinterJob->printRange();
+    changed |= printRangeMode() != newPrinterJob->printRangeMode();
+    changed |= quality() != newPrinterJob->quality();
+    changed |= reverse() != newPrinterJob->reverse();
+    changed |= state() != newPrinterJob->state();
+    changed |= title() != newPrinterJob->title();
+
+    return changed;
+}
+
+void PrinterJob::updateFrom(QSharedPointer<PrinterJob> newPrinterJob)
+{
+    setCollate(newPrinterJob->collate());
+    setColorModel(newPrinterJob->colorModel());
+    setCopies(newPrinterJob->copies());
+    setDuplexMode(newPrinterJob->duplexMode());
+    setLandscape(newPrinterJob->landscape());
+    setPrintRange(newPrinterJob->printRange());
+    setPrintRangeMode(newPrinterJob->printRangeMode());
+    setQuality(newPrinterJob->quality());
+    setReverse(newPrinterJob->reverse());
+    setState(newPrinterJob->state());
+    setTitle(newPrinterJob->title());
+}

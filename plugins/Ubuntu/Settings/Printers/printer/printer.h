@@ -71,6 +71,7 @@ public:
     void setDefaultPrintQuality(const PrintQuality &quality);
     void setDefaultPageSize(const QPageSize &pageSize);
 
+    bool deepCompare(Printer *other) const;
 public Q_SLOTS:
     // Add user that is either denied or allowed printer. See AccessControl.
     void addUser(const QString &username);
@@ -85,6 +86,7 @@ public Q_SLOTS:
     // Requests ink levels for printer.
     void requestInkLevels(const QString &name);
 
+    void updateFrom(Printer *newPrinter);
 Q_SIGNALS:
     void nameChanged();
     void enabledChanged();
@@ -92,6 +94,7 @@ Q_SIGNALS:
     void defaultPageSizeChanged();
     void defaultDuplexModeChanged();
     void defaultColorModelChanged();
+    void defaultPrintQualityChanged();
     void qualityChanged();
     void accessControlChanged();
     void errorPolicyChanged();

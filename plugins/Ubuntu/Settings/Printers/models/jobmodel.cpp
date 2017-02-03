@@ -68,9 +68,16 @@ void JobModel::update()
         bool exists = false;
 
         Q_FOREACH(QSharedPointer<PrinterJob> p, newJobs) {
-            // TODO: update status here
             if (p->jobId() == m_jobs.at(i)->jobId()) {
                 exists = true;
+
+                // Ensure the other properties of the job are up to date
+                if (!m_jobs.at(i)->deepCompare(p)) {
+                    m_jobs.at(i)->updateFrom(p);
+
+                    Q_EMIT dataChanged(index(i), index(i));
+                }
+
                 break;
             }
         }

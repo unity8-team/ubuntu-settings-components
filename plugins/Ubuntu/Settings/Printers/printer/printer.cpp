@@ -185,9 +185,6 @@ void Printer::setDefaultColorModel(const ColorModel &colorModel)
     QStringList vals({colorModel.name});
     QString reply = m_backend->printerAddOption(name(), "ColorModel", vals);
     Q_UNUSED(reply);
-
-    loadColorModel();
-    Q_EMIT defaultColorModelChanged();
 }
 
 void Printer::setAccessControl(const PrinterEnum::AccessControl &accessControl)
@@ -198,9 +195,6 @@ void Printer::setAccessControl(const PrinterEnum::AccessControl &accessControl)
 void Printer::setDescription(const QString &description)
 {
     QString answer = m_backend->printerSetInfo(name(), description);
-
-    m_backend->refresh();
-    Q_EMIT descriptionChanged();
 }
 
 void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
@@ -216,9 +210,6 @@ void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
 
     QStringList vals({Utils::duplexModeToPpdChoice(duplexMode)});
     QString reply = m_backend->printerAddOption(name(), "Duplex", vals);
-
-    m_backend->refresh();
-    Q_EMIT defaultDuplexModeChanged();
 }
 
 void Printer::setEnabled(const bool enabled)
@@ -249,7 +240,6 @@ void Printer::setDefaultPrintQuality(const PrintQuality &quality)
 
     QStringList vals({quality.name});
     QString reply = m_backend->printerAddOption(name(), quality.originalOption, vals);
-    loadPrintQualities();
 }
 
 void Printer::setDefaultPageSize(const QPageSize &pageSize)
@@ -288,4 +278,41 @@ void Printer::removeUser(const QString &username)
 void Printer::requestInkLevels(const QString &name)
 {
 
+}
+
+void Printer::deepCompare(Printer *other) const
+{
+    bool changed = false;
+
+    changed |= defaultColorModel() != other->defaultColorModel();
+    changed |= defaultPrintQuality() != other->defaultPrintQuality();
+    changed |= description() != other->description();
+    changed |= defaultDuplexMode() != other->defaultDuplexMode();
+    changed |= defaultPageSize() != other->defaultPageSize();
+    changed |= state() != other->state();
+
+    // TODO: accessControl
+    // TODO: enabled
+    // TODO: errorPolicy
+
+    return changed;
+}
+
+void Printer::updateFrom(Printer* newPrinter)
+{
+    m_backend->refresh();
+
+    loadColorModel();
+    loadPrintQualities();
+
+    Q_EMIT descriptionChanged();
+    Q_EMIT defaultColorModelChanged();
+    Q_EMIT defaultDuplexModeChanged();
+    Q_EMIT defaultPageSizeChanged();
+    Q_EMIT defaultPrintQualityChanged();
+    Q_EMIT stateChanged();
+
+    // TODO: accessControl
+    // TODO: enabled
+    // TODO: errorPolicy
 }

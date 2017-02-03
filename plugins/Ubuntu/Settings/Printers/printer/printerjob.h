@@ -75,6 +75,8 @@ public:
     bool reverse() const;
     PrinterEnum::JobState state() const;
     QString title() const;
+
+    bool deepCompare(QSharedPointer<PrinterJob> other) const;
 public Q_SLOTS:
     PrinterEnum::DuplexMode getDuplexMode() const;
     ColorModel getColorModel() const;
@@ -92,6 +94,8 @@ public Q_SLOTS:
     void setQuality(const int quality);
     void setReverse(const bool reverse);
     void setTitle(const QString &title);
+
+    void updateFrom(QSharedPointer<PrinterJob> newPrinterJob);
 private Q_SLOTS:
     void loadDefaults();
     void setIsTwoSided(const bool isTwoSided);

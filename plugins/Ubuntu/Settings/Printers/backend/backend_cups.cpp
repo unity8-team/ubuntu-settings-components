@@ -245,6 +245,8 @@ QList<QSharedPointer<PrinterJob>> PrinterCupsBackend::printerGetJobs(const QStri
     Q_FOREACH(auto job, jobs) {
         auto newJob = QSharedPointer<PrinterJob>(new PrinterJob(name, this, job->id));
 
+        // TODO: needs to extract other properties like copies/duplex etc
+
         newJob->setState(static_cast<PrinterEnum::JobState>(job->state));
         newJob->setTitle(QString::fromLocal8Bit(job->title));
 

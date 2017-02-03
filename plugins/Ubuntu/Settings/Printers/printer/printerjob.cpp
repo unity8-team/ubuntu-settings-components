@@ -352,12 +352,6 @@ QString PrinterJob::title() const
 
 bool PrinterJob::updateFrom(QSharedPointer<PrinterJob> newPrinterJob)
 {
-    qDebug() << "Updating from other job:" << newPrinterJob->jobId();
-
-    qDebug() << "Printer:" << m_printer;
-    qDebug() << "PrinterName:" << m_printer_name;
-    qDebug() << "PrinterPrinterName:" << m_printer->name();
-
     // jobId and printerName will be the same
     setCollate(newPrinterJob->collate());
     setColorModel(newPrinterJob->colorModel());
@@ -371,6 +365,6 @@ bool PrinterJob::updateFrom(QSharedPointer<PrinterJob> newPrinterJob)
     setState(newPrinterJob->state());
     setTitle(newPrinterJob->title());
 
-    // FIXME: for now force a change
+    // FIXME: for now always force a change
     return true;
 }

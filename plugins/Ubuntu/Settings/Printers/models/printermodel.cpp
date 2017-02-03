@@ -466,7 +466,15 @@ bool PrinterFilter::lessThan(const QModelIndex &left,
             int leftPdf = sourceModel()->data(left, PrinterModel::IsPdfRole).toInt();
             int rightPdf = sourceModel()->data(right, PrinterModel::IsPdfRole).toInt();
 
-            return leftPdf > rightPdf;
+            // If Pdf is also same then sort by name
+            if (leftPdf == rightPdf) {
+                QString leftName = sourceModel()->data(left, PrinterModel::NameRole).toString();
+                QString rightName = sourceModel()->data(right, PrinterModel::NameRole).toString();
+
+                return leftName > rightName;
+            } else {
+                return leftPdf > rightPdf;
+            }
         } else {
             return leftData.toInt() < rightData.toInt();
         }

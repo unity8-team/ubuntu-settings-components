@@ -287,8 +287,6 @@ void Printer::requestInkLevels(const QString &name)
 
 bool Printer::updateFrom(Printer* newPrinter)
 {
-    qDebug() << "Updating from other printer:" << newPrinter->name();
-
     bool changed = false;
 
     // The following refresh themselves, do we need this?
@@ -311,9 +309,6 @@ bool Printer::updateFrom(Printer* newPrinter)
 
         changed |= true;
     }
-
-    qDebug() << description() << newPrinter->description();
-    qDebug() << "CHANGED!!!" << changed;
 
     // TODO: accessControl
     // TODO: enabled

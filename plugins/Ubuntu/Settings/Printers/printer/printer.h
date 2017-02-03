@@ -36,6 +36,8 @@ class PrinterJob;
 class PRINTERS_DECL_EXPORT Printer : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
 public:
     explicit Printer(QObject *parent = nullptr);
     explicit Printer(PrinterBackend *backend, QObject *parent = nullptr);
@@ -85,6 +87,7 @@ public Q_SLOTS:
     // Requests ink levels for printer.
     void requestInkLevels(const QString &name);
 
+    bool updateFrom(Printer *newPrinter);
 Q_SIGNALS:
     void nameChanged();
     void enabledChanged();
@@ -92,6 +95,7 @@ Q_SIGNALS:
     void defaultPageSizeChanged();
     void defaultDuplexModeChanged();
     void defaultColorModelChanged();
+    void defaultPrintQualityChanged();
     void qualityChanged();
     void accessControlChanged();
     void errorPolicyChanged();

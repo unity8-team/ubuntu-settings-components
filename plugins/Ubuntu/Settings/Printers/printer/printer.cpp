@@ -198,9 +198,6 @@ void Printer::setAccessControl(const PrinterEnum::AccessControl &accessControl)
 void Printer::setDescription(const QString &description)
 {
     QString answer = m_backend->printerSetInfo(name(), description);
-
-    m_backend->refresh();
-    Q_EMIT descriptionChanged();
 }
 
 void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
@@ -216,9 +213,6 @@ void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
 
     QStringList vals({Utils::duplexModeToPpdChoice(duplexMode)});
     QString reply = m_backend->printerAddOption(name(), "Duplex", vals);
-
-    m_backend->refresh();
-    Q_EMIT defaultDuplexModeChanged();
 }
 
 void Printer::setEnabled(const bool enabled)
@@ -250,6 +244,7 @@ void Printer::setDefaultPrintQuality(const PrintQuality &quality)
     QStringList vals({quality.name});
     QString reply = m_backend->printerAddOption(name(), quality.originalOption, vals);
     loadPrintQualities();
+    Q_EMIT defaultPrintQualityChanged();
 }
 
 void Printer::setDefaultPageSize(const QPageSize &pageSize)
@@ -288,4 +283,41 @@ void Printer::removeUser(const QString &username)
 void Printer::requestInkLevels(const QString &name)
 {
 
+}
+
+bool Printer::updateFrom(Printer* newPrinter)
+{
+    qDebug() << "Updating from other printer:" << newPrinter->name();
+
+    bool changed = false;
+
+    // The following refresh themselves, do we need this?
+    if (defaultColorModel() != newPrinter->defaultColorModel()) {
+        loadColorModel();
+
+        changed |= true;
+    }
+
+    if (defaultPrintQuality() != newPrinter->defaultPrintQuality()) {
+        loadPrintQualities();
+
+        changed |= true;
+    }
+
+    if (description() != newPrinter->description()
+            || defaultDuplexMode() != newPrinter->defaultDuplexMode()
+            || defaultPageSize() != newPrinter->defaultPageSize()) {
+        m_backend->refresh();
+
+        changed |= true;
+    }
+
+    qDebug() << description() << newPrinter->description();
+    qDebug() << "CHANGED!!!" << changed;
+
+    // TODO: accessControl
+    // TODO: enabled
+    // TODO: errorPolicy
+
+    return changed;
 }

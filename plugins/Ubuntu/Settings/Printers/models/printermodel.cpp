@@ -80,6 +80,12 @@ void PrinterModel::update()
         Q_FOREACH(Printer *p, newPrinters) {
             if (p->name() == m_printers.at(i)->name()) {
                 exists = true;
+
+                // Ensure the other properties of the Printer are up to date
+                if (m_printers.at(i)->updateFrom(p)) {
+                    Q_EMIT dataChanged(index(i), index(i), roleNames().keys().toVector());
+                }
+
                 break;
             }
         }

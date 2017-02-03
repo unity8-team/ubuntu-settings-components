@@ -349,3 +349,28 @@ QString PrinterJob::title() const
 {
     return m_title;
 }
+
+bool PrinterJob::updateFrom(QSharedPointer<PrinterJob> newPrinterJob)
+{
+    qDebug() << "Updating from other job:" << newPrinterJob->jobId();
+
+    qDebug() << "Printer:" << m_printer;
+    qDebug() << "PrinterName:" << m_printer_name;
+    qDebug() << "PrinterPrinterName:" << m_printer->name();
+
+    // jobId and printerName will be the same
+    setCollate(newPrinterJob->collate());
+    setColorModel(newPrinterJob->colorModel());
+    setCopies(newPrinterJob->copies());
+    setDuplexMode(newPrinterJob->duplexMode());
+    setLandscape(newPrinterJob->landscape());
+    setPrintRange(newPrinterJob->printRange());
+    setPrintRangeMode(newPrinterJob->printRangeMode());
+    setQuality(newPrinterJob->quality());
+    setReverse(newPrinterJob->reverse());
+    setState(newPrinterJob->state());
+    setTitle(newPrinterJob->title());
+
+    // FIXME: for now force a change
+    return true;
+}

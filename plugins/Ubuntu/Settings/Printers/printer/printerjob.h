@@ -92,6 +92,8 @@ public Q_SLOTS:
     void setQuality(const int quality);
     void setReverse(const bool reverse);
     void setTitle(const QString &title);
+
+    bool updateFrom(QSharedPointer<PrinterJob> newPrinterJob);
 private Q_SLOTS:
     void loadDefaults();
     void setIsTwoSided(const bool isTwoSided);

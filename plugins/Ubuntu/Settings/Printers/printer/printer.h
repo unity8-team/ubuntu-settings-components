@@ -36,8 +36,6 @@ class PrinterJob;
 class PRINTERS_DECL_EXPORT Printer : public QObject
 {
     Q_OBJECT
-
-    Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
 public:
     explicit Printer(QObject *parent = nullptr);
     explicit Printer(PrinterBackend *backend, QObject *parent = nullptr);

@@ -280,7 +280,7 @@ void Printer::requestInkLevels(const QString &name)
 
 }
 
-void Printer::deepCompare(Printer *other) const
+bool Printer::deepCompare(Printer *other) const
 {
     bool changed = false;
 
@@ -295,7 +295,8 @@ void Printer::deepCompare(Printer *other) const
     // TODO: enabled
     // TODO: errorPolicy
 
-    return changed;
+    // Return true if they are the same, so no change
+    return changed == false;
 }
 
 void Printer::updateFrom(Printer* newPrinter)

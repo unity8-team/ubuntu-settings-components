@@ -82,8 +82,10 @@ void PrinterModel::update()
                 exists = true;
 
                 // Ensure the other properties of the Printer are up to date
-                if (m_printers.at(i)->updateFrom(p)) {
-                    Q_EMIT dataChanged(index(i), index(i), roleNames().keys().toVector());
+                if (!m_printers.at(i)->deepCompare(p)) {
+                    m_printers.at(i)->updateFrom(p);
+
+                    Q_EMIT dataChanged(index(i), index(i));
                 }
 
                 break;

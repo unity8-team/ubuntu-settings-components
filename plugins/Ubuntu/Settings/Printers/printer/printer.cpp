@@ -280,42 +280,39 @@ void Printer::requestInkLevels(const QString &name)
 
 }
 
-bool Printer::updateFrom(Printer* newPrinter)
+void Printer::deepCompare(Printer *other) const
 {
     bool changed = false;
 
-    // The following refresh themselves, do we need this?
-    if (defaultColorModel() != newPrinter->defaultColorModel()) {
-        loadColorModel();
-
-        Q_EMIT defaultColorModelChanged();
-
-        changed = true;
-    }
-
-    if (defaultPrintQuality() != newPrinter->defaultPrintQuality()) {
-        loadPrintQualities();
-
-        Q_EMIT defaultPrintQualityChanged();
-
-        changed = true;
-    }
-
-    if (description() != newPrinter->description()
-            || defaultDuplexMode() != newPrinter->defaultDuplexMode()
-            || defaultPageSize() != newPrinter->defaultPageSize()) {
-        m_backend->refresh();
-
-        Q_EMIT descriptionChanged();
-        Q_EMIT defaultDuplexModeChanged();
-        Q_EMIT defaultPageSizeChanged();
-
-        changed = true;
-    }
+    changed |= defaultColorModel() != other->defaultColorModel();
+    changed |= defaultPrintQuality() != other->defaultPrintQuality();
+    changed |= description() != other->description();
+    changed |= defaultDuplexMode() != other->defaultDuplexMode();
+    changed |= defaultPageSize() != other->defaultPageSize();
+    changed |= state() != other->state();
 
     // TODO: accessControl
     // TODO: enabled
     // TODO: errorPolicy
 
     return changed;
+}
+
+void Printer::updateFrom(Printer* newPrinter)
+{
+    m_backend->refresh();
+
+    loadColorModel();
+    loadPrintQualities();
+
+    Q_EMIT descriptionChanged();
+    Q_EMIT defaultColorModelChanged();
+    Q_EMIT defaultDuplexModeChanged();
+    Q_EMIT defaultPageSizeChanged();
+    Q_EMIT defaultPrintQualityChanged();
+    Q_EMIT stateChanged();
+
+    // TODO: accessControl
+    // TODO: enabled
+    // TODO: errorPolicy
 }

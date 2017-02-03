@@ -350,66 +350,38 @@ QString PrinterJob::title() const
     return m_title;
 }
 
-bool PrinterJob::updateFrom(QSharedPointer<PrinterJob> newPrinterJob)
+bool PrinterJob::deepCompare(QSharedPointer<PrinterJob> other) const
 {
-    bool changed = false;
-
     // jobId and printerName will be the same
 
-    if (collate() != newPrinterJob->collate()) {
-        setCollate(newPrinterJob->collate());
-        changed = true;
-    }
+    bool changed = false;
 
-    if (colorModel() != newPrinterJob->colorModel()) {
-        setColorModel(newPrinterJob->colorModel());
-        changed = true;
-    }
-
-    if (copies() != newPrinterJob->copies()) {
-        setCopies(newPrinterJob->copies());
-        changed = true;
-    }
-
-    if (duplexMode() != newPrinterJob->duplexMode()) {
-        setDuplexMode(newPrinterJob->duplexMode());
-        changed = true;
-    }
-
-    if (landscape() != newPrinterJob->landscape()) {
-        setLandscape(newPrinterJob->landscape());
-        changed = true;
-    }
-
-    if (printRange() != newPrinterJob->printRange()) {
-        setPrintRange(newPrinterJob->printRange());
-        changed = true;
-    }
-
-    if (printRangeMode() != newPrinterJob->printRangeMode()) {
-        setPrintRangeMode(newPrinterJob->printRangeMode());
-        changed = true;
-    }
-
-    if (quality() != newPrinterJob->quality()) {
-        setQuality(newPrinterJob->quality());
-        changed = true;
-    }
-
-    if (reverse() != newPrinterJob->reverse()) {
-        setReverse(newPrinterJob->reverse());
-        changed = true;
-    }
-
-    if (state() != newPrinterJob->state()) {
-        setState(newPrinterJob->state());
-        changed = true;
-    }
-
-    if (title() != newPrinterJob->title()) {
-        setTitle(newPrinterJob->title());
-        changed = true;
-    }
+    changed |= collate() != newPrinterJob->collate();
+    changed |= colorModel() != newPrinterJob->colorModel();
+    changed |= copies() != newPrinterJob->copies();
+    changed |= duplexMode() != newPrinterJob->duplexMode();
+    changed |= landscape() != newPrinterJob->landscape();
+    changed |= printRange() != newPrinterJob->printRange();
+    changed |= printRangeMode() != newPrinterJob->printRangeMode();
+    changed |= quality() != newPrinterJob->quality();
+    changed |= reverse() != newPrinterJob->reverse();
+    changed |= state() != newPrinterJob->state();
+    changed |= title() != newPrinterJob->title();
 
     return changed;
+}
+
+void PrinterJob::updateFrom(QSharedPointer<PrinterJob> newPrinterJob)
+{
+    setCollate(newPrinterJob->collate());
+    setColorModel(newPrinterJob->colorModel());
+    setCopies(newPrinterJob->copies());
+    setDuplexMode(newPrinterJob->duplexMode());
+    setLandscape(newPrinterJob->landscape());
+    setPrintRange(newPrinterJob->printRange());
+    setPrintRangeMode(newPrinterJob->printRangeMode());
+    setQuality(newPrinterJob->quality());
+    setReverse(newPrinterJob->reverse());
+    setState(newPrinterJob->state());
+    setTitle(newPrinterJob->title());
 }

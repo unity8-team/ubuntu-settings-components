@@ -73,6 +73,8 @@ public:
         const QStringList &includeSchemes = QStringList(),
         const QStringList &excludeSchemes = QStringList()
     );
+    int createSubscription();
+    void cancelSubscription(const int &subscriptionId);
 
 private:
     enum CphResource

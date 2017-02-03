@@ -88,10 +88,10 @@ private Q_SLOTS:
         PrinterBackend* backend = new MockPrinterBackend;
         ((MockPrinterBackend*) backend)->m_availablePrinters = in;
 
-        Printers printers(backend, 100);
+        Printers printers(backend);
         auto all = printers.allPrinters();
 
-        QTRY_COMPARE_WITH_TIMEOUT(all->rowCount(), out.size(), 101);
+        QCOMPARE(all->rowCount(), out.size());
         for (int i = 0; i < all->rowCount(); i++) {
             QCOMPARE(
                  all->data(all->index(i, 0)).toString(),

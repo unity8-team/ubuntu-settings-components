@@ -149,13 +149,33 @@ public Q_SLOTS:
     virtual void refresh();
 
 Q_SIGNALS:
-    void printerAdded(const QString &name);
-    void printerModified(const QString &name, const bool ppdChanged);
-    void printerDeleted(const QString &name);
-    void printerStateChanged(const QString &name);
-
     void printerDriversLoaded(const QList<PrinterDriver> &drivers);
     void printerDriversFailedToLoad(const QString &errorMessage);
+
+    void printerAdded(
+        const QString &text,
+        const QString &printerUri,
+        const QString &printerName,
+        uint printerState,
+        const QString &printerStateReason,
+        bool acceptingJobs
+    );
+    void printerDeleted(
+        const QString &text,
+        const QString &printerUri,
+        const QString &printerName,
+        uint printerState,
+        const QString &printerStateReason,
+        bool acceptingJobs
+    );
+    void printerModified(
+        const QString &text,
+        const QString &printerUri,
+        const QString &printerName,
+        uint printerState,
+        const QString &printerStateReason,
+        bool acceptingJobs
+    );
 
 protected:
     const QString m_printerName;

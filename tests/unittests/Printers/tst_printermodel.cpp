@@ -36,7 +36,7 @@ private Q_SLOTS:
     void init()
     {
         m_backend = new MockPrinterBackend;
-        m_model = new PrinterModel(m_backend, 100);
+        m_model = new PrinterModel(m_backend);
     }
     void cleanup()
     {
@@ -80,9 +80,10 @@ private Q_SLOTS:
 
         PrinterBackend* printerABackend = new MockPrinterBackend("a-printer");
         Printer* printerA = new Printer(printerABackend);
-        ((MockPrinterBackend*) m_backend)->m_availablePrinters << printerA;
+        getBackend()->m_availablePrinters << printerA;
+        getBackend()->mockPrinterAdded("Test added printer", "", printerA->name(), 0, "", true);
 
-        QTRY_COMPARE_WITH_TIMEOUT(m_model->count(), 1, 500);
+        QCOMPARE(m_model->count(), 1);
         QCOMPARE(countSpy.count(), 1);
         QCOMPARE(insertSpy.count(), 1);
 
@@ -99,8 +100,10 @@ private Q_SLOTS:
         PrinterBackend* printerBBackend = new MockPrinterBackend("b-printer");
         Printer* printerB = new Printer(printerBBackend);
         ((MockPrinterBackend*) m_backend)->m_availablePrinters << printerA << printerB;
+        getBackend()->mockPrinterAdded("Test added printer", "", printerA->name(), 0, "", true);
+        getBackend()->mockPrinterAdded("Test added printer", "", printerB->name(), 0, "", true);
 
-        QTRY_COMPARE_WITH_TIMEOUT(m_model->count(), 2, 500);
+        QCOMPARE(m_model->count(), 2);
 
         // Setup spy and move a printer
         int from = 1;
@@ -109,7 +112,10 @@ private Q_SLOTS:
 
         // Check signals were fired
         QSignalSpy moveSpy(m_model, SIGNAL(rowsMoved(const QModelIndex&, int, int, const QModelIndex&, int)));
-        QTRY_COMPARE_WITH_TIMEOUT(moveSpy.count(), 1, 500);
+
+        getBackend()->mockPrinterModified("Test e.g. renamed printer", "", printerA->name(), 0, "", true);
+
+        QCOMPARE(moveSpy.count(), 1);
         QCOMPARE(m_model->count(), 2);
 
         // Check item was moved from -> to
@@ -127,14 +133,18 @@ private Q_SLOTS:
         Printer* printerB = new Printer(printerBBackend);
         ((MockPrinterBackend*) m_backend)->m_availablePrinters << printerA << printerB;
 
-        QTRY_COMPARE_WITH_TIMEOUT(m_model->count(), 2, 500);
+        getBackend()->mockPrinterAdded("Test added printer", "", printerA->name(), 0, "", true);
+        getBackend()->mockPrinterAdded("Test added printer", "", printerB->name(), 0, "", true);
+
+        QCOMPARE(m_model->count(), 2);
 
         // Setup spy and remove a printer
         QSignalSpy countSpy(m_model, SIGNAL(countChanged()));
         QSignalSpy removeSpy(m_model, SIGNAL(rowsRemoved(const QModelIndex&, int, int)));
         ((MockPrinterBackend*) m_backend)->m_availablePrinters.removeLast();
+        getBackend()->mockPrinterDeleted("Test deleted printer", "", printerB->name(), 0, "", false);
 
-        QTRY_COMPARE_WITH_TIMEOUT(m_model->count(), 1, 500);
+        QCOMPARE(m_model->count(), 1);
         QCOMPARE(countSpy.count(), 1);
         QCOMPARE(removeSpy.count(), 1);
 
@@ -156,17 +166,20 @@ private Q_SLOTS:
         Printer* printerD = new Printer(printerDBackend);
         ((MockPrinterBackend*) m_backend)->m_availablePrinters << printerA << printerB << printerC << printerD;
 
-        QTRY_COMPARE_WITH_TIMEOUT(m_model->count(), 4, 500);
+        getBackend()->mockPrinterAdded("Test added printer", "", printerA->name(), 0, "", true);
+
+        QCOMPARE(m_model->count(), 4);
 
         // Setup spy and remove middle two printers
         QSignalSpy countSpy(m_model, SIGNAL(countChanged()));
         QSignalSpy removeSpy(m_model, SIGNAL(rowsRemoved(const QModelIndex&, int, int)));
+
         ((MockPrinterBackend*) m_backend)->m_availablePrinters.removeAt(2);
         ((MockPrinterBackend*) m_backend)->m_availablePrinters.removeAt(1);
 
-        // Wait until one count signal has been fired
-        // (to ensure this is only one iteration of update)
-        QTRY_COMPARE_WITH_TIMEOUT(countSpy.count(), 1, 500);
+        getBackend()->mockPrinterDeleted("Test deleted printer", "", printerB->name(), 0, "", false);
+
+        QCOMPARE(countSpy.count(), 1);
         QCOMPARE(m_model->count(), 2);
         QCOMPARE(removeSpy.count(), 2);
 
@@ -181,6 +194,10 @@ private Q_SLOTS:
         QCOMPARE(args.at(2).toInt(), 1);
     }
 private:
+    MockPrinterBackend* getBackend()
+    {
+        return (MockPrinterBackend*) m_backend;
+    }
     PrinterBackend *m_backend;
     PrinterModel *m_model;
 };

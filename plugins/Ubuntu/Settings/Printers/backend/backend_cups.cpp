@@ -19,29 +19,56 @@
 #include "i18n.h"
 #include "utils.h"
 
+#include <QDBusConnection>
 
 PrinterCupsBackend::PrinterCupsBackend(QObject *parent)
-    : PrinterCupsBackend(new CupsFacade(), QPrinterInfo(), parent)
+    : PrinterCupsBackend(new CupsFacade(), QPrinterInfo(),
+                         new OrgCupsCupsdNotifierInterface("",
+                                                           CUPSD_NOTIFIER_DBUS_PATH,
+                                                           QDBusConnection::systemBus()),
+                         parent)
 {
-    // If we create the CupsFacade, we're in charge of RAII.
+    // Use proper RAII of things we create:
     m_cups->setParent(this);
-
-    connect(m_cups, SIGNAL(printerDriversLoaded(const QList<PrinterDriver>&)),
-            this, SIGNAL(printerDriversLoaded(const QList<PrinterDriver>&)));
-    connect(m_cups, SIGNAL(printerDriversFailedToLoad(const QString&)),
-            this, SIGNAL(printerDriversFailedToLoad(const QString&)));
+    m_notifier->setParent(this);
 }
 
 PrinterCupsBackend::PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
+                                       OrgCupsCupsdNotifierInterface *notifier,
                                        QObject *parent)
     : PrinterBackend(info.printerName(), parent)
     , m_cups(cups)
     , m_info(info)
+    , m_notifier(notifier)
 {
+    connect(m_cups, SIGNAL(printerDriversLoaded(const QList<PrinterDriver>&)),
+            this, SIGNAL(printerDriversLoaded(const QList<PrinterDriver>&)));
+    connect(m_cups, SIGNAL(printerDriversFailedToLoad(const QString&)),
+            this, SIGNAL(printerDriversFailedToLoad(const QString&)));
+
+    connect(m_notifier, SIGNAL(PrinterAdded(const QString&, const QString&,
+                                            const QString&, uint,
+                                            const QString&, bool)),
+            this, SIGNAL(printerAdded(const QString&, const QString&,
+                                      const QString&, uint,
+                                      const QString&, bool)));
+    connect(m_notifier, SIGNAL(PrinterDeleted(const QString&, const QString&,
+                                              const QString&, uint,
+                                              const QString&, bool)),
+            this, SIGNAL(printerDeleted(const QString&, const QString&,
+                                        const QString&, uint,
+                                        const QString&, bool)));
+    connect(m_notifier, SIGNAL(PrinterModified(const QString&, const QString&,
+                                               const QString&, uint,
+                                               const QString&, bool)),
+            this, SIGNAL(printerModified(const QString&, const QString&,
+                                         const QString&, uint,
+                                         const QString&, bool)));
 }
 
 PrinterCupsBackend::~PrinterCupsBackend()
 {
+    cancelSubscription();
 }
 
 QString PrinterCupsBackend::printerAdd(const QString &name,
@@ -316,14 +343,13 @@ QList<Printer*> PrinterCupsBackend::availablePrinters()
         QPrinterInfo info = QPrinterInfo::printerInfo(name);
 
         if (!info.isNull()) {
-            list.append(new Printer(new PrinterCupsBackend(m_cups, info)));
+            list.append(new Printer(new PrinterCupsBackend(m_cups, info, m_notifier)));
         } else {
             qWarning() << "Printer is null so skipping (" << name << ")";
         }
     }
 
     // Cups allows a faux PDF printer.
-    // TODO: Translate.
     list.append(new Printer(new PrinterPdfBackend(__("Create PDF"))));
 
     return list;
@@ -361,4 +387,15 @@ void PrinterCupsBackend::refresh()
     } else {
         m_info = QPrinterInfo::printerInfo(m_printerName);
     }
+}
+
+void PrinterCupsBackend::createSubscription()
+{
+    m_cupsSubscriptionId = m_cups->createSubscription();
+}
+
+void PrinterCupsBackend::cancelSubscription()
+{
+    if (m_cupsSubscriptionId > 0)
+        m_cups->cancelSubscription(m_cupsSubscriptionId);
 }

@@ -19,17 +19,15 @@
 
 #include <QQmlEngine>
 
-Printers::Printers(int printerUpdateIntervalMSecs, QObject *parent)
-    : Printers(new PrinterCupsBackend, printerUpdateIntervalMSecs, parent)
+Printers::Printers(QObject *parent) : Printers(new PrinterCupsBackend, parent)
 {
 }
 
-Printers::Printers(PrinterBackend *backend, int printerUpdateIntervalMSecs,
-                   QObject *parent)
+Printers::Printers(PrinterBackend *backend, QObject *parent)
     : QObject(parent)
     , m_backend(backend)
     , m_drivers(backend)
-    , m_model(backend, printerUpdateIntervalMSecs)
+    , m_model(backend)
 {
     m_allPrinters.setSourceModel(&m_model);
     m_allPrinters.setSortRole(PrinterModel::Roles::DefaultPrinterRole);
@@ -45,6 +43,10 @@ Printers::Printers(PrinterBackend *backend, int printerUpdateIntervalMSecs,
 
     connect(&m_drivers, SIGNAL(filterComplete()),
             this, SIGNAL(driverFilterChanged()));
+
+    if (m_backend->backendType() == PrinterBackend::BackendType::CupsType) {
+        ((PrinterCupsBackend*) m_backend)->createSubscription();
+    }
 }
 
 Printers::~Printers()

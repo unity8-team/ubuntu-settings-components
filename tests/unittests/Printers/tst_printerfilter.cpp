@@ -33,7 +33,7 @@ private Q_SLOTS:
     void testEmptyCount()
     {
         QScopedPointer<PrinterBackend> backend(new MockPrinterBackend);
-        PrinterModel model(backend.data(), 100);
+        PrinterModel model(backend.data());
 
         PrinterFilter filter;
         filter.setSourceModel(&model);
@@ -42,7 +42,7 @@ private Q_SLOTS:
     void testNonEmptyCount()
     {
         QScopedPointer<PrinterBackend> backend(new MockPrinterBackend);
-        PrinterModel model(backend.data(), 100);
+        PrinterModel model(backend.data());
 
         PrinterBackend* printerABackend = new MockPrinterBackend("a-printer");
         PrinterBackend* printerBBackend = new MockPrinterBackend("b-printer");
@@ -53,13 +53,14 @@ private Q_SLOTS:
 
         PrinterFilter filter;
         filter.setSourceModel(&model);
+        ((MockPrinterBackend*) backend.data())->mockPrinterAdded("Test added printer", "", printerA.name(), 0, "", true);
 
-        QTRY_COMPARE_WITH_TIMEOUT(filter.count(), 2, 101);
+        QCOMPARE(filter.count(), 2);
     }
     void testCountChanged()
     {
         QScopedPointer<PrinterBackend> backend(new MockPrinterBackend);
-        PrinterModel model(backend.data(), 100);
+        PrinterModel model(backend.data());
 
         PrinterBackend* printerABackend = new MockPrinterBackend("a-printer");
         PrinterBackend* printerBBackend = new MockPrinterBackend("b-printer");
@@ -73,8 +74,9 @@ private Q_SLOTS:
 
         QSignalSpy modelCountSpy(&model, SIGNAL(countChanged()));
         QSignalSpy filterCountSpy(&filter, SIGNAL(countChanged()));
-        QTRY_COMPARE_WITH_TIMEOUT(modelCountSpy.count(), 1, 101);
-        QTRY_COMPARE_WITH_TIMEOUT(filterCountSpy.count(), 1, 101);
+        ((MockPrinterBackend*) backend.data())->mockPrinterAdded("Test added printer", "", printerA.name(), 0, "", true);
+        QCOMPARE(modelCountSpy.count(), 1);
+        QCOMPARE(filterCountSpy.count(), 1);
     }
 };
 

@@ -24,31 +24,41 @@
 #include <QDebug>
 #include <QQmlEngine>
 
-PrinterModel::PrinterModel(const int updateIntervalMSecs, QObject *parent)
-    : PrinterModel(new PrinterCupsBackend, updateIntervalMSecs, parent)
+PrinterModel::PrinterModel(QObject *parent)
+    : PrinterModel(new PrinterCupsBackend, parent)
 {
 }
 
-PrinterModel::PrinterModel(PrinterBackend *backend,
-                           const int updateIntervalMSecs,
-                           QObject *parent)
+PrinterModel::PrinterModel(PrinterBackend *backend, QObject *parent)
     : QAbstractListModel(parent)
     , m_backend(backend)
 {
     update();
-    startUpdateTimer(updateIntervalMSecs);
+
+    QObject::connect(m_backend, &PrinterBackend::printerAdded,
+                     this, &PrinterModel::printerSignalCatchall);
+    QObject::connect(m_backend, &PrinterBackend::printerModified,
+                     this, &PrinterModel::printerSignalCatchall);
+    QObject::connect(m_backend, &PrinterBackend::printerDeleted,
+                     this, &PrinterModel::printerSignalCatchall);
 }
 
 PrinterModel::~PrinterModel()
 {
 }
 
-void PrinterModel::startUpdateTimer(const int &msecs)
+void PrinterModel::printerSignalCatchall(
+    const QString &text, const QString &printerUri,
+    const QString &printerName, uint printerState,
+    const QString &printerStateReason, bool acceptingJobs)
 {
-    // Start a timer to poll for changes in the printers
-    m_update_timer.setParent(this);
-    connect(&m_update_timer, SIGNAL(timeout()), this, SLOT(update()));
-    m_update_timer.start(msecs);
+    Q_UNUSED(text);
+    Q_UNUSED(printerUri);
+    Q_UNUSED(printerName);
+    Q_UNUSED(printerState);
+    Q_UNUSED(printerStateReason);
+    Q_UNUSED(acceptingJobs);
+    update();
 }
 
 void PrinterModel::update()

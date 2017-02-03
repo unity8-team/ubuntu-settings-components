@@ -224,9 +224,8 @@ public:
 
     virtual QList<QSharedPointer<PrinterJob>> printerGetJobs(const QString &name) override
     {
-
+        return QList<QSharedPointer<PrinterJob>>();
     }
-
 
     virtual QString printerName() const override
     {

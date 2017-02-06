@@ -42,6 +42,11 @@ QString PrinterBackend::printerAdd(const QString &name,
                                    const QString &info,
                                    const QString &location)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(uri);
+    Q_UNUSED(ppdFile);
+    Q_UNUSED(info);
+    Q_UNUSED(location);
     return QString();
 }
 
@@ -51,17 +56,25 @@ QString PrinterBackend::printerAddWithPpd(const QString &name,
                                           const QString &info,
                                           const QString &location)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(uri);
+    Q_UNUSED(ppdFileName);
+    Q_UNUSED(info);
+    Q_UNUSED(location);
     return QString();
 }
 
 QString PrinterBackend::printerDelete(const QString &name)
 {
+    Q_UNUSED(name);
     return QString();
 }
 
 QString PrinterBackend::printerSetEnabled(const QString &name,
                                           const bool enabled)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(enabled);
     return QString();
 }
 
@@ -70,24 +83,33 @@ QString PrinterBackend::printerSetAcceptJobs(
     const bool enabled,
     const QString &reason)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(enabled);
+    Q_UNUSED(reason);
     return QString();
 }
 
 QString PrinterBackend::printerSetInfo(const QString &name,
                                        const QString &info)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(info);
     return QString();
 }
 
 QString PrinterBackend::printerSetLocation(const QString &name,
                                            const QString &location)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(location);
     return QString();
 }
 
 QString PrinterBackend::printerSetShared(const QString &name,
                                          const bool shared)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(shared);
     return QString();
 }
 
@@ -95,12 +117,17 @@ QString PrinterBackend::printerSetJobSheets(const QString &name,
                                             const QString &start,
                                             const QString &end)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(start);
+    Q_UNUSED(end);
     return QString();
 }
 
 QString PrinterBackend::printerSetErrorPolicy(const QString &name,
                                               const PrinterEnum::ErrorPolicy &policy)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(policy);
     return QString();
 }
 
@@ -108,18 +135,24 @@ QString PrinterBackend::printerSetErrorPolicy(const QString &name,
 QString PrinterBackend::printerSetOpPolicy(const QString &name,
                                            const PrinterEnum::OperationPolicy &policy)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(policy);
     return QString();
 }
 
 QString PrinterBackend::printerSetUsersAllowed(const QString &name,
                                                const QStringList &users)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(users);
     return QString();
 }
 
 QString PrinterBackend::printerSetUsersDenied(const QString &name,
                                               const QStringList &users)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(users);
     return QString();
 }
 
@@ -127,12 +160,17 @@ QString PrinterBackend::printerAddOptionDefault(const QString &name,
                                                 const QString &option,
                                                 const QStringList &values)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(option);
+    Q_UNUSED(values);
     return QString();
 }
 
 QString PrinterBackend::printerDeleteOptionDefault(const QString &name,
                                                    const QString &value)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(value);
     return QString();
 }
 
@@ -140,12 +178,17 @@ QString PrinterBackend::printerAddOption(const QString &name,
                                          const QString &option,
                                          const QStringList &values)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(option);
+    Q_UNUSED(values);
     return QString();
 }
 
 QVariant PrinterBackend::printerGetOption(const QString &name,
                                           const QString &option) const
 {
+    Q_UNUSED(name);
+    Q_UNUSED(option);
     return QVariant();
 }
 
@@ -153,6 +196,8 @@ QMap<QString, QVariant> PrinterBackend::printerGetOptions(
     const QString &name, const QStringList &options
 )
 {
+    Q_UNUSED(name);
+    Q_UNUSED(options);
     return QMap<QString, QVariant>();
 }
 
@@ -160,12 +205,15 @@ QMap<QString, QVariant> PrinterBackend::printerGetOptions(
 cups_dest_t* PrinterBackend::makeDest(const QString &name,
                               const PrinterJob *options)
 {
+    Q_UNUSED(name);
+    Q_UNUSED(options);
     return Q_NULLPTR;
 }
 
 QList<ColorModel> PrinterBackend::printerGetSupportedColorModels(
     const QString &name) const
 {
+    Q_UNUSED(name);
     return QList<ColorModel>();
 }
 
@@ -179,6 +227,7 @@ ColorModel PrinterBackend::printerGetDefaultColorModel(
 QList<PrintQuality> PrinterBackend::printerGetSupportedQualities(
     const QString &name) const
 {
+    Q_UNUSED(name);
     return QList<PrintQuality>();
 }
 
@@ -199,6 +248,9 @@ int PrinterBackend::printFileToDest(const QString &filepath,
                             const QString &title,
                             const cups_dest_t *dest)
 {
+    Q_UNUSED(filepath);
+    Q_UNUSED(title);
+    Q_UNUSED(dest);
     return -1;
 }
 
@@ -241,7 +293,7 @@ QList<QPageSize> PrinterBackend::supportedPageSizes() const
 
 QPageSize PrinterBackend::defaultPageSize() const
 {
-
+    return QPageSize();
 }
 
 bool PrinterBackend::supportsCustomPageSizes() const
@@ -286,6 +338,7 @@ QStringList PrinterBackend::availablePrinterNames()
 
 Printer* PrinterBackend::getPrinter(const QString &printerName)
 {
+    Q_UNUSED(printerName);
     return Q_NULLPTR;
 }
 

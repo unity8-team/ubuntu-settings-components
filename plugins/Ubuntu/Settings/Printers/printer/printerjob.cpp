@@ -46,8 +46,8 @@ PrinterJob::PrinterJob(Printer *printer, PrinterBackend *backend,
     , m_print_range(QStringLiteral(""))
     , m_print_range_mode(PrinterEnum::PrintRange::AllPages)
     , m_quality(0)
-    , m_state(PrinterEnum::JobState::Pending)
     , m_reverse(false)
+    , m_state(PrinterEnum::JobState::Pending)
     , m_title(QStringLiteral(""))
 {
     if (m_printer) {

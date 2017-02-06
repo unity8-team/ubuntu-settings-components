@@ -69,12 +69,14 @@ QAbstractItemModel* Printers::allPrintersWithPdf()
 
 QAbstractItemModel* Printers::recentPrinters()
 {
-
+    // TODO: implement
+    return Q_NULLPTR;
 }
 
 QAbstractItemModel* Printers::printJobs()
 {
-
+    // TODO: implement
+    return Q_NULLPTR;
 }
 
 QAbstractItemModel* Printers::drivers()
@@ -96,7 +98,8 @@ void Printers::setDriverFilter(const QString &filter)
 
 QString Printers::defaultPrinterName() const
 {
-
+    // TODO: implement
+    return QString();
 }
 
 QString Printers::lastMessage() const
@@ -111,16 +114,23 @@ void Printers::cancelJob(const QString &printerName, const int jobId)
 
 void Printers::setDefaultPrinterName(const QString &name)
 {
-
+    // TODO: implement
+    Q_UNUSED(name);
 }
 
 QSharedPointer<Printer> Printers::getPrinterByName(const QString &name)
 {
+    // TODO: implement
+    Q_UNUSED(name);
 
+    return QSharedPointer<Printer>(Q_NULLPTR);
 }
 QSharedPointer<Printer> Printers::getJobOwner(const int &jobId)
 {
+    // TODO: implement
+    Q_UNUSED(jobId);
 
+    return QSharedPointer<Printer>(Q_NULLPTR);
 }
 
 void Printers::prepareToAddPrinter()
@@ -158,5 +168,8 @@ bool Printers::addPrinterWithPpdFile(const QString &name,
 
 bool Printers::removePrinter(const QString &name)
 {
+    // TODO: implement
+    Q_UNUSED(name);
 
+    return true;
 }

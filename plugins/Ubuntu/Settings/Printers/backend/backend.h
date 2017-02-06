@@ -152,6 +152,45 @@ Q_SIGNALS:
     void printerDriversLoaded(const QList<PrinterDriver> &drivers);
     void printerDriversFailedToLoad(const QString &errorMessage);
 
+    void jobCompleted(
+        const QString &text,
+        const QString &printerUri,
+        const QString &printerName,
+        uint printerState,
+        const QString &printerStateReason,
+        bool acceptingJobs,
+        uint jobId,
+        uint jobState,
+        const QString &jobStateReason,
+        const QString &job_name,
+        uint jobImpressionsCompleted
+    );
+    void jobCreated(
+        const QString &text,
+        const QString &printerUri,
+        const QString &printerName,
+        uint printerState,
+        const QString &printerStateReason,
+        bool acceptingJobs,
+        uint jobId,
+        uint jobState,
+        const QString &jobStateReason,
+        const QString &job_name,
+        uint jobImpressionsCompleted
+    );
+    void jobState(
+        const QString &text,
+        const QString &printerUri,
+        const QString &printerName,
+        uint printerState,
+        const QString &printerStateReason,
+        bool acceptingJobs,
+        uint jobId,
+        uint jobState,
+        const QString &jobStateReason,
+        const QString &job_name,
+        uint jobImpressionsCompleted
+    );
     void printerAdded(
         const QString &text,
         const QString &printerUri,

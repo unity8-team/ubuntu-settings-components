@@ -139,7 +139,7 @@ void PrinterModel::update()
 
             m_printers.insert(i, newPrinters.at(i));
 
-            JobModel *model = new JobModel(newPrinters.at(i)->name(), m_backend, 5000, this);
+            JobModel *model = new JobModel(newPrinters.at(i)->name(), m_backend, this);
             QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
             m_job_models.insert(newPrinters.at(i)->name(), model);
 

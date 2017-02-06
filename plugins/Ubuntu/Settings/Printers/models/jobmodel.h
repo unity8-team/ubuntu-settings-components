@@ -35,8 +35,8 @@ class PRINTERS_DECL_EXPORT JobModel : public QAbstractListModel
 
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
-    explicit JobModel(const int updateIntervalMSecs=5000, QObject *parent = Q_NULLPTR);
-    explicit JobModel(const QString &printerName, PrinterBackend *backend, const int updateIntervalMSecs=5000,
+    explicit JobModel(QObject *parent = Q_NULLPTR);
+    explicit JobModel(const QString &printerName, PrinterBackend *backend,
                       QObject *parent = Q_NULLPTR);
     ~JobModel();
 
@@ -59,14 +59,19 @@ public:
 
     Q_INVOKABLE QVariantMap get(const int row) const;
 private:
-    QTimer m_update_timer;
     PrinterBackend *m_backend;
     QString m_printer_name;
 
     QList<QSharedPointer<PrinterJob>> m_jobs;
 private Q_SLOTS:
-    void startUpdateTimer(const int &msecs);
     void update();
+    void jobSignalCatchAll(const QString &text, const QString &printer_uri,
+                           const QString &printer_name, uint printer_state,
+                           const QString &printer_state_reasons,
+                           bool printer_is_accepting_jobs, uint job_id,
+                           uint job_state, const QString &job_state_reasons,
+                           const QString &job_name,
+                           uint job_impressions_completed);
 
 Q_SIGNALS:
     void countChanged();

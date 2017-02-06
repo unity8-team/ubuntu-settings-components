@@ -31,7 +31,7 @@ public:
 
     virtual bool holdsDefinition() const override
     {
-
+        return true;
     }
 
     virtual QString printerAdd(const QString &name,
@@ -81,6 +81,8 @@ public:
         const QString &reason = QString::null) override
     {
         Q_UNUSED(name);
+        Q_UNUSED(enabled);
+        Q_UNUSED(reason);
         return returnValue;
     }
 
@@ -194,7 +196,9 @@ public:
     virtual cups_dest_t* makeDest(const QString &name,
                                   const PrinterJob *options) override
     {
-
+        Q_UNUSED(name);
+        Q_UNUSED(options);
+        return Q_NULLPTR;
     }
 
 
@@ -212,18 +216,23 @@ public:
 
     virtual void cancelJob(const QString &name, const int jobId) override
     {
-
+        Q_UNUSED(name);
+        Q_UNUSED(jobId);
     }
 
     virtual int printFileToDest(const QString &filepath,
                                 const QString &title,
                                 const cups_dest_t *dest) override
     {
-
+        Q_UNUSED(filepath);
+        Q_UNUSED(title);
+        Q_UNUSED(dest);
+        return -1;
     }
 
     virtual QList<QSharedPointer<PrinterJob>> printerGetJobs(const QString &name) override
     {
+        Q_UNUSED(name);
         return QList<QSharedPointer<PrinterJob>>();
     }
 
@@ -264,23 +273,23 @@ public:
 
     virtual bool supportsCustomPageSizes() const override
     {
-
+        return false;
     }
 
 
     virtual QPageSize minimumPhysicalPageSize() const override
     {
-
+        return QPageSize();
     }
 
     virtual QPageSize maximumPhysicalPageSize() const override
     {
-
+        return QPageSize();
     }
 
     virtual QList<int> supportedResolutions() const override
     {
-
+        return QList<int>{};
     }
 
     virtual PrinterEnum::DuplexMode defaultDuplexMode() const override
@@ -403,7 +412,7 @@ public:
     QList<Printer*> m_availablePrinters;
     PrinterBackend::BackendType m_backendType;
 
-public Q_SLOT:
+public Q_SLOTS:
     virtual void refresh() override
     {
     }

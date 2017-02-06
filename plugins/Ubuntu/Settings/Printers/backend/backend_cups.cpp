@@ -120,13 +120,18 @@ bool PrinterCupsBackend::holdsDefinition() const
 
 QString PrinterCupsBackend::printerDelete(const QString &name)
 {
-
+    // TODO: implement
+    Q_UNUSED(name);
+    return QString();
 }
 
 QString PrinterCupsBackend::printerSetEnabled(const QString &name,
                                               const bool enabled)
 {
-
+    // TODO: implement
+    Q_UNUSED(name);
+    Q_UNUSED(enabled);
+    return QString();
 }
 
 QString PrinterCupsBackend::printerSetAcceptJobs(
@@ -134,7 +139,11 @@ QString PrinterCupsBackend::printerSetAcceptJobs(
         const bool enabled,
         const QString &reason)
 {
-
+    // TODO: implement
+    Q_UNUSED(name);
+    Q_UNUSED(enabled);
+    Q_UNUSED(reason);
+    return QString();
 }
 
 QString PrinterCupsBackend::printerSetInfo(const QString &name,
@@ -292,25 +301,28 @@ QString PrinterCupsBackend::description() const
 
 QString PrinterCupsBackend::location() const
 {
-
+    // TODO: implement
+    return QString();
 }
 
 QString PrinterCupsBackend::makeAndModel() const
 {
-
+    // TODO: implement
+    return QString();
 }
 
 PrinterEnum::State PrinterCupsBackend::state() const
 {
     switch (m_info.state()) {
-        case QPrinter::Idle:
-            return PrinterEnum::State::IdleState;
-        case QPrinter::Active:
-            return PrinterEnum::State::ActiveState;
-        case QPrinter::Aborted:
-            return PrinterEnum::State::AbortedState;
-        case QPrinter::Error:
-            return PrinterEnum::State::ErrorState;
+    case QPrinter::Active:
+        return PrinterEnum::State::ActiveState;
+    case QPrinter::Aborted:
+        return PrinterEnum::State::AbortedState;
+    case QPrinter::Error:
+        return PrinterEnum::State::ErrorState;
+    case QPrinter::Idle:
+    default:
+        return PrinterEnum::State::IdleState;
     }
 }
 
@@ -326,22 +338,26 @@ QPageSize PrinterCupsBackend::defaultPageSize() const
 
 bool PrinterCupsBackend::supportsCustomPageSizes() const
 {
-
+    // TODO: implement
+    return false;
 }
 
 QPageSize PrinterCupsBackend::minimumPhysicalPageSize() const
 {
-
+    // TODO: implement
+    return QPageSize();
 }
 
 QPageSize PrinterCupsBackend::maximumPhysicalPageSize() const
 {
-
+    // TODO: implement
+    return QPageSize();
 }
 
 QList<int> PrinterCupsBackend::supportedResolutions() const
 {
-
+    // TODO: implement
+    return QList<int>{};
 }
 
 PrinterEnum::DuplexMode PrinterCupsBackend::defaultDuplexMode() const
@@ -388,7 +404,9 @@ QStringList PrinterCupsBackend::availablePrinterNames()
 
 Printer* PrinterCupsBackend::getPrinter(const QString &printerName)
 {
-
+    // TODO: implement
+    Q_UNUSED(printerName);
+    return Q_NULLPTR;
 }
 
 QString PrinterCupsBackend::defaultPrinterName()

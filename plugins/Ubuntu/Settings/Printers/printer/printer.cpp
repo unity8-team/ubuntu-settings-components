@@ -133,22 +133,26 @@ QList<QPageSize> Printer::supportedPageSizes() const
 
 PrinterEnum::AccessControl Printer::accessControl() const
 {
-
+    // TODO: implement
+    return PrinterEnum::AccessControl::AccessAllow;
 }
 
 PrinterEnum::ErrorPolicy Printer::errorPolicy() const
 {
-
+    // TODO: implement
+    return PrinterEnum::ErrorPolicy::RetryOnError;
 }
 
 bool Printer::enabled() const
 {
-
+    // TODO: implement
+    return true;
 }
 
 QStringList Printer::users() const
 {
-
+    // TODO: implement
+    return QStringList();
 }
 
 PrinterEnum::State Printer::state() const
@@ -158,7 +162,8 @@ PrinterEnum::State Printer::state() const
 
 QString Printer::lastStateMessage() const
 {
-
+    // TODO: implement
+    return QString();
 }
 
 bool Printer::isDefault()
@@ -189,7 +194,8 @@ void Printer::setDefaultColorModel(const ColorModel &colorModel)
 
 void Printer::setAccessControl(const PrinterEnum::AccessControl &accessControl)
 {
-
+    // TODO: implement
+    Q_UNUSED(accessControl);
 }
 
 void Printer::setDescription(const QString &description)
@@ -214,17 +220,20 @@ void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
 
 void Printer::setEnabled(const bool enabled)
 {
-
+    // TODO: implement
+    Q_UNUSED(enabled);
 }
 
 void Printer::setErrorPolicy(const PrinterEnum::ErrorPolicy &errorPolicy)
 {
-
+    // TODO: implement
+    Q_UNUSED(errorPolicy);
 }
 
 void Printer::setName(const QString &name)
 {
-
+    // TODO: implement
+    Q_UNUSED(name);
 }
 
 void Printer::setDefaultPrintQuality(const PrintQuality &quality)
@@ -267,17 +276,20 @@ void Printer::setDefaultPageSize(const QPageSize &pageSize)
 
 void Printer::addUser(const QString &username)
 {
-
+    // TODO: implement
+    Q_UNUSED(username);
 }
 
 void Printer::removeUser(const QString &username)
 {
-
+    // TODO: implement
+    Q_UNUSED(username);
 }
 
 void Printer::requestInkLevels(const QString &name)
 {
-
+    // TODO: implement
+    Q_UNUSED(name);
 }
 
 bool Printer::deepCompare(Printer *other) const
@@ -301,6 +313,8 @@ bool Printer::deepCompare(Printer *other) const
 
 void Printer::updateFrom(Printer* newPrinter)
 {
+    Q_UNUSED(newPrinter);
+
     m_backend->refresh();
 
     loadColorModel();

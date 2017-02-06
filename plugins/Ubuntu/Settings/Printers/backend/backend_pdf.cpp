@@ -108,7 +108,7 @@ QPageSize PrinterPdfBackend::maximumPhysicalPageSize() const
 
 QList<int> PrinterPdfBackend::supportedResolutions() const
 {
-
+    return QList<int>{};
 }
 
 PrinterEnum::DuplexMode PrinterPdfBackend::defaultDuplexMode() const

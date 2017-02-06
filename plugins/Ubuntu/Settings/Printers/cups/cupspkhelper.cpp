@@ -680,6 +680,8 @@ void CupsPkHelper::addClassUri(ipp_t *request, const QString &name)
 ppd_file_t* CupsPkHelper::getPpdFile(const QString &name,
                                      const QString &instance) const
 {
+    Q_UNUSED(instance);
+
     ppd_file_t* file = 0;
     const char *ppdFile = cupsGetPPD(name.toUtf8());
     if (ppdFile) {

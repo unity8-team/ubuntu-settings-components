@@ -42,37 +42,40 @@ public:
     static const QString duplexModeToPpdChoice(const PrinterEnum::DuplexMode &mode)
     {
         switch (mode) {
-        case PrinterEnum::DuplexMode::DuplexNone:
-            return "None";
         case PrinterEnum::DuplexMode::DuplexShortSide:
             return "DuplexTumble";
         case PrinterEnum::DuplexMode::DuplexLongSide:
             return "DuplexNoTumble";
+        case PrinterEnum::DuplexMode::DuplexNone:
+        default:
+            return "None";
         }
     }
 
     static const QString duplexModeToUIString(const PrinterEnum::DuplexMode &mode)
     {
         switch (mode) {
-        case PrinterEnum::DuplexMode::DuplexNone:
-            return __("One Sided");
         case PrinterEnum::DuplexMode::DuplexShortSide:
             return __("Short Edge (Flip)");
         case PrinterEnum::DuplexMode::DuplexLongSide:
             return __("Long Edge (Standard)");
+        case PrinterEnum::DuplexMode::DuplexNone:
+        default:
+            return __("One Sided");
         }
     }
 
     static PrinterEnum::DuplexMode qDuplexModeToDuplexMode(const QPrinter::DuplexMode &mode)
     {
         switch(mode) {
-        case QPrinter::DuplexNone:
-            return PrinterEnum::DuplexMode::DuplexNone;
         case QPrinter::DuplexAuto:
         case QPrinter::DuplexLongSide:
             return PrinterEnum::DuplexMode::DuplexLongSide;
         case QPrinter::DuplexShortSide:
             return PrinterEnum::DuplexMode::DuplexShortSide;
+        case QPrinter::DuplexNone:
+        default:
+            return PrinterEnum::DuplexMode::DuplexNone;
         }
     }
 

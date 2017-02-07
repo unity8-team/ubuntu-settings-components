@@ -94,6 +94,7 @@ PrinterCupsBackend::PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
 PrinterCupsBackend::~PrinterCupsBackend()
 {
     cancelSubscription();
+    Q_EMIT cancelWorkers();
 }
 
 QString PrinterCupsBackend::printerAdd(const QString &name,
@@ -420,11 +421,11 @@ QString PrinterCupsBackend::defaultPrinterName()
 
 void PrinterCupsBackend::requestAvailablePrinters()
 {
-    qWarning() << "requestAvailablePrinters";
     auto thread = new QThread;
     auto loader = new PrintersLoader(m_cups, m_notifier);
     loader->moveToThread(thread);
     connect(thread, SIGNAL(started()), loader, SLOT(load()));
+    connect(this, SIGNAL(cancelWorkers()), loader, SLOT(cancel()));
     connect(loader, SIGNAL(finished()), thread, SLOT(quit()));
     connect(loader, SIGNAL(finished()), loader, SLOT(deleteLater()));
     connect(loader, SIGNAL(loaded(QList<QSharedPointer<Printer>>)),
@@ -479,9 +480,14 @@ PrintersLoader::~PrintersLoader()
 void PrintersLoader::load()
 {
     QList<QSharedPointer<Printer>> list;
+    m_running = true;
 
     // Use availablePrinterNames as this gives us a name for even null printers
     Q_FOREACH(QString name, QPrinterInfo::availablePrinterNames()) {
+
+        if (!m_running)
+            break;
+
         QPrinterInfo info = QPrinterInfo::printerInfo(name);
 
         if (!info.isNull()) {
@@ -500,7 +506,7 @@ void PrintersLoader::load()
     Q_EMIT finished();
 }
 
-// Q_SIGNALS:
-//     void finished(QList<QSharedPointer<Printer>> printers);
-//     void error(const QString &errorMessage);
-// };
+void PrintersLoader::cancel()
+{
+    m_running = false;
+}

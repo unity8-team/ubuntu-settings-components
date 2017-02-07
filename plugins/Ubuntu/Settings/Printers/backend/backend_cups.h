@@ -133,6 +133,9 @@ public Q_SLOTS:
     virtual void refresh() override;
     void createSubscription();
 
+Q_SIGNALS:
+    void cancelWorkers();
+
 private:
     void cancelSubscription();
     CupsFacade *m_cups;
@@ -146,6 +149,7 @@ class PrintersLoader : public QObject
     Q_OBJECT
     CupsFacade *m_cups;
     OrgCupsCupsdNotifierInterface *m_notifier;
+    bool m_running = false;
 public:
     explicit PrintersLoader(CupsFacade *cups,
                             OrgCupsCupsdNotifierInterface* notifier,
@@ -154,6 +158,7 @@ public:
 
 public Q_SLOTS:
     void load();
+    void cancel();
 
 Q_SIGNALS:
     void finished();

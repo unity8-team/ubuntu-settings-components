@@ -98,7 +98,7 @@ private:
 private Q_SLOTS:
     void update();
     void printersLoaded(QList<QSharedPointer<Printer>> printers);
-    void printerSignalCatchall(const QString &text, const QString &printerUri,
+    void printerModified(const QString &text, const QString &printerUri,
         const QString &printerName, uint printerState,
         const QString &printerStateReason, bool acceptingJobs);
     void printerAdded(const QString &text, const QString &printerUri,

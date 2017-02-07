@@ -33,19 +33,18 @@ PrinterModel::PrinterModel(PrinterBackend *backend, QObject *parent)
     : QAbstractListModel(parent)
     , m_backend(backend)
 {
-    update();
 
     QObject::connect(m_backend, &PrinterBackend::printerAdded,
                      this, &PrinterModel::printerAdded);
     QObject::connect(m_backend, &PrinterBackend::printerModified,
-                     this, &PrinterModel::printerSignalCatchall);
+                     this, &PrinterModel::printerModified);
     QObject::connect(m_backend, &PrinterBackend::printerDeleted,
                      this, &PrinterModel::printerDeleted);
 
     connect(m_backend, SIGNAL(availablePrintersLoaded(QList<QSharedPointer<Printer>>)),
             this, SLOT(printersLoaded(QList<QSharedPointer<Printer>>)));
 
-    m_backend->requestAvailablePrinters();
+    update();
 }
 
 PrinterModel::~PrinterModel()
@@ -109,18 +108,20 @@ void PrinterModel::printersLoaded(QList<QSharedPointer<Printer>> printers)
     }
 }
 
-void PrinterModel::printerSignalCatchall(
+void PrinterModel::printerModified(
     const QString &text, const QString &printerUri,
     const QString &printerName, uint printerState,
     const QString &printerStateReason, bool acceptingJobs)
 {
     Q_UNUSED(text);
     Q_UNUSED(printerUri);
-    Q_UNUSED(printerName);
     Q_UNUSED(printerState);
     Q_UNUSED(printerStateReason);
     Q_UNUSED(acceptingJobs);
-    update();
+    auto oldPrinter = getPrinterByName(printerName);
+    auto newPrinter = m_backend->getPrinter(printerName);
+    if (oldPrinter && newPrinter)
+        modifyPrinter(oldPrinter, newPrinter);
 }
 
 void PrinterModel::printerAdded(

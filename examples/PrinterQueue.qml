@@ -51,6 +51,11 @@ MainView {
                         id: modelLayout
                         title.text: displayName
                         subtitle.text: "Job: " + model.id + " State: " + model.state
+                                       + " Color: " + model.colorModel + " CreationTime: "
+                                       + model.creationTime + " PageRange: "
+                                       + model.printRange + " Messages: " + model.messages;
+                        subtitle.wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                        subtitle.maximumLineCount: 3
                     }
                     onClicked: {
                         console.debug("Cancel:", printer.name, model.id);

@@ -62,6 +62,8 @@ public:
     ppd_file_t* getPpdFile(const QString &name, const QString &instance) const;
     cups_dest_t* getDest(const QString &name, const QString &instance) const;
 
+    QMap<QString, QVariant> printerGetJobAttributes(const int jobId);
+
     QString getLastError() const;
 
     // This response needs to be free by the caller.
@@ -110,6 +112,7 @@ private:
     bool handleReply(ipp_t *reply);
     bool isReplyOk(ipp_t *reply, bool deleteIfReplyNotOk);
     void setErrorFromReply(ipp_t *reply);
+    QVariant getAttributeValue(ipp_attribute_t *attr, int index=-1) const;
 
     http_t *m_connection;
     ipp_status_t m_lastStatus = IPP_OK;

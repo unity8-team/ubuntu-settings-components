@@ -88,7 +88,7 @@ private:
     void removePrinter(QSharedPointer<Printer> printer,
                        const CountChangeSignal &notify = CountChangeSignal::Defer);
     void movePrinter(const int &from, const int &to);
-    void modifyPrinter(QSharedPointer<Printer> printer, QSharedPointer<Printer> other);
+    void replacePrinter(QSharedPointer<Printer> old, QSharedPointer<Printer> newPrinter);
     QSharedPointer<Printer> getPrinterByName(const QString &printerName);
     PrinterBackend *m_backend;
 

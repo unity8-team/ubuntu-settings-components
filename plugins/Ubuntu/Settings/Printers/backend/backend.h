@@ -40,14 +40,6 @@ public:
                             QObject *parent = Q_NULLPTR);
     virtual ~PrinterBackend();
 
-    enum class BackendType
-    {
-        DefaultType = 0,
-        CupsType,
-        PdfType,
-    };
-    Q_ENUM(BackendType)
-
     virtual bool holdsDefinition() const;
 
     // Add a printer using an already existing ppd.
@@ -144,7 +136,7 @@ public:
     virtual void requestAvailablePrinters();
     virtual void requestAvailablePrinterDrivers();
 
-    virtual BackendType backendType() const;
+    virtual PrinterEnum::PrinterType type() const;
 
 public Q_SLOTS:
     virtual void refresh();
@@ -221,6 +213,7 @@ Q_SIGNALS:
 
 protected:
     const QString m_printerName;
+    PrinterEnum::PrinterType m_type;
 };
 
 #endif // USC_PRINTERS_BACKEND_H

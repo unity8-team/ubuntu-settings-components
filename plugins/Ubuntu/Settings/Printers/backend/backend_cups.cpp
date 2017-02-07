@@ -42,6 +42,7 @@ PrinterCupsBackend::PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
     , m_info(info)
     , m_notifier(notifier)
 {
+    m_type = PrinterEnum::PrinterType::CupsType;
     connect(m_cups, SIGNAL(printerDriversLoaded(const QList<PrinterDriver>&)),
             this, SIGNAL(printerDriversLoaded(const QList<PrinterDriver>&)));
     connect(m_cups, SIGNAL(printerDriversFailedToLoad(const QString&)),
@@ -384,10 +385,8 @@ QList<QSharedPointer<Printer>> PrinterCupsBackend::availablePrinters()
 
     // Use availablePrinterNames as this gives us a name for even null printers
     Q_FOREACH(QString name, QPrinterInfo::availablePrinterNames()) {
-        auto printer = getPrinter(name);
-        if (printer) {
-            list.append(printer);
-        }
+        auto printer = QSharedPointer<Printer>(new Printer(new PrinterBackend(name)));
+        list.append(printer);
     }
 
     // Cups allows a faux PDF printer.
@@ -437,11 +436,6 @@ void PrinterCupsBackend::requestAvailablePrinters()
 void PrinterCupsBackend::requestAvailablePrinterDrivers()
 {
     return m_cups->requestPrinterDrivers();
-}
-
-PrinterBackend::BackendType PrinterCupsBackend::backendType() const
-{
-    return PrinterBackend::BackendType::CupsType;
 }
 
 void PrinterCupsBackend::refresh()

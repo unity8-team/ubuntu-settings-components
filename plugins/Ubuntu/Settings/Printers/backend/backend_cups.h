@@ -127,8 +127,6 @@ public:
     virtual void requestAvailablePrinters() override;
     virtual void requestAvailablePrinterDrivers() override;
 
-    virtual PrinterBackend::BackendType backendType() const override;
-
 public Q_SLOTS:
     virtual void refresh() override;
     void createSubscription();

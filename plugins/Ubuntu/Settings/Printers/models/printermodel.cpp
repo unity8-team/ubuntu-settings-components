@@ -44,6 +44,7 @@ PrinterModel::PrinterModel(PrinterBackend *backend, QObject *parent)
     connect(m_backend, SIGNAL(availablePrintersLoaded(QList<QSharedPointer<Printer>>)),
             this, SLOT(printersLoaded(QList<QSharedPointer<Printer>>)));
 
+    printersLoaded(m_backend->availablePrinters());
     update();
 }
 
@@ -53,6 +54,7 @@ PrinterModel::~PrinterModel()
 
 void PrinterModel::printersLoaded(QList<QSharedPointer<Printer>> printers)
 {
+    qWarning() << Q_FUNC_INFO;
     // Store the old count and get the new printers
     int oldCount = m_printers.size();
     QList<QSharedPointer<Printer>> newPrinters = printers;
@@ -62,10 +64,13 @@ void PrinterModel::printersLoaded(QList<QSharedPointer<Printer>> printers)
         // Determine if the old printer exists in the new model
         bool exists = false;
 
-        Q_FOREACH(auto p, newPrinters) {
-            if (p->name() == m_printers.at(i)->name()) {
+        Q_FOREACH(auto newPrinter, newPrinters) {
+            auto oldPrinter = m_printers.at(i);
+            if (newPrinter->name() == oldPrinter->name()) {
                 exists = true;
-                modifyPrinter(m_printers.at(i), p);
+                if (!oldPrinter->deepCompare(newPrinter.data())) {
+                    replacePrinter(oldPrinter, newPrinter);
+                }
                 break;
             }
         }
@@ -84,8 +89,14 @@ void PrinterModel::printersLoaded(QList<QSharedPointer<Printer>> printers)
         int j;
 
         for (j=0; j < m_printers.count(); j++) {
-            if (m_printers.at(j)->name() == newPrinters.at(i)->name()) {
+            auto oldPrinter = m_printers.at(j);
+            auto newPrinter = newPrinters.at(i);
+            if (oldPrinter->name() == newPrinter->name()) {
                 exists = true;
+
+                if (oldPrinter->type() == PrinterEnum::PrinterType::ProxyType) {
+                    replacePrinter(oldPrinter, newPrinter);
+                }
                 break;
             }
         }
@@ -121,7 +132,7 @@ void PrinterModel::printerModified(
     auto oldPrinter = getPrinterByName(printerName);
     auto newPrinter = m_backend->getPrinter(printerName);
     if (oldPrinter && newPrinter)
-        modifyPrinter(oldPrinter, newPrinter);
+        replacePrinter(oldPrinter, newPrinter);
 }
 
 void PrinterModel::printerAdded(
@@ -191,17 +202,15 @@ void PrinterModel::removePrinter(QSharedPointer<Printer> printer, const CountCha
         Q_EMIT countChanged();
 }
 
-void PrinterModel::modifyPrinter(QSharedPointer<Printer> printer,
-                                 QSharedPointer<Printer> other)
+void PrinterModel::replacePrinter(QSharedPointer<Printer> old,
+                                  QSharedPointer<Printer> newPrinter)
 {
-    /* Ensure the other properties of printer are up to date. If not, update
-    with values from other. */
-    QModelIndex idx = index(m_printers.indexOf(printer));
-    if (!printer->deepCompare(other.data())) {
-        printer->updateFrom(other.data());
+    qWarning() << "will replace" << old->name() << "with" << newPrinter->name() << (int) newPrinter->type();
+    int i = m_printers.indexOf(old);
+    QModelIndex idx = index(i);
 
-        Q_EMIT dataChanged(idx, idx);
-    }
+    m_printers.replace(i, newPrinter);
+    Q_EMIT dataChanged(idx, idx);
 }
 
 void PrinterModel::addPrinter(QSharedPointer<Printer> printer, const CountChangeSignal &notify)
@@ -319,7 +328,7 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
             ret = QVariant::fromValue(printer);
             break;
         case IsPdfRole:
-            ret = printer->isPdf();
+            ret = printer->type() == PrinterEnum::PrinterType::PdfType;
             break;
         case JobRole: {
             ret = QVariant::fromValue(m_job_models.value(printer->name()));

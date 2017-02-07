@@ -16,14 +16,10 @@
 
 #include "backend/backend.h"
 
-PrinterBackend::PrinterBackend(QObject *parent)
-    : QObject(parent)
-{
-}
-
 PrinterBackend::PrinterBackend(const QString &printerName, QObject *parent)
     : QObject(parent)
     , m_printerName(printerName)
+    , m_type(PrinterEnum::PrinterType::ProxyType)
 {
 }
 
@@ -263,7 +259,7 @@ QList<QSharedPointer<PrinterJob>> PrinterBackend::printerGetJobs(const QString &
 
 QString PrinterBackend::printerName() const
 {
-    return QString();
+    return m_printerName;
 }
 
 QString PrinterBackend::description() const
@@ -355,9 +351,9 @@ void PrinterBackend::requestAvailablePrinterDrivers()
 {
 }
 
-PrinterBackend::BackendType PrinterBackend::backendType() const
+PrinterEnum::PrinterType PrinterBackend::type() const
 {
-    return BackendType::DefaultType;
+    return m_type;
 }
 
 void PrinterBackend::refresh()

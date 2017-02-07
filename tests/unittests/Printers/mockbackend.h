@@ -23,10 +23,18 @@ class MockPrinterBackend : public PrinterBackend
 {
     Q_OBJECT
 public:
-    explicit MockPrinterBackend(QObject *parent = Q_NULLPTR) : PrinterBackend(parent) {};
+    explicit MockPrinterBackend(QObject *parent = Q_NULLPTR)
+        : MockPrinterBackend(QString::null, parent)
+    {
+
+    };
+
     explicit MockPrinterBackend(const QString &printerName,
                                 QObject *parent = Q_NULLPTR)
-      : PrinterBackend(printerName, parent) {};
+      : PrinterBackend(printerName, parent)
+    {
+    };
+
     virtual ~MockPrinterBackend() {};
 
     virtual bool holdsDefinition() const override
@@ -331,12 +339,6 @@ public:
     {
     }
 
-    virtual BackendType backendType() const override
-    {
-        return m_backendType;
-    }
-
-
     void mockPrinterAdded(
         const QString &text,
         const QString &printerUri,
@@ -421,7 +423,6 @@ public:
 
     QStringList m_availablePrinterNames;
     QList<QSharedPointer<Printer>> m_availablePrinters;
-    PrinterBackend::BackendType m_backendType;
 
 public Q_SLOTS:
     virtual void refresh() override

@@ -20,6 +20,8 @@
 #include "utils.h"
 
 #include <QDBusConnection>
+#include <QLocale>
+#include <QTimeZone>
 
 PrinterCupsBackend::PrinterCupsBackend(QObject *parent)
     : PrinterCupsBackend(new CupsFacade(), QPrinterInfo(),
@@ -276,12 +278,86 @@ QList<QSharedPointer<PrinterJob>> PrinterCupsBackend::printerGetJobs(const QStri
     QList<QSharedPointer<PrinterJob>> list;
 
     Q_FOREACH(auto job, jobs) {
-        auto newJob = QSharedPointer<PrinterJob>(new PrinterJob(name, this, job->id));
+        QSharedPointer<PrinterJob> newJob = QSharedPointer<PrinterJob>(new PrinterJob(name, this, job->id));
 
-        // TODO: needs to extract other properties like copies/duplex etc
+        // Extract the times
+        QDateTime completedTime;
+        completedTime.setTimeZone(QTimeZone::systemTimeZone());
+        completedTime.setTime_t(job->completed_time);
 
+        QDateTime creationTime;
+        creationTime.setTimeZone(QTimeZone::systemTimeZone());
+        creationTime.setTime_t(job->creation_time);
+
+        QDateTime processingTime;
+        processingTime.setTimeZone(QTimeZone::systemTimeZone());
+        processingTime.setTime_t(job->processing_time);
+
+        // Load the information from the cups struct
+        newJob->setCompletedTime(completedTime);
+        newJob->setCreationTime(creationTime);
+        newJob->setProcessingTime(processingTime);
+        newJob->setSize(job->size);
         newJob->setState(static_cast<PrinterEnum::JobState>(job->state));
         newJob->setTitle(QString::fromLocal8Bit(job->title));
+        newJob->setUser(QString::fromLocal8Bit(job->user));
+
+        // Load the extra attributes for the job
+        // NOTE: we don't need to type check them as they have been filtered for us
+        QMap<QString, QVariant> attributes = m_cups->printerGetJobAttributes(name, job->id);
+
+        newJob->setCollate(attributes.value("Collate").toBool());
+        newJob->setCopies(attributes.value("copies").toInt());
+
+        // No colorModel will result in PrinterJob using defaultColorModel
+        if (!newJob->printer()) {
+            QString colorModel = attributes.value("ColorModel").toString();
+
+            for (int i=0; i < newJob->printer()->supportedColorModels().length(); i++) {
+                if (newJob->printer()->supportedColorModels().at(i).originalOption == colorModel) {
+                    newJob->setColorModel(i);
+                }
+            }
+        }
+
+        // No duplexMode will result in PrinterJob using defaultDuplexMode
+        if (!newJob->printer()) {
+            QString duplex = attributes.value("Duplex").toString();
+            PrinterEnum::DuplexMode duplexMode = Utils::ppdChoiceToDuplexMode(duplex);
+
+            for (int i=0; i < newJob->printer()->supportedDuplexModes().length(); i++) {
+                if (newJob->printer()->supportedDuplexModes().at(i) == duplexMode) {
+                    newJob->setDuplexMode(i);
+                }
+            }
+        }
+
+        newJob->setLandscape(attributes.value("landscape").toBool());
+        newJob->setMessages(attributes.value("messages").toStringList());
+
+        QStringList pageRanges = attributes.value("page-ranges").toStringList();
+
+        if (pageRanges.isEmpty()) {
+            newJob->setPrintRangeMode(PrinterEnum::PrintRange::AllPages);
+            newJob->setPrintRange(QStringLiteral(""));
+        } else {
+            newJob->setPrintRangeMode(PrinterEnum::PrintRange::PageRange);
+            // Use groupSeparator as createSeparatedList adds "and" into the string
+            newJob->setPrintRange(pageRanges.join(QLocale::system().groupSeparator()));
+        }
+
+        // No quality will result in PrinterJob using defaultPrintQuality
+        if (!newJob->printer()) {
+            QString quality = attributes.value("quality").toString();
+
+            for (int i=0; i < newJob->printer()->supportedPrintQualities().length(); i++) {
+                if (newJob->printer()->supportedPrintQualities().at(i).name == quality) {
+                    newJob->setQuality(i);
+                }
+            }
+        }
+
+        newJob->setReverse(attributes.value("OutputOrder").toString() == "Reverse");
 
         list.append(newJob);
     }

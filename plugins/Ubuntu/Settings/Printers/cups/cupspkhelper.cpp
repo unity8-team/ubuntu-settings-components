@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2017 Canonical, Ltd.
  * Copyright (C) 2014 John Layt <jlayt@kde.org>
- * Copyright (C) 2009 Red Hat, Inc.
+ * Copyright (C) 2002, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013, 2014 Red Hat, Inc.
  * Copyright (C) 2008 Novell, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,8 +23,10 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <QUrl>
 #include <QDebug>
+#include <QDateTime>
+#include <QTimeZone>
+#include <QUrl>
 
 CupsPkHelper::CupsPkHelper()
     : m_connection(httpConnectEncrypt(cupsServer(),
@@ -273,6 +275,46 @@ bool CupsPkHelper::printerClassSetOption(const QString &name,
     }
 
     return retval;
+}
+
+QMap<QString, QVariant> CupsPkHelper::printerGetJobAttributes(const int jobId)
+{
+    ipp_t *request;
+    QMap<QString, QVariant> map;
+
+    // Construct request
+    request = ippNewRequest(IPP_GET_JOB_ATTRIBUTES);
+    QString uri = QStringLiteral("ipp://localhost/jobs/") + QString::number(jobId);
+    qDebug() << "URI:" << uri;
+
+    ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_URI, "job-uri", NULL, uri.toStdString().data());
+
+
+    // Send request and construct reply
+    ipp_t *reply;
+    const QString resourceChar = getResource(CphResourceRoot);
+    reply = cupsDoRequest(m_connection, request,
+                          resourceChar.toUtf8());
+
+    // Check if the reply is OK
+    if (isReplyOk(reply, false)) {
+        // Loop through the attributes
+        ipp_attribute_t *attr;
+
+        for (attr = ippFirstAttribute(reply); attr; attr = ippNextAttribute(reply)) {
+            QVariant value = getAttributeValue(attr);
+            map.insert(ippGetName(attr), value);
+        }
+    } else {
+        qWarning() << "Not able to get attributes of job:" << jobId;
+    }
+
+    // Destruct the reply if valid
+    if (reply) {
+        ippDelete(reply);
+    }
+
+    return map;
 }
 
 
@@ -797,4 +839,80 @@ void CupsPkHelper::cancelSubscription(const int &subscriptionId)
     }
 
     ippDelete(resp);
+}
+
+QVariant CupsPkHelper::getAttributeValue(ipp_attribute_t *attr, int index) const
+{
+    QVariant var;
+
+    if (ippGetCount(attr) > 1 && index < 0) {
+        QList<QVariant> list;
+
+        for (int i=0; i < ippGetCount(attr); i++) {
+            list.append(getAttributeValue(attr, i));
+        }
+
+        var = QVariant::fromValue<QList<QVariant>>(list);
+    } else {
+        if (index == -1) {
+            index = 0;
+        }
+
+        switch (ippGetValueTag(attr)) {
+        case IPP_TAG_NAME:
+        case IPP_TAG_TEXT:
+        case IPP_TAG_KEYWORD:
+        case IPP_TAG_URI:
+        case IPP_TAG_CHARSET:
+        case IPP_TAG_MIMETYPE:
+        case IPP_TAG_LANGUAGE:
+            var = QVariant::fromValue<QString>(ippGetString(attr, index, NULL));
+            break;
+        case IPP_TAG_INTEGER:
+        case IPP_TAG_ENUM:
+            var = QVariant::fromValue<int>(ippGetInteger(attr, index));
+            break;
+        case IPP_TAG_BOOLEAN:
+            var = QVariant::fromValue<bool>(ippGetBoolean(attr, index));
+            break;
+        case IPP_TAG_RANGE: {
+            QString range;
+            int upper;
+            int lower = ippGetRange(attr, index, &upper);
+
+            // Build a string similar to "1-3" "5-" "8" "-4"
+            if (lower != INT_MIN) {
+                range += QString::number(lower);
+            }
+
+            if (lower != upper) {
+                range += QStringLiteral("-");
+
+                if (upper != INT_MAX) {
+                    range += QString::number(upper);
+                }
+            }
+
+            var = QVariant(range);
+            break;
+        }
+        case IPP_TAG_NOVALUE:
+            var = QVariant();
+            break;
+        case IPP_TAG_DATE: {
+            time_t time = ippDateToTime(ippGetDate(attr, index));
+            QDateTime datetime;
+            datetime.setTimeZone(QTimeZone::systemTimeZone());
+            datetime.setTime_t(time);
+
+            var = QVariant::fromValue<QDateTime>(datetime);
+            break;
+        }
+        default:
+            qWarning() << "Unknown IPP value tab 0x" << ippGetValueTag(attr);
+            break;
+        }
+    }
+
+    return var;
 }

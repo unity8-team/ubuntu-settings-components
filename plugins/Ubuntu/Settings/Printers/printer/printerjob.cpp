@@ -36,19 +36,25 @@ PrinterJob::PrinterJob(Printer *printer, PrinterBackend *backend,
     : QObject(parent)
     , m_collate(true)
     , m_color_model(0)
+    , m_completed_time(QDateTime())
     , m_copies(1)
+    , m_creation_time(QDateTime())
     , m_backend(backend)
     , m_duplex_mode(0)
     , m_is_two_sided(false)
     , m_job_id(-1)
+    , m_messages(QStringList())
     , m_printer(printer)
     , m_printer_name(QStringLiteral(""))
     , m_print_range(QStringLiteral(""))
     , m_print_range_mode(PrinterEnum::PrintRange::AllPages)
+    , m_processing_time(QDateTime())
     , m_quality(0)
     , m_reverse(false)
+    , m_size(0)
     , m_state(PrinterEnum::JobState::Pending)
     , m_title(QStringLiteral(""))
+    , m_user("")
 {
     if (m_printer) {
         m_printer_name = printer->name();
@@ -88,9 +94,19 @@ PrinterEnum::ColorModelType PrinterJob::colorModelType() const
     return getColorModel().colorType;
 }
 
+QDateTime PrinterJob::completedTime() const
+{
+    return m_completed_time;
+}
+
 int PrinterJob::copies() const
 {
     return m_copies;
+}
+
+QDateTime PrinterJob::creationTime() const
+{
+    return m_creation_time;
 }
 
 int PrinterJob::duplexMode() const
@@ -150,10 +166,15 @@ void PrinterJob::loadDefaults()
     }
 }
 
-//Printer *PrinterJob::printer() const
-//{
-//    return m_printer;
-//}
+QStringList PrinterJob::messages() const
+{
+    return m_messages;
+}
+
+Printer *PrinterJob::printer() const
+{
+    return m_printer;
+}
 
 QString PrinterJob::printerName() const
 {
@@ -179,6 +200,11 @@ PrinterEnum::PrintRange PrinterJob::printRangeMode() const
     return m_print_range_mode;
 }
 
+QDateTime PrinterJob::processingTime() const
+{
+    return m_processing_time;
+}
+
 int PrinterJob::quality() const
 {
     return m_quality;
@@ -187,6 +213,11 @@ int PrinterJob::quality() const
 bool PrinterJob::reverse() const
 {
     return m_reverse;
+}
+
+int PrinterJob::size() const
+{
+    return m_size;
 }
 
 PrinterEnum::JobState PrinterJob::state() const
@@ -218,6 +249,15 @@ void PrinterJob::setColorModel(const int colorModel)
     Q_EMIT colorModelTypeChanged();
 }
 
+void PrinterJob::setCompletedTime(const QDateTime &completedTime)
+{
+    if (m_completed_time != completedTime) {
+        m_completed_time = completedTime;
+
+        Q_EMIT completedTimeChanged();
+    }
+}
+
 void PrinterJob::setCopies(const int copies)
 {
     if (m_copies != copies) {
@@ -228,6 +268,15 @@ void PrinterJob::setCopies(const int copies)
         } else {
             qWarning() << "Copies should be greater than 0.";
         }
+    }
+}
+
+void PrinterJob::setCreationTime(const QDateTime &creationTime)
+{
+    if (m_creation_time != creationTime) {
+        m_creation_time = creationTime;
+
+        Q_EMIT creationTimeChanged();
     }
 }
 
@@ -259,6 +308,15 @@ void PrinterJob::setLandscape(const bool landscape)
         m_landscape = landscape;
 
         Q_EMIT landscapeChanged();
+    }
+}
+
+void PrinterJob::setMessages(const QStringList &messages)
+{
+    if (m_messages != messages) {
+        m_messages = messages;
+
+        Q_EMIT messagesChanged();
     }
 }
 
@@ -309,6 +367,15 @@ void PrinterJob::setPrintRangeMode(const PrinterEnum::PrintRange printRangeMode)
     }
 }
 
+void PrinterJob::setProcessingTime(const QDateTime &processingTime)
+{
+    if (m_processing_time != processingTime) {
+        m_processing_time = processingTime;
+
+        Q_EMIT processingTimeChanged();
+    }
+}
+
 void PrinterJob::setQuality(const int quality)
 {
     if (m_quality != quality) {
@@ -327,6 +394,15 @@ void PrinterJob::setReverse(const bool reverse)
     }
 }
 
+void PrinterJob::setSize(const int size)
+{
+    if (m_size != size) {
+        m_size = size;
+
+        Q_EMIT sizeChanged();
+    }
+}
+
 void PrinterJob::setState(const PrinterEnum::JobState &state)
 {
     if (m_state != state) {
@@ -342,6 +418,15 @@ void PrinterJob::setTitle(const QString &title)
         m_title = title;
 
         Q_EMIT titleChanged();
+    }
+}
+
+void PrinterJob::setUser(const QString &user)
+{
+    if (m_user != user) {
+        m_user = user;
+
+        Q_EMIT userChanged();
     }
 }
 
@@ -385,4 +470,9 @@ void PrinterJob::updateFrom(QSharedPointer<PrinterJob> newPrinterJob)
     setReverse(newPrinterJob->reverse());
     setState(newPrinterJob->state());
     setTitle(newPrinterJob->title());
+}
+
+QString PrinterJob::user() const
+{
+    return m_user;
 }

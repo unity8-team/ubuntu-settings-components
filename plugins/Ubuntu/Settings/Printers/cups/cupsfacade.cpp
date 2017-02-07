@@ -28,6 +28,9 @@
 #define __CUPS_ADD_OPTION(dest, name, value) dest->num_options = \
     cupsAddOption(name, value, dest->num_options, &dest->options);
 
+#define __CUPS_ATTR_EXISTS(map, attr, type) map.contains(attr) \
+    && map.value(attr).canConvert<type>()
+
 CupsFacade::CupsFacade(QObject *parent) : QObject(parent)
 {
 }
@@ -392,6 +395,88 @@ QList<cups_job_t *> CupsFacade::printerGetJobs(const QString &name)
     // FIXME: needs to run cupsFreeJobs();
 
     return list;
+}
+
+QMap<QString, QVariant> CupsFacade::printerGetJobAttributes(const QString &name, const int jobId)
+{
+    Q_UNUSED(name);
+    QMap<QString, QVariant> rawMap = helper.printerGetJobAttributes(jobId);
+    QMap<QString, QVariant> map;
+
+    // Filter attributes to know values
+    // Do this here so we can use things such as m_knownQualityOptions
+
+    if (__CUPS_ATTR_EXISTS(rawMap, "Collate", bool)) {
+        map.insert("Collate", rawMap.value("Collate"));
+    } else {
+        map.insert("Collate", QVariant(true));
+    }
+
+    if (__CUPS_ATTR_EXISTS(rawMap, "copies", int)) {
+        map.insert("copies", rawMap.value("copies"));
+    } else {
+        map.insert("copies", QVariant(1));
+    }
+
+    if (__CUPS_ATTR_EXISTS(rawMap, "ColorModel", QString)) {
+        map.insert("ColorModel", rawMap.value("ColorModel"));
+    } else {
+        map.insert("ColorModel", QVariant(""));
+    }
+
+    if (__CUPS_ATTR_EXISTS(rawMap, "Duplex", QString)) {
+        map.insert("Duplex", rawMap.value("Duplex"));
+    } else {
+        map.insert("Duplex", QVariant(""));
+    }
+
+    if (__CUPS_ATTR_EXISTS(rawMap, "landscape", bool)) {
+        map.insert("landscape", rawMap.value("landscape"));
+    } else {
+        map.insert("landscape", QVariant(false));
+    }
+
+    if (__CUPS_ATTR_EXISTS(rawMap, "page-ranges", QList<QVariant>)) {
+        QList<QVariant> range = rawMap.value("page-ranges").toList();
+        QStringList rangeStrings;
+
+        Q_FOREACH(QVariant var, range) {
+            rangeStrings << var.toString();
+        }
+
+        map.insert("page-ranges", QVariant(rangeStrings));
+    } else {
+        map.insert("page-ranges", QVariant(QStringList()));
+    }
+
+    Q_FOREACH(QString qualityOption, m_knownQualityOptions) {
+        if (rawMap.contains(qualityOption)
+                && rawMap.value(qualityOption).canConvert<QString>()) {
+            map.insert("quality", rawMap.value(qualityOption).toString());
+        }
+    }
+
+    if (!map.contains("quality")) {
+        map.insert("quality", QVariant(""));
+    }
+
+    if (__CUPS_ATTR_EXISTS(rawMap, "OutputOrder", QString)) {
+        map.insert("OutputOrder", rawMap.value("OutputOrder"));
+    } else {
+        map.insert("OutputOrder", "Normal");
+    }
+
+    // Generate a list of messages
+    // TODO: for now just using job-printer-state-message, are there others?
+    QStringList messages;
+
+    if (__CUPS_ATTR_EXISTS(rawMap, "job-printer-state-message", QString)) {
+        messages << rawMap.value("job-printer-state-message").toString();
+    }
+
+    map.insert("messages", QVariant(messages));
+
+    return map;
 }
 
 int CupsFacade::printFileToDest(const QString &filepath, const QString &title,

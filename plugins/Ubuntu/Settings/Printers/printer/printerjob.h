@@ -38,7 +38,7 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
     Q_PROPERTY(bool collate READ collate WRITE setCollate NOTIFY collateChanged)
     Q_PROPERTY(int colorModel READ colorModel WRITE setColorModel NOTIFY colorModelChanged)
     Q_PROPERTY(PrinterEnum::ColorModelType colorModelType READ colorModelType NOTIFY colorModelTypeChanged)
-    Q_PROPERTY(QDateTime completedTime NOTIFY completedTimeChanged)
+    Q_PROPERTY(QDateTime completedTime READ completedTime NOTIFY completedTimeChanged)
     Q_PROPERTY(int copies READ copies WRITE setCopies NOTIFY copiesChanged)
     Q_PROPERTY(QDateTime creationTime READ creationTime NOTIFY creationTimeChanged)
     Q_PROPERTY(int duplexMode READ duplexMode WRITE setDuplexMode NOTIFY duplexModeChanged)

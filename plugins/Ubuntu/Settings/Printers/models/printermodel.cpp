@@ -36,15 +36,77 @@ PrinterModel::PrinterModel(PrinterBackend *backend, QObject *parent)
     update();
 
     QObject::connect(m_backend, &PrinterBackend::printerAdded,
-                     this, &PrinterModel::printerSignalCatchall);
+                     this, &PrinterModel::printerAdded);
     QObject::connect(m_backend, &PrinterBackend::printerModified,
                      this, &PrinterModel::printerSignalCatchall);
     QObject::connect(m_backend, &PrinterBackend::printerDeleted,
-                     this, &PrinterModel::printerSignalCatchall);
+                     this, &PrinterModel::printerDeleted);
+
+    connect(m_backend, SIGNAL(availablePrintersLoaded(QList<QSharedPointer<Printer>>)),
+            this, SLOT(printersLoaded(QList<QSharedPointer<Printer>>)));
+
+    m_backend->requestAvailablePrinters();
 }
 
 PrinterModel::~PrinterModel()
 {
+}
+
+void PrinterModel::printersLoaded(QList<QSharedPointer<Printer>> printers)
+{
+    // Store the old count and get the new printers
+    int oldCount = m_printers.size();
+    QList<QSharedPointer<Printer>> newPrinters = printers;
+
+    // Go through the old model
+    for (int i=0; i < m_printers.count(); i++) {
+        // Determine if the old printer exists in the new model
+        bool exists = false;
+
+        Q_FOREACH(auto p, newPrinters) {
+            if (p->name() == m_printers.at(i)->name()) {
+                exists = true;
+                modifyPrinter(m_printers.at(i), p);
+                break;
+            }
+        }
+
+        // If it doesn't exist then remove it from the old model
+        if (!exists) {
+            removePrinter(m_printers.at(i));
+            i--;  // as we have removed an item decrement
+        }
+    }
+
+    // Go through the new model
+    for (int i=0; i < newPrinters.count(); i++) {
+        // Determine if the new printer exists in the old model
+        bool exists = false;
+        int j;
+
+        for (j=0; j < m_printers.count(); j++) {
+            if (m_printers.at(j)->name() == newPrinters.at(i)->name()) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (exists) {
+            if (j == i) {  // New printer exists and in correct position
+                continue;
+            } else {
+                // New printer does exist but needs to be moved in old model
+                movePrinter(j, i);
+            }
+        } else {
+            // New printer does not exist insert into model
+            addPrinter(newPrinters.at(i));
+        }
+    }
+
+    if (oldCount != m_printers.size()) {
+        Q_EMIT countChanged();
+    }
 }
 
 void PrinterModel::printerSignalCatchall(
@@ -61,99 +123,101 @@ void PrinterModel::printerSignalCatchall(
     update();
 }
 
+void PrinterModel::printerAdded(
+    const QString &text, const QString &printerUri,
+    const QString &printerName, uint printerState,
+    const QString &printerStateReason, bool acceptingJobs)
+{
+    Q_UNUSED(text);
+    Q_UNUSED(printerUri);
+    Q_UNUSED(printerState);
+    Q_UNUSED(printerStateReason);
+    Q_UNUSED(acceptingJobs);
+
+    auto printer = m_backend->getPrinter(printerName);
+    if (printer)
+        addPrinter(printer, CountChangeSignal::Emit);
+}
+
+void PrinterModel::printerDeleted(
+    const QString &text, const QString &printerUri,
+    const QString &printerName, uint printerState,
+    const QString &printerStateReason, bool acceptingJobs)
+{
+    Q_UNUSED(text);
+    Q_UNUSED(printerUri);
+    Q_UNUSED(printerState);
+    Q_UNUSED(printerStateReason);
+    Q_UNUSED(acceptingJobs);
+
+    auto printer = getPrinterByName(printerName);
+    if (printer)
+        removePrinter(printer, CountChangeSignal::Emit);
+}
+
+QSharedPointer<Printer> PrinterModel::getPrinterByName(const QString &printerName)
+{
+    Q_FOREACH(auto p, m_printers) {
+        if (p->name() == printerName)
+            return p;
+    }
+    return QSharedPointer<Printer>(Q_NULLPTR);
+}
+
 void PrinterModel::update()
 {
-    // Store the old count and get the new printers
-    int oldCount = m_printers.size();
-    QList<Printer*> newPrinters = m_backend->availablePrinters();
+    m_backend->requestAvailablePrinters();
+}
 
-    /* If any printers returned from the backend are irrelevant, we delete
-    them. This a list of indices that corresponds to printers scheduled for
-    deletion in newPrinters. */
-    QList<uint> forDeletion;
+void PrinterModel::movePrinter(const int &from, const int &to)
+{
+    beginMoveRows(QModelIndex(), from, 1, QModelIndex(), to);
+    m_printers.move(from, to);
+    endMoveRows();
+}
 
-    // Go through the old model
-    for (int i=0; i < m_printers.count(); i++) {
-        // Determine if the old printer exists in the new model
-        bool exists = false;
+// TODO: take a Printer
+void PrinterModel::removePrinter(QSharedPointer<Printer> printer, const CountChangeSignal &notify)
+{
+    int idx = m_printers.indexOf(printer);
+    beginRemoveRows(QModelIndex(), idx, idx);
+    auto p = m_printers.takeAt(idx);
+    JobModel *jobModel = m_job_models.take(p->name());
+    jobModel->deleteLater();
+    endRemoveRows();
 
-        Q_FOREACH(Printer *p, newPrinters) {
-            if (p->name() == m_printers.at(i)->name()) {
-                exists = true;
-
-                // Ensure the other properties of the Printer are up to date
-                if (!m_printers.at(i)->deepCompare(p)) {
-                    m_printers.at(i)->updateFrom(p);
-
-                    Q_EMIT dataChanged(index(i), index(i));
-                }
-
-                break;
-            }
-        }
-
-        // If it doesn't exist then remove it from the old model
-        if (!exists) {
-            beginRemoveRows(QModelIndex(), i, i);
-            Printer *p = m_printers.takeAt(i);
-            JobModel *jobModel = m_job_models.take(p->name());
-
-            p->deleteLater();
-            jobModel->deleteLater();
-
-            endRemoveRows();
-
-            i--;  // as we have removed an item decrement
-        }
-    }
-
-    // Go through the new model
-    for (int i=0; i < newPrinters.count(); i++) {
-        // Determine if the new printer exists in the old model
-        bool exists = false;
-        int j;
-
-        for (j=0; j < m_printers.count(); j++) {
-            if (m_printers.at(j)->name() == newPrinters.at(i)->name()) {
-                exists = true;
-                forDeletion << i;
-                break;
-            }
-        }
-
-        if (exists) {
-            if (j == i) {  // New printer exists and in correct position
-                continue;
-            } else {
-                // New printer does exist but needs to be moved in old model
-                beginMoveRows(QModelIndex(), j, 1, QModelIndex(), i);
-                m_printers.move(j, i);
-                endMoveRows();
-            }
-
-            // We can safely delete the newPrinter as it already exists.
-            forDeletion << i;
-        } else {
-            // New printer does not exist insert into model
-            beginInsertRows(QModelIndex(), i, i);
-
-            m_printers.insert(i, newPrinters.at(i));
-
-            JobModel *model = new JobModel(newPrinters.at(i)->name(), m_backend, this);
-            QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
-            m_job_models.insert(newPrinters.at(i)->name(), model);
-
-            endInsertRows();
-        }
-    }
-
-    Q_FOREACH(const int &index, forDeletion) {
-        newPrinters.at(index)->deleteLater();
-    }
-
-    if (oldCount != m_printers.size()) {
+    if (notify == CountChangeSignal::Emit)
         Q_EMIT countChanged();
+}
+
+void PrinterModel::modifyPrinter(QSharedPointer<Printer> printer,
+                                 QSharedPointer<Printer> other)
+{
+    /* Ensure the other properties of printer are up to date. If not, update
+    with values from other. */
+    QModelIndex idx = index(m_printers.indexOf(printer));
+    if (!printer->deepCompare(other.data())) {
+        printer->updateFrom(other.data());
+
+        Q_EMIT dataChanged(idx, idx);
     }
+}
+
+void PrinterModel::addPrinter(QSharedPointer<Printer> printer, const CountChangeSignal &notify)
+{
+    int i = m_printers.size();
+    beginInsertRows(QModelIndex(), i, i);
+
+    m_printers.append(printer);
+
+    JobModel *model = new JobModel(printer->name(), m_backend, this);
+    QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
+    m_job_models.insert(printer->name(), model);
+
+    endInsertRows();
+
+    if (notify == CountChangeSignal::Emit)
+        Q_EMIT countChanged();
 }
 
 int PrinterModel::rowCount(const QModelIndex &parent) const
@@ -364,12 +428,6 @@ QVariantMap PrinterModel::get(const int row) const
     }
 
     return result;
-}
-
-Printer* PrinterModel::getPrinterFromName(const QString &name)
-{
-    Q_UNUSED(name);
-    return Q_NULLPTR;
 }
 
 PrinterFilter::PrinterFilter(QObject *parent) : QSortFilterProxyModel(parent)

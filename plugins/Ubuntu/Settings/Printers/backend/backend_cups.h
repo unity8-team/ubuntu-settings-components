@@ -27,6 +27,7 @@
 
 class PRINTERS_DECL_EXPORT PrinterCupsBackend : public PrinterBackend
 {
+    Q_OBJECT
 public:
     explicit PrinterCupsBackend(QObject *parent = Q_NULLPTR);
     explicit PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
@@ -119,10 +120,11 @@ public:
     virtual PrinterEnum::DuplexMode defaultDuplexMode() const override;
     virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const override;
 
-    virtual QList<Printer*> availablePrinters() override;
+    virtual QList<QSharedPointer<Printer>> availablePrinters() override;
     virtual QStringList availablePrinterNames() override;
-    virtual Printer* getPrinter(const QString &printerName) override;
+    virtual QSharedPointer<Printer> getPrinter(const QString &printerName) override;
     virtual QString defaultPrinterName() override;
+    virtual void requestAvailablePrinters() override;
     virtual void requestAvailablePrinterDrivers() override;
 
     virtual PrinterBackend::BackendType backendType() const override;
@@ -137,6 +139,25 @@ private:
     QPrinterInfo m_info;
     OrgCupsCupsdNotifierInterface *m_notifier;
     int m_cupsSubscriptionId = -1;
+};
+
+class PrintersLoader : public QObject
+{
+    Q_OBJECT
+    CupsFacade *m_cups;
+    OrgCupsCupsdNotifierInterface *m_notifier;
+public:
+    explicit PrintersLoader(CupsFacade *cups,
+                            OrgCupsCupsdNotifierInterface* notifier,
+                            QObject *parent = Q_NULLPTR);
+    ~PrintersLoader();
+
+public Q_SLOTS:
+    void load();
+
+Q_SIGNALS:
+    void finished();
+    void loaded(QList<QSharedPointer<Printer>> printers);
 };
 
 #endif // USC_PRINTERS_CUPS_BACKEND_H

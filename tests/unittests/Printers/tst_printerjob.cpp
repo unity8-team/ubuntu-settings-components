@@ -36,7 +36,7 @@ private Q_SLOTS:
     void init()
     {
         m_backend = new MockPrinterBackend(m_printer_name);
-        m_mock_printer = new Printer(m_backend);
+        m_mock_printer = QSharedPointer<Printer>(new Printer(m_backend));
         m_instance = new PrinterJob(m_mock_printer, m_backend);
     }
     void cleanup()
@@ -45,8 +45,8 @@ private Q_SLOTS:
         m_instance->deleteLater();
         QTRY_COMPARE(destroyedJobSpy.count(), 1);
 
-        QSignalSpy destroyedSpy(m_mock_printer, SIGNAL(destroyed(QObject*)));
-        m_mock_printer->deleteLater();
+        QSignalSpy destroyedSpy(m_mock_printer.data(), SIGNAL(destroyed(QObject*)));
+        m_mock_printer.clear();
         QTRY_COMPARE(destroyedSpy.count(), 1);
 
         delete m_backend;
@@ -196,7 +196,7 @@ private Q_SLOTS:
 private:
     PrinterJob *m_instance = nullptr;
     PrinterBackend *m_backend = nullptr;
-    Printer *m_mock_printer = nullptr;
+    QSharedPointer<Printer> m_mock_printer;
     QString m_printer_name = "my-printer";
 };
 

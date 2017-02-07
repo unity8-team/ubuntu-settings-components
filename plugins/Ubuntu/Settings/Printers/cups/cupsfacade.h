@@ -161,5 +161,4 @@ private:
     CupsPkHelper helper;
 };
 
-
 #endif // USC_PRINTERS_CUPSFACADE_H

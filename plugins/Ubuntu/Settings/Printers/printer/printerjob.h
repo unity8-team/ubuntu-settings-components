@@ -25,6 +25,7 @@
 #include "backend/backend.h"
 #include "printer/printer.h"
 
+#include <QSharedPointer>
 #include <QtCore/QObject>
 
 class Printer;
@@ -53,8 +54,8 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
     friend class PrinterCupsBackend;
 public:
     explicit PrinterJob(QObject *parent=Q_NULLPTR);
-    explicit PrinterJob(Printer *printer, QObject *parent=Q_NULLPTR);
-    explicit PrinterJob(Printer *printer, PrinterBackend *backend,
+    explicit PrinterJob(QSharedPointer<Printer> printer, QObject *parent=Q_NULLPTR);
+    explicit PrinterJob(QSharedPointer<Printer> printer, PrinterBackend *backend,
                         QObject *parent=Q_NULLPTR);
     explicit PrinterJob(const QString &name, PrinterBackend *backend, int jobId, QObject *parent=Q_NULLPTR);
     ~PrinterJob();
@@ -125,7 +126,7 @@ private:
     bool m_is_two_sided;
     int m_job_id;
     bool m_landscape;
-    Printer *m_printer;
+    QSharedPointer<Printer> m_printer;
     QString m_printer_name;
     QString m_print_range;
     PrinterEnum::PrintRange m_print_range_mode;

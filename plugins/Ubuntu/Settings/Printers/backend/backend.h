@@ -136,11 +136,12 @@ public:
     virtual PrinterEnum::DuplexMode defaultDuplexMode() const;
     virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const;
 
-    virtual QList<Printer*> availablePrinters();
+    virtual QList<QSharedPointer<Printer>> availablePrinters();
     virtual QStringList availablePrinterNames();
-    virtual Printer* getPrinter(const QString &printerName);
+    virtual QSharedPointer<Printer> getPrinter(const QString &printerName);
     virtual QString defaultPrinterName();
 
+    virtual void requestAvailablePrinters();
     virtual void requestAvailablePrinterDrivers();
 
     virtual BackendType backendType() const;
@@ -151,6 +152,8 @@ public Q_SLOTS:
 Q_SIGNALS:
     void printerDriversLoaded(const QList<PrinterDriver> &drivers);
     void printerDriversFailedToLoad(const QString &errorMessage);
+
+    void availablePrintersLoaded(QList<QSharedPointer<Printer>> printers);
 
     void jobCompleted(
         const QString &text,

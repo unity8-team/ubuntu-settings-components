@@ -20,6 +20,7 @@
 #include "utils.h"
 
 #include <QDBusConnection>
+#include <QThread>
 
 PrinterCupsBackend::PrinterCupsBackend(QObject *parent)
     : PrinterCupsBackend(new CupsFacade(), QPrinterInfo(),
@@ -376,23 +377,20 @@ QList<PrinterEnum::DuplexMode> PrinterCupsBackend::supportedDuplexModes() const
     return list;
 }
 
-QList<Printer*> PrinterCupsBackend::availablePrinters()
+QList<QSharedPointer<Printer>> PrinterCupsBackend::availablePrinters()
 {
-    QList<Printer*> list;
+    QList<QSharedPointer<Printer>> list;
 
     // Use availablePrinterNames as this gives us a name for even null printers
     Q_FOREACH(QString name, QPrinterInfo::availablePrinterNames()) {
-        QPrinterInfo info = QPrinterInfo::printerInfo(name);
-
-        if (!info.isNull()) {
-            list.append(new Printer(new PrinterCupsBackend(m_cups, info, m_notifier)));
-        } else {
-            qWarning() << "Printer is null so skipping (" << name << ")";
+        auto printer = getPrinter(name);
+        if (printer) {
+            list.append(printer);
         }
     }
 
     // Cups allows a faux PDF printer.
-    list.append(new Printer(new PrinterPdfBackend(__("Create PDF"))));
+    list.append(QSharedPointer<Printer>(new Printer(new PrinterPdfBackend(__("Create PDF")))));
 
     return list;
 }
@@ -402,16 +400,37 @@ QStringList PrinterCupsBackend::availablePrinterNames()
     return QPrinterInfo::availablePrinterNames();
 }
 
-Printer* PrinterCupsBackend::getPrinter(const QString &printerName)
+QSharedPointer<Printer> PrinterCupsBackend::getPrinter(const QString &printerName)
 {
-    // TODO: implement
-    Q_UNUSED(printerName);
-    return Q_NULLPTR;
+    QPrinterInfo info = QPrinterInfo::printerInfo(printerName);
+
+    if (!info.isNull()) {
+        return QSharedPointer<Printer>(new Printer(new PrinterCupsBackend(m_cups, info, m_notifier)));
+    } else {
+        qWarning() << "Printer is null so skipping (" << printerName << ")";
+    }
+
+    return QSharedPointer<Printer>(Q_NULLPTR);
 }
 
 QString PrinterCupsBackend::defaultPrinterName()
 {
     return QPrinterInfo::defaultPrinterName();
+}
+
+void PrinterCupsBackend::requestAvailablePrinters()
+{
+    qWarning() << "requestAvailablePrinters";
+    auto thread = new QThread;
+    auto loader = new PrintersLoader(m_cups, m_notifier);
+    loader->moveToThread(thread);
+    connect(thread, SIGNAL(started()), loader, SLOT(load()));
+    connect(loader, SIGNAL(finished()), thread, SLOT(quit()));
+    connect(loader, SIGNAL(finished()), loader, SLOT(deleteLater()));
+    connect(loader, SIGNAL(loaded(QList<QSharedPointer<Printer>>)),
+            this, SIGNAL(availablePrintersLoaded(QList<QSharedPointer<Printer>>)));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    thread->start();
 }
 
 void PrinterCupsBackend::requestAvailablePrinterDrivers()
@@ -443,3 +462,45 @@ void PrinterCupsBackend::cancelSubscription()
     if (m_cupsSubscriptionId > 0)
         m_cups->cancelSubscription(m_cupsSubscriptionId);
 }
+
+PrintersLoader::PrintersLoader(CupsFacade *cups,
+                               OrgCupsCupsdNotifierInterface* notifier,
+                               QObject *parent)
+    : QObject(parent)
+    , m_cups(cups)
+    , m_notifier(notifier)
+{
+}
+
+PrintersLoader::~PrintersLoader()
+{
+}
+
+void PrintersLoader::load()
+{
+    QList<QSharedPointer<Printer>> list;
+
+    // Use availablePrinterNames as this gives us a name for even null printers
+    Q_FOREACH(QString name, QPrinterInfo::availablePrinterNames()) {
+        QPrinterInfo info = QPrinterInfo::printerInfo(name);
+
+        if (!info.isNull()) {
+            auto p = QSharedPointer<Printer>(new Printer(new PrinterCupsBackend(m_cups, info, m_notifier)));
+            list.append(p);
+        } else {
+            qWarning() << "Printer is null so skipping (" << name << ")";
+        }
+    }
+
+    // Cups allows a faux PDF printer.
+    auto faux = QSharedPointer<Printer>(new Printer(new PrinterPdfBackend(__("Create PDF"))));
+    list.append(faux);
+
+    Q_EMIT loaded(list);
+    Q_EMIT finished();
+}
+
+// Q_SIGNALS:
+//     void finished(QList<QSharedPointer<Printer>> printers);
+//     void error(const QString &errorMessage);
+// };

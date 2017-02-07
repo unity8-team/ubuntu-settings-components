@@ -25,7 +25,7 @@
 #include <QTest>
 
 Q_DECLARE_METATYPE(PrinterBackend*)
-Q_DECLARE_METATYPE(QList<Printer*>)
+Q_DECLARE_METATYPE(QList<QSharedPointer<Printer>>)
 
 class TestPrinters : public QObject
 {
@@ -47,17 +47,17 @@ private Q_SLOTS:
     }
     void testAllPrintersFilter_data()
     {
-        QTest::addColumn<QList<Printer*>>("in");
-        QTest::addColumn<QList<Printer*>>("out");
+        QTest::addColumn<QList<QSharedPointer<Printer>>>("in");
+        QTest::addColumn<QList<QSharedPointer<Printer>>>("out");
 
         {
-            auto in = QList<Printer*>();
-            auto out = QList<Printer*>();
+            auto in = QList<QSharedPointer<Printer>>();
+            auto out = QList<QSharedPointer<Printer>>();
 
             auto aBackend = new MockPrinterBackend("printer-a");
-            auto a = new Printer(aBackend);
+            auto a = QSharedPointer<Printer>(new Printer(aBackend));
             auto bBackend = new MockPrinterBackend("printer-b");
-            auto b = new Printer(bBackend);
+            auto b = QSharedPointer<Printer>(new Printer(bBackend));
 
             in << a << b;
             out << a << b;
@@ -65,13 +65,13 @@ private Q_SLOTS:
             QTest::newRow("no defaults") << in << out;
         }
         {
-            auto in = QList<Printer*>();
-            auto out = QList<Printer*>();
+            auto in = QList<QSharedPointer<Printer>>();
+            auto out = QList<QSharedPointer<Printer>>();
 
             auto aBackend = new MockPrinterBackend("printer-a");
-            auto a = new Printer(aBackend);
+            auto a = QSharedPointer<Printer>(new Printer(aBackend));
             auto bBackend = new MockPrinterBackend("printer-b");
-            auto b = new Printer(bBackend);
+            auto b = QSharedPointer<Printer>(new Printer(bBackend));
             bBackend->m_defaultPrinterName = "printer-b";
 
             in << a << b;
@@ -82,13 +82,14 @@ private Q_SLOTS:
     }
     void testAllPrintersFilter()
     {
-        QFETCH(QList<Printer*>, in);
-        QFETCH(QList<Printer*>, out);
+        QFETCH(QList<QSharedPointer<Printer>>, in);
+        QFETCH(QList<QSharedPointer<Printer>>, out);
 
         PrinterBackend* backend = new MockPrinterBackend;
-        ((MockPrinterBackend*) backend)->m_availablePrinters = in;
-
         Printers printers(backend);
+
+        ((MockPrinterBackend*) backend)->mockPrintersLoaded(in);
+
         auto all = printers.allPrinters();
 
         QCOMPARE(all->rowCount(), out.size());

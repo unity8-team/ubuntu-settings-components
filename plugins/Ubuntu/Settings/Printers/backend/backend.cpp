@@ -326,9 +326,9 @@ QList<PrinterEnum::DuplexMode> PrinterBackend::supportedDuplexModes() const
     return QList<PrinterEnum::DuplexMode>();
 }
 
-QList<Printer*> PrinterBackend::availablePrinters()
+QList<QSharedPointer<Printer>> PrinterBackend::availablePrinters()
 {
-    return QList<Printer*>();
+    return QList<QSharedPointer<Printer>>();
 }
 
 QStringList PrinterBackend::availablePrinterNames()
@@ -336,15 +336,19 @@ QStringList PrinterBackend::availablePrinterNames()
     return QStringList();
 }
 
-Printer* PrinterBackend::getPrinter(const QString &printerName)
+QSharedPointer<Printer> PrinterBackend::getPrinter(const QString &printerName)
 {
     Q_UNUSED(printerName);
-    return Q_NULLPTR;
+    return QSharedPointer<Printer>(Q_NULLPTR);
 }
 
 QString PrinterBackend::defaultPrinterName()
 {
     return QString();
+}
+
+void PrinterBackend::requestAvailablePrinters()
+{
 }
 
 void PrinterBackend::requestAvailablePrinterDrivers()

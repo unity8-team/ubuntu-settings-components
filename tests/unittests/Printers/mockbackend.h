@@ -302,7 +302,7 @@ public:
         return m_supportedDuplexModes;
     }
 
-    virtual QList<Printer*> availablePrinters() override
+    virtual QList<QSharedPointer<Printer>> availablePrinters() override
     {
         return m_availablePrinters;
     }
@@ -312,14 +312,14 @@ public:
         return m_availablePrinterNames;
     }
 
-    virtual Printer* getPrinter(const QString &printerName) override
+    virtual QSharedPointer<Printer> getPrinter(const QString &printerName) override
     {
-        Q_FOREACH(Printer* p, m_availablePrinters) {
+        Q_FOREACH(auto p, m_availablePrinters) {
             if (p->name() == printerName) {
                 return p;
             }
         }
-        return Q_NULLPTR;
+        return QSharedPointer<Printer>(Q_NULLPTR);
     }
 
     virtual QString defaultPrinterName() override
@@ -383,6 +383,17 @@ public:
         Q_EMIT printerDriversFailedToLoad(errorMessage);
     }
 
+    void mockPrintersLoaded(QList<QSharedPointer<Printer>> printers)
+    {
+        Q_EMIT availablePrintersLoaded(printers);
+    }
+
+    void mockPrintersLoaded(QSharedPointer<Printer> printer)
+    {
+        QList<QSharedPointer<Printer>> list({printer});
+        mockPrintersLoaded(list);
+    }
+
     QString returnValue = QString::null;
 
     // Map from printer to key/val.
@@ -409,7 +420,7 @@ public:
     PrinterEnum::DuplexMode m_defaultDuplexMode;
 
     QStringList m_availablePrinterNames;
-    QList<Printer*> m_availablePrinters;
+    QList<QSharedPointer<Printer>> m_availablePrinters;
     PrinterBackend::BackendType m_backendType;
 
 public Q_SLOTS:

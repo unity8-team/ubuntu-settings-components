@@ -46,14 +46,15 @@ private Q_SLOTS:
 
         PrinterBackend* printerABackend = new MockPrinterBackend("a-printer");
         PrinterBackend* printerBBackend = new MockPrinterBackend("b-printer");
-        Printer printerA(printerABackend);
-        Printer printerB(printerBBackend);
+        auto printerA = QSharedPointer<Printer>(new Printer(printerABackend));
+        auto printerB = QSharedPointer<Printer>(new Printer(printerBBackend));
 
-        ((MockPrinterBackend*) backend.data())->m_availablePrinters << &printerA << &printerB;
+        QList<QSharedPointer<Printer>> list;
+        list << printerA << printerB;
 
         PrinterFilter filter;
         filter.setSourceModel(&model);
-        ((MockPrinterBackend*) backend.data())->mockPrinterAdded("Test added printer", "", printerA.name(), 0, "", true);
+        ((MockPrinterBackend*) backend.data())->mockPrintersLoaded(list);
 
         QCOMPARE(filter.count(), 2);
     }
@@ -64,17 +65,17 @@ private Q_SLOTS:
 
         PrinterBackend* printerABackend = new MockPrinterBackend("a-printer");
         PrinterBackend* printerBBackend = new MockPrinterBackend("b-printer");
-        Printer printerA(printerABackend);
-        Printer printerB(printerBBackend);
+        auto printerA = QSharedPointer<Printer>(new Printer(printerABackend));
+        auto printerB = QSharedPointer<Printer>(new Printer(printerBBackend));
 
-        ((MockPrinterBackend*) backend.data())->m_availablePrinters << &printerA << &printerB;
+        ((MockPrinterBackend*) backend.data())->m_availablePrinters << printerA << printerB;
 
         PrinterFilter filter;
         filter.setSourceModel(&model);
 
         QSignalSpy modelCountSpy(&model, SIGNAL(countChanged()));
         QSignalSpy filterCountSpy(&filter, SIGNAL(countChanged()));
-        ((MockPrinterBackend*) backend.data())->mockPrinterAdded("Test added printer", "", printerA.name(), 0, "", true);
+        ((MockPrinterBackend*) backend.data())->mockPrinterAdded("Test added printer", "", printerA->name(), 0, "", true);
         QCOMPARE(modelCountSpy.count(), 1);
         QCOMPARE(filterCountSpy.count(), 1);
     }

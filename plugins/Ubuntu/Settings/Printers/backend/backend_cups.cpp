@@ -17,6 +17,7 @@
 #include "backend/backend_cups.h"
 #include "backend/backend_pdf.h"
 #include "cups/printerdriverloader.h"
+#include "cups/printersloader.h"
 #include "i18n.h"
 #include "utils.h"
 
@@ -763,7 +764,7 @@ QSharedPointer<Printer> PrinterCupsBackend::getPrinter(const QString &printerNam
     QPrinterInfo info = QPrinterInfo::printerInfo(printerName);
 
     if (!info.isNull()) {
-        return QSharedPointer<Printer>(new Printer(new PrinterCupsBackend(m_cups, info, m_notifier)));
+        return QSharedPointer<Printer>(new Printer(new PrinterCupsBackend(m_client, info, m_notifier)));
     } else {
         qWarning() << "Printer is null so skipping (" << printerName << ")";
     }
@@ -779,7 +780,7 @@ QString PrinterCupsBackend::defaultPrinterName()
 void PrinterCupsBackend::requestAvailablePrinters()
 {
     auto thread = new QThread;
-    auto loader = new PrintersLoader(m_backend);
+    auto loader = new PrintersLoader(m_client, m_notifier);
     loader->moveToThread(thread);
     connect(thread, SIGNAL(started()), loader, SLOT(load()));
     connect(this, SIGNAL(cancelWorkers()), loader, SLOT(cancel()));

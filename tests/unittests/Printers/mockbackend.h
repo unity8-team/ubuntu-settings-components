@@ -72,7 +72,7 @@ public:
 
     virtual QString printerDelete(const QString &name) override
     {
-        Q_FOREACH(Printer *p, m_availablePrinters) {
+        Q_FOREACH(QSharedPointer<Printer> p, m_availablePrinters) {
             if (p->name() == name) {
                 m_availablePrinters.removeOne(p);
                 break;

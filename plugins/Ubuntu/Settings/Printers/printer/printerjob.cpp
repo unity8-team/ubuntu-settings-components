@@ -162,7 +162,7 @@ QStringList PrinterJob::messages() const
     return m_messages;
 }
 
-Printer *PrinterJob::printer() const
+QSharedPointer<Printer> PrinterJob::printer() const
 {
     return m_printer;
 }

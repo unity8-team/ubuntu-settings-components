@@ -60,7 +60,8 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
 
     friend class PrinterCupsBackend;
 public:
-    explicit PrinterJob(Printer *printer, PrinterBackend *backend,
+    explicit PrinterJob(QSharedPointer<Printer> printer,
+                        PrinterBackend *backend,
                         QObject *parent=Q_NULLPTR);
     explicit PrinterJob(const QString &name, PrinterBackend *backend, int jobId, QObject *parent=Q_NULLPTR);
     ~PrinterJob();
@@ -76,7 +77,7 @@ public:
     int jobId() const;  // TODO: implement
     bool landscape() const;
     QStringList messages() const;
-    Printer* printer() const;
+    QSharedPointer<Printer> printer() const;
     QString printerName() const;
     QString printRange() const;
     PrinterEnum::PrintRange printRangeMode() const;

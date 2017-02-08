@@ -17,14 +17,22 @@
 #ifndef USC_PRINTERS_CUPS_PRINTERSLOADER_H
 #define USC_PRINTERS_CUPS_PRINTERSLOADER_H
 
+#include "cups/ippclient.h"
+#include "cupsdnotifier.h" // Note: this file was generated.
+#include "printer/printer.h"
+
+#include <QList>
+#include <QObject>
+#include <QSharedPointer>
+
 class PrintersLoader : public QObject
 {
     Q_OBJECT
-    PrinterBackend *m_backend;
+    IppClient *m_client;
     OrgCupsCupsdNotifierInterface *m_notifier;
     bool m_running = false;
 public:
-    explicit PrintersLoader(PrinterBackend *backend,
+    explicit PrintersLoader(IppClient *client,
                             OrgCupsCupsdNotifierInterface* notifier,
                             QObject *parent = Q_NULLPTR);
     ~PrintersLoader();

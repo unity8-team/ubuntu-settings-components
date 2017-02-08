@@ -14,11 +14,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-PrintersLoader::PrintersLoader(PrinterBackend *backend,
+#include "backend/backend_pdf.h"
+#include "backend/backend_cups.h"
+#include "printersloader.h"
+
+#include <QPrinterInfo>
+
+class PrinterCupsBackend;
+PrintersLoader::PrintersLoader(IppClient *client,
                                OrgCupsCupsdNotifierInterface* notifier,
                                QObject *parent)
     : QObject(parent)
-    , m_backend(backend)
+    , m_client(client)
     , m_notifier(notifier)
 {
 }
@@ -41,7 +48,7 @@ void PrintersLoader::load()
         QPrinterInfo info = QPrinterInfo::printerInfo(name);
 
         if (!info.isNull()) {
-            auto p = QSharedPointer<Printer>(new Printer(new PrinterCupsBackend(m_backend, info, m_notifier)));
+            auto p = QSharedPointer<Printer>(new Printer(new PrinterCupsBackend(m_client, info, m_notifier)));
             list.append(p);
         } else {
             qWarning() << "Printer is null so skipping (" << name << ")";

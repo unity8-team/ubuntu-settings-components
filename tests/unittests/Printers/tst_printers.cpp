@@ -120,11 +120,12 @@ private Q_SLOTS:
     void testPrinterRemove()
     {
         auto aBackend = new MockPrinterBackend("printer-a");
-        auto a = new Printer(aBackend);
-        QList<Printer*> list({a});
+        auto a = QSharedPointer<Printer>(new Printer(aBackend));
+        QList<QSharedPointer<Printer>> list({a});
         MockPrinterBackend* backend = new MockPrinterBackend;
-        backend->m_availablePrinters = list;
+
         Printers printers(backend);
+        ((MockPrinterBackend*) backend)->mockPrintersLoaded(list);
         printers.removePrinter(a->name());
         QCOMPARE(backend->m_availablePrinters.size(), 0);
     }

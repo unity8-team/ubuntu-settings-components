@@ -17,16 +17,10 @@
 #include "utils.h"
 
 #include "backend/backend_cups.h"
-#include "cups/cupsfacade.h"
 
 #include "models/jobmodel.h"
 
 #include <QDebug>
-
-JobModel::JobModel(QObject *parent)
-    : JobModel(QStringLiteral(""), new PrinterCupsBackend, parent)
-{
-}
 
 JobModel::JobModel(const QString &printerName, PrinterBackend *backend,
                    QObject *parent)

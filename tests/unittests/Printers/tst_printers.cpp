@@ -108,6 +108,14 @@ private Q_SLOTS:
         DriverModel *drivers = (DriverModel*) printers.drivers();
         QCOMPARE(drivers->filter(), targetFilter);
     }
+    void testCreateJob()
+    {
+
+    }
+    void testCancelJob()
+    {
+
+    }
 };
 
 QTEST_GUILESS_MAIN(TestPrinters)

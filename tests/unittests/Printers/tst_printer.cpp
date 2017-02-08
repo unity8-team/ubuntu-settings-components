@@ -237,4 +237,3 @@ private:
 
 QTEST_GUILESS_MAIN(TestPrinter)
 #include "tst_printer.moc"
-

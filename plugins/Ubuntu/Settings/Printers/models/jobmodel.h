@@ -35,7 +35,6 @@ class PRINTERS_DECL_EXPORT JobModel : public QAbstractListModel
 
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
-    explicit JobModel(QObject *parent = Q_NULLPTR);
     explicit JobModel(const QString &printerName, PrinterBackend *backend,
                       QObject *parent = Q_NULLPTR);
     ~JobModel();

@@ -35,7 +35,6 @@ class PRINTERS_DECL_EXPORT PrinterModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
-    explicit PrinterModel(QObject *parent = Q_NULLPTR);
     explicit PrinterModel(PrinterBackend *backend, QObject *parent = Q_NULLPTR);
     ~PrinterModel();
 

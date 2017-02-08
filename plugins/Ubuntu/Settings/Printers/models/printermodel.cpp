@@ -17,17 +17,11 @@
 #include "utils.h"
 
 #include "backend/backend_cups.h"
-#include "cups/cupsfacade.h"
 #include "models/jobmodel.h"
 #include "models/printermodel.h"
 
 #include <QDebug>
 #include <QQmlEngine>
-
-PrinterModel::PrinterModel(QObject *parent)
-    : PrinterModel(new PrinterCupsBackend, parent)
-{
-}
 
 PrinterModel::PrinterModel(PrinterBackend *backend, QObject *parent)
     : QAbstractListModel(parent)

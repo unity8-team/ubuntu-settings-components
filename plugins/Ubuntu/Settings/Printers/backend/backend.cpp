@@ -193,8 +193,7 @@ QVariant PrinterBackend::printerGetOption(const QString &name,
 }
 
 QMap<QString, QVariant> PrinterBackend::printerGetOptions(
-    const QString &name, const QStringList &options
-)
+    const QString &name, const QStringList &options) const
 {
     Q_UNUSED(name);
     Q_UNUSED(options);
@@ -347,7 +346,7 @@ QString PrinterBackend::defaultPrinterName()
     return QString();
 }
 
-void PrinterBackend::requestAvailablePrinterDrivers()
+void PrinterBackend::requestPrinterDrivers()
 {
 }
 

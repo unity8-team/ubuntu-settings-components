@@ -16,10 +16,17 @@
 
 #include "backend/backend_cups.h"
 #include "printers/printers.h"
+#include "cupsdnotifier.h" // Note: this file was generated.
 
+#include <QDBusConnection>
+#include <QPrinterInfo>
 #include <QQmlEngine>
 
-Printers::Printers(QObject *parent) : Printers(new PrinterCupsBackend, parent)
+Printers::Printers(QObject *parent)
+    : Printers(new PrinterCupsBackend(new IppClient(), QPrinterInfo(),
+        new OrgCupsCupsdNotifierInterface("", CUPSD_NOTIFIER_DBUS_PATH,
+                                          QDBusConnection::systemBus())),
+       parent)
 {
 }
 
@@ -105,6 +112,11 @@ QString Printers::defaultPrinterName() const
 QString Printers::lastMessage() const
 {
     return m_lastMessage;
+}
+
+PrinterJob* Printers::createJob(const QString &printerName)
+{
+    return new PrinterJob(m_backend->getPrinter(printerName), m_backend);
 }
 
 void Printers::cancelJob(const QString &printerName, const int jobId)

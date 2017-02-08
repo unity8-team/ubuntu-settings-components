@@ -98,11 +98,6 @@ PrinterEnum::DuplexMode Printer::defaultDuplexMode() const
     return m_backend->defaultDuplexMode();
 }
 
-PrinterJob *Printer::job()
-{
-    return new PrinterJob(this);
-}
-
 int Printer::printFile(const QString &filepath, const PrinterJob *options)
 {
     auto dest = m_backend->makeDest(name(), options);  // options could be QMap<QString, QString> ?

@@ -182,8 +182,7 @@ public:
     }
 
     virtual QMap<QString, QVariant> printerGetOptions(
-        const QString &name, const QStringList &options
-    ) override
+        const QString &name, const QStringList &options) const override
     {
         QMap<QString, QVariant> opts;
         Q_FOREACH(const QString &option, options) {
@@ -327,7 +326,7 @@ public:
         return m_defaultPrinterName;
     }
 
-    virtual void requestAvailablePrinterDrivers() override
+    virtual void requestPrinterDrivers() override
     {
     }
 

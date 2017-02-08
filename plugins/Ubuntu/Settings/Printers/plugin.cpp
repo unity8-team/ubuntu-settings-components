@@ -48,7 +48,9 @@ void UbuntuSettingsComponentsPrintersPlugin::registerTypes(const char *uri)
     qmlRegisterUncreatableType<Printer>(
         uri, 0, 1, "Printer", "use Printers to get a list of Printers."
     );
-    qmlRegisterType<PrinterJob>(uri, 0, 1, "PrinterJob");
+
+    qmlRegisterUncreatableType<PrinterJob>(uri, 0, 1, "PrinterJob",
+                                           "use Printers to create jobs.");
 
     qmlRegisterUncreatableType<PrinterEnum>(uri, 0, 1, "PrinterEnum", "Is an enum");
     qRegisterMetaType<QList<PrinterDriver>>("QList<PrinterDriver>");

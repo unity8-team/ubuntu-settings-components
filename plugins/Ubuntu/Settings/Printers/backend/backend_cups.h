@@ -18,18 +18,19 @@
 #define USC_PRINTERS_CUPS_BACKEND_H
 
 #include "backend/backend.h"
-#include "cups/cupsfacade.h"
+#include "cups/ippclient.h"
 #include "cupsdnotifier.h" // Note: this file was generated.
+
+#include <cups/cups.h>
 
 #include <QPrinterInfo>
 
-#define CUPSD_NOTIFIER_DBUS_PATH "/org/cups/cupsd/Notifier"
-
 class PRINTERS_DECL_EXPORT PrinterCupsBackend : public PrinterBackend
 {
+    Q_OBJECT
 public:
-    explicit PrinterCupsBackend(QObject *parent = Q_NULLPTR);
-    explicit PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
+    // explicit PrinterCupsBackend(QObject *parent = Q_NULLPTR);
+    explicit PrinterCupsBackend(IppClient *client, QPrinterInfo info,
                                 OrgCupsCupsdNotifierInterface* notifier,
                                 QObject *parent = Q_NULLPTR);
     virtual ~PrinterCupsBackend() override;
@@ -85,7 +86,7 @@ public:
                                       const QString &option) const override;
     virtual QMap<QString, QVariant> printerGetOptions(
         const QString &name, const QStringList &options
-    ) override;
+    ) const override;
     // FIXME: maybe have a PrinterDest iface that has a CupsDest impl?
     virtual cups_dest_t* makeDest(const QString &name,
                                   const PrinterJob *options) override;
@@ -123,7 +124,7 @@ public:
     virtual QStringList availablePrinterNames() override;
     virtual Printer* getPrinter(const QString &printerName) override;
     virtual QString defaultPrinterName() override;
-    virtual void requestAvailablePrinterDrivers() override;
+    virtual void requestPrinterDrivers() override;
 
     virtual PrinterBackend::BackendType backendType() const override;
 
@@ -131,9 +132,25 @@ public Q_SLOTS:
     virtual void refresh() override;
     void createSubscription();
 
+Q_SIGNALS:
+    void requestPrinterDriverCancel();
+    void printerDriversLoaded(const QList<PrinterDriver> &drivers);
+    void printerDriversFailedToLoad(const QString &errorMessage);
+
 private:
     void cancelSubscription();
-    CupsFacade *m_cups;
+    void cancelPrinterDriverRequest();
+    QList<cups_job_t *> getCupsJobs(const QString &name);
+    QMap<QString, QVariant> printerGetJobAttributes(const QString &name, const int jobId);
+
+    QString getPrinterName(const QString &name) const;
+    QString getPrinterInstance(const QString &name) const;
+
+    const QStringList m_knownQualityOptions = QStringList({
+        "Quality", "PrintQuality", "HPPrintQuality", "StpQuality",
+        "OutputMode",
+    });
+    IppClient *m_client;
     QPrinterInfo m_info;
     OrgCupsCupsdNotifierInterface *m_notifier;
     int m_cupsSubscriptionId = -1;

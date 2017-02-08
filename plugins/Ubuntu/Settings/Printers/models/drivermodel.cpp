@@ -15,16 +15,10 @@
  */
 
 #include "backend/backend_cups.h"
-#include "cups/cupsfacade.h"
 #include "models/drivermodel.h"
 
 #include <QDebug>
 #include <QtConcurrent>
-
-DriverModel::DriverModel(QObject *parent)
-    : DriverModel(new PrinterCupsBackend, parent)
-{
-}
 
 DriverModel::DriverModel(PrinterBackend *backend, QObject *parent)
     : QAbstractListModel(parent)
@@ -156,7 +150,7 @@ void DriverModel::filterFinished()
 
 void DriverModel::load()
 {
-    m_backend->requestAvailablePrinterDrivers();
+    m_backend->requestPrinterDrivers();
 }
 
 void DriverModel::cancel()

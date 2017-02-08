@@ -101,8 +101,7 @@ public:
     virtual QVariant printerGetOption(const QString &name,
                                       const QString &option) const;
     virtual QMap<QString, QVariant> printerGetOptions(
-        const QString &name, const QStringList &options
-    );
+        const QString &name, const QStringList &options) const;
     // FIXME: maybe have a PrinterDest iface that has a CupsDest impl?
     virtual cups_dest_t* makeDest(const QString &name,
                                   const PrinterJob *options);
@@ -141,7 +140,7 @@ public:
     virtual Printer* getPrinter(const QString &printerName);
     virtual QString defaultPrinterName();
 
-    virtual void requestAvailablePrinterDrivers();
+    virtual void requestPrinterDrivers();
 
     virtual BackendType backendType() const;
 

@@ -21,16 +21,6 @@
 #include "models/printermodel.h"
 #include "printer/printerjob.h"
 
-PrinterJob::PrinterJob(QObject *parent)
-    : PrinterJob(Q_NULLPTR, parent)
-{
-}
-
-PrinterJob::PrinterJob(Printer *printer, QObject *parent)
-    : PrinterJob(printer, new PrinterCupsBackend, parent)
-{
-}
-
 PrinterJob::PrinterJob(Printer *printer, PrinterBackend *backend,
                        QObject *parent)
     : QObject(parent)

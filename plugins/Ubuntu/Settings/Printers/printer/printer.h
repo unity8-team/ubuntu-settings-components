@@ -76,8 +76,6 @@ public Q_SLOTS:
     // Add user that is either denied or allowed printer. See AccessControl.
     void addUser(const QString &username);
 
-    // Helper for managing a job on the printer
-    PrinterJob *job();
     int printFile(const QString &filepath, const PrinterJob *options);
 
     // Removes user. See addUser.

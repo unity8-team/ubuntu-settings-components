@@ -171,6 +171,18 @@ MainView {
                 model: Printers.allPrintersWithPdf
                 delegate: ListItem {
                     height: modelLayout.height + (divider.visible ? divider.height : 0)
+                    trailingActions: ListItemActions {
+                        actions: [
+                            Action {
+                                iconName: "delete"
+                                onTriggered: {
+                                    if (!Printers.removePrinter(model.name)) {
+                                        console.error('failed to remove printer', Printers.lastMessage);
+                                    }
+                                }
+                            }
+                        ]
+                    }
                     ListItemLayout {
                         id: modelLayout
                         title.text: displayName

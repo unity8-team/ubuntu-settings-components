@@ -180,8 +180,11 @@ bool Printers::addPrinterWithPpdFile(const QString &name,
 
 bool Printers::removePrinter(const QString &name)
 {
-    // TODO: implement
-    Q_UNUSED(name);
+    QString reply = m_backend->printerDelete(name);
 
+    if (!reply.isEmpty()) {
+        m_lastMessage = reply;
+        return false;
+    }
     return true;
 }

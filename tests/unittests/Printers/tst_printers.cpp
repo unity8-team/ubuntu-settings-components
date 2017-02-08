@@ -116,6 +116,17 @@ private Q_SLOTS:
     {
 
     }
+    void testPrinterRemove()
+    {
+        auto aBackend = new MockPrinterBackend("printer-a");
+        auto a = new Printer(aBackend);
+        QList<Printer*> list({a});
+        MockPrinterBackend* backend = new MockPrinterBackend;
+        backend->m_availablePrinters = list;
+        Printers printers(backend);
+        printers.removePrinter(a->name());
+        QCOMPARE(backend->m_availablePrinters.size(), 0);
+    }
 };
 
 QTEST_GUILESS_MAIN(TestPrinters)

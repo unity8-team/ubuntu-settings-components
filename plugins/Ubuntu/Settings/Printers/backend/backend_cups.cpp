@@ -122,8 +122,9 @@ bool PrinterCupsBackend::holdsDefinition() const
 
 QString PrinterCupsBackend::printerDelete(const QString &name)
 {
-    // TODO: implement
-    Q_UNUSED(name);
+    if (!m_client->printerDelete(name)) {
+        return m_client->getLastError();
+    }
     return QString();
 }
 

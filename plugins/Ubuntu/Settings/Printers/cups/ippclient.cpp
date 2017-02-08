@@ -46,6 +46,12 @@ IppClient::~IppClient()
         httpClose(m_connection);
 }
 
+bool IppClient::printerDelete(const QString &printerName)
+{
+    return sendNewSimpleRequest(CUPS_DELETE_PRINTER, printerName.toUtf8(),
+                                CupsResource::CupsResourceAdmin);
+}
+
 bool IppClient::printerAdd(const QString &printerName,
                            const QString &printerUri,
                            const QString &ppdFile,
@@ -628,6 +634,21 @@ bool IppClient::sendRequest(ipp_t *request, const CupsResource &resource)
     reply = cupsDoRequest(m_connection, request,
                           resourceChar.toUtf8());
     return handleReply(reply);
+}
+
+bool IppClient::sendNewSimpleRequest(ipp_op_t op, const QString &printerName,
+                                     const IppClient::CupsResource &resource)
+{
+    ipp_t *request;
+
+    if (!isPrinterNameValid(printerName))
+        return false;
+
+    request = ippNewRequest(op);
+    addPrinterUri(request, printerName);
+    addRequestingUsername(request, NULL);
+
+    return sendRequest(request, resource);
 }
 
 bool IppClient::handleReply(ipp_t *reply)

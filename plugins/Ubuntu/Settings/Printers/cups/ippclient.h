@@ -39,6 +39,7 @@ public:
     explicit IppClient();
     ~IppClient();
 
+    bool printerDelete(const QString &printerName);
     bool printerAdd(const QString &printerName,
                     const QString &printerUri,
                     const QString &ppdFile,
@@ -102,6 +103,8 @@ private:
     bool postRequest(ipp_t *request, const QString &file,
                      const CupsResource &resource);
     bool sendRequest(ipp_t *request, const CupsResource &resource);
+    bool sendNewSimpleRequest(ipp_op_t op, const QString &printerName,
+                              const CupsResource &resource);
     bool handleReply(ipp_t *reply);
     bool isReplyOk(ipp_t *reply, bool deleteIfReplyNotOk);
     void setErrorFromReply(ipp_t *reply);

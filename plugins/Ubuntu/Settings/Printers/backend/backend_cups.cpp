@@ -89,6 +89,7 @@ PrinterCupsBackend::PrinterCupsBackend(IppClient *client, QPrinterInfo info,
 PrinterCupsBackend::~PrinterCupsBackend()
 {
     cancelSubscription();
+    Q_EMIT cancelWorkers();
 }
 
 QString PrinterCupsBackend::printerAdd(const QString &name,
@@ -735,23 +736,19 @@ QList<PrinterEnum::DuplexMode> PrinterCupsBackend::supportedDuplexModes() const
     return list;
 }
 
-QList<Printer*> PrinterCupsBackend::availablePrinters()
+QList<QSharedPointer<Printer>> PrinterCupsBackend::availablePrinters()
 {
-    QList<Printer*> list;
+
+    QList<QSharedPointer<Printer>> list;
 
     // Use availablePrinterNames as this gives us a name for even null printers
     Q_FOREACH(QString name, QPrinterInfo::availablePrinterNames()) {
-        QPrinterInfo info = QPrinterInfo::printerInfo(name);
-
-        if (!info.isNull()) {
-            list.append(new Printer(new PrinterCupsBackend(m_client, info, m_notifier)));
-        } else {
-            qWarning() << "Printer is null so skipping (" << name << ")";
-        }
+        auto printer = QSharedPointer<Printer>(new Printer(new PrinterBackend(name)));
+        list.append(printer);
     }
 
     // Cups allows a faux PDF printer.
-    list.append(new Printer(new PrinterPdfBackend(__("Create PDF"))));
+    list.append(QSharedPointer<Printer>(new Printer(new PrinterPdfBackend(__("Create PDF")))));
 
     return list;
 }
@@ -761,16 +758,37 @@ QStringList PrinterCupsBackend::availablePrinterNames()
     return QPrinterInfo::availablePrinterNames();
 }
 
-Printer* PrinterCupsBackend::getPrinter(const QString &printerName)
+QSharedPointer<Printer> PrinterCupsBackend::getPrinter(const QString &printerName)
 {
-    // TODO: implement
-    Q_UNUSED(printerName);
-    return Q_NULLPTR;
+    QPrinterInfo info = QPrinterInfo::printerInfo(printerName);
+
+    if (!info.isNull()) {
+        return QSharedPointer<Printer>(new Printer(new PrinterCupsBackend(m_cups, info, m_notifier)));
+    } else {
+        qWarning() << "Printer is null so skipping (" << printerName << ")";
+    }
+
+    return QSharedPointer<Printer>(Q_NULLPTR);
 }
 
 QString PrinterCupsBackend::defaultPrinterName()
 {
     return QPrinterInfo::defaultPrinterName();
+}
+
+void PrinterCupsBackend::requestAvailablePrinters()
+{
+    auto thread = new QThread;
+    auto loader = new PrintersLoader(m_backend);
+    loader->moveToThread(thread);
+    connect(thread, SIGNAL(started()), loader, SLOT(load()));
+    connect(this, SIGNAL(cancelWorkers()), loader, SLOT(cancel()));
+    connect(loader, SIGNAL(finished()), thread, SLOT(quit()));
+    connect(loader, SIGNAL(finished()), loader, SLOT(deleteLater()));
+    connect(loader, SIGNAL(loaded(QList<QSharedPointer<Printer>>)),
+            this, SIGNAL(availablePrintersLoaded(QList<QSharedPointer<Printer>>)));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    thread->start();
 }
 
 void PrinterCupsBackend::requestPrinterDrivers()
@@ -802,11 +820,6 @@ void PrinterCupsBackend::requestPrinterDrivers()
 void PrinterCupsBackend::cancelPrinterDriverRequest()
 {
     Q_EMIT requestPrinterDriverCancel();
-}
-
-PrinterBackend::BackendType PrinterCupsBackend::backendType() const
-{
-    return PrinterBackend::BackendType::CupsType;
 }
 
 void PrinterCupsBackend::refresh()

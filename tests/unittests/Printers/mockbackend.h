@@ -23,10 +23,18 @@ class MockPrinterBackend : public PrinterBackend
 {
     Q_OBJECT
 public:
-    explicit MockPrinterBackend(QObject *parent = Q_NULLPTR) : PrinterBackend(parent) {};
+    explicit MockPrinterBackend(QObject *parent = Q_NULLPTR)
+        : MockPrinterBackend(QString::null, parent)
+    {
+
+    };
+
     explicit MockPrinterBackend(const QString &printerName,
                                 QObject *parent = Q_NULLPTR)
-      : PrinterBackend(printerName, parent) {};
+      : PrinterBackend(printerName, parent)
+    {
+    };
+
     virtual ~MockPrinterBackend() {};
 
     virtual bool holdsDefinition() const override
@@ -306,7 +314,7 @@ public:
         return m_supportedDuplexModes;
     }
 
-    virtual QList<Printer*> availablePrinters() override
+    virtual QList<QSharedPointer<Printer>> availablePrinters() override
     {
         return m_availablePrinters;
     }
@@ -316,14 +324,14 @@ public:
         return m_availablePrinterNames;
     }
 
-    virtual Printer* getPrinter(const QString &printerName) override
+    virtual QSharedPointer<Printer> getPrinter(const QString &printerName) override
     {
-        Q_FOREACH(Printer* p, m_availablePrinters) {
+        Q_FOREACH(auto p, m_availablePrinters) {
             if (p->name() == printerName) {
                 return p;
             }
         }
-        return Q_NULLPTR;
+        return QSharedPointer<Printer>(Q_NULLPTR);
     }
 
     virtual QString defaultPrinterName() override
@@ -334,12 +342,6 @@ public:
     virtual void requestPrinterDrivers() override
     {
     }
-
-    virtual BackendType backendType() const override
-    {
-        return m_backendType;
-    }
-
 
     void mockPrinterAdded(
         const QString &text,
@@ -387,6 +389,17 @@ public:
         Q_EMIT printerDriversFailedToLoad(errorMessage);
     }
 
+    void mockPrintersLoaded(QList<QSharedPointer<Printer>> printers)
+    {
+        Q_EMIT availablePrintersLoaded(printers);
+    }
+
+    void mockPrintersLoaded(QSharedPointer<Printer> printer)
+    {
+        QList<QSharedPointer<Printer>> list({printer});
+        mockPrintersLoaded(list);
+    }
+
     QString returnValue = QString::null;
 
     // Map from printer to key/val.
@@ -413,8 +426,7 @@ public:
     PrinterEnum::DuplexMode m_defaultDuplexMode;
 
     QStringList m_availablePrinterNames;
-    QList<Printer*> m_availablePrinters;
-    PrinterBackend::BackendType m_backendType;
+    QList<QSharedPointer<Printer>> m_availablePrinters;
 
 public Q_SLOTS:
     virtual void refresh() override

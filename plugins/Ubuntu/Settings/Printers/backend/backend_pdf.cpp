@@ -21,6 +21,7 @@ PrinterPdfBackend::PrinterPdfBackend(const QString &printerName,
                                      QObject *parent)
     : PrinterBackend(printerName, parent)
 {
+    m_type = PrinterEnum::PrinterType::PdfType;
 }
 
 QList<ColorModel> PrinterPdfBackend::printerGetSupportedColorModels(
@@ -121,7 +122,3 @@ QList<PrinterEnum::DuplexMode> PrinterPdfBackend::supportedDuplexModes() const
     return QList<PrinterEnum::DuplexMode>{PrinterEnum::DuplexMode::DuplexNone};
 }
 
-PrinterBackend::BackendType PrinterPdfBackend::backendType() const
-{
-    return PrinterBackend::BackendType::PdfType;
-}

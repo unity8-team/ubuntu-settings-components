@@ -25,6 +25,7 @@
 #include "backend/backend.h"
 #include "printer/printer.h"
 
+#include <QSharedPointer>
 #include <QtCore/QDateTime>
 #include <QtCore/QObject>
 
@@ -151,7 +152,7 @@ private:
     int m_job_id;
     bool m_landscape;
     QStringList m_messages;
-    Printer *m_printer;
+    QSharedPointer<Printer> m_printer;
     QString m_printer_name;
     QString m_print_range;
     PrinterEnum::PrintRange m_print_range_mode;

@@ -120,22 +120,22 @@ public:
     virtual PrinterEnum::DuplexMode defaultDuplexMode() const override;
     virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const override;
 
-    virtual QList<Printer*> availablePrinters() override;
+    virtual QList<QSharedPointer<Printer>> availablePrinters() override;
     virtual QStringList availablePrinterNames() override;
-    virtual Printer* getPrinter(const QString &printerName) override;
+    virtual QSharedPointer<Printer> getPrinter(const QString &printerName) override;
     virtual QString defaultPrinterName() override;
     virtual void requestPrinterDrivers() override;
-
-    virtual PrinterBackend::BackendType backendType() const override;
+    virtual void requestAvailablePrinters() override;
 
 public Q_SLOTS:
     virtual void refresh() override;
     void createSubscription();
 
 Q_SIGNALS:
-    void requestPrinterDriverCancel();
+    void cancelWorkers();
     void printerDriversLoaded(const QList<PrinterDriver> &drivers);
     void printerDriversFailedToLoad(const QString &errorMessage);
+    void requestPrinterDriverCancel();
 
 private:
     void cancelSubscription();

@@ -74,20 +74,36 @@ public:
 
     int count() const;
 
-    Printer* getPrinterFromName(const QString &name);
-
     Q_INVOKABLE QVariantMap get(const int row) const;
 private:
+    enum class CountChangeSignal
+    {
+        Defer,
+        Emit,
+    };
+
+    void addPrinter(QSharedPointer<Printer> printer,
+                    const CountChangeSignal &notify = CountChangeSignal::Defer);
+    void removePrinter(QSharedPointer<Printer> printer,
+                       const CountChangeSignal &notify = CountChangeSignal::Defer);
+    void movePrinter(const int &from, const int &to);
+    void replacePrinter(QSharedPointer<Printer> old, QSharedPointer<Printer> newPrinter);
+    QSharedPointer<Printer> getPrinterByName(const QString &printerName);
     PrinterBackend *m_backend;
 
-    /* FIXME: there's currently no need to share the Printer obj with QML, so
-    this should be normal pointers that are deletedLater. */
-    QList<Printer*> m_printers;
+    QList<QSharedPointer<Printer>> m_printers;
     QMap<QString, JobModel *> m_job_models;
 
 private Q_SLOTS:
     void update();
-    void printerSignalCatchall(const QString &text, const QString &printerUri,
+    void printersLoaded(QList<QSharedPointer<Printer>> printers);
+    void printerModified(const QString &text, const QString &printerUri,
+        const QString &printerName, uint printerState,
+        const QString &printerStateReason, bool acceptingJobs);
+    void printerAdded(const QString &text, const QString &printerUri,
+        const QString &printerName, uint printerState,
+        const QString &printerStateReason, bool acceptingJobs);
+    void printerDeleted(const QString &text, const QString &printerUri,
         const QString &printerName, uint printerState,
         const QString &printerStateReason, bool acceptingJobs);
 

@@ -16,14 +16,10 @@
 
 #include "backend/backend.h"
 
-PrinterBackend::PrinterBackend(QObject *parent)
-    : QObject(parent)
-{
-}
-
 PrinterBackend::PrinterBackend(const QString &printerName, QObject *parent)
     : QObject(parent)
     , m_printerName(printerName)
+    , m_type(PrinterEnum::PrinterType::ProxyType)
 {
 }
 
@@ -262,7 +258,7 @@ QList<QSharedPointer<PrinterJob>> PrinterBackend::printerGetJobs(const QString &
 
 QString PrinterBackend::printerName() const
 {
-    return QString();
+    return m_printerName;
 }
 
 QString PrinterBackend::description() const
@@ -325,9 +321,9 @@ QList<PrinterEnum::DuplexMode> PrinterBackend::supportedDuplexModes() const
     return QList<PrinterEnum::DuplexMode>();
 }
 
-QList<Printer*> PrinterBackend::availablePrinters()
+QList<QSharedPointer<Printer>> PrinterBackend::availablePrinters()
 {
-    return QList<Printer*>();
+    return QList<QSharedPointer<Printer>>();
 }
 
 QStringList PrinterBackend::availablePrinterNames()
@@ -335,10 +331,10 @@ QStringList PrinterBackend::availablePrinterNames()
     return QStringList();
 }
 
-Printer* PrinterBackend::getPrinter(const QString &printerName)
+QSharedPointer<Printer> PrinterBackend::getPrinter(const QString &printerName)
 {
     Q_UNUSED(printerName);
-    return Q_NULLPTR;
+    return QSharedPointer<Printer>(Q_NULLPTR);
 }
 
 QString PrinterBackend::defaultPrinterName()
@@ -350,9 +346,13 @@ void PrinterBackend::requestPrinterDrivers()
 {
 }
 
-PrinterBackend::BackendType PrinterBackend::backendType() const
+void PrinterBackend::requestAvailablePrinters()
 {
-    return BackendType::DefaultType;
+}
+
+PrinterEnum::PrinterType PrinterBackend::type() const
+{
+    return m_type;
 }
 
 void PrinterBackend::refresh()

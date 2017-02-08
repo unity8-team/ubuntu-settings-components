@@ -51,7 +51,7 @@ Printers::Printers(PrinterBackend *backend, QObject *parent)
     connect(&m_drivers, SIGNAL(filterComplete()),
             this, SIGNAL(driverFilterChanged()));
 
-    if (m_backend->backendType() == PrinterBackend::BackendType::CupsType) {
+    if (m_backend->type() == PrinterEnum::PrinterType::CupsType) {
         ((PrinterCupsBackend*) m_backend)->createSubscription();
     }
 }

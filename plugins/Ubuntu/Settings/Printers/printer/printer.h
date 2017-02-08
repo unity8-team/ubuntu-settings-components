@@ -59,7 +59,8 @@ public:
     PrinterEnum::State state() const;
     QString lastStateMessage() const;
     bool isDefault();
-    bool isPdf();
+
+    PrinterEnum::PrinterType type();
 
     void setAccessControl(const PrinterEnum::AccessControl &accessControl);
     void setDefaultColorModel(const ColorModel &colorModel);
@@ -84,7 +85,6 @@ public Q_SLOTS:
     // Requests ink levels for printer.
     void requestInkLevels(const QString &name);
 
-    void updateFrom(Printer *newPrinter);
 Q_SIGNALS:
     void nameChanged();
     void enabledChanged();

@@ -46,8 +46,6 @@ public:
     virtual QList<int> supportedResolutions() const override;
     virtual PrinterEnum::DuplexMode defaultDuplexMode() const override;
     virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const override;
-
-    virtual PrinterBackend::BackendType backendType() const override;
 };
 
 #endif // USC_PRINTERS_PDF_BACKEND_H

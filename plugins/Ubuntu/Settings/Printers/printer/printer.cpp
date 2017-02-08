@@ -166,9 +166,9 @@ bool Printer::isDefault()
     return name() == m_backend->defaultPrinterName();
 }
 
-bool Printer::isPdf()
+PrinterEnum::PrinterType Printer::type()
 {
-    return m_backend->backendType() == PrinterBackend::BackendType::PdfType;
+    return m_backend->type();
 }
 
 void Printer::setDefaultColorModel(const ColorModel &colorModel)
@@ -306,23 +306,23 @@ bool Printer::deepCompare(Printer *other) const
     return changed == false;
 }
 
-void Printer::updateFrom(Printer* newPrinter)
-{
-    Q_UNUSED(newPrinter);
+// void Printer::updateFrom(QSharedPointer<Printer> other)
+// {
 
-    m_backend->refresh();
 
-    loadColorModel();
-    loadPrintQualities();
+//     // m_backend->refresh();
 
-    Q_EMIT descriptionChanged();
-    Q_EMIT defaultColorModelChanged();
-    Q_EMIT defaultDuplexModeChanged();
-    Q_EMIT defaultPageSizeChanged();
-    Q_EMIT defaultPrintQualityChanged();
-    Q_EMIT stateChanged();
+//     loadColorModel();
+//     loadPrintQualities();
 
-    // TODO: accessControl
-    // TODO: enabled
-    // TODO: errorPolicy
-}
+//     Q_EMIT descriptionChanged();
+//     Q_EMIT defaultColorModelChanged();
+//     Q_EMIT defaultDuplexModeChanged();
+//     Q_EMIT defaultPageSizeChanged();
+//     Q_EMIT defaultPrintQualityChanged();
+//     Q_EMIT stateChanged();
+
+//     // TODO: accessControl
+//     // TODO: enabled
+//     // TODO: errorPolicy
+// }

@@ -54,4 +54,5 @@ void UbuntuSettingsComponentsPrintersPlugin::registerTypes(const char *uri)
 
     qmlRegisterUncreatableType<PrinterEnum>(uri, 0, 1, "PrinterEnum", "Is an enum");
     qRegisterMetaType<QList<PrinterDriver>>("QList<PrinterDriver>");
+    qRegisterMetaType<QList<QSharedPointer<Printer>>>("QList<QSharedPointer<Printer>>");
 }

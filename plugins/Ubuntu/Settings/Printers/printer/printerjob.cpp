@@ -21,7 +21,8 @@
 #include "models/printermodel.h"
 #include "printer/printerjob.h"
 
-PrinterJob::PrinterJob(Printer *printer, PrinterBackend *backend,
+PrinterJob::PrinterJob(QSharedPointer<Printer> printer,
+                       PrinterBackend *backend,
                        QObject *parent)
     : QObject(parent)
     , m_collate(true)
@@ -325,7 +326,7 @@ void PrinterJob::setPrinterName(const QString &printerName)
 {
     // Please note the return inside the foreach.
     if (m_printer_name != printerName) {
-        Q_FOREACH(Printer *printer, m_backend->availablePrinters()) {
+        Q_FOREACH(auto printer, m_backend->availablePrinters()) {
             if (printer->name() == printerName) {
                 m_printer_name = printerName;
                 m_printer = printer;

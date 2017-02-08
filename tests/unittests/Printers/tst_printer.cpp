@@ -219,7 +219,7 @@ private Q_SLOTS:
         QCOMPARE(p.defaultColorModel().name, QString("RGB"));
         QCOMPARE(p.defaultPageSize(), QPageSize(QPageSize::A4));
         QCOMPARE(p.defaultDuplexMode(), PrinterEnum::DuplexMode::DuplexNone);
-        QCOMPARE(p.isPdf(), true);
+        QCOMPARE(p.type(), PrinterEnum::PrinterType::PdfType);
     }
     void testState()
     {

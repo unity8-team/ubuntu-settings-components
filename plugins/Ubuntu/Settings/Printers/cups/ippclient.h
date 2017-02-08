@@ -33,12 +33,6 @@
  */
 #define CPH_STR_MAXLEN 512
 
-/* This code is only a shim for systems not running the daemon provided by
-cups-pk-helper. Once provided on all platforms, this code should be replaced
-by proper dbus bindings, and subsequently be set on fire.
-
-FIXME: make most of the "is..." methods const.
-*/
 class IppClient
 {
 public:
@@ -65,7 +59,7 @@ public:
 
     QString getLastError() const;
 
-    // This response needs to be free by the caller.
+    // Note: This response needs to be free by the caller.
     ipp_t* createPrinterDriversRequest(
         const QString &deviceId = "",
         const QString &language = "",

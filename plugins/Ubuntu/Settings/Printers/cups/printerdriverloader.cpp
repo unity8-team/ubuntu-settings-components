@@ -45,7 +45,7 @@ void PrinterDriverLoader::process()
     // Note: if the response somehow fails, we return.
     if (!response || ippGetStatusCode(response) > IPP_OK_CONFLICT) {
         QString err(cupsLastErrorString());
-        qWarning() << __PRETTY_FUNCTION__ << "Cups HTTP error:" << err;
+        qWarning() << Q_FUNC_INFO << "Cups HTTP error:" << err;
 
         if (response)
             ippDelete(response);

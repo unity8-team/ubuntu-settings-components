@@ -100,8 +100,8 @@ bool IppClient::printerAdd(const QString &printerName,
                      "printer-info", NULL, info.toUtf8());
     }
     if (!location.isEmpty()) {
-            ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_TEXT,
-                         "printer-location", NULL, location.toUtf8());
+        ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_TEXT,
+                     "printer-location", NULL, location.toUtf8());
     }
 
     return sendRequest(request, CupsResourceAdmin);
@@ -160,8 +160,8 @@ bool IppClient::printerAddWithPpdFile(const QString &printerName,
                      "printer-info", NULL, info.toUtf8());
     }
     if (!location.isEmpty()) {
-            ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_TEXT,
-                         "printer-location", NULL, location.toUtf8());
+        ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_TEXT,
+                     "printer-location", NULL, location.toUtf8());
     }
 
     return postRequest(request, ppdFileName.toUtf8(), CupsResourceAdmin);
@@ -516,8 +516,6 @@ const QString IppClient::getResource(const IppClient::CupsResource &resource)
     case CupsResourceJobs:
         return "/jobs/";
     default:
-        /* that's a fall back -- we don't use
-         * g_assert_not_reached() to avoid crashing. */
         qCritical("Asking for a resource with no match.");
         return "/";
     }
@@ -548,11 +546,11 @@ bool IppClient::isPrinterNameValid(const QString &name)
     for (i = 0; i < len; i++) {
         const QChar c = name.at(i);
         if (!c.isPrint())
-                return false;
+            return false;
         if (c.isSpace())
-                return false;
+            return false;
         if (c == '/' || c == '#')
-                return false;
+            return false;
     }
     return true;
 }
@@ -583,7 +581,7 @@ bool IppClient::isStringPrintable(const QString &string, const bool checkNull,
     for (i = 0; i < len; i++) {
         const QChar c = string.at(i);
         if (!c.isPrint())
-                return false;
+            return false;
     }
     return true;
 }
@@ -652,7 +650,7 @@ bool IppClient::isReplyOk(ipp_t *reply, bool deleteIfReplyNotOk)
         return true;
     } else {
         setErrorFromReply(reply);
-        qWarning() << __PRETTY_FUNCTION__ << "Cups HTTP error:" << cupsLastErrorString();
+        qWarning() << Q_FUNC_INFO << "Cups HTTP error:" << cupsLastErrorString();
 
         if (deleteIfReplyNotOk && reply)
             ippDelete(reply);

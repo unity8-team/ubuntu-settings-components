@@ -179,6 +179,14 @@ bool IppClient::printerSetDefault(const QString &printerName)
                                 CupsResource::CupsResourceAdmin);
 }
 
+bool IppClient::printerSetEnabled(const QString &printerName,
+                                  const bool enabled)
+{
+    ipp_op_t op;
+    op = enabled ? IPP_RESUME_PRINTER : IPP_PAUSE_PRINTER;
+    return sendNewSimpleRequest(op, printerName, CupsResourceAdmin);
+}
+
 bool IppClient::printerClassSetInfo(const QString &name,
                                        const QString &info)
 {

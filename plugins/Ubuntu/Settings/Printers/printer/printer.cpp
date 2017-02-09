@@ -20,12 +20,6 @@
 
 #include <QDebug>
 
-Printer::Printer(QObject *parent)
-    : QObject(parent)
-{
-    // TODO: remove this constructor.
-}
-
 Printer::Printer(PrinterBackend *backend, QObject *parent)
     : QObject(parent)
     , m_backend(backend)
@@ -152,8 +146,7 @@ PrinterEnum::ErrorPolicy Printer::errorPolicy() const
 
 bool Printer::enabled() const
 {
-    // TODO: implement
-    return true;
+    return state() != PrinterEnum::State::ErrorState;
 }
 
 QStringList Printer::users() const
@@ -227,8 +220,10 @@ void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
 
 void Printer::setEnabled(const bool enabled)
 {
-    // TODO: implement
-    Q_UNUSED(enabled);
+    QString reply = m_backend->printerSetEnabled(name(), enabled);
+    if (!reply.isEmpty()) {
+        qWarning() << Q_FUNC_INFO << "failed to set enabled:" << reply;
+    }
 }
 
 void Printer::setErrorPolicy(const PrinterEnum::ErrorPolicy &errorPolicy)
@@ -317,24 +312,3 @@ bool Printer::deepCompare(Printer *other) const
     // Return true if they are the same, so no change
     return changed == false;
 }
-
-// void Printer::updateFrom(QSharedPointer<Printer> other)
-// {
-
-
-//     // m_backend->refresh();
-
-//     loadColorModel();
-//     loadPrintQualities();
-
-//     Q_EMIT descriptionChanged();
-//     Q_EMIT defaultColorModelChanged();
-//     Q_EMIT defaultDuplexModeChanged();
-//     Q_EMIT defaultPageSizeChanged();
-//     Q_EMIT defaultPrintQualityChanged();
-//     Q_EMIT stateChanged();
-
-//     // TODO: accessControl
-//     // TODO: enabled
-//     // TODO: errorPolicy
-// }

@@ -56,7 +56,7 @@ public:
                                       const QString &info,
                                       const QString &location);
     virtual QString printerDelete(const QString &name);
-    virtual QString printerSetDefault(const QString &printerName);
+    virtual QString printerSetDefault(const QString &name);
     virtual QString printerSetEnabled(const QString &name,
                                       const bool enabled);
     virtual QString printerSetAcceptJobs(

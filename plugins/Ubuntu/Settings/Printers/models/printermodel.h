@@ -48,6 +48,7 @@ public:
         DuplexRole,
         SupportedDuplexModesRole,
         NameRole,
+        EnabledRole,
         PrintRangeRole,
         PrintRangeModeRole,
         PdfModeRole,

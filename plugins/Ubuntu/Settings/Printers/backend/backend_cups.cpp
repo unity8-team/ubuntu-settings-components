@@ -138,9 +138,9 @@ QString PrinterCupsBackend::printerDelete(const QString &name)
     return QString();
 }
 
-QString PrinterCupsBackend::printerSetDefault(const QString &printerName)
+QString PrinterCupsBackend::printerSetDefault(const QString &name)
 {
-    if (!m_client->printerSetDefault(printerName)) {
+    if (!m_client->printerSetDefault(name)) {
         return m_client->getLastError();
     }
     return QString();
@@ -149,9 +149,9 @@ QString PrinterCupsBackend::printerSetDefault(const QString &printerName)
 QString PrinterCupsBackend::printerSetEnabled(const QString &name,
                                               const bool enabled)
 {
-    // TODO: implement
-    Q_UNUSED(name);
-    Q_UNUSED(enabled);
+    if (!m_client->printerSetEnabled(name, enabled)) {
+        return m_client->getLastError();
+    }
     return QString();
 }
 
@@ -356,8 +356,6 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetOptions(
                 }
             }
             ret[option] = QVariant::fromValue(models);
-        } else if (option == QLatin1String("SupportedColorModels")) {
-
         } else {
             ppd_option_t *val = ppdFindOption(ppd, option.toUtf8());
 

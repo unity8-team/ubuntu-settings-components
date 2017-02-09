@@ -34,6 +34,8 @@ QVariant PrinterPdfBackend::printerGetOption(const QString &name,
 QMap<QString, QVariant> PrinterPdfBackend::printerGetOptions(
     const QString &name, const QStringList &options) const
 {
+    Q_UNUSED(name);
+
     QMap<QString, QVariant> ret;
 
     ColorModel rgb;

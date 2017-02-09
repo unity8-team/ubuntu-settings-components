@@ -327,6 +327,10 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
             ret = QVariant::fromValue(m_job_models.value(printer->name()));
             break;
         }
+        case EnabledRole: {
+            ret = printer->enabled();
+            break;
+        }
         // case LastStateMessageRole:
         //     ret = printer->lastStateMessage();
         //     break;
@@ -379,6 +383,10 @@ bool PrinterModel::setData(const QModelIndex &index,
                 }
             }
             break;
+        case EnabledRole:
+            bool enabled = value.toBool();
+            printer->setEnabled(enabled);
+            break;
         }
     }
 
@@ -398,6 +406,7 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
         names[DuplexRole] = "duplexMode";
         names[SupportedDuplexModesRole] = "supportedDuplexModes";
         names[NameRole] = "name";
+        names[EnabledRole] = "printerEnabled";
         names[PrintRangeRole] = "printRange";
         names[PrintRangeModeRole] = "printRangeMode";
         names[PdfModeRole] = "pdfMode";

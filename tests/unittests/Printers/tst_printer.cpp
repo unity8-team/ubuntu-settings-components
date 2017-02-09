@@ -226,6 +226,18 @@ private Q_SLOTS:
         getBackend()->m_state = PrinterEnum::State::AbortedState;
         QCOMPARE(m_instance->state(), getBackend()->m_state);
     }
+    void testEnabled()
+    {
+
+    }
+    void testSetEnabled_data()
+    {
+
+    }
+    void testSetEnabled()
+    {
+
+    }
 private:
     QString m_printerName = "my-printer";
     PrinterBackend *m_backend = nullptr;

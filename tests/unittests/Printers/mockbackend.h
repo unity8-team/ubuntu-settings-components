@@ -81,9 +81,9 @@ public:
         return returnValue;
     }
 
-    virtual QString printerSetDefault(const QString &printerName) override
+    virtual QString printerSetDefault(const QString &name) override
     {
-        Q_UNUSED(printerName);
+        Q_UNUSED(name);
         return returnValue;
     }
 

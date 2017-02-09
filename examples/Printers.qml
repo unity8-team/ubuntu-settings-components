@@ -52,6 +52,20 @@ MainView {
                         right: parent.right
                     }
 
+
+                    ListItems.Standard {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Enabled"
+
+                        control: Switch {
+                            checked: printer.printerEnabled
+                            onCheckedChanged: printer.printerEnabled = checked
+                        }
+                    }
+
                     Label {
                         anchors {
                             left: parent.left

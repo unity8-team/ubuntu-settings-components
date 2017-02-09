@@ -37,7 +37,6 @@ class PRINTERS_DECL_EXPORT Printer : public QObject
 {
     Q_OBJECT
 public:
-    explicit Printer(QObject *parent = nullptr);
     explicit Printer(PrinterBackend *backend, QObject *parent = nullptr);
     ~Printer();
 
@@ -116,6 +115,7 @@ private:
     QList<ColorModel> m_supportedColorModels;
     PrintQuality m_defaultPrintQuality;
     QList<PrintQuality> m_supportedPrintQualities;
+    bool m_enabled;
 };
 
 // FIXME: not necessary outside tests

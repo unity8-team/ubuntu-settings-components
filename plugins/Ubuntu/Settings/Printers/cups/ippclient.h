@@ -52,6 +52,7 @@ public:
                                const QString &info,
                                const QString &location);
     bool printerSetDefault(const QString &printerName);
+    bool printerSetEnabled(const QString &printerName, const bool enabled);
     bool printerClassSetInfo(const QString &name, const QString &info);
     bool printerClassSetOption(const QString &name, const QString &option,
                                const QStringList &values);

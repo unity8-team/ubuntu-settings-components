@@ -56,6 +56,7 @@ public:
                                       const QString &info,
                                       const QString &location);
     virtual QString printerDelete(const QString &name);
+    virtual QString printerSetDefault(const QString &printerName);
     virtual QString printerSetEnabled(const QString &name,
                                       const bool enabled);
     virtual QString printerSetAcceptJobs(
@@ -202,6 +203,14 @@ Q_SIGNALS:
         bool acceptingJobs
     );
     void printerModified(
+        const QString &text,
+        const QString &printerUri,
+        const QString &printerName,
+        uint printerState,
+        const QString &printerStateReason,
+        bool acceptingJobs
+    );
+    void printerStateChanged(
         const QString &text,
         const QString &printerUri,
         const QString &printerName,

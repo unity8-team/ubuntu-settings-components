@@ -45,11 +45,13 @@ public:
                     const QString &ppdFile,
                     const QString &info,
                     const QString &location);
+
     bool printerAddWithPpdFile(const QString &printerName,
                                const QString &printerUri,
                                const QString &ppdFileName,
                                const QString &info,
                                const QString &location);
+    bool printerSetDefault(const QString &printerName);
     bool printerClassSetInfo(const QString &name, const QString &info);
     bool printerClassSetOption(const QString &name, const QString &option,
                                const QStringList &values);
@@ -62,12 +64,9 @@ public:
 
     // Note: This response needs to be free by the caller.
     ipp_t* createPrinterDriversRequest(
-        const QString &deviceId = "",
-        const QString &language = "",
-        const QString &makeModel = "",
-        const QString &product = "",
-        const QStringList &includeSchemes = QStringList(),
-        const QStringList &excludeSchemes = QStringList()
+        const QString &deviceId, const QString &language,
+        const QString &makeModel, const QString &product,
+        const QStringList &includeSchemes, const QStringList &excludeSchemes
     );
     int createSubscription();
     void cancelSubscription(const int &subscriptionId);

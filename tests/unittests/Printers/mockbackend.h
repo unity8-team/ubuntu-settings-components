@@ -81,6 +81,12 @@ public:
         return returnValue;
     }
 
+    virtual QString printerSetDefault(const QString &printerName) override
+    {
+        Q_UNUSED(printerName);
+        return returnValue;
+    }
+
     virtual QString printerSetEnabled(const QString &name,
                                       const bool enabled) override
     {

@@ -48,6 +48,7 @@ public:
                                       const QString &info,
                                       const QString &location) override;
     virtual QString printerDelete(const QString &name) override;
+    virtual QString printerSetDefault(const QString &printerName) override;
     virtual QString printerSetEnabled(const QString &name,
                                       const bool enabled) override;
     virtual QString printerSetAcceptJobs(

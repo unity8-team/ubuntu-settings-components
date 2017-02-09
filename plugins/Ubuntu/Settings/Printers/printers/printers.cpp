@@ -126,8 +126,11 @@ void Printers::cancelJob(const QString &printerName, const int jobId)
 
 void Printers::setDefaultPrinterName(const QString &name)
 {
-    // TODO: implement
-    Q_UNUSED(name);
+    QString reply = m_backend->printerSetDefault(name);
+
+    if (!reply.isEmpty()) {
+        m_lastMessage = reply;
+    }
 }
 
 QSharedPointer<Printer> Printers::getPrinterByName(const QString &name)

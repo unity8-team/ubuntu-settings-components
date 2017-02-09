@@ -85,6 +85,14 @@ PrinterCupsBackend::PrinterCupsBackend(IppClient *client, QPrinterInfo info,
             this, SIGNAL(printerModified(const QString&, const QString&,
                                          const QString&, uint,
                                          const QString&, bool)));
+    connect(m_notifier, SIGNAL(PrinterStateChanged(const QString&,
+                                                   const QString&,
+                                                   const QString&, uint,
+                                                   const QString&, bool)),
+            this, SIGNAL(printerStateChanged(const QString&, const QString&,
+                                             const QString&, uint,
+                                             const QString&, bool)));
+
 }
 
 PrinterCupsBackend::~PrinterCupsBackend()
@@ -125,6 +133,14 @@ bool PrinterCupsBackend::holdsDefinition() const
 QString PrinterCupsBackend::printerDelete(const QString &name)
 {
     if (!m_client->printerDelete(name)) {
+        return m_client->getLastError();
+    }
+    return QString();
+}
+
+QString PrinterCupsBackend::printerSetDefault(const QString &printerName)
+{
+    if (!m_client->printerSetDefault(printerName)) {
         return m_client->getLastError();
     }
     return QString();
@@ -794,17 +810,8 @@ void PrinterCupsBackend::requestAvailablePrinters()
 
 void PrinterCupsBackend::requestPrinterDrivers()
 {
-    const QString &deviceId = "";
-    const QString &language = "";
-    const QString &makeModel = "";
-    const QString &product = "";
-    const QStringList &includeSchemes = QStringList();
-    const QStringList &excludeSchemes = QStringList();
-
     auto thread = new QThread;
-    auto loader = new PrinterDriverLoader(deviceId, language, makeModel,
-                                          product, includeSchemes,
-                                          excludeSchemes);
+    auto loader = new PrinterDriverLoader();
     loader->moveToThread(thread);
     connect(loader, SIGNAL(error(const QString&)),
             this, SIGNAL(printerDriversFailedToLoad(const QString&)));

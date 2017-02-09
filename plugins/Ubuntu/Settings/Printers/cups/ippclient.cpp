@@ -173,6 +173,12 @@ bool IppClient::printerAddWithPpdFile(const QString &printerName,
     return postRequest(request, ppdFileName.toUtf8(), CupsResourceAdmin);
 }
 
+bool IppClient::printerSetDefault(const QString &printerName)
+{
+    return sendNewSimpleRequest(CUPS_SET_DEFAULT, printerName.toUtf8(),
+                                CupsResource::CupsResourceAdmin);
+}
+
 bool IppClient::printerClassSetInfo(const QString &name,
                                        const QString &info)
 {

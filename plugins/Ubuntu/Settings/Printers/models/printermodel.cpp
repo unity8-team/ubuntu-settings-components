@@ -32,6 +32,8 @@ PrinterModel::PrinterModel(PrinterBackend *backend, QObject *parent)
                      this, &PrinterModel::printerAdded);
     QObject::connect(m_backend, &PrinterBackend::printerModified,
                      this, &PrinterModel::printerModified);
+    QObject::connect(m_backend, &PrinterBackend::printerStateChanged,
+                     this, &PrinterModel::printerModified);
     QObject::connect(m_backend, &PrinterBackend::printerDeleted,
                      this, &PrinterModel::printerDeleted);
 
@@ -48,7 +50,6 @@ PrinterModel::~PrinterModel()
 
 void PrinterModel::printersLoaded(QList<QSharedPointer<Printer>> printers)
 {
-    qWarning() << Q_FUNC_INFO;
     // Store the old count and get the new printers
     int oldCount = m_printers.size();
     QList<QSharedPointer<Printer>> newPrinters = printers;
@@ -198,7 +199,6 @@ void PrinterModel::removePrinter(QSharedPointer<Printer> printer, const CountCha
 void PrinterModel::replacePrinter(QSharedPointer<Printer> old,
                                   QSharedPointer<Printer> newPrinter)
 {
-    qWarning() << "will replace" << old->name() << "with" << newPrinter->name() << (int) newPrinter->type();
     int i = m_printers.indexOf(old);
     QModelIndex idx = index(i);
 

@@ -129,6 +129,10 @@ private Q_SLOTS:
         printers.removePrinter(a->name());
         QCOMPARE(backend->m_availablePrinters.size(), 0);
     }
+    void testSetDefault()
+    {
+
+    }
 };
 
 QTEST_GUILESS_MAIN(TestPrinters)

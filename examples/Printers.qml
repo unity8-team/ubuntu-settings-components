@@ -180,7 +180,13 @@ MainView {
                                         console.error('failed to remove printer', Printers.lastMessage);
                                     }
                                 }
+                            },
+                            Action {
+                                iconName: model.default ? "starred" : "non-starred"
+                                enabled: !model.default
+                                onTriggered: Printers.defaultPrinterName = model.name
                             }
+
                         ]
                     }
                     ListItemLayout {

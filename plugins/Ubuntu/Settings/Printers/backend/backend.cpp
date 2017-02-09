@@ -66,6 +66,12 @@ QString PrinterBackend::printerDelete(const QString &name)
     return QString();
 }
 
+QString PrinterBackend::printerSetDefault(const QString &printerName)
+{
+    Q_UNUSED(printerName);
+    return QString();
+}
+
 QString PrinterBackend::printerSetEnabled(const QString &name,
                                           const bool enabled)
 {

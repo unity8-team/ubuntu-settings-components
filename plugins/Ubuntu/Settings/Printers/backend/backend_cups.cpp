@@ -269,8 +269,7 @@ QString PrinterCupsBackend::printerAddOption(const QString &name,
 QVariant PrinterCupsBackend::printerGetOption(const QString &name,
                                               const QString &option) const
 {
-    QStringList opts({option});
-    auto res = printerGetOptions(name, opts);
+    auto res = printerGetOptions(name, QStringList({option}));
     return res[option];
 }
 
@@ -299,7 +298,7 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetOptions(
     }
 
     Q_FOREACH(const QString &option, options) {
-        if (option == "DefaultColorModel") {
+        if (option == QLatin1String("DefaultColorModel")) {
             ColorModel model;
             ppd_option_t *ppdColorModel = ppdFindOption(ppd, "ColorModel");
             if (ppdColorModel) {
@@ -312,7 +311,7 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetOptions(
                 }
             }
             ret[option] = QVariant::fromValue(model);
-        } else if (option == "DefaultPrintQuality") {
+        } else if (option == QLatin1String("DefaultPrintQuality")) {
             PrintQuality quality;
             Q_FOREACH(const QString opt, m_knownQualityOptions) {
                 ppd_option_t *ppdQuality = ppdFindOption(ppd, opt.toUtf8());
@@ -326,6 +325,39 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetOptions(
                 }
             }
             ret[option] = QVariant::fromValue(quality);
+        } else if (option == QLatin1String("SupportedPrintQualities")) {
+            QList<PrintQuality> qualities;
+            Q_FOREACH(const QString &opt, m_knownQualityOptions) {
+                ppd_option_t *qualityOpt = ppdFindOption(ppd, opt.toUtf8());
+                if (qualityOpt) {
+                    for (int i = 0; i < qualityOpt->num_choices; ++i) {
+                        qualities.append(
+                            Utils::parsePpdPrintQuality(
+                                qualityOpt->choices[i].choice,
+                                qualityOpt->choices[i].text,
+                                opt
+                            )
+                        );
+                    }
+                }
+            }
+        } else if (option == QLatin1String("SupportedColorModels")) {
+            QList<ColorModel> models;
+            ppd_option_t *colorModels = ppdFindOption(ppd, "ColorModel");
+            if (colorModels) {
+                for (int i = 0; i < colorModels->num_choices; ++i) {
+                    models.append(
+                        Utils::parsePpdColorModel(
+                            colorModels->choices[i].choice,
+                            colorModels->choices[i].text,
+                            QLatin1String("ColorModel")
+                        )
+                    );
+                }
+            }
+            ret[option] = QVariant::fromValue(models);
+        } else if (option == QLatin1String("SupportedColorModels")) {
+
         } else {
             ppd_option_t *val = ppdFindOption(ppd, option.toUtf8());
 
@@ -385,69 +417,6 @@ cups_dest_t* PrinterCupsBackend::makeDest(const QString &name,
     __CUPS_ADD_OPTION(dest, "fit-to-page", "True");
 
     return dest;
-}
-
-QList<ColorModel> PrinterCupsBackend::printerGetSupportedColorModels(
-        const QString &name) const
-{
-    QList<ColorModel> ret;
-    ppd_file_t* ppd;
-
-    ppd = m_client->getPpdFile(getPrinterName(name), getPrinterInstance(name));
-    if (!ppd) {
-        qCritical() << "Could not get PPD for" << name;
-        return ret;
-    }
-
-    ppd_option_t *colorModels = ppdFindOption(ppd, "ColorModel");
-    if (colorModels) {
-        for (int i = 0; i < colorModels->num_choices; ++i) {
-            ret.append(Utils::parsePpdColorModel(colorModels->choices[i].choice,
-                                                 colorModels->choices[i].text,
-                                                 "ColorModel"));
-        }
-    }
-
-    ppdClose(ppd);
-    return ret;
-}
-
-ColorModel PrinterCupsBackend::printerGetDefaultColorModel(
-    const QString &name) const
-{
-    return printerGetOption(name, "DefaultColorModel").value<ColorModel>();
-}
-
-QList<PrintQuality> PrinterCupsBackend::printerGetSupportedQualities(
-        const QString &name) const
-{
-    QList<PrintQuality> ret;
-    ppd_file_t* ppd;
-
-    ppd = m_client->getPpdFile(getPrinterName(name), getPrinterInstance(name));
-    if (!ppd) {
-        qCritical() << "Could not get PPD for" << name;
-        return ret;
-    }
-
-    Q_FOREACH(const QString &opt, m_knownQualityOptions) {
-        ppd_option_t *qualityOpt = ppdFindOption(ppd, opt.toUtf8());
-        if (qualityOpt) {
-            for (int i = 0; i < qualityOpt->num_choices; ++i)
-                ret.append(Utils::parsePpdPrintQuality(qualityOpt->choices[i].choice,
-                                                       qualityOpt->choices[i].text,
-                                                       opt));
-        }
-    }
-
-    ppdClose(ppd);
-    return ret;
-}
-
-PrintQuality PrinterCupsBackend::printerGetDefaultQuality(
-        const QString &name) const
-{
-    return printerGetOption(name, "DefaultPrintQuality").value<PrintQuality>();
 }
 
 void PrinterCupsBackend::cancelJob(const QString &name, const int jobId)

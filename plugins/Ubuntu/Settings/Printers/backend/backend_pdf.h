@@ -24,17 +24,13 @@ class PRINTERS_DECL_EXPORT PrinterPdfBackend : public PrinterBackend
 public:
     explicit PrinterPdfBackend(const QString &printerName,
                                QObject *parent = Q_NULLPTR);
-    virtual QList<ColorModel> printerGetSupportedColorModels(
-        const QString &name) const override;
-    virtual ColorModel printerGetDefaultColorModel(const QString &name) const;
-    virtual QList<PrintQuality> printerGetSupportedQualities(
-        const QString &name) const override;
-    virtual PrintQuality printerGetDefaultQuality(const QString &name) const;
+    virtual QVariant printerGetOption(const QString &name,
+                                      const QString &option) const override;
+    virtual QMap<QString, QVariant> printerGetOptions(
+        const QString &name, const QStringList &options
+    ) const override;
 
     virtual QString printerName() const override;
-    virtual QString description() const override;
-    virtual QString location() const override;
-    virtual QString makeAndModel() const override;
 
     virtual PrinterEnum::State state() const override;
     virtual QList<QPageSize> supportedPageSizes() const override;

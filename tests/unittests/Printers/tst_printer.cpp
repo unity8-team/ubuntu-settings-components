@@ -176,7 +176,7 @@ private Q_SLOTS:
 
         PrinterBackend *backend = new MockPrinterBackend(m_printerName);
         ((MockPrinterBackend*) backend)->printerOptions[m_printerName].insert(
-            "ColorModels", QVariant::fromValue(models));
+            "SupportedColorModels", QVariant::fromValue(models));
         Printer p(backend);
         QCOMPARE(p.supportedColorModels(), models);
     }
@@ -196,7 +196,7 @@ private Q_SLOTS:
 
         PrinterBackend *backend = new MockPrinterBackend(m_printerName);
         ((MockPrinterBackend*) backend)->printerOptions[m_printerName].insert(
-            "PrintQualities", QVariant::fromValue(qualities));
+            "SupportedPrintQualities", QVariant::fromValue(qualities));
         Printer p(backend);
         QCOMPARE(p.supportedPrintQualities(), qualities);
     }

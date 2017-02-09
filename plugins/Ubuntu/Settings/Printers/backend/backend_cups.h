@@ -82,7 +82,6 @@ public:
                                      const QString &option,
                                      const QStringList &values) override;
 
-    // TODO: const for both these getters (if possible)!
     virtual QVariant printerGetOption(const QString &name,
                                       const QString &option) const override;
     virtual QMap<QString, QVariant> printerGetOptions(
@@ -91,13 +90,6 @@ public:
     // FIXME: maybe have a PrinterDest iface that has a CupsDest impl?
     virtual cups_dest_t* makeDest(const QString &name,
                                   const PrinterJob *options) override;
-
-    virtual QList<ColorModel> printerGetSupportedColorModels(
-        const QString &name) const override;
-    virtual ColorModel printerGetDefaultColorModel(const QString &name) const;
-    virtual QList<PrintQuality> printerGetSupportedQualities(
-        const QString &name) const override;
-    virtual PrintQuality printerGetDefaultQuality(const QString &name) const;
 
     virtual void cancelJob(const QString &name, const int jobId) override;
     virtual int printFileToDest(const QString &filepath,

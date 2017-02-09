@@ -105,8 +105,7 @@ void Printers::setDriverFilter(const QString &filter)
 
 QString Printers::defaultPrinterName() const
 {
-    // TODO: implement
-    return QString();
+    return m_backend->defaultPrinterName();
 }
 
 QString Printers::lastMessage() const

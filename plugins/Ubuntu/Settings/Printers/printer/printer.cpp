@@ -41,8 +41,14 @@ Printer::~Printer()
 
 void Printer::loadColorModel()
 {
-    m_supportedColorModels = m_backend->printerGetSupportedColorModels(name());
-    m_defaultColorModel = m_backend->printerGetDefaultColorModel(name());
+    auto defModel = QLatin1String("DefaultColorModel");
+    auto models = QLatin1String("SupportedColorModels");
+    auto result = m_backend->printerGetOptions(
+        name(), QStringList({defModel, models})
+    );
+
+    m_defaultColorModel = result.value(defModel).value<ColorModel>();
+    m_supportedColorModels = result.value(models).value<QList<ColorModel>>();
 
     if (m_supportedColorModels.size() == 0) {
         m_supportedColorModels.append(m_defaultColorModel);
@@ -51,8 +57,14 @@ void Printer::loadColorModel()
 
 void Printer::loadPrintQualities()
 {
-    m_supportedPrintQualities = m_backend->printerGetSupportedQualities(name());
-    m_defaultPrintQuality = m_backend->printerGetDefaultQuality(name());
+    auto defQuality = QLatin1String("DefaultPrintQuality");
+    auto qualities = QLatin1String("SupportedPrintQualities");
+    auto result = m_backend->printerGetOptions(
+        name(), QStringList({defQuality, qualities})
+    );
+
+    m_supportedPrintQualities = result.value(qualities).value<QList<PrintQuality>>();
+    m_defaultPrintQuality = result.value(defQuality).value<PrintQuality>();
 
     if (m_supportedPrintQualities.size() == 0) {
         m_supportedPrintQualities.append(m_defaultPrintQuality);

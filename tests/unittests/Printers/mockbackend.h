@@ -219,19 +219,6 @@ public:
         return Q_NULLPTR;
     }
 
-
-    virtual QList<ColorModel> printerGetSupportedColorModels(
-        const QString &name) const override
-    {
-        return printerOptions[name].value("ColorModels").value<QList<ColorModel>>();
-    }
-
-    virtual QList<PrintQuality> printerGetSupportedQualities(
-        const QString &name) const override
-    {
-        return printerOptions[name].value("PrintQualities").value<QList<PrintQuality>>();
-    }
-
     virtual void cancelJob(const QString &name, const int jobId) override
     {
         Q_UNUSED(name);

@@ -211,34 +211,6 @@ cups_dest_t* PrinterBackend::makeDest(const QString &name,
     return Q_NULLPTR;
 }
 
-QList<ColorModel> PrinterBackend::printerGetSupportedColorModels(
-    const QString &name) const
-{
-    Q_UNUSED(name);
-    return QList<ColorModel>();
-}
-
-ColorModel PrinterBackend::printerGetDefaultColorModel(
-    const QString &name) const
-{
-    Q_UNUSED(name);
-    return ColorModel();
-}
-
-QList<PrintQuality> PrinterBackend::printerGetSupportedQualities(
-    const QString &name) const
-{
-    Q_UNUSED(name);
-    return QList<PrintQuality>();
-}
-
-PrintQuality PrinterBackend::printerGetDefaultQuality(
-        const QString &name) const
-{
-    Q_UNUSED(name);
-    return PrintQuality();
-}
-
 void PrinterBackend::cancelJob(const QString &name, const int jobId)
 {
     Q_UNUSED(jobId);

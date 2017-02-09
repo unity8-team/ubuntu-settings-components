@@ -238,6 +238,19 @@ private Q_SLOTS:
     {
 
     }
+    void testAcceptJobs()
+    {
+
+    }
+    void testSetAcceptJobs_data()
+    {
+
+    }
+    void testSetAcceptJobs()
+    {
+
+    }
+
 private:
     QString m_printerName = "my-printer";
     PrinterBackend *m_backend = nullptr;

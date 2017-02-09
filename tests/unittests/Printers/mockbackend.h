@@ -96,11 +96,11 @@ public:
 
     virtual QString printerSetAcceptJobs(
         const QString &name,
-        const bool enabled,
+        const bool accept,
         const QString &reason = QString::null) override
     {
         Q_UNUSED(name);
-        Q_UNUSED(enabled);
+        Q_UNUSED(accept);
         Q_UNUSED(reason);
         return returnValue;
     }

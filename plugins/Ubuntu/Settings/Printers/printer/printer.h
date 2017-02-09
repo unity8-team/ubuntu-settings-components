@@ -58,6 +58,7 @@ public:
     PrinterEnum::State state() const;
     QString lastStateMessage() const;
     bool isDefault();
+    bool acceptJobs();
 
     PrinterEnum::PrinterType type();
 
@@ -66,6 +67,7 @@ public:
     void setDescription(const QString &description);
     void setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode);
     void setEnabled(const bool enabled);
+    void setAcceptJobs(const bool accepting);
     void setErrorPolicy(const PrinterEnum::ErrorPolicy &errorPolicy);
     void setName(const QString &name);
     void setDefaultPrintQuality(const PrintQuality &quality);
@@ -107,6 +109,7 @@ Q_SIGNALS:
     void printerChanged();
 
 private:
+    void loadAcceptJobs();
     void loadColorModel();
     void loadPrintQualities();
 
@@ -115,7 +118,7 @@ private:
     QList<ColorModel> m_supportedColorModels;
     PrintQuality m_defaultPrintQuality;
     QList<PrintQuality> m_supportedPrintQualities;
-    bool m_enabled;
+    bool m_acceptJobs;
 };
 
 // FIXME: not necessary outside tests

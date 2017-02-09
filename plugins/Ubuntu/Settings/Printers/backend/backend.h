@@ -61,7 +61,7 @@ public:
                                       const bool enabled);
     virtual QString printerSetAcceptJobs(
         const QString &name,
-        const bool enabled,
+        const bool accept,
         const QString &reason = QString::null);
     virtual QString printerSetInfo(const QString &name,
                                    const QString &info);

@@ -49,6 +49,7 @@ public:
         SupportedDuplexModesRole,
         NameRole,
         EnabledRole,
+        AcceptJobsRole,
         PrintRangeRole,
         PrintRangeModeRole,
         PdfModeRole,

@@ -57,6 +57,8 @@ QMap<QString, QVariant> PrinterPdfBackend::printerGetOptions(
         } else if (option == QLatin1String("SupportedColorModels")) {
             auto models = QList<ColorModel>{rgb};
             ret[option] = QVariant::fromValue(models);
+        } else if (option == QLatin1String("AcceptJobs")) {
+            ret[option] = true;
         } else {
             throw std::invalid_argument("Invalid value for PDF printer: " + option.toStdString());
         }

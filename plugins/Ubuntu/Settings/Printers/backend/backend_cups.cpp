@@ -157,13 +157,12 @@ QString PrinterCupsBackend::printerSetEnabled(const QString &name,
 
 QString PrinterCupsBackend::printerSetAcceptJobs(
         const QString &name,
-        const bool enabled,
+        const bool accept,
         const QString &reason)
 {
-    // TODO: implement
-    Q_UNUSED(name);
-    Q_UNUSED(enabled);
-    Q_UNUSED(reason);
+    if (!m_client->printerSetAcceptJobs(name, accept, reason)) {
+        return m_client->getLastError();
+    }
     return QString();
 }
 
@@ -298,7 +297,7 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetOptions(
     }
 
     Q_FOREACH(const QString &option, options) {
-        if (option == QLatin1String("DefaultColorModel")) {
+        if (option == QStringLiteral("DefaultColorModel")) {
             ColorModel model;
             ppd_option_t *ppdColorModel = ppdFindOption(ppd, "ColorModel");
             if (ppdColorModel) {
@@ -311,7 +310,7 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetOptions(
                 }
             }
             ret[option] = QVariant::fromValue(model);
-        } else if (option == QLatin1String("DefaultPrintQuality")) {
+        } else if (option == QStringLiteral("DefaultPrintQuality")) {
             PrintQuality quality;
             Q_FOREACH(const QString opt, m_knownQualityOptions) {
                 ppd_option_t *ppdQuality = ppdFindOption(ppd, opt.toUtf8());
@@ -325,7 +324,7 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetOptions(
                 }
             }
             ret[option] = QVariant::fromValue(quality);
-        } else if (option == QLatin1String("SupportedPrintQualities")) {
+        } else if (option == QStringLiteral("SupportedPrintQualities")) {
             QList<PrintQuality> qualities;
             Q_FOREACH(const QString &opt, m_knownQualityOptions) {
                 ppd_option_t *qualityOpt = ppdFindOption(ppd, opt.toUtf8());
@@ -341,7 +340,7 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetOptions(
                     }
                 }
             }
-        } else if (option == QLatin1String("SupportedColorModels")) {
+        } else if (option == QStringLiteral("SupportedColorModels")) {
             QList<ColorModel> models;
             ppd_option_t *colorModels = ppdFindOption(ppd, "ColorModel");
             if (colorModels) {
@@ -350,12 +349,17 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetOptions(
                         Utils::parsePpdColorModel(
                             colorModels->choices[i].choice,
                             colorModels->choices[i].text,
-                            QLatin1String("ColorModel")
+                            QStringLiteral("ColorModel")
                         )
                     );
                 }
             }
             ret[option] = QVariant::fromValue(models);
+        } else if (option == QStringLiteral("AcceptJobs")) {
+            // "true" if the destination is accepting new jobs, "false" if not.
+            QString res = cupsGetOption("printer-is-accepting-jobs",
+                                        dest->num_options, dest->options);
+            ret[option] = res.contains("true");
         } else {
             ppd_option_t *val = ppdFindOption(ppd, option.toUtf8());
 

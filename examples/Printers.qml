@@ -52,7 +52,6 @@ MainView {
                         right: parent.right
                     }
 
-
                     ListItems.Standard {
                         anchors {
                             left: parent.left
@@ -63,6 +62,19 @@ MainView {
                         control: Switch {
                             checked: printer.printerEnabled
                             onCheckedChanged: printer.printerEnabled = checked
+                        }
+                    }
+
+                    ListItems.Standard {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Accepting jobs"
+
+                        control: Switch {
+                            checked: printer.acceptJobs
+                            onCheckedChanged: printer.acceptJobs = checked
                         }
                     }
 

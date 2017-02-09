@@ -187,11 +187,50 @@ bool IppClient::printerSetEnabled(const QString &printerName,
     return sendNewSimpleRequest(op, printerName, CupsResourceAdmin);
 }
 
+/* reason must be empty if accept is true */
+bool IppClient::printerSetAcceptJobs(const QString &printerName,
+                                     const bool accept,
+                                     const QString &reason)
+{
+    ipp_t *request;
+
+    if (accept && !reason.isEmpty()) {
+        setInternalStatus("Accepting jobs does not take a reason.");
+        return false;
+    }
+
+    if (!isPrinterNameValid(printerName)) {
+        setInternalStatus(QString("%1 is not a valid printer name.").arg(printerName));
+        return false;
+    }
+
+    if (!isStringValid(reason)) {
+        setInternalStatus(QString("%1 is not a valid reason.").arg(reason));
+        return false;
+    }
+
+    if (accept)
+        return sendNewSimpleRequest(CUPS_ACCEPT_JOBS, printerName.toUtf8(),
+                                    CupsResourceAdmin);
+
+    // Not accepting.
+    request = ippNewRequest(CUPS_REJECT_JOBS);
+    addPrinterUri(request, printerName);
+    addRequestingUsername(request, NULL);
+
+    if (!reason.isEmpty())
+        ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_TEXT,
+                     "printer-state-message", NULL, reason.toUtf8());
+
+    return sendRequest(request, CupsResourceAdmin);
+}
+
+
 bool IppClient::printerClassSetInfo(const QString &name,
                                        const QString &info)
 {
     if (!isPrinterNameValid(name)) {
-        setInternalStatus(QString("%1 is not a valid printer name.").arg(info));
+        setInternalStatus(QString("%1 is not a valid printer name.").arg(name));
         return false;
     }
 

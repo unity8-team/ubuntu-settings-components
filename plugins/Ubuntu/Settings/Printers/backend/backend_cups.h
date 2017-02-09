@@ -53,7 +53,7 @@ public:
                                       const bool enabled) override;
     virtual QString printerSetAcceptJobs(
         const QString &name,
-        const bool enabled,
+        const bool accept,
         const QString &reason = QString::null) override;
     virtual QString printerSetInfo(const QString &name,
                                    const QString &info) override;

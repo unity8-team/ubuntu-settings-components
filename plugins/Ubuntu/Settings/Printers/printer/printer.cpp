@@ -26,6 +26,7 @@ Printer::Printer(PrinterBackend *backend, QObject *parent)
 {
     loadColorModel();
     loadPrintQualities();
+    loadAcceptJobs();
 }
 
 Printer::~Printer()
@@ -33,10 +34,16 @@ Printer::~Printer()
     m_backend->deleteLater();
 }
 
+void Printer::loadAcceptJobs()
+{
+    auto opt = QStringLiteral("AcceptJobs");
+    m_acceptJobs = m_backend->printerGetOption(name(), opt).toBool();
+}
+
 void Printer::loadColorModel()
 {
-    auto defModel = QLatin1String("DefaultColorModel");
-    auto models = QLatin1String("SupportedColorModels");
+    auto defModel = QStringLiteral("DefaultColorModel");
+    auto models = QStringLiteral("SupportedColorModels");
     auto result = m_backend->printerGetOptions(
         name(), QStringList({defModel, models})
     );
@@ -51,8 +58,8 @@ void Printer::loadColorModel()
 
 void Printer::loadPrintQualities()
 {
-    auto defQuality = QLatin1String("DefaultPrintQuality");
-    auto qualities = QLatin1String("SupportedPrintQualities");
+    auto defQuality = QStringLiteral("DefaultPrintQuality");
+    auto qualities = QStringLiteral("SupportedPrintQualities");
     auto result = m_backend->printerGetOptions(
         name(), QStringList({defQuality, qualities})
     );
@@ -171,6 +178,11 @@ bool Printer::isDefault()
     return name() == m_backend->defaultPrinterName();
 }
 
+bool Printer::acceptJobs()
+{
+    return m_acceptJobs;
+}
+
 PrinterEnum::PrinterType Printer::type()
 {
     return m_backend->type();
@@ -223,6 +235,14 @@ void Printer::setEnabled(const bool enabled)
     QString reply = m_backend->printerSetEnabled(name(), enabled);
     if (!reply.isEmpty()) {
         qWarning() << Q_FUNC_INFO << "failed to set enabled:" << reply;
+    }
+}
+
+void Printer::setAcceptJobs(const bool accepting)
+{
+    QString reply = m_backend->printerSetAcceptJobs(name(), accepting);
+    if (!reply.isEmpty()) {
+        qWarning() << Q_FUNC_INFO << "failed to set accepting:" << reply;
     }
 }
 

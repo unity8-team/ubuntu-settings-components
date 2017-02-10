@@ -250,6 +250,10 @@ private Q_SLOTS:
     {
 
     }
+    void testHoldsDefinition()
+    {
+
+    }
 
 private:
     QString m_printerName = "my-printer";

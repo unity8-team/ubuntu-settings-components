@@ -41,18 +41,19 @@ void PrintersLoader::load()
 
     // Use availablePrinterNames as this gives us a name for even null printers
     Q_FOREACH(QString name, QPrinterInfo::availablePrinterNames()) {
-
         if (!m_running)
             break;
 
         QPrinterInfo info = QPrinterInfo::printerInfo(name);
+        auto backend = new PrinterCupsBackend(m_client, info, m_notifier);
 
-        if (!info.isNull()) {
-            auto p = QSharedPointer<Printer>(new Printer(new PrinterCupsBackend(m_client, info, m_notifier)));
-            list.append(p);
-        } else {
-            qWarning() << "Printer is null so skipping (" << name << ")";
+        // Dest or PPD was null, but we know it's name so we will use it.
+        if (info.printerName().isEmpty()) {
+            backend->setPrinterNameInternal(name);
         }
+
+        auto p = QSharedPointer<Printer>(new Printer(backend));
+        list.append(p);
     }
 
     // Cups allows a faux PDF printer.

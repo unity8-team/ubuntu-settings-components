@@ -39,9 +39,32 @@ MainView {
                 flickable: printerFlickable
             }
 
+            Component {
+                id: printerPageNotYetLoaded
+
+                Item {
+                    anchors.fill: parent
+                    ActivityIndicator {
+                        anchors.centerIn: parent
+                        running: true
+                    }
+                }
+            }
+
             Flickable {
                 id: printerFlickable
                 anchors.fill: parent
+
+                Loader {
+                    id: printerPageBitsLoader
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    sourceComponent: printer.isProxy ? printerPageNotYetLoaded : printerPageLoaded
+                }
+            }
+
+            Component {
+                id: printerPageLoaded
 
                 Column {
                     spacing: units.gu(2)

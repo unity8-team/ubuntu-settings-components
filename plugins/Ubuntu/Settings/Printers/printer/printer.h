@@ -59,6 +59,7 @@ public:
     QString lastStateMessage() const;
     bool isDefault();
     bool acceptJobs();
+    bool holdsDefinition() const;
 
     PrinterEnum::PrinterType type();
 
@@ -69,7 +70,6 @@ public:
     void setEnabled(const bool enabled);
     void setAcceptJobs(const bool accepting);
     void setErrorPolicy(const PrinterEnum::ErrorPolicy &errorPolicy);
-    void setName(const QString &name);
     void setDefaultPrintQuality(const PrintQuality &quality);
     void setDefaultPageSize(const QPageSize &pageSize);
 

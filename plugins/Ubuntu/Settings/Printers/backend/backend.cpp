@@ -333,6 +333,11 @@ PrinterEnum::PrinterType PrinterBackend::type() const
     return m_type;
 }
 
+void PrinterBackend::setPrinterNameInternal(const QString &printerName)
+{
+    m_printerName = printerName;
+}
+
 void PrinterBackend::refresh()
 {
 }

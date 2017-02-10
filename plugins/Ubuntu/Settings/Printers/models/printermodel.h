@@ -64,7 +64,17 @@ public:
         StateRole,
         PrinterRole,
         LastStateMessageRole,
+
+        /* Indicates that this printer is a pseudo printer used to create
+        PDF files. */
         IsPdfRole,
+
+        /* Indicates whether or not this printer is a proxy. A proxy is a
+        printer which details have not yet been loaded. */
+        IsProxyRole,
+
+        /* Indicates that this printers has no associated PPD. */
+        IsRawRole,
         JobRole,
         LastRole = LastStateMessageRole,
     };

@@ -280,18 +280,10 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetOptions(
     QString printerName = getPrinterName(name);
     QString instance = getPrinterInstance(name);
 
-    ppd_file_t* ppd;
-
-    // We don't need a dest, really.
     cups_dest_t *dest = m_client->getDest(printerName, instance);
-    if (!dest) {
-        qCritical() << "Could not get dest for" << printerName;
-        return ret;
-    }
+    ppd_file_t* ppd = m_client->getPpdFile(printerName, instance);
 
-    ppd = m_client->getPpdFile(printerName, instance);
-    if (!ppd) {
-        qCritical() << "Could not get PPD for" << printerName;
+    if (!dest || !ppd) {
         cupsFreeDests(1, dest);
         return ret;
     }
@@ -639,7 +631,7 @@ QList<QSharedPointer<PrinterJob>> PrinterCupsBackend::printerGetJobs(const QStri
 
 QString PrinterCupsBackend::printerName() const
 {
-    return m_info.printerName();
+    return m_printerName;
 }
 
 QString PrinterCupsBackend::description() const
@@ -649,14 +641,12 @@ QString PrinterCupsBackend::description() const
 
 QString PrinterCupsBackend::location() const
 {
-    // TODO: implement
-    return QString();
+    return m_info.location();
 }
 
 QString PrinterCupsBackend::makeAndModel() const
 {
-    // TODO: implement
-    return QString();
+    return m_info.makeAndModel();
 }
 
 PrinterEnum::State PrinterCupsBackend::state() const
@@ -686,26 +676,22 @@ QPageSize PrinterCupsBackend::defaultPageSize() const
 
 bool PrinterCupsBackend::supportsCustomPageSizes() const
 {
-    // TODO: implement
-    return false;
+    return m_info.supportsCustomPageSizes();
 }
 
 QPageSize PrinterCupsBackend::minimumPhysicalPageSize() const
 {
-    // TODO: implement
-    return QPageSize();
+    return m_info.minimumPhysicalPageSize();
 }
 
 QPageSize PrinterCupsBackend::maximumPhysicalPageSize() const
 {
-    // TODO: implement
-    return QPageSize();
+    return m_info.maximumPhysicalPageSize();
 }
 
 QList<int> PrinterCupsBackend::supportedResolutions() const
 {
-    // TODO: implement
-    return QList<int>{};
+    return m_info.supportedResolutions();
 }
 
 PrinterEnum::DuplexMode PrinterCupsBackend::defaultDuplexMode() const
@@ -749,14 +735,7 @@ QStringList PrinterCupsBackend::availablePrinterNames()
 QSharedPointer<Printer> PrinterCupsBackend::getPrinter(const QString &printerName)
 {
     QPrinterInfo info = QPrinterInfo::printerInfo(printerName);
-
-    if (!info.isNull()) {
-        return QSharedPointer<Printer>(new Printer(new PrinterCupsBackend(m_client, info, m_notifier)));
-    } else {
-        qWarning() << "Printer is null so skipping (" << printerName << ")";
-    }
-
-    return QSharedPointer<Printer>(Q_NULLPTR);
+    return QSharedPointer<Printer>(new Printer(new PrinterCupsBackend(m_client, info, m_notifier)));
 }
 
 QString PrinterCupsBackend::defaultPrinterName()

@@ -178,7 +178,16 @@ void PrinterModel::update()
 
 void PrinterModel::movePrinter(const int &from, const int &to)
 {
-    beginMoveRows(QModelIndex(), from, 1, QModelIndex(), to);
+    int size = m_printers.size();
+    if (from < 0 || to < 0 || from >= size || to >= size) {
+        qWarning() << Q_FUNC_INFO << "Illegal move operation from"
+                   << from << "to" << to ". Size was" << size;
+        return;
+    }
+    if (!beginMoveRows(QModelIndex(), from, 1, QModelIndex(), to)) {
+        qWarning() << Q_FUNC_INFO << "failed to move rows.";
+        return;
+    }
     m_printers.move(from, to);
     endMoveRows();
 }
@@ -276,9 +285,6 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
         // case PrintRangeModeRole:
         //     ret = printer->printRangeMode();
         //     break;
-        // case PdfModeRole:
-        //     ret = printer->pdfMode();
-        //     break;
         case PrintQualityRole:
             ret = printer->supportedPrintQualities().indexOf(printer->defaultPrintQuality());
             break;
@@ -322,6 +328,12 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
             break;
         case IsPdfRole:
             ret = printer->type() == PrinterEnum::PrinterType::PdfType;
+            break;
+        case IsProxyRole:
+            ret = printer->type() == PrinterEnum::PrinterType::ProxyType;
+            break;
+        case IsRawRole:
+            ret = !printer->holdsDefinition();
             break;
         case JobRole:
             ret = QVariant::fromValue(m_job_models.value(printer->name()));
@@ -426,6 +438,8 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
         names[StateRole] = "state";
         names[PrinterRole] = "printer";
         names[IsPdfRole] = "isPdf";
+        names[IsProxyRole] = "isProxy";
+        names[IsRawRole] = "isRaw";
         names[JobRole] = "jobs";
         names[LastStateMessageRole] = "lastStateMessage";
     }

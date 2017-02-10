@@ -130,6 +130,8 @@ public:
 
     virtual PrinterEnum::PrinterType type() const;
 
+    virtual void setPrinterNameInternal(const QString &printerName);
+
 public Q_SLOTS:
     virtual void refresh();
 
@@ -212,7 +214,7 @@ Q_SIGNALS:
     );
 
 protected:
-    const QString m_printerName;
+    QString m_printerName;
     PrinterEnum::PrinterType m_type;
 };
 

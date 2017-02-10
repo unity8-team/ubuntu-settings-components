@@ -183,6 +183,11 @@ bool Printer::acceptJobs()
     return m_acceptJobs;
 }
 
+bool Printer::holdsDefinition() const
+{
+    return m_backend->holdsDefinition();
+}
+
 PrinterEnum::PrinterType Printer::type()
 {
     return m_backend->type();
@@ -250,12 +255,6 @@ void Printer::setErrorPolicy(const PrinterEnum::ErrorPolicy &errorPolicy)
 {
     // TODO: implement
     Q_UNUSED(errorPolicy);
-}
-
-void Printer::setName(const QString &name)
-{
-    // TODO: implement
-    Q_UNUSED(name);
 }
 
 void Printer::setDefaultPrintQuality(const PrintQuality &quality)

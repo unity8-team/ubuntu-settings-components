@@ -69,9 +69,9 @@ public:
         PDF files. */
         IsPdfRole,
 
-        /* Indicates whether or not this printer is a proxy. A proxy is a
-        printer which details have not yet been loaded. */
-        IsProxyRole,
+        /* Indicates whether or not this printer has been fully loaded. If not
+        fully loaded, basically only its name will be accessible.  */
+        IsLoadedRole,
 
         /* Indicates that this printers has no associated PPD. */
         IsRawRole,
@@ -107,8 +107,7 @@ private:
     QMap<QString, JobModel *> m_job_models;
 
 private Q_SLOTS:
-    void update();
-    void printersLoaded(QList<QSharedPointer<Printer>> printers);
+    void printerLoaded(QSharedPointer<Printer> printer);
     void printerModified(const QString &text, const QString &printerUri,
         const QString &printerName, uint printerState,
         const QString &printerStateReason, bool acceptingJobs);

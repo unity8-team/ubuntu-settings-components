@@ -47,48 +47,33 @@ private Q_SLOTS:
     }
     void testAllPrintersFilter_data()
     {
-        QTest::addColumn<QList<QSharedPointer<Printer>>>("in");
-        QTest::addColumn<QList<QSharedPointer<Printer>>>("out");
-
+        QTest::addColumn<QStringList>("in");
+        QTest::addColumn<QStringList>("out");
+        QTest::addColumn<QString>("defaultPrinterName");
         {
-            auto in = QList<QSharedPointer<Printer>>();
-            auto out = QList<QSharedPointer<Printer>>();
+            auto in = QStringList({"printer-a", "printer-b"});
+            auto out = QStringList({"printer-a", "printer-b"});
 
-            auto aBackend = new MockPrinterBackend("printer-a");
-            auto a = QSharedPointer<Printer>(new Printer(aBackend));
-            auto bBackend = new MockPrinterBackend("printer-b");
-            auto b = QSharedPointer<Printer>(new Printer(bBackend));
-
-            in << a << b;
-            out << a << b;
-
-            QTest::newRow("no defaults") << in << out;
+            QTest::newRow("no defaults") << in << out << "";
         }
         {
-            auto in = QList<QSharedPointer<Printer>>();
-            auto out = QList<QSharedPointer<Printer>>();
-
-            auto aBackend = new MockPrinterBackend("printer-a");
-            auto a = QSharedPointer<Printer>(new Printer(aBackend));
-            auto bBackend = new MockPrinterBackend("printer-b");
-            auto b = QSharedPointer<Printer>(new Printer(bBackend));
-            bBackend->m_defaultPrinterName = "printer-b";
-
-            in << a << b;
-            out << b << a;
-
-            QTest::newRow("have default") << in << out;
+            auto in = QStringList({"printer-a", "printer-b"});
+            auto out = QStringList({"printer-b", "printer-a"});
+            QTest::newRow("have default") << in << out << "printer-b";
         }
     }
     void testAllPrintersFilter()
     {
-        QFETCH(QList<QSharedPointer<Printer>>, in);
-        QFETCH(QList<QSharedPointer<Printer>>, out);
+        QFETCH(QStringList, in);
+        QFETCH(QStringList, out);
+        QFETCH(QString, defaultPrinterName);
 
-        PrinterBackend* backend = new MockPrinterBackend;
+        MockPrinterBackend* backend = new MockPrinterBackend;
+        backend->m_defaultPrinterName = defaultPrinterName;
+        Q_FOREACH(auto existingPrinter, in) {
+            backend->m_availablePrinterNames << existingPrinter;
+        }
         Printers printers(backend);
-
-        ((MockPrinterBackend*) backend)->mockPrintersLoaded(in);
 
         auto all = printers.allPrinters();
 
@@ -96,7 +81,7 @@ private Q_SLOTS:
         for (int i = 0; i < all->rowCount(); i++) {
             QCOMPARE(
                  all->data(all->index(i, 0)).toString(),
-                 out.at(i)->name()
+                 out.at(i)
             );
         }
     }
@@ -119,15 +104,7 @@ private Q_SLOTS:
     }
     void testPrinterRemove()
     {
-        auto aBackend = new MockPrinterBackend("printer-a");
-        auto a = QSharedPointer<Printer>(new Printer(aBackend));
-        QList<QSharedPointer<Printer>> list({a});
-        MockPrinterBackend* backend = new MockPrinterBackend;
-
-        Printers printers(backend);
-        ((MockPrinterBackend*) backend)->mockPrintersLoaded(list);
-        printers.removePrinter(a->name());
-        QCOMPARE(backend->m_availablePrinters.size(), 0);
+        // TODO
     }
     void testSetDefault()
     {

@@ -23,7 +23,7 @@ add_library(UbuntuSettingsPrintersQml SHARED
 
     cups/ippclient.cpp
     cups/printerdriverloader.cpp
-    cups/printersloader.cpp
+    cups/printerloader.cpp
 
     models/drivermodel.cpp
     models/jobmodel.cpp

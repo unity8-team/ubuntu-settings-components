@@ -809,8 +809,12 @@ cups_dest_t* IppClient::getDest(const QString &name,
                                 const QString &instance) const
 {
     cups_dest_t *dest = 0;
-    dest = cupsGetNamedDest(m_connection, name.toUtf8(),
-                            instance.toUtf8());
+
+    if (instance.isEmpty()) {
+        dest = cupsGetNamedDest(m_connection, name.toUtf8(), NULL);
+    } else {
+        dest = cupsGetNamedDest(m_connection, name.toUtf8(), instance.toUtf8());
+    }
     return dest;
 }
 

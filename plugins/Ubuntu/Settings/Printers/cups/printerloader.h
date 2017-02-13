@@ -14,8 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef USC_PRINTERS_CUPS_PRINTERSLOADER_H
-#define USC_PRINTERS_CUPS_PRINTERSLOADER_H
+#ifndef USC_PRINTERS_CUPS_PRINTERLOADER_H
+#define USC_PRINTERS_CUPS_PRINTERLOADER_H
 
 #include "cups/ippclient.h"
 #include "cupsdnotifier.h" // Note: this file was generated.
@@ -25,25 +25,25 @@
 #include <QObject>
 #include <QSharedPointer>
 
-class PrintersLoader : public QObject
+class PrinterLoader : public QObject
 {
     Q_OBJECT
+    const QString m_printerName;
     IppClient *m_client;
     OrgCupsCupsdNotifierInterface *m_notifier;
-    bool m_running = false;
 public:
-    explicit PrintersLoader(IppClient *client,
-                            OrgCupsCupsdNotifierInterface* notifier,
-                            QObject *parent = Q_NULLPTR);
-    ~PrintersLoader();
+    explicit PrinterLoader(const QString &printerName,
+                           IppClient *client,
+                           OrgCupsCupsdNotifierInterface* notifier,
+                           QObject *parent = Q_NULLPTR);
+    ~PrinterLoader();
 
 public Q_SLOTS:
     void load();
-    void cancel();
 
 Q_SIGNALS:
     void finished();
-    void loaded(QList<QSharedPointer<Printer>> printers);
+    void loaded(QSharedPointer<Printer> printer);
 };
 
-#endif // USC_PRINTERS_CUPS_PRINTERSLOADER_H
+#endif // USC_PRINTERS_CUPS_PRINTERLOADER_H

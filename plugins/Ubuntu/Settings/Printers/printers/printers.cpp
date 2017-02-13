@@ -54,6 +54,10 @@ Printers::Printers(PrinterBackend *backend, QObject *parent)
     if (m_backend->type() == PrinterEnum::PrinterType::CupsType) {
         ((PrinterCupsBackend*) m_backend)->createSubscription();
     }
+
+    // Always request the default printer.
+    if (!m_backend->defaultPrinterName().isEmpty()) {}
+        m_backend->requestPrinter(m_backend->defaultPrinterName());
 }
 
 Printers::~Printers()

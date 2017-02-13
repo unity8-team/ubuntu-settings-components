@@ -35,6 +35,7 @@ MainView {
             visible: false
             property var printer
             header: PageHeader {
+                id: printerPageHeader
                 title: printer.name
                 flickable: printerFlickable
             }
@@ -51,15 +52,18 @@ MainView {
                 }
             }
 
+            Component.onCompleted: {
+                printer.description;
+            }
+
             Flickable {
                 id: printerFlickable
                 anchors.fill: parent
 
                 Loader {
                     id: printerPageBitsLoader
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    sourceComponent: printer.isProxy ? printerPageNotYetLoaded : printerPageLoaded
+                    anchors.fill: parent
+                    sourceComponent: printer.isLoaded ? printerPageLoaded : printerPageNotYetLoaded
                 }
             }
 
@@ -242,7 +246,6 @@ MainView {
                         id: modelLayout
                         title.text: displayName
                         title.font.bold: model.default
-                        subtitle.text: description
 
                         Icon {
                             id: icon

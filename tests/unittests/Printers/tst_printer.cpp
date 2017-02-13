@@ -200,18 +200,6 @@ private Q_SLOTS:
         Printer p(backend);
         QCOMPARE(p.supportedPrintQualities(), qualities);
     }
-    void testIsDefault_data()
-    {
-        QTest::addColumn<bool>("isDefault");
-        QTest::newRow("default") << true;
-        QTest::newRow("not default") << false;
-    }
-    void testIsDefault()
-    {
-        QFETCH(bool, isDefault);
-        getBackend()->m_defaultPrinterName = isDefault ? m_printerName : "some-other";
-        QCOMPARE(m_instance->isDefault(), isDefault);
-    }
     void testPdfPrinter()
     {
         PrinterBackend *backend = new PrinterPdfBackend(m_printerName);

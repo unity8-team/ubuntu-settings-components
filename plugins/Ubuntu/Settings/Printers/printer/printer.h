@@ -57,7 +57,6 @@ public:
     QStringList users() const;
     PrinterEnum::State state() const;
     QString lastStateMessage() const;
-    bool isDefault();
     bool acceptJobs();
     bool holdsDefinition() const;
 

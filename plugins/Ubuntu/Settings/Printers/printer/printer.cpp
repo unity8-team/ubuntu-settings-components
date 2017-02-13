@@ -173,11 +173,6 @@ QString Printer::lastStateMessage() const
     return QString();
 }
 
-bool Printer::isDefault()
-{
-    return name() == m_backend->defaultPrinterName();
-}
-
 bool Printer::acceptJobs()
 {
     return m_acceptJobs;
@@ -217,7 +212,9 @@ void Printer::setAccessControl(const PrinterEnum::AccessControl &accessControl)
 
 void Printer::setDescription(const QString &description)
 {
-    QString answer = m_backend->printerSetInfo(name(), description);
+    if (this->description() != description) {
+        m_backend->printerSetInfo(name(), description);
+    }
 }
 
 void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
@@ -237,17 +234,21 @@ void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
 
 void Printer::setEnabled(const bool enabled)
 {
-    QString reply = m_backend->printerSetEnabled(name(), enabled);
-    if (!reply.isEmpty()) {
-        qWarning() << Q_FUNC_INFO << "failed to set enabled:" << reply;
+    if (this->enabled() != enabled) {
+        QString reply = m_backend->printerSetEnabled(name(), enabled);
+        if (!reply.isEmpty()) {
+            qWarning() << Q_FUNC_INFO << "failed to set enabled:" << reply;
+        }
     }
 }
 
 void Printer::setAcceptJobs(const bool accepting)
 {
-    QString reply = m_backend->printerSetAcceptJobs(name(), accepting);
-    if (!reply.isEmpty()) {
-        qWarning() << Q_FUNC_INFO << "failed to set accepting:" << reply;
+    if (this->acceptJobs() != accepting) {
+        QString reply = m_backend->printerSetAcceptJobs(name(), accepting);
+        if (!reply.isEmpty()) {
+            qWarning() << Q_FUNC_INFO << "failed to set accepting:" << reply;
+        }
     }
 }
 

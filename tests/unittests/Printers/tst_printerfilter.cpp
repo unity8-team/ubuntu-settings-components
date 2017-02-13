@@ -49,12 +49,10 @@ private Q_SLOTS:
         auto printerA = QSharedPointer<Printer>(new Printer(printerABackend));
         auto printerB = QSharedPointer<Printer>(new Printer(printerBBackend));
 
-        QList<QSharedPointer<Printer>> list;
-        list << printerA << printerB;
-
         PrinterFilter filter;
         filter.setSourceModel(&model);
-        ((MockPrinterBackend*) backend.data())->mockPrintersLoaded(list);
+        ((MockPrinterBackend*) backend.data())->mockPrinterLoaded(printerA);
+        ((MockPrinterBackend*) backend.data())->mockPrinterLoaded(printerB);
 
         QCOMPARE(filter.count(), 2);
     }
@@ -68,17 +66,54 @@ private Q_SLOTS:
         auto printerA = QSharedPointer<Printer>(new Printer(printerABackend));
         auto printerB = QSharedPointer<Printer>(new Printer(printerBBackend));
 
-        ((MockPrinterBackend*) backend.data())->m_availablePrinters << printerA << printerB;
+        // ((MockPrinterBackend*) backend.data())->mockPrinterLoaded(printerB);
 
         PrinterFilter filter;
         filter.setSourceModel(&model);
 
         QSignalSpy modelCountSpy(&model, SIGNAL(countChanged()));
         QSignalSpy filterCountSpy(&filter, SIGNAL(countChanged()));
-        ((MockPrinterBackend*) backend.data())->mockPrinterAdded("Test added printer", "", printerA->name(), 0, "", true);
+        ((MockPrinterBackend*) backend.data())->mockPrinterLoaded(printerA);
         QCOMPARE(modelCountSpy.count(), 1);
         QCOMPARE(filterCountSpy.count(), 1);
     }
+    // void testMoveOnPrintersLoaded()
+    // {
+    //     // Setup two printers
+    //     PrinterBackend* printerABackend = new MockPrinterBackend("a-printer");
+    //     auto printerA = QSharedPointer<Printer>(new Printer(printerABackend));
+    //     PrinterBackend* printerBBackend = new MockPrinterBackend("b-printer");
+    //     auto printerB = QSharedPointer<Printer>(new Printer(printerBBackend));
+
+    //     getBackend()->m_availablePrinterNames << printerA->name() << printerB->name();
+
+    //     getBackend()->mockPrinterLoaded(printerA);
+    //     getBackend()->mockPrinterLoaded(printerB);
+
+    //     QCOMPARE(m_model->count(), 2);
+
+    //     // Setup spy and move a printer
+    //     int from = 1;
+    //     int to = 0;
+    //     qWarning() << "before move" << getBackend()->m_availablePrinterNames;
+    //     getBackend()->m_availablePrinterNames.move(from, to);
+    //     qWarning() << "after move" << getBackend()->m_availablePrinterNames;
+
+    //     // Check signals were fired
+    //     QSignalSpy moveSpy(m_model, SIGNAL(rowsMoved(const QModelIndex&, int, int, const QModelIndex&, int)));
+
+    //     // If a printer is re-named, we would expect a move signal.
+    //     getBackend()->mockPrinterModified("Test renamed printer", "", printerB->name(), 0, "", true);
+
+    //     QCOMPARE(moveSpy.count(), 1);
+    //     QCOMPARE(m_model->count(), 2);
+
+    //     // Check item was moved from -> to
+    //     QList<QVariant> args = moveSpy.at(0);
+    //     QCOMPARE(args.at(1).toInt(), from);
+    //     QCOMPARE(args.at(2).toInt(), from);
+    //     QCOMPARE(args.at(4).toInt(), to);
+    // }
 };
 
 QTEST_GUILESS_MAIN(TestPrinterFilter)

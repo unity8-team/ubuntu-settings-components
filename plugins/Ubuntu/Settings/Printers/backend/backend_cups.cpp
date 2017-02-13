@@ -15,10 +15,8 @@
  */
 
 #include "backend/backend_cups.h"
-#include "backend/backend_pdf.h"
 #include "cups/printerdriverloader.h"
-#include "cups/printersloader.h"
-#include "i18n.h"
+#include "cups/printerloader.h"
 #include "utils.h"
 
 #include <cups/http.h>
@@ -43,6 +41,7 @@ PrinterCupsBackend::PrinterCupsBackend(IppClient *client, QPrinterInfo info,
     , m_info(info)
     , m_notifier(notifier)
 {
+    m_type = PrinterEnum::PrinterType::CupsType;
     connect(m_notifier, SIGNAL(JobCompleted(const QString&, const QString&,
                                             const QString&, uint,
                                             const QString&, bool, uint, uint,
@@ -712,19 +711,7 @@ QList<PrinterEnum::DuplexMode> PrinterCupsBackend::supportedDuplexModes() const
 
 QList<QSharedPointer<Printer>> PrinterCupsBackend::availablePrinters()
 {
-
-    QList<QSharedPointer<Printer>> list;
-
-    // Use availablePrinterNames as this gives us a name for even null printers
-    Q_FOREACH(QString name, QPrinterInfo::availablePrinterNames()) {
-        auto printer = QSharedPointer<Printer>(new Printer(new PrinterBackend(name)));
-        list.append(printer);
-    }
-
-    // Cups allows a faux PDF printer.
-    list.append(QSharedPointer<Printer>(new Printer(new PrinterPdfBackend(__("Create PDF")))));
-
-    return list;
+    return QList<QSharedPointer<Printer>>();
 }
 
 QStringList PrinterCupsBackend::availablePrinterNames()
@@ -743,17 +730,17 @@ QString PrinterCupsBackend::defaultPrinterName()
     return QPrinterInfo::defaultPrinterName();
 }
 
-void PrinterCupsBackend::requestAvailablePrinters()
+void PrinterCupsBackend::requestPrinter(const QString &printerName)
 {
+    qWarning() << "requestPrinter" << printerName;
     auto thread = new QThread;
-    auto loader = new PrintersLoader(m_client, m_notifier);
+    auto loader = new PrinterLoader(printerName, m_client, m_notifier);
     loader->moveToThread(thread);
     connect(thread, SIGNAL(started()), loader, SLOT(load()));
-    connect(this, SIGNAL(cancelWorkers()), loader, SLOT(cancel()));
     connect(loader, SIGNAL(finished()), thread, SLOT(quit()));
     connect(loader, SIGNAL(finished()), loader, SLOT(deleteLater()));
-    connect(loader, SIGNAL(loaded(QList<QSharedPointer<Printer>>)),
-            this, SIGNAL(availablePrintersLoaded(QList<QSharedPointer<Printer>>)));
+    connect(loader, SIGNAL(loaded(QSharedPointer<Printer>)),
+            this, SIGNAL(printerLoaded(QSharedPointer<Printer>)));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
 }

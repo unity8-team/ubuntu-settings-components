@@ -118,7 +118,7 @@ public:
     virtual QSharedPointer<Printer> getPrinter(const QString &printerName) override;
     virtual QString defaultPrinterName() override;
     virtual void requestPrinterDrivers() override;
-    virtual void requestAvailablePrinters() override;
+    virtual void requestPrinter(const QString &printerName) override;
 
 public Q_SLOTS:
     virtual void refresh() override;

@@ -332,10 +332,6 @@ public:
         return m_defaultPrinterName;
     }
 
-    virtual void requestPrinterDrivers() override
-    {
-    }
-
     void mockPrinterAdded(
         const QString &text,
         const QString &printerUri,
@@ -382,15 +378,9 @@ public:
         Q_EMIT printerDriversFailedToLoad(errorMessage);
     }
 
-    void mockPrintersLoaded(QList<QSharedPointer<Printer>> printers)
+    void mockPrinterLoaded(QSharedPointer<Printer> printer)
     {
-        Q_EMIT availablePrintersLoaded(printers);
-    }
-
-    void mockPrintersLoaded(QSharedPointer<Printer> printer)
-    {
-        QList<QSharedPointer<Printer>> list({printer});
-        mockPrintersLoaded(list);
+        Q_EMIT printerLoaded(printer);
     }
 
     QString returnValue = QString::null;

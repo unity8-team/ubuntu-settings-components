@@ -126,7 +126,7 @@ public:
     virtual QString defaultPrinterName();
 
     virtual void requestPrinterDrivers();
-    virtual void requestAvailablePrinters();
+    virtual void requestPrinter(const QString &printerName);
 
     virtual PrinterEnum::PrinterType type() const;
 
@@ -139,7 +139,7 @@ Q_SIGNALS:
     void printerDriversLoaded(const QList<PrinterDriver> &drivers);
     void printerDriversFailedToLoad(const QString &errorMessage);
 
-    void availablePrintersLoaded(QList<QSharedPointer<Printer>> printers);
+    void printerLoaded(QSharedPointer<Printer> printers);
 
     void jobCompleted(
         const QString &text,

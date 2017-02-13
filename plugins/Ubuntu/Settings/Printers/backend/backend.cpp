@@ -324,8 +324,9 @@ void PrinterBackend::requestPrinterDrivers()
 {
 }
 
-void PrinterBackend::requestAvailablePrinters()
+void PrinterBackend::requestPrinter(const QString &printerName)
 {
+    Q_UNUSED(printerName);
 }
 
 PrinterEnum::PrinterType PrinterBackend::type() const

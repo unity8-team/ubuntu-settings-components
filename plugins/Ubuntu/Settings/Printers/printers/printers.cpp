@@ -48,7 +48,6 @@ Printers::Printers(PrinterBackend *backend, QObject *parent)
     connect(m_backend, SIGNAL(printerLoaded(QSharedPointer<Printer>)),
             this, SLOT(printerLoaded(QSharedPointer<Printer>)));
 
-
     // Let Qt be in charge of RAII.
     m_backend->setParent(this);
 
@@ -209,7 +208,7 @@ void Printers::printerLoaded(QSharedPointer<Printer> printer)
     );
     if (!jobFilter) {
         qWarning() << "printer" << printer->name() << "did not have a proper filter.";
-    } else if (jobFilter->sourceModel() != &m_jobs) {
+    } else if (!jobFilter->sourceModel()) {
         qWarning() << "printer" << printer->name() << "will get a job filter.";
         jobFilter->setSourceModel(&m_jobs);
     }

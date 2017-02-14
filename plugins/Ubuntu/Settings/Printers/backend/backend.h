@@ -102,7 +102,9 @@ public:
     virtual int printFileToDest(const QString &filepath,
                                 const QString &title,
                                 const cups_dest_t *dest);
-    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs(const QString &name);
+    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs();
+    virtual QMap<QString, QVariant> printerGetJobAttributes(
+        const QString &name, const int jobId);
 
     virtual QString printerName() const;
     virtual QString description() const;

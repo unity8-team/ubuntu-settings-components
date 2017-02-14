@@ -18,6 +18,7 @@
 #define USC_PRINTERS_MOCK_BACKEND_H
 
 #include "backend/backend.h"
+#include "utils.h"
 
 class MockPrinterBackend : public PrinterBackend
 {
@@ -235,10 +236,15 @@ public:
         return -1;
     }
 
-    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs(const QString &name) override
+    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs() override
     {
-        Q_UNUSED(name);
         return QList<QSharedPointer<PrinterJob>>();
+    }
+
+    virtual QMap<QString, QVariant> printerGetJobAttributes(
+            const QString &name, const int jobId) override
+    {
+        return QMap<QString, QVariant>();
     }
 
     virtual QString printerName() const override
@@ -299,7 +305,8 @@ public:
 
     virtual PrinterEnum::DuplexMode defaultDuplexMode() const override
     {
-        return m_defaultDuplexMode;
+        auto ppdMode = printerGetOption(printerName(), "Duplex").toString();
+        return Utils::ppdChoiceToDuplexMode(ppdMode);
     }
 
     virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const override
@@ -406,7 +413,6 @@ public:
     QList<QPageSize> m_supportedPageSizes;
 
     QList<PrinterEnum::DuplexMode> m_supportedDuplexModes;
-    PrinterEnum::DuplexMode m_defaultDuplexMode;
 
     QStringList m_availablePrinterNames;
     QList<QSharedPointer<Printer>> m_availablePrinters;

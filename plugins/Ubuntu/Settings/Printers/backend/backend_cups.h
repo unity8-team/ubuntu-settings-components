@@ -95,7 +95,7 @@ public:
     virtual int printFileToDest(const QString &filepath,
                                 const QString &title,
                                 const cups_dest_t *dest) override;
-    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs(const QString &name) override;
+    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs() override;
 
     virtual QString printerName() const override;
     virtual QString description() const override;
@@ -119,6 +119,8 @@ public:
     virtual QString defaultPrinterName() override;
     virtual void requestPrinterDrivers() override;
     virtual void requestPrinter(const QString &printerName) override;
+    virtual QMap<QString, QVariant> printerGetJobAttributes(
+        const QString &name, const int jobId) override;
 
 public Q_SLOTS:
     virtual void refresh() override;
@@ -133,8 +135,7 @@ Q_SIGNALS:
 private:
     void cancelSubscription();
     void cancelPrinterDriverRequest();
-    QList<cups_job_t *> getCupsJobs(const QString &name);
-    QMap<QString, QVariant> printerGetJobAttributes(const QString &name, const int jobId);
+    QList<cups_job_t *> getCupsJobs(const QString &name = QStringLiteral());
 
     QString getPrinterName(const QString &name) const;
     QString getPrinterInstance(const QString &name) const;

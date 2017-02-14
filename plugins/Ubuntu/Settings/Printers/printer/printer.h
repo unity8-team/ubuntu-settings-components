@@ -21,6 +21,7 @@
 
 #include "backend/backend.h"
 #include "enums.h"
+#include "models/jobmodel.h"
 #include "printer/printerjob.h"
 #include "structs.h"
 
@@ -28,6 +29,7 @@
 #include <QPageSize>
 #include <QList>
 #include <QScopedPointer>
+#include <QSortFilterProxyModel>
 #include <QString>
 #include <QStringList>
 
@@ -57,10 +59,11 @@ public:
     QStringList users() const;
     PrinterEnum::State state() const;
     QString lastStateMessage() const;
-    bool acceptJobs();
+    bool acceptJobs() const;
     bool holdsDefinition() const;
+    QAbstractItemModel* jobs();
 
-    PrinterEnum::PrinterType type();
+    PrinterEnum::PrinterType type() const;
 
     void setAccessControl(const PrinterEnum::AccessControl &accessControl);
     void setDefaultColorModel(const ColorModel &colorModel);
@@ -71,8 +74,12 @@ public:
     void setErrorPolicy(const PrinterEnum::ErrorPolicy &errorPolicy);
     void setDefaultPrintQuality(const PrintQuality &quality);
     void setDefaultPageSize(const QPageSize &pageSize);
+    void setJobModel(QAbstractItemModel* jobModel);
 
-    bool deepCompare(Printer *other) const;
+    bool deepCompare(QSharedPointer<Printer> other) const;
+    void updateFrom(QSharedPointer<Printer> other);
+
+
 public Q_SLOTS:
     // Add user that is either denied or allowed printer. See AccessControl.
     void addUser(const QString &username);
@@ -82,36 +89,12 @@ public Q_SLOTS:
     // Removes user. See addUser.
     void removeUser(const QString &username);
 
-    // Requests ink levels for printer.
-    void requestInkLevels(const QString &name);
-
-Q_SIGNALS:
-    void nameChanged();
-    void enabledChanged();
-    void descriptionChanged();
-    void defaultPageSizeChanged();
-    void defaultDuplexModeChanged();
-    void defaultColorModelChanged();
-    void defaultPrintQualityChanged();
-    void qualityChanged();
-    void accessControlChanged();
-    void errorPolicyChanged();
-    void usersChanged();
-    void stateChanged();
-    void settingsChanged();
-    void lastStateMessageChanged();
-
-    void inkLevelsRequestComplete(const InkLevels &inkLevels);
-    void inkLevelsRequestFailed(const QString &reply);
-
-    // Signals that some printer setting was changed.
-    void printerChanged();
-
 private:
     void loadAcceptJobs();
     void loadColorModel();
     void loadPrintQualities();
 
+    QSortFilterProxyModel m_jobs;
     PrinterBackend *m_backend;
     ColorModel m_defaultColorModel;
     QList<ColorModel> m_supportedColorModels;

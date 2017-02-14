@@ -59,7 +59,6 @@ public:
     QString defaultPrinterName() const;
     QString lastMessage() const;
 
-
     void setDefaultPrinterName(const QString &name);
     void setDriverFilter(const QString &filter);
 
@@ -86,6 +85,9 @@ public Q_SLOTS:
 
     bool removePrinter(const QString &name);
 
+private Q_SLOTS:
+    void printerLoaded(QSharedPointer<Printer> printer);
+
 Q_SIGNALS:
     void defaultPrinterNameChanged();
     void driverFilterChanged();
@@ -94,6 +96,7 @@ private:
     PrinterBackend *m_backend;
     DriverModel m_drivers;
     PrinterModel m_model;
+    JobModel m_jobs;
     PrinterFilter m_allPrinters;
     PrinterFilter m_allPrintersWithPdf;
     PrinterFilter m_recentPrinters;

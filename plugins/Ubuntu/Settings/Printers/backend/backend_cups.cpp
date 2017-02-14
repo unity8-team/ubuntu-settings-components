@@ -279,6 +279,7 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetOptions(
     QString printerName = getPrinterName(name);
     QString instance = getPrinterInstance(name);
 
+    // TODO: this will be called too often.
     cups_dest_t *dest = m_client->getDest(printerName, instance);
     ppd_file_t* ppd = m_client->getPpdFile(printerName, instance);
 
@@ -441,7 +442,12 @@ QList<cups_job_t *> PrinterCupsBackend::getCupsJobs(const QString &name)
 
     // Get a list of the jobs that are 'mine' and only active ones
     // https://www.cups.org/doc/api-cups.html#cupsGetJobs
-    int count = cupsGetJobs(&jobs, name.toLocal8Bit(), 1, CUPS_WHICHJOBS_ACTIVE);
+    int count;
+    if (name.isEmpty()) {
+        count = cupsGetJobs(&jobs, NULL, 1, CUPS_WHICHJOBS_ACTIVE);
+    } else {
+        count = cupsGetJobs(&jobs, name.toLocal8Bit(), 1, CUPS_WHICHJOBS_ACTIVE);
+    }
 
     for (int i=0; i < count; i++) {
         list.append(&jobs[i]);
@@ -452,7 +458,8 @@ QList<cups_job_t *> PrinterCupsBackend::getCupsJobs(const QString &name)
     return list;
 }
 
-QMap<QString, QVariant> PrinterCupsBackend::printerGetJobAttributes(const QString &name, const int jobId)
+QMap<QString, QVariant> PrinterCupsBackend::printerGetJobAttributes(
+    const QString &name, const int jobId)
 {
     Q_UNUSED(name);
     QMap<QString, QVariant> rawMap = m_client->printerGetJobAttributes(jobId);
@@ -535,13 +542,15 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetJobAttributes(const QStrin
 }
 
 
-QList<QSharedPointer<PrinterJob>> PrinterCupsBackend::printerGetJobs(const QString &name)
+QList<QSharedPointer<PrinterJob>> PrinterCupsBackend::printerGetJobs()
 {
-    auto jobs = getCupsJobs(name);
+    auto jobs = getCupsJobs();
     QList<QSharedPointer<PrinterJob>> list;
 
     Q_FOREACH(auto job, jobs) {
-        QSharedPointer<PrinterJob> newJob = QSharedPointer<PrinterJob>(new PrinterJob(name, this, job->id));
+        auto newJob = QSharedPointer<PrinterJob>(
+            new PrinterJob(QString::fromUtf8(job->dest), this, job->id)
+        );
 
         // Extract the times
         QDateTime completedTime;
@@ -564,63 +573,6 @@ QList<QSharedPointer<PrinterJob>> PrinterCupsBackend::printerGetJobs(const QStri
         newJob->setState(static_cast<PrinterEnum::JobState>(job->state));
         newJob->setTitle(QString::fromLocal8Bit(job->title));
         newJob->setUser(QString::fromLocal8Bit(job->user));
-
-        // Load the extra attributes for the job
-        // NOTE: we don't need to type check them as they have been filtered for us
-        QMap<QString, QVariant> attributes = printerGetJobAttributes(name, job->id);
-
-        newJob->setCollate(attributes.value("Collate").toBool());
-        newJob->setCopies(attributes.value("copies").toInt());
-
-        // No colorModel will result in PrinterJob using defaultColorModel
-        if (!newJob->printer()) {
-            QString colorModel = attributes.value("ColorModel").toString();
-
-            for (int i=0; i < newJob->printer()->supportedColorModels().length(); i++) {
-                if (newJob->printer()->supportedColorModels().at(i).originalOption == colorModel) {
-                    newJob->setColorModel(i);
-                }
-            }
-        }
-
-        // No duplexMode will result in PrinterJob using defaultDuplexMode
-        if (!newJob->printer()) {
-            QString duplex = attributes.value("Duplex").toString();
-            PrinterEnum::DuplexMode duplexMode = Utils::ppdChoiceToDuplexMode(duplex);
-
-            for (int i=0; i < newJob->printer()->supportedDuplexModes().length(); i++) {
-                if (newJob->printer()->supportedDuplexModes().at(i) == duplexMode) {
-                    newJob->setDuplexMode(i);
-                }
-            }
-        }
-
-        newJob->setLandscape(attributes.value("landscape").toBool());
-        newJob->setMessages(attributes.value("messages").toStringList());
-
-        QStringList pageRanges = attributes.value("page-ranges").toStringList();
-
-        if (pageRanges.isEmpty()) {
-            newJob->setPrintRangeMode(PrinterEnum::PrintRange::AllPages);
-            newJob->setPrintRange(QStringLiteral(""));
-        } else {
-            newJob->setPrintRangeMode(PrinterEnum::PrintRange::PageRange);
-            // Use groupSeparator as createSeparatedList adds "and" into the string
-            newJob->setPrintRange(pageRanges.join(QLocale::system().groupSeparator()));
-        }
-
-        // No quality will result in PrinterJob using defaultPrintQuality
-        if (!newJob->printer()) {
-            QString quality = attributes.value("quality").toString();
-
-            for (int i=0; i < newJob->printer()->supportedPrintQualities().length(); i++) {
-                if (newJob->printer()->supportedPrintQualities().at(i).name == quality) {
-                    newJob->setQuality(i);
-                }
-            }
-        }
-
-        newJob->setReverse(attributes.value("OutputOrder").toString() == "Reverse");
 
         list.append(newJob);
     }
@@ -796,7 +748,6 @@ QString PrinterCupsBackend::getPrinterInstance(const QString &name) const
 
     return instance;
 }
-
 
 QString PrinterCupsBackend::getPrinterName(const QString &name) const
 {

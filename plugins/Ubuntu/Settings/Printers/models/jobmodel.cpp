@@ -22,11 +22,14 @@
 
 #include <QDebug>
 
-JobModel::JobModel(const QString &printerName, PrinterBackend *backend,
+JobModel::JobModel(QObject *parent) : QAbstractListModel(parent)
+{
+}
+
+JobModel::JobModel(PrinterBackend *backend,
                    QObject *parent)
     : QAbstractListModel(parent)
     , m_backend(backend)
-    , m_printer_name(printerName)
 {
     update();
 
@@ -51,7 +54,7 @@ void JobModel::jobSignalCatchAll(
 {
     Q_UNUSED(text);
     Q_UNUSED(printer_uri);
-    Q_UNUSED(printer_name);
+    Q_UNUSED(printer_name); // use
     Q_UNUSED(printer_state);
     Q_UNUSED(printer_state_reasons);
     Q_UNUSED(printer_is_accepting_jobs);
@@ -68,7 +71,7 @@ void JobModel::update()
 {
     // Store the old count and get the new printers
     int oldCount = m_jobs.size();
-    QList<QSharedPointer<PrinterJob>> newJobs = m_backend->printerGetJobs(m_printer_name);
+    QList<QSharedPointer<PrinterJob>> newJobs = m_backend->printerGetJobs();
 
     /* If any printers returned from the backend are irrelevant, we delete
     them. This a list of indices that corresponds to printers scheduled for
@@ -190,6 +193,9 @@ QVariant JobModel::data(const QModelIndex &index, int role) const
         case CreationTimeRole:
             ret = job->creationTime().toString(QLocale::system().dateTimeFormat());
             break;
+        case DestRole:
+            ret = job->printerName();
+            break;
         case DuplexRole: {
             if (job->printer()) {
                 ret = job->printer()->supportedDuplexStrings().at(job->duplexMode());
@@ -207,9 +213,6 @@ QVariant JobModel::data(const QModelIndex &index, int role) const
             break;
         case MessagesRole:
             ret = job->messages();
-            break;
-        case OwnerRole:
-            ret = m_printer_name;
             break;
         case PrintRangeRole:
             ret = job->printRange();
@@ -286,6 +289,7 @@ QHash<int, QByteArray> JobModel::roleNames() const
         names[CompletedTimeRole] = "completedTime";
         names[CopiesRole] = "copies";
         names[CreationTimeRole] = "creationTime";
+        names[DestRole] = "dest";
         names[DuplexRole] = "duplexMode";
         names[LandscapeRole] = "landscape";
         names[MessagesRole] = "messages";
@@ -317,4 +321,78 @@ QVariantMap JobModel::get(const int row) const
     }
 
     return result;
+}
+
+QSharedPointer<PrinterJob> JobModel::getJobById(const int &id)
+{
+    Q_FOREACH(auto job, m_jobs) {
+        if (job->jobId() == id) {
+            return job;
+        }
+    }
+    return QSharedPointer<PrinterJob>(Q_NULLPTR);
+}
+
+
+JobFilter::JobFilter(QObject *parent) : QSortFilterProxyModel(parent)
+{
+    connect(this, SIGNAL(sourceModelChanged()), SLOT(onSourceModelChanged()));
+}
+
+JobFilter::~JobFilter()
+{
+}
+
+QVariantMap JobFilter::get(const int row) const
+{
+    QHashIterator<int, QByteArray> iterator(roleNames());
+    QVariantMap result;
+    QModelIndex modelIndex = index(row, 0);
+
+    while (iterator.hasNext()) {
+        iterator.next();
+        result[iterator.value()] = modelIndex.data(iterator.key());
+    }
+
+    return result;
+}
+
+void JobFilter::onSourceModelChanged()
+{
+    connect((JobModel*) sourceModel(),
+            SIGNAL(countChanged()),
+            this,
+            SIGNAL(countChanged()));
+}
+
+void JobFilter::onSourceModelCountChanged()
+{
+    Q_EMIT countChanged();
+}
+
+int JobFilter::count() const
+{
+    return rowCount();
+}
+
+void JobFilter::filterOnPrinterName(const QString &name)
+{
+    m_printerName = name;
+    m_printerNameFilterEnabled = true;
+    invalidate();
+}
+
+bool JobFilter::filterAcceptsRow(int sourceRow,
+                                 const QModelIndex &sourceParent) const
+{
+    bool accepts = true;
+    QModelIndex childIndex = sourceModel()->index(sourceRow, 0, sourceParent);
+
+    if (accepts && m_printerNameFilterEnabled) {
+        QString printerName = childIndex.model()->data(
+            childIndex, JobModel::DestRole).toString();
+        accepts = m_printerName == printerName;
+    }
+
+    return accepts;
 }

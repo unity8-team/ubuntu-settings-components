@@ -22,7 +22,6 @@
 #include "utils.h"
 
 #include <QDebug>
-#include <QQmlEngine>
 
 PrinterModel::PrinterModel(PrinterBackend *backend, QObject *parent)
     : QAbstractListModel(parent)
@@ -66,8 +65,8 @@ void PrinterModel::printerLoaded(QSharedPointer<Printer> printer)
     for (int i=0; i < m_printers.count(); i++) {
         auto oldPrinter = m_printers.at(i);
         if (printer->name() == oldPrinter->name()) {
-            if (!oldPrinter->deepCompare(printer.data())) {
-                replacePrinter(oldPrinter, printer);
+            if (!oldPrinter->deepCompare(printer)) {
+                updatePrinter(oldPrinter, printer);
             }
 
             // We're done.
@@ -152,22 +151,19 @@ void PrinterModel::removePrinter(QSharedPointer<Printer> printer, const CountCha
 {
     int idx = m_printers.indexOf(printer);
     beginRemoveRows(QModelIndex(), idx, idx);
-    auto p = m_printers.takeAt(idx);
-    JobModel *jobModel = m_job_models.take(p->name());
-    jobModel->deleteLater();
+    m_printers.removeAt(idx);
     endRemoveRows();
 
     if (notify == CountChangeSignal::Emit)
         Q_EMIT countChanged();
 }
 
-void PrinterModel::replacePrinter(QSharedPointer<Printer> old,
+void PrinterModel::updatePrinter(QSharedPointer<Printer> old,
                                   QSharedPointer<Printer> newPrinter)
 {
     int i = m_printers.indexOf(old);
     QModelIndex idx = index(i);
-
-    m_printers.replace(i, newPrinter);
+    old->updateFrom(newPrinter);
     Q_EMIT dataChanged(idx, idx);
 }
 
@@ -175,13 +171,7 @@ void PrinterModel::addPrinter(QSharedPointer<Printer> printer, const CountChange
 {
     int i = m_printers.size();
     beginInsertRows(QModelIndex(), i, i);
-
     m_printers.append(printer);
-
-    JobModel *model = new JobModel(printer->name(), m_backend, this);
-    QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
-    m_job_models.insert(printer->name(), model);
-
     endInsertRows();
 
     if (notify == CountChangeSignal::Emit)
@@ -308,7 +298,7 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
             ret = !printer->holdsDefinition();
             break;
         case JobRole:
-            ret = QVariant::fromValue(m_job_models.value(printer->name()));
+            ret = QVariant::fromValue(printer->jobs());
             break;
         case EnabledRole:
             ret = printer->enabled();
@@ -545,4 +535,3 @@ bool PrinterFilter::lessThan(const QModelIndex &left,
         return leftData < rightData;
     }
 }
-

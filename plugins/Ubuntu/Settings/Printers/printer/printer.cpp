@@ -19,6 +19,7 @@
 #include "printer.h"
 
 #include <QDebug>
+#include <QQmlEngine>
 
 Printer::Printer(PrinterBackend *backend, QObject *parent)
     : QObject(parent)
@@ -31,7 +32,12 @@ Printer::Printer(PrinterBackend *backend, QObject *parent)
 
 Printer::~Printer()
 {
-    m_backend->deleteLater();
+    //m_backend->deleteLater();
+}
+
+void Printer::setJobModel(QAbstractItemModel* jobModel)
+{
+    m_jobs.setSourceModel(jobModel);
 }
 
 void Printer::loadAcceptJobs()
@@ -173,7 +179,7 @@ QString Printer::lastStateMessage() const
     return QString();
 }
 
-bool Printer::acceptJobs()
+bool Printer::acceptJobs() const
 {
     return m_acceptJobs;
 }
@@ -183,7 +189,7 @@ bool Printer::holdsDefinition() const
     return m_backend->holdsDefinition();
 }
 
-PrinterEnum::PrinterType Printer::type()
+PrinterEnum::PrinterType Printer::type() const
 {
     return m_backend->type();
 }
@@ -224,11 +230,13 @@ void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
     }
 
     if (!m_backend->supportedDuplexModes().contains(duplexMode)) {
-        qWarning() << Q_FUNC_INFO << "duplex mode not supported";
+        qWarning() << Q_FUNC_INFO << "duplex mode not supported" << duplexMode;
         return;
     }
 
+    qWarning() << Q_FUNC_INFO<<duplexMode;
     QStringList vals({Utils::duplexModeToPpdChoice(duplexMode)});
+    qWarning() << Q_FUNC_INFO<<vals;
     QString reply = m_backend->printerAddOption(name(), "Duplex", vals);
 }
 
@@ -293,7 +301,6 @@ void Printer::setDefaultPageSize(const QPageSize &pageSize)
     QString reply = m_backend->printerAddOption(name(), "PageSize", vals);
 
     m_backend->refresh();
-    Q_EMIT defaultPageSizeChanged();
 }
 
 void Printer::addUser(const QString &username)
@@ -308,13 +315,14 @@ void Printer::removeUser(const QString &username)
     Q_UNUSED(username);
 }
 
-void Printer::requestInkLevels(const QString &name)
+QAbstractItemModel* Printer::jobs()
 {
-    // TODO: implement
-    Q_UNUSED(name);
+    auto ret = &m_jobs;
+    QQmlEngine::setObjectOwnership(ret, QQmlEngine::CppOwnership);
+    return ret;
 }
 
-bool Printer::deepCompare(Printer *other) const
+bool Printer::deepCompare(QSharedPointer<Printer> other) const
 {
     bool changed = false;
 
@@ -323,6 +331,8 @@ bool Printer::deepCompare(Printer *other) const
     changed |= description() != other->description();
     changed |= defaultDuplexMode() != other->defaultDuplexMode();
     changed |= defaultPageSize() != other->defaultPageSize();
+    changed |= type() != other->type();
+    changed |= acceptJobs() != other->acceptJobs();
     changed |= state() != other->state();
 
     // TODO: accessControl
@@ -331,4 +341,14 @@ bool Printer::deepCompare(Printer *other) const
 
     // Return true if they are the same, so no change
     return changed == false;
+}
+
+void Printer::updateFrom(QSharedPointer<Printer> other)
+{
+    m_backend->deleteLater();
+    m_backend = other->m_backend;
+
+    loadColorModel();
+    loadPrintQualities();
+    loadAcceptJobs();
 }

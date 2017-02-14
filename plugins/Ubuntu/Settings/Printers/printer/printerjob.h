@@ -46,7 +46,7 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
     Q_PROPERTY(bool isTwoSided READ isTwoSided NOTIFY isTwoSidedChanged)
     Q_PROPERTY(bool landscape READ landscape WRITE setLandscape NOTIFY landscapeChanged)
     Q_PROPERTY(QStringList messages READ messages NOTIFY messagesChanged)
-//    Q_PROPERTY(Printer *printer READ printer WRITE setPrinter NOTIFY printerChanged)
+    Q_PROPERTY(QSharedPointer<Printer> printer READ printer WRITE setPrinter NOTIFY printerChanged)
     Q_PROPERTY(QString printerName READ printerName WRITE setPrinterName NOTIFY printerNameChanged)
     Q_PROPERTY(QString printRange READ printRange WRITE setPrintRange NOTIFY printRangeChanged)
     Q_PROPERTY(PrinterEnum::PrintRange printRangeMode READ printRangeMode WRITE setPrintRangeMode NOTIFY printRangeModeChanged)
@@ -60,10 +60,11 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
 
     friend class PrinterCupsBackend;
 public:
-    explicit PrinterJob(QSharedPointer<Printer> printer,
+    explicit PrinterJob(QString dest,
                         PrinterBackend *backend,
                         QObject *parent=Q_NULLPTR);
-    explicit PrinterJob(const QString &name, PrinterBackend *backend, int jobId, QObject *parent=Q_NULLPTR);
+    explicit PrinterJob(QString dest, PrinterBackend *backend, int jobId,
+                        QObject *parent=Q_NULLPTR);
     ~PrinterJob();
 
     bool collate() const;
@@ -74,7 +75,7 @@ public:
     QDateTime creationTime() const;
     int duplexMode() const;
     bool isTwoSided() const;
-    int jobId() const;  // TODO: implement
+    int jobId() const;
     bool landscape() const;
     QStringList messages() const;
     QSharedPointer<Printer> printer() const;
@@ -100,7 +101,7 @@ public Q_SLOTS:
     void setCopies(const int copies);
     void setDuplexMode(const int duplexMode);
     void setLandscape(const bool landscape);
-//    void setPrinter(Printer *printer);
+    void setPrinter(QSharedPointer<Printer> printer);
     void setPrinterName(const QString &printerName);
     void setPrintRange(const QString &printRange);
     void setPrintRangeMode(const PrinterEnum::PrintRange printRangeMode);
@@ -108,7 +109,7 @@ public Q_SLOTS:
     void setReverse(const bool reverse);
     void setTitle(const QString &title);
 
-    void updateFrom(QSharedPointer<PrinterJob> newPrinterJob);
+    void updateFrom(QSharedPointer<PrinterJob> other);
 private Q_SLOTS:
     void loadDefaults();
     void setCompletedTime(const QDateTime &completedTime);
@@ -130,7 +131,7 @@ Q_SIGNALS:
     void isTwoSidedChanged();
     void landscapeChanged();
     void messagesChanged();
-//    void printerChanged();
+    void printerChanged();
     void printerNameChanged();
     void printRangeChanged();
     void printRangeModeChanged();
@@ -148,13 +149,13 @@ private:
     int m_copies;
     QDateTime m_creation_time;
     PrinterBackend *m_backend; // TODO: Maybe use the printer's backend?
+    QString m_dest; // Printer or class name that this job belongs to.
     int m_duplex_mode;
     bool m_is_two_sided;
     int m_job_id;
     bool m_landscape;
     QStringList m_messages;
     QSharedPointer<Printer> m_printer;
-    QString m_printer_name;
     QString m_print_range;
     PrinterEnum::PrintRange m_print_range_mode;
     QDateTime m_processing_time;

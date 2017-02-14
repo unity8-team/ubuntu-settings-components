@@ -87,6 +87,7 @@ public:
     int count() const;
 
     Q_INVOKABLE QVariantMap get(const int row) const;
+    QSharedPointer<Printer> getPrinterByName(const QString &printerName);
 private:
     enum class CountChangeSignal
     {
@@ -95,16 +96,15 @@ private:
     };
 
     void addPrinter(QSharedPointer<Printer> printer,
-                    const CountChangeSignal &notify = CountChangeSignal::Defer);
+        const CountChangeSignal &notify = CountChangeSignal::Defer);
     void removePrinter(QSharedPointer<Printer> printer,
-                       const CountChangeSignal &notify = CountChangeSignal::Defer);
+        const CountChangeSignal &notify = CountChangeSignal::Defer);
     void movePrinter(const int &from, const int &to);
-    void replacePrinter(QSharedPointer<Printer> old, QSharedPointer<Printer> newPrinter);
-    QSharedPointer<Printer> getPrinterByName(const QString &printerName);
+    void updatePrinter(QSharedPointer<Printer> old,
+                       QSharedPointer<Printer> newPrinter);
     PrinterBackend *m_backend;
 
     QList<QSharedPointer<Printer>> m_printers;
-    QMap<QString, JobModel *> m_job_models;
 
 private Q_SLOTS:
     void printerLoaded(QSharedPointer<Printer> printer);

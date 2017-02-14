@@ -18,13 +18,14 @@
 #define USC_JOB_MODEL_H
 
 #include "printers_global.h"
-
-#include "printer/printer.h"
+#include "backend/backend.h"
+#include "printer/printerjob.h"
 
 #include <QAbstractListModel>
 #include <QByteArray>
 #include <QModelIndex>
 #include <QObject>
+#include <QSharedPointer>
 #include <QSortFilterProxyModel>
 #include <QTimer>
 #include <QVariant>
@@ -35,7 +36,8 @@ class PRINTERS_DECL_EXPORT JobModel : public QAbstractListModel
 
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
-    explicit JobModel(const QString &printerName, PrinterBackend *backend,
+    explicit JobModel(QObject *parent = Q_NULLPTR);
+    explicit JobModel(PrinterBackend *backend,
                       QObject *parent = Q_NULLPTR);
     ~JobModel();
 
@@ -48,6 +50,7 @@ public:
         CompletedTimeRole,
         CopiesRole,
         CreationTimeRole,
+        DestRole,
         DuplexRole,
         LandscapeRole,
         OwnerRole,
@@ -72,9 +75,9 @@ public:
     int count() const;
 
     Q_INVOKABLE QVariantMap get(const int row) const;
+    QSharedPointer<PrinterJob> getJobById(const int &id);
 private:
     PrinterBackend *m_backend;
-    QString m_printer_name;
 
     QList<QSharedPointer<PrinterJob>> m_jobs;
 private Q_SLOTS:
@@ -89,6 +92,34 @@ private Q_SLOTS:
 
 Q_SIGNALS:
     void countChanged();
+};
+
+class PRINTERS_DECL_EXPORT JobFilter : public QSortFilterProxyModel
+{
+    Q_OBJECT
+    Q_PROPERTY(int count READ count NOTIFY countChanged)
+public:
+    explicit JobFilter(QObject *parent = Q_NULLPTR);
+    ~JobFilter();
+
+    Q_INVOKABLE QVariantMap get(const int row) const;
+
+    void filterOnPrinterName(const QString &name);
+    int count() const;
+protected:
+    virtual bool filterAcceptsRow(
+        int sourceRow, const QModelIndex &sourceParent) const override;
+
+Q_SIGNALS:
+    void countChanged();
+
+private Q_SLOTS:
+    void onSourceModelChanged();
+    void onSourceModelCountChanged();
+
+private:
+    QString m_printerName = QString::null;
+    bool m_printerNameFilterEnabled = false;
 };
 
 #endif // USC_JOB_MODEL_H

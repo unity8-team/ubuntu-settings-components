@@ -48,10 +48,6 @@ void PrinterLoader::load()
 
     auto p = QSharedPointer<Printer>(new Printer(backend));
 
-    // // Cups allows a faux PDF printer.
-    // auto faux = QSharedPointer<Printer>(new Printer(new PrinterPdfBackend(__("Create PDF"))));
-    // list.append(faux);
-
     Q_EMIT loaded(p);
     Q_EMIT finished();
 }

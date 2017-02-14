@@ -54,7 +54,7 @@ private Q_SLOTS:
         ((MockPrinterBackend*) backend.data())->mockPrinterLoaded(printerA);
         ((MockPrinterBackend*) backend.data())->mockPrinterLoaded(printerB);
 
-        QCOMPARE(filter.count(), 2);
+        QCOMPARE(filter.count(), 3);
     }
     void testCountChanged()
     {
@@ -62,11 +62,7 @@ private Q_SLOTS:
         PrinterModel model(backend.data());
 
         PrinterBackend* printerABackend = new MockPrinterBackend("a-printer");
-        PrinterBackend* printerBBackend = new MockPrinterBackend("b-printer");
         auto printerA = QSharedPointer<Printer>(new Printer(printerABackend));
-        auto printerB = QSharedPointer<Printer>(new Printer(printerBBackend));
-
-        // ((MockPrinterBackend*) backend.data())->mockPrinterLoaded(printerB);
 
         PrinterFilter filter;
         filter.setSourceModel(&model);

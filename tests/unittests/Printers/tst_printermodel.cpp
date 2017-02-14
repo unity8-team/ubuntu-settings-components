@@ -53,16 +53,16 @@ private Q_SLOTS:
         PrinterBackend* printerABackend = new MockPrinterBackend("a-printer");
         auto printerA = QSharedPointer<Printer>(new Printer(printerABackend));
 
-        getBackend()->mockPrinterLoaded(printerA);
+        m_backend->mockPrinterLoaded(printerA);
 
-        QCOMPARE(m_model->count(), 1);
+        QCOMPARE(m_model->count(), 2);
         QCOMPARE(countSpy.count(), 1);
         QCOMPARE(insertSpy.count(), 1);
 
         // Check item was inserted at end
         QList<QVariant> args = insertSpy.takeFirst();
-        QCOMPARE(args.at(1).toInt(), 0);
-        QCOMPARE(args.at(2).toInt(), 0);
+        QCOMPARE(args.at(1).toInt(), 1);
+        QCOMPARE(args.at(2).toInt(), 1);
     }
     void testInsertOnPrinterAddedFromNotification()
     {
@@ -72,16 +72,16 @@ private Q_SLOTS:
         PrinterBackend* printerABackend = new MockPrinterBackend("a-printer");
         auto printerA = QSharedPointer<Printer>(new Printer(printerABackend));
 
-        getBackend()->mockPrinterLoaded(printerA);
+        m_backend->mockPrinterLoaded(printerA);
 
-        QCOMPARE(m_model->count(), 1);
+        QCOMPARE(m_model->count(), 2);
         QCOMPARE(countSpy.count(), 1);
         QCOMPARE(insertSpy.count(), 1);
 
         // Check item was inserted at end
         QList<QVariant> args = insertSpy.takeFirst();
-        QCOMPARE(args.at(1).toInt(), 0);
-        QCOMPARE(args.at(2).toInt(), 0);
+        QCOMPARE(args.at(1).toInt(), 1);
+        QCOMPARE(args.at(2).toInt(), 1);
     }
     void testRemoveOnPrinterDeletedFromNotification()
     {
@@ -91,25 +91,25 @@ private Q_SLOTS:
         PrinterBackend *printerBBackend = new MockPrinterBackend("b-printer");
         auto printerB = QSharedPointer<Printer>(new Printer(printerBBackend));
 
-        getBackend()->mockPrinterLoaded(printerA);
-        getBackend()->mockPrinterLoaded(printerB);
+        m_backend->mockPrinterLoaded(printerA);
+        m_backend->mockPrinterLoaded(printerB);
 
-        QCOMPARE(m_model->count(), 2);
+        QCOMPARE(m_model->count(), 3);
 
         // Setup spy and remove a printer
         QSignalSpy countSpy(m_model, SIGNAL(countChanged()));
         QSignalSpy removeSpy(m_model, SIGNAL(rowsRemoved(const QModelIndex&, int, int)));
 
-        getBackend()->mockPrinterDeleted("Test removed printer", "", printerB->name(), 0, "", true);
+        m_backend->mockPrinterDeleted("Test removed printer", "", printerB->name(), 0, "", true);
 
-        QCOMPARE(m_model->count(), 1);
+        QCOMPARE(m_model->count(), 2);
         QCOMPARE(countSpy.count(), 1);
         QCOMPARE(removeSpy.count(), 1);
 
         // Check item was removed from end
         QList<QVariant> args = removeSpy.at(0);
-        QCOMPARE(args.at(1).toInt(), 1);
-        QCOMPARE(args.at(2).toInt(), 1);
+        QCOMPARE(args.at(1).toInt(), 2);
+        QCOMPARE(args.at(2).toInt(), 2);
     }
     void testUpdateRemoveMulti()
     {
@@ -123,40 +123,36 @@ private Q_SLOTS:
         MockPrinterBackend *printerDBackend = new MockPrinterBackend("d-printer");
         auto printerD = QSharedPointer<Printer>(new Printer(printerDBackend));
 
-        getBackend()->mockPrinterLoaded(printerA);
-        getBackend()->mockPrinterLoaded(printerB);
-        getBackend()->mockPrinterLoaded(printerC);
-        getBackend()->mockPrinterLoaded(printerD);
+        m_backend->mockPrinterLoaded(printerA);
+        m_backend->mockPrinterLoaded(printerB);
+        m_backend->mockPrinterLoaded(printerC);
+        m_backend->mockPrinterLoaded(printerD);
 
-        QCOMPARE(m_model->count(), 4);
+        QCOMPARE(m_model->count(), 5);
 
         // Setup spy and remove middle two printers
         QSignalSpy countSpy(m_model, SIGNAL(countChanged()));
         QSignalSpy removeSpy(m_model, SIGNAL(rowsRemoved(const QModelIndex&, int, int)));
 
-        getBackend()->mockPrinterDeleted("Test removed printer", "", printerB->name(), 0, "", true);
-        getBackend()->mockPrinterDeleted("Test removed printer", "", printerC->name(), 0, "", true);
+        m_backend->mockPrinterDeleted("Test removed printer", "", printerB->name(), 0, "", true);
+        m_backend->mockPrinterDeleted("Test removed printer", "", printerC->name(), 0, "", true);
 
         QCOMPARE(countSpy.count(), 2);
-        QCOMPARE(m_model->count(), 2);
+        QCOMPARE(m_model->count(), 3);
         QCOMPARE(removeSpy.count(), 2);
 
         // Check items were removed from the middle
         QList<QVariant> args;
         args = removeSpy.at(0);
-        QCOMPARE(args.at(1).toInt(), 1);
-        QCOMPARE(args.at(2).toInt(), 1);
+        QCOMPARE(args.at(1).toInt(), 2);
+        QCOMPARE(args.at(2).toInt(), 2);
 
         args = removeSpy.at(1);
-        QCOMPARE(args.at(1).toInt(), 1);
-        QCOMPARE(args.at(2).toInt(), 1);
+        QCOMPARE(args.at(1).toInt(), 2);
+        QCOMPARE(args.at(2).toInt(), 2);
     }
 private:
-    MockPrinterBackend* getBackend()
-    {
-        return (MockPrinterBackend*) m_backend;
-    }
-    PrinterBackend *m_backend;
+    MockPrinterBackend *m_backend;
     PrinterModel *m_model;
 };
 

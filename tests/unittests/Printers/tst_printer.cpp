@@ -85,17 +85,21 @@ private Q_SLOTS:
     }
     void testDefaultDuplexMode()
     {
-        getBackend()->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexLongSide;
+        QList<PrinterEnum::DuplexMode> modes({
+            PrinterEnum::DuplexMode::DuplexNone,
+            PrinterEnum::DuplexMode::DuplexLongSide,
+            PrinterEnum::DuplexMode::DuplexShortSide});
+        getBackend()->m_supportedDuplexModes = modes;
+
+        m_instance->setDefaultDuplexMode(PrinterEnum::DuplexMode::DuplexLongSide);
         QCOMPARE(m_instance->defaultDuplexMode(), PrinterEnum::DuplexMode::DuplexLongSide);
-        getBackend()->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexNone;
+        m_instance->setDefaultDuplexMode(PrinterEnum::DuplexMode::DuplexNone);
         QCOMPARE(m_instance->defaultDuplexMode(), PrinterEnum::DuplexMode::DuplexNone);
-        getBackend()->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexShortSide;
+        m_instance->setDefaultDuplexMode(PrinterEnum::DuplexMode::DuplexShortSide);
         QCOMPARE(m_instance->defaultDuplexMode(), PrinterEnum::DuplexMode::DuplexShortSide);
     }
     void testSetDefaultDuplexMode()
     {
-        getBackend()->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexNone;
-
         // Add support
         QList<PrinterEnum::DuplexMode> modes({PrinterEnum::DuplexMode::DuplexNone, PrinterEnum::DuplexMode::DuplexLongSide});
         getBackend()->m_supportedDuplexModes = modes;

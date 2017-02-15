@@ -73,11 +73,6 @@ void JobModel::update()
     int oldCount = m_jobs.size();
     QList<QSharedPointer<PrinterJob>> newJobs = m_backend->printerGetJobs();
 
-    /* If any printers returned from the backend are irrelevant, we delete
-    them. This a list of indices that corresponds to printers scheduled for
-    deletion in newPrinters. */
-    QList<uint> forDeletion;
-
     // Go through the old model
     for (int i=0; i < m_jobs.count(); i++) {
         // Determine if the old printer exists in the new model
@@ -102,7 +97,6 @@ void JobModel::update()
         if (!exists) {
             beginRemoveRows(QModelIndex(), i, i);
             QSharedPointer<PrinterJob> p = m_jobs.takeAt(i);
-            p->deleteLater();
             endRemoveRows();
 
             i--;  // as we have removed an item decrement
@@ -118,7 +112,6 @@ void JobModel::update()
         for (j=0; j < m_jobs.count(); j++) {
             if (m_jobs.at(j)->jobId() == newJobs.at(i)->jobId()) {
                 exists = true;
-                forDeletion << i;
                 break;
             }
         }
@@ -132,19 +125,12 @@ void JobModel::update()
                 m_jobs.move(j, i);
                 endMoveRows();
             }
-
-            // We can safely delete the newPrinter as it already exists.
-            forDeletion << i;
         } else {
             // New printer does not exist insert into model
             beginInsertRows(QModelIndex(), i, i);
             m_jobs.insert(i, newJobs.at(i));
             endInsertRows();
         }
-    }
-
-    Q_FOREACH(const int &index, forDeletion) {
-        newJobs.at(index)->deleteLater();
     }
 
     if (oldCount != m_jobs.size()) {

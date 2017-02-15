@@ -237,7 +237,7 @@ public:
 
     virtual QList<QSharedPointer<PrinterJob>> printerGetJobs() override
     {
-        return QList<QSharedPointer<PrinterJob>>();
+        return m_jobs;
     }
 
     virtual QMap<QString, QVariant> printerGetJobAttributes(
@@ -376,6 +376,21 @@ public:
         Q_EMIT printerDeleted(text, printerUri, printerName, printerState, printerStateReason, acceptingJobs);
     }
 
+    void mockJobCreated(
+        const QString &text, const QString &printer_uri,
+        const QString &printer_name, uint printer_state,
+        const QString &printer_state_reasons, bool printer_is_accepting_jobs,
+        uint job_id, uint job_state, const QString &job_state_reasons,
+        const QString &job_name, uint job_impressions_completed
+    )
+    {
+        Q_EMIT jobCreated(
+            text, printer_uri, printer_name, printer_state,
+            printer_state_reasons, printer_is_accepting_jobs, job_id,
+            job_state, job_state_reasons, job_name, job_impressions_completed
+        );
+    }
+
     void mockDriversLoaded(const QList<PrinterDriver> &drivers)
     {
         Q_EMIT printerDriversLoaded(drivers);
@@ -417,6 +432,7 @@ public:
 
     QStringList m_availablePrinterNames;
     QList<QSharedPointer<Printer>> m_availablePrinters;
+    QList<QSharedPointer<PrinterJob>> m_jobs;
 
 public Q_SLOTS:
     virtual void refresh() override

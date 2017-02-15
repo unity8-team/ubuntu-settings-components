@@ -87,6 +87,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void printerLoaded(QSharedPointer<Printer> printer);
+    void jobAdded(QSharedPointer<PrinterJob> job);
 
 Q_SIGNALS:
     void defaultPrinterNameChanged();

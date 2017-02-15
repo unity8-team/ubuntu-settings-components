@@ -244,6 +244,8 @@ public:
     virtual QMap<QString, QVariant> printerGetJobAttributes(
             const QString &name, const int jobId) override
     {
+        Q_UNUSED(name);
+        Q_UNUSED(jobId);
         return QMap<QString, QVariant>();
     }
 

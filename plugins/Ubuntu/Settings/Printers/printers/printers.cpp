@@ -54,6 +54,13 @@ Printers::Printers(PrinterBackend *backend, QObject *parent)
     connect(&m_drivers, SIGNAL(filterComplete()),
             this, SIGNAL(driverFilterChanged()));
 
+    connect(&m_jobs, &QAbstractItemModel::rowsInserted, [this](
+            const QModelIndex &parent, int first, int) {
+        int jobId = m_jobs.data(m_jobs.index(first, 0, parent),
+                                JobModel::Roles::IdRole).toInt();
+        jobAdded(m_jobs.getJobById(jobId));
+    });
+
     if (m_backend->type() == PrinterEnum::PrinterType::CupsType) {
         ((PrinterCupsBackend*) m_backend)->createSubscription();
     }
@@ -202,18 +209,17 @@ bool Printers::removePrinter(const QString &name)
 
 void Printers::printerLoaded(QSharedPointer<Printer> printer)
 {
-    qWarning() << Q_FUNC_INFO;
+    // Get the printer's jobFilter.
     QAbstractProxyModel *jobFilter = qobject_cast<QAbstractProxyModel *>(
         printer->jobs()
     );
-    if (!jobFilter) {
-        qWarning() << "printer" << printer->name() << "did not have a proper filter.";
-    } else if (!jobFilter->sourceModel()) {
-        qWarning() << "printer" << printer->name() << "will get a job filter.";
+
+    // If the job filter's source model is not set, set it to our JobModel.
+    if (!jobFilter->sourceModel()) {
         jobFilter->setSourceModel(&m_jobs);
     }
 
-    // Find each job's printer and associate it with it.
+    // Loop through jobs and associate a printer with it.
     for (int i = 0; i < m_jobs.rowCount(); i++) {
         QModelIndex idx = m_jobs.index(i, 0);
         QString dest = m_jobs.data(idx, JobModel::Roles::DestRole).toString();
@@ -224,4 +230,11 @@ void Printers::printerLoaded(QSharedPointer<Printer> printer)
             return;
         }
     }
+}
+
+void Printers::jobAdded(QSharedPointer<PrinterJob> job)
+{
+    auto printer = m_model.getPrinterByName(job->printerName());
+    if (printer && job)
+        job->setPrinter(printer);
 }

@@ -64,6 +64,10 @@ void JobModel::jobSignalCatchAll(
     Q_UNUSED(job_name);
     Q_UNUSED(job_impressions_completed);
 
+    auto job = getJobById(job_id);
+    if (job)
+        job->setImpressionsCompleted(job_impressions_completed);
+
     update();
 }
 
@@ -194,6 +198,9 @@ QVariant JobModel::data(const QModelIndex &index, int role) const
         case IdRole:
             ret = job->jobId();
             break;
+        case ImpressionsCompletedRole:
+            ret = job->impressionsCompleted();
+            break;
         case LandscapeRole:
             ret = job->landscape();
             break;
@@ -277,6 +284,7 @@ QHash<int, QByteArray> JobModel::roleNames() const
         names[CreationTimeRole] = "creationTime";
         names[DestRole] = "dest";
         names[DuplexRole] = "duplexMode";
+        names[ImpressionsCompletedRole] = "impressionsCompleted";
         names[LandscapeRole] = "landscape";
         names[MessagesRole] = "messages";
         names[OwnerRole] = "owner";

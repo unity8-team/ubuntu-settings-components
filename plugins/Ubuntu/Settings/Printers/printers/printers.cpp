@@ -35,6 +35,7 @@ Printers::Printers(PrinterBackend *backend, QObject *parent)
     , m_backend(backend)
     , m_drivers(backend)
     , m_model(backend)
+    , m_jobs(backend)
 {
     m_allPrinters.setSourceModel(&m_model);
     m_allPrinters.setSortRole(PrinterModel::Roles::DefaultPrinterRole);

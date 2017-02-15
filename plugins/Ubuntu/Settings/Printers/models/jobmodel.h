@@ -52,6 +52,7 @@ public:
         CreationTimeRole,
         DestRole,
         DuplexRole,
+        ImpressionsCompletedRole,
         LandscapeRole,
         OwnerRole,
         MessagesRole,

@@ -105,6 +105,16 @@ MainView {
                         }
                     }
 
+                    ListItems.Standard {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Jobs"
+                        progression: true
+                        onClicked: pageStack.push(jobPage, { printer: printer })
+                    }
+
                     Label {
                         anchors {
                             left: parent.left
@@ -196,6 +206,79 @@ MainView {
         }
     }
 
+    Component {
+        id: jobPage
+        Page {
+            property var printer
+            header: PageHeader {
+                id: jobPageHeader
+                title: printer.name
+                flickable: jobList
+            }
+
+            ListView {
+                id: jobList
+                anchors.fill: parent
+                model: printer.jobs
+                delegate: ListItem {
+                    height: jobLayout.height + (divider.visible ? divider.height : 0)
+                    ListItemLayout {
+                        id: jobLayout
+                        title.text: displayName
+
+                        Icon {
+                            id: icon
+                            width: height
+                            height: units.gu(2.5)
+                            name: "stock_document"
+                            SlotsLayout.position: SlotsLayout.First
+                        }
+
+                        // ProgressionSlot {}
+                    }
+                    // onClicked: pageStack.push(printerPage, { printer: model })
+                }
+            }
+        }
+    }
+
+
+    Component {
+        id: allJobsPage
+        Page {
+            header: PageHeader {
+                id: allJobsHeader
+                title: "Printer jobs"
+                flickable: jobsList
+            }
+
+            ListView {
+                id: jobsList
+                anchors.fill: parent
+                model: Printers.printJobs
+                delegate: ListItem {
+                    height: jobsLayout.height + (divider.visible ? divider.height : 0)
+                    ListItemLayout {
+                        id: jobsLayout
+                        title.text: displayName
+
+                        Icon {
+                            id: icon
+                            width: height
+                            height: units.gu(2.5)
+                            name: "stock_document"
+                            SlotsLayout.position: SlotsLayout.First
+                        }
+
+                        // ProgressionSlot {}
+                    }
+                    // onClicked: pageStack.push(printerPage, { printer: model })
+                }
+            }
+        }
+    }
+
+
     PageStack {
         id: pageStack
 
@@ -212,6 +295,11 @@ MainView {
                             iconName: "add"
                             text: "Add printer"
                             onTriggered: pageStack.push(addPrinterPageComponent)
+                        },
+                        Action {
+                            iconName: "document-print"
+                            text: "Printer jobs"
+                            onTriggered: pageStack.push(allJobsPage)
                         }
                     ]
                 }

@@ -40,6 +40,7 @@ PrinterJob::PrinterJob(QString dest, PrinterBackend *backend, int jobId,
     , m_backend(backend)
     , m_dest(dest)
     , m_duplex_mode(0)
+    , m_impressions_completed(0)
     , m_is_two_sided(false)
     , m_job_id(jobId)
     , m_messages(QStringList())
@@ -93,6 +94,11 @@ QDateTime PrinterJob::creationTime() const
 int PrinterJob::duplexMode() const
 {
     return m_duplex_mode;
+}
+
+int PrinterJob::impressionsCompleted() const
+{
+    return m_impressions_completed;
 }
 
 ColorModel PrinterJob::getColorModel() const
@@ -335,6 +341,14 @@ void PrinterJob::setIsTwoSided(const bool isTwoSided)
         m_is_two_sided = isTwoSided;
 
         Q_EMIT isTwoSidedChanged();
+    }
+}
+
+void PrinterJob::setImpressionsCompleted(const int &impressionsCompleted)
+{
+    if (m_impressions_completed != impressionsCompleted) {
+        m_impressions_completed = impressionsCompleted;
+        Q_EMIT impressionsCompletedChanged();
     }
 }
 

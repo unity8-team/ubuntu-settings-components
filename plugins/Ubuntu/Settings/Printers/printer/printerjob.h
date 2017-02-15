@@ -43,6 +43,7 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
     Q_PROPERTY(int copies READ copies WRITE setCopies NOTIFY copiesChanged)
     Q_PROPERTY(QDateTime creationTime READ creationTime NOTIFY creationTimeChanged)
     Q_PROPERTY(int duplexMode READ duplexMode WRITE setDuplexMode NOTIFY duplexModeChanged)
+    Q_PROPERTY(int impressionsCompleted READ impressionsCompleted NOTIFY impressionsCompletedChanged)
     Q_PROPERTY(bool isTwoSided READ isTwoSided NOTIFY isTwoSidedChanged)
     Q_PROPERTY(bool landscape READ landscape WRITE setLandscape NOTIFY landscapeChanged)
     Q_PROPERTY(QStringList messages READ messages NOTIFY messagesChanged)
@@ -74,6 +75,7 @@ public:
     int copies() const;
     QDateTime creationTime() const;
     int duplexMode() const;
+    int impressionsCompleted() const;
     bool isTwoSided() const;
     int jobId() const;
     bool landscape() const;
@@ -100,6 +102,7 @@ public Q_SLOTS:
     void setColorModel(const int colorModel);
     void setCopies(const int copies);
     void setDuplexMode(const int duplexMode);
+    void setImpressionsCompleted(const int &impressionsCompleted);
     void setLandscape(const bool landscape);
     void setPrinter(QSharedPointer<Printer> printer);
     void setPrinterName(const QString &printerName);
@@ -128,6 +131,7 @@ Q_SIGNALS:
     void copiesChanged();
     void creationTimeChanged();
     void duplexModeChanged();
+    void impressionsCompletedChanged();
     void isTwoSidedChanged();
     void landscapeChanged();
     void messagesChanged();
@@ -151,6 +155,7 @@ private:
     PrinterBackend *m_backend; // TODO: Maybe use the printer's backend?
     QString m_dest; // Printer or class name that this job belongs to.
     int m_duplex_mode;
+    int m_impressions_completed;
     bool m_is_two_sided;
     int m_job_id;
     bool m_landscape;

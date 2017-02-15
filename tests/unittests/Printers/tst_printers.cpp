@@ -110,6 +110,27 @@ private Q_SLOTS:
     {
 
     }
+    /* Test that Printers successfully assigns printers to jobs whenever
+    they appear, as well as assigning job proxies to printers whenever they
+    appear. */
+    void testAssignPrinterToJob()
+    {
+        MockPrinterBackend *backend = new MockPrinterBackend;
+        Printers p(backend);
+
+        MockPrinterBackend *printerBackend = new MockPrinterBackend("test-printer");
+        auto printer = QSharedPointer<Printer>(new Printer(printerBackend));
+        backend->mockPrinterLoaded(printer);
+
+        auto job = QSharedPointer<PrinterJob>(new PrinterJob("test-printer", backend));
+        backend->m_jobs << job;
+
+        // Trigger update.
+        backend->mockJobCreated("", "", "", 1, "", true, 100, 1, "", "", 1);
+
+        // Job now has a shared pointer to printer.
+        QCOMPARE(job->printer()->name(), printer->name());
+    }
 };
 
 QTEST_GUILESS_MAIN(TestPrinters)

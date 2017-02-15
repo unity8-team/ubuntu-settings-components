@@ -372,31 +372,17 @@ void PrinterJob::setMessages(const QStringList &messages)
 
 void PrinterJob::setPrinter(QSharedPointer<Printer> printer)
 {
-   qDebug() << "Attempting to set printer!" << printer;
-
    if (m_printer != printer) {
        m_printer = printer;
+
+       if (printer->name() != m_dest) {
+            m_dest = printer->name();
+            Q_EMIT printerNameChanged();
+       }
 
        Q_EMIT printerChanged();
    }
    loadDefaults();
-}
-
-void PrinterJob::setPrinterName(const QString &printerName)
-{
-    // Please note the return inside the foreach.
-    // if (m_printer->name() != printerName) {
-    //     Q_FOREACH(auto printer, m_backend->availablePrinters()) {
-    //         if (printer->name() == printerName) {
-    //             m_printer = printer;
-    //             loadDefaults();
-    //             Q_EMIT printerNameChanged();
-    //             return;
-    //         }
-    //     }
-
-    //     qWarning() << "Unknown printer:" << printerName;
-    // }
 }
 
 void PrinterJob::setPrintRange(const QString &printRange)

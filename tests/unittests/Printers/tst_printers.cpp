@@ -131,6 +131,25 @@ private Q_SLOTS:
         // Job now has a shared pointer to printer.
         QCOMPARE(job->printer()->name(), printer->name());
     }
+    void testSetPrinterJobFilter()
+    {
+        MockPrinterBackend *backend = new MockPrinterBackend;
+        Printers p(backend);
+
+        auto job = QSharedPointer<PrinterJob>(new PrinterJob("test-printer", backend));
+        backend->m_jobs << job;
+        backend->mockJobCreated("", "", "", 1, "", true, 100, 1, "", "", 1);
+
+        MockPrinterBackend *printerBackend = new MockPrinterBackend("test-printer");
+        auto printer = QSharedPointer<Printer>(new Printer(printerBackend));
+        backend->mockPrinterLoaded(printer);
+
+        QCOMPARE(printer->jobs()->rowCount(), 1);
+
+        // Need to also get this through a model.
+        auto printerJobs = p.allPrinters()->data(p.allPrinters()->index(0,0), PrinterModel::Roles::JobRole).value<QAbstractItemModel*>();
+        QCOMPARE(printerJobs->rowCount(), 1);
+    }
 };
 
 QTEST_GUILESS_MAIN(TestPrinters)

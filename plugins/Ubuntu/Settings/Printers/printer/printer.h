@@ -74,7 +74,7 @@ public:
     void setErrorPolicy(const PrinterEnum::ErrorPolicy &errorPolicy);
     void setDefaultPrintQuality(const PrintQuality &quality);
     void setDefaultPageSize(const QPageSize &pageSize);
-    void setJobModel(QAbstractItemModel* jobModel);
+    void setJobModel(JobModel* jobModel);
 
     bool deepCompare(QSharedPointer<Printer> other) const;
     void updateFrom(QSharedPointer<Printer> other);

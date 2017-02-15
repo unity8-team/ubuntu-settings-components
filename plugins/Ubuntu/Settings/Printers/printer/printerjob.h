@@ -48,7 +48,7 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
     Q_PROPERTY(bool landscape READ landscape WRITE setLandscape NOTIFY landscapeChanged)
     Q_PROPERTY(QStringList messages READ messages NOTIFY messagesChanged)
     Q_PROPERTY(QSharedPointer<Printer> printer READ printer WRITE setPrinter NOTIFY printerChanged)
-    Q_PROPERTY(QString printerName READ printerName WRITE setPrinterName NOTIFY printerNameChanged)
+    Q_PROPERTY(QString printerName READ printerName NOTIFY printerNameChanged)
     Q_PROPERTY(QString printRange READ printRange WRITE setPrintRange NOTIFY printRangeChanged)
     Q_PROPERTY(PrinterEnum::PrintRange printRangeMode READ printRangeMode WRITE setPrintRangeMode NOTIFY printRangeModeChanged)
     Q_PROPERTY(QDateTime processingTime READ processingTime NOTIFY processingTimeChanged)
@@ -105,7 +105,6 @@ public Q_SLOTS:
     void setImpressionsCompleted(const int &impressionsCompleted);
     void setLandscape(const bool landscape);
     void setPrinter(QSharedPointer<Printer> printer);
-    void setPrinterName(const QString &printerName);
     void setPrintRange(const QString &printRange);
     void setPrintRangeMode(const PrinterEnum::PrintRange printRangeMode);
     void setQuality(const int quality);

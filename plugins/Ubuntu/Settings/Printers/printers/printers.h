@@ -86,8 +86,8 @@ public Q_SLOTS:
     bool removePrinter(const QString &name);
 
 private Q_SLOTS:
-    void printerLoaded(QSharedPointer<Printer> printer);
     void jobAdded(QSharedPointer<PrinterJob> job);
+    void printerAdded(QSharedPointer<Printer> printer);
 
 Q_SIGNALS:
     void defaultPrinterNameChanged();

@@ -684,7 +684,6 @@ QString PrinterCupsBackend::defaultPrinterName()
 
 void PrinterCupsBackend::requestPrinter(const QString &printerName)
 {
-    qWarning() << "requestPrinter" << printerName;
     auto thread = new QThread;
     auto loader = new PrinterLoader(printerName, m_client, m_notifier);
     loader->moveToThread(thread);

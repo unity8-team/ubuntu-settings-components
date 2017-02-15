@@ -29,7 +29,7 @@ Printer::Printer(PrinterBackend *backend, QObject *parent)
     loadPrintQualities();
     loadAcceptJobs();
 
-    // m_jobs.filterOnPrinterName(name());
+    m_jobs.filterOnPrinterName(name());
 }
 
 Printer::~Printer()
@@ -37,9 +37,12 @@ Printer::~Printer()
     m_backend->deleteLater();
 }
 
-void Printer::setJobModel(QAbstractItemModel* jobModel)
+void Printer::setJobModel(JobModel* jobModel)
 {
-    m_jobs.setSourceModel(jobModel);
+    if (!m_jobs.sourceModel()) {
+        m_jobs.setSourceModel(jobModel);
+        m_jobs.sort(JobModel::Roles::IdRole);
+    }
 }
 
 void Printer::loadAcceptJobs()

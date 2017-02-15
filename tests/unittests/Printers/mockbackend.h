@@ -100,9 +100,8 @@ public:
         const bool accept,
         const QString &reason = QString::null) override
     {
-        Q_UNUSED(name);
-        Q_UNUSED(accept);
         Q_UNUSED(reason);
+        printerOptions[name].insert("AcceptJobs", accept);
         return returnValue;
     }
 

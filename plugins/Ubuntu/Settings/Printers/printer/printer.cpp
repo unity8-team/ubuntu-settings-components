@@ -234,9 +234,7 @@ void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
         return;
     }
 
-    qWarning() << Q_FUNC_INFO<<duplexMode;
     QStringList vals({Utils::duplexModeToPpdChoice(duplexMode)});
-    qWarning() << Q_FUNC_INFO<<vals;
     QString reply = m_backend->printerAddOption(name(), "Duplex", vals);
 }
 
@@ -333,10 +331,10 @@ bool Printer::deepCompare(QSharedPointer<Printer> other) const
     changed |= defaultPageSize() != other->defaultPageSize();
     changed |= type() != other->type();
     changed |= acceptJobs() != other->acceptJobs();
+    changed |= enabled() != other->enabled();
     changed |= state() != other->state();
 
     // TODO: accessControl
-    // TODO: enabled
     // TODO: errorPolicy
 
     // Return true if they are the same, so no change

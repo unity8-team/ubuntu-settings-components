@@ -32,7 +32,7 @@ Printer::Printer(PrinterBackend *backend, QObject *parent)
 
 Printer::~Printer()
 {
-    //m_backend->deleteLater();
+    m_backend->deleteLater();
 }
 
 void Printer::setJobModel(QAbstractItemModel* jobModel)
@@ -345,8 +345,9 @@ bool Printer::deepCompare(QSharedPointer<Printer> other) const
 
 void Printer::updateFrom(QSharedPointer<Printer> other)
 {
-    m_backend->deleteLater();
+    PrinterBackend *tmp = m_backend;
     m_backend = other->m_backend;
+    other->m_backend = tmp;
 
     loadColorModel();
     loadPrintQualities();

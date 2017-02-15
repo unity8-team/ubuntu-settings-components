@@ -32,3 +32,11 @@ add_test(tst_printerfilter testPrintersPrinterFilter)
 add_executable(testPrintersDriverModel tst_drivermodel.cpp ${MOCK_SOURCES})
 target_link_libraries(testPrintersDriverModel UbuntuSettingsPrintersQml Qt5::Test Qt5::Gui)
 add_test(tst_drivermodel testPrintersDriverModel)
+
+add_executable(testPrintersJobModel tst_jobmodel.cpp ${MOCK_SOURCES})
+target_link_libraries(testPrintersJobModel UbuntuSettingsPrintersQml Qt5::Test Qt5::Gui)
+add_test(tst_jobmodel testPrintersJobModel)
+
+add_executable(testPrintersJobFilter tst_jobfilter.cpp ${MOCK_SOURCES})
+target_link_libraries(testPrintersJobFilter UbuntuSettingsPrintersQml Qt5::Test Qt5::Gui)
+add_test(tst_jobfilter testPrintersJobFilter)

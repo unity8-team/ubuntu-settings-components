@@ -94,7 +94,7 @@ private:
     void loadColorModel();
     void loadPrintQualities();
 
-    QSortFilterProxyModel m_jobs;
+    JobFilter m_jobs;
     PrinterBackend *m_backend;
     ColorModel m_defaultColorModel;
     QList<ColorModel> m_supportedColorModels;

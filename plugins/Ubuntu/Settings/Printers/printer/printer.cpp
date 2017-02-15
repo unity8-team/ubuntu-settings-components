@@ -28,6 +28,8 @@ Printer::Printer(PrinterBackend *backend, QObject *parent)
     loadColorModel();
     loadPrintQualities();
     loadAcceptJobs();
+
+    // m_jobs.filterOnPrinterName(name());
 }
 
 Printer::~Printer()

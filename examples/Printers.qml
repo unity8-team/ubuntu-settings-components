@@ -212,8 +212,9 @@ MainView {
             property var printer
             header: PageHeader {
                 id: jobPageHeader
-                title: printer.name
+                title: "%1 (%2 jobs)".arg(printer.name).arg(jobList.count)
                 flickable: jobList
+                Component.onCompleted: console.log(printer.jobs, printer.jobs.count)
             }
 
             ListView {
@@ -233,10 +234,7 @@ MainView {
                             name: "stock_document"
                             SlotsLayout.position: SlotsLayout.First
                         }
-
-                        // ProgressionSlot {}
                     }
-                    // onClicked: pageStack.push(printerPage, { printer: model })
                 }
             }
         }
@@ -269,10 +267,7 @@ MainView {
                             name: "stock_document"
                             SlotsLayout.position: SlotsLayout.First
                         }
-
-                        // ProgressionSlot {}
                     }
-                    // onClicked: pageStack.push(printerPage, { printer: model })
                 }
             }
         }

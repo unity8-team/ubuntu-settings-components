@@ -379,6 +379,7 @@ void JobFilter::filterOnPrinterName(const QString &name)
 bool JobFilter::filterAcceptsRow(int sourceRow,
                                  const QModelIndex &sourceParent) const
 {
+    qWarning() << "accepts";
     bool accepts = true;
     QModelIndex childIndex = sourceModel()->index(sourceRow, 0, sourceParent);
 

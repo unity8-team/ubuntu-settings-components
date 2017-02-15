@@ -218,6 +218,8 @@ void Printers::printerLoaded(QSharedPointer<Printer> printer)
     // If the job filter's source model is not set, set it to our JobModel.
     if (!jobFilter->sourceModel()) {
         jobFilter->setSourceModel(&m_jobs);
+        jobFilter->sort(JobModel::Roles::IdRole);
+        qWarning() << "sat printer's source model";
     }
 
     // Loop through jobs and associate a printer with it.

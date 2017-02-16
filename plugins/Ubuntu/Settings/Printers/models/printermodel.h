@@ -21,13 +21,13 @@
 
 #include "models/jobmodel.h"
 #include "printer/printer.h"
+#include "printer/printersignalhandler.h"
 
 #include <QAbstractListModel>
 #include <QByteArray>
 #include <QModelIndex>
 #include <QObject>
 #include <QSortFilterProxyModel>
-#include <QTimer>
 #include <QVariant>
 
 class PRINTERS_DECL_EXPORT PrinterModel : public QAbstractListModel
@@ -105,12 +105,11 @@ private:
     PrinterBackend *m_backend;
 
     QList<QSharedPointer<Printer>> m_printers;
+    PrinterSignalHandler m_signalHandler;
 
 private Q_SLOTS:
     void printerLoaded(QSharedPointer<Printer> printer);
-    void printerModified(const QString &text, const QString &printerUri,
-        const QString &printerName, uint printerState,
-        const QString &printerStateReason, bool acceptingJobs);
+    void printerModified(const QString &printerName);
     void printerAdded(const QString &text, const QString &printerUri,
         const QString &printerName, uint printerState,
         const QString &printerStateReason, bool acceptingJobs);

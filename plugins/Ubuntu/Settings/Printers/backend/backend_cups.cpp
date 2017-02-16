@@ -451,7 +451,8 @@ QList<cups_job_t *> PrinterCupsBackend::getCupsJobs(const QString &name)
         count = cupsGetJobs(&jobs, name.toLocal8Bit(), 1, CUPS_WHICHJOBS_ACTIVE);
     }
 
-    for (int i=0; i < count; i++) {
+    int i = 0;
+    for (; i < count; i++) {
         list.append(&jobs[i]);
     }
 

@@ -31,6 +31,7 @@ add_library(UbuntuSettingsPrintersQml SHARED
 
     printer/printer.cpp
     printer/printerjob.cpp
+    printer/printersignalhandler.cpp
     printers/printers.cpp
 
     enums.h

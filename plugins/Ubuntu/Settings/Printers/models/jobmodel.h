@@ -53,7 +53,6 @@ public:
         DuplexRole,
         ImpressionsCompletedRole,
         LandscapeRole,
-        OwnerRole,
         MessagesRole,
         PrinterNameRole,
         PrintRangeRole,

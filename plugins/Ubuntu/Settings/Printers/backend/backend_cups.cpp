@@ -741,13 +741,17 @@ void PrinterCupsBackend::cancelSubscription()
 
 QString PrinterCupsBackend::getPrinterInstance(const QString &name) const
 {
-    return name.splitRef(QLatin1Char('/')).first().toString();
+    const auto parts = name.splitRef(QLatin1Char('/'));
+    QString instance;
+    if (parts.size() > 1)
+        instance = parts.at(1).toString();
+
+    return instance;
 }
 
 QString PrinterCupsBackend::getPrinterName(const QString &name) const
 {
-    const auto parts = name.splitRef(QLatin1Char('/'));
-    return parts.at(0).toString();
+    return name.splitRef(QLatin1Char('/')).first().toString();
 }
 
 cups_dest_t* PrinterCupsBackend::getDest(const QString &name) const

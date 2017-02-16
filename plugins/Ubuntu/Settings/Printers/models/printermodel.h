@@ -76,7 +76,7 @@ public:
         /* Indicates that this printers has no associated PPD. */
         IsRawRole,
         JobRole,
-        LastRole = LastStateMessageRole,
+        LastRole = JobRole,
     };
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;

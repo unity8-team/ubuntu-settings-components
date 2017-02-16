@@ -205,6 +205,7 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
             case Qt::DisplayRole:
             case NameRole:
             case DefaultPrinterRole:
+            case PrinterRole:
             case IsPdfRole:
             case IsLoadedRole:
                 break; // All of these can be inferred from the name (lazily).

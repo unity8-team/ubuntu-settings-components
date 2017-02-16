@@ -100,7 +100,6 @@ PrinterCupsBackend::PrinterCupsBackend(IppClient *client, QPrinterInfo info,
 
 PrinterCupsBackend::~PrinterCupsBackend()
 {
-
     Q_FOREACH(auto dest, m_dests) {
         if (dest)
             cupsFreeDests(1, dest);

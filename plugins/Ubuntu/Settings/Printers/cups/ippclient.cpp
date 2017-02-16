@@ -209,20 +209,20 @@ bool IppClient::printerSetAcceptJobs(const QString &printerName,
         return false;
     }
 
-    if (accept)
+    if (accept) {
         return sendNewSimpleRequest(CUPS_ACCEPT_JOBS, printerName.toUtf8(),
                                     CupsResourceAdmin);
+    } else {
+        request = ippNewRequest(CUPS_REJECT_JOBS);
+        addPrinterUri(request, printerName);
+        addRequestingUsername(request, NULL);
 
-    // Not accepting.
-    request = ippNewRequest(CUPS_REJECT_JOBS);
-    addPrinterUri(request, printerName);
-    addRequestingUsername(request, NULL);
+        if (!reason.isEmpty())
+            ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_TEXT,
+                         "printer-state-message", NULL, reason.toUtf8());
 
-    if (!reason.isEmpty())
-        ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_TEXT,
-                     "printer-state-message", NULL, reason.toUtf8());
-
-    return sendRequest(request, CupsResourceAdmin);
+        return sendRequest(request, CupsResourceAdmin);
+    }
 }
 
 

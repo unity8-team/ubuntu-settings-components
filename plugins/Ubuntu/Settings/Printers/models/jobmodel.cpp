@@ -54,7 +54,7 @@ void JobModel::jobSignalCatchAll(
 {
     Q_UNUSED(text);
     Q_UNUSED(printer_uri);
-    Q_UNUSED(printer_name); // use
+    Q_UNUSED(printer_name);
     Q_UNUSED(printer_state);
     Q_UNUSED(printer_state_reasons);
     Q_UNUSED(printer_is_accepting_jobs);
@@ -183,9 +183,6 @@ QVariant JobModel::data(const QModelIndex &index, int role) const
         case CreationTimeRole:
             ret = job->creationTime().toString(QLocale::system().dateTimeFormat());
             break;
-        case DestRole:
-            ret = job->printerName();
-            break;
         case DuplexRole: {
             if (job->printer()) {
                 ret = job->printer()->supportedDuplexStrings().at(job->duplexMode());
@@ -206,6 +203,9 @@ QVariant JobModel::data(const QModelIndex &index, int role) const
             break;
         case MessagesRole:
             ret = job->messages();
+            break;
+        case PrinterNameRole:
+            ret = job->printerName();
             break;
         case PrintRangeRole:
             ret = job->printRange();
@@ -282,12 +282,11 @@ QHash<int, QByteArray> JobModel::roleNames() const
         names[CompletedTimeRole] = "completedTime";
         names[CopiesRole] = "copies";
         names[CreationTimeRole] = "creationTime";
-        names[DestRole] = "dest";
         names[DuplexRole] = "duplexMode";
         names[ImpressionsCompletedRole] = "impressionsCompleted";
         names[LandscapeRole] = "landscape";
         names[MessagesRole] = "messages";
-        names[OwnerRole] = "owner";
+        names[PrinterNameRole] = "printerName";
         names[PrintRangeRole] = "printRange";
         names[PrintRangeModeRole] = "printRangeMode";
         names[ProcessingTimeRole] = "processingTime";
@@ -384,7 +383,7 @@ bool JobFilter::filterAcceptsRow(int sourceRow,
 
     if (accepts && m_printerNameFilterEnabled) {
         QString printerName = childIndex.model()->data(
-            childIndex, JobModel::DestRole).toString();
+            childIndex, JobModel::PrinterNameRole).toString();
         accepts = m_printerName == printerName;
     }
 

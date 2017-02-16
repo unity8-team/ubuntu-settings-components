@@ -236,10 +236,14 @@ void Printers::printerAdded(QSharedPointer<Printer> printer)
     // Loop through jobs and associate a printer with it.
     for (int i = 0; i < m_jobs.rowCount(); i++) {
         QModelIndex idx = m_jobs.index(i, 0);
-        QString dest = m_jobs.data(idx, JobModel::Roles::DestRole).toString();
+
+        QString printerName = m_jobs.data(
+            idx, JobModel::Roles::PrinterNameRole
+        ).toString();
+
         int jobId = m_jobs.data(idx, JobModel::Roles::IdRole).toInt();
         auto job = m_jobs.getJobById(jobId);
-        if (dest == printer->name() && !job->printer()) {
+        if (printerName == printer->name() && !job->printer()) {
             job->setPrinter(printer);
             return;
         }

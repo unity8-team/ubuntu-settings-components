@@ -37,9 +37,13 @@ PrinterCupsBackend::PrinterCupsBackend(IppClient *client, QPrinterInfo info,
                                        OrgCupsCupsdNotifierInterface *notifier,
                                        QObject *parent)
     : PrinterBackend(info.printerName(), parent)
+    , m_knownQualityOptions({
+        "Quality", "PrintQuality", "HPPrintQuality", "StpQuality",
+        "OutputMode",})
     , m_client(client)
     , m_info(info)
     , m_notifier(notifier)
+    , m_cupsSubscriptionId(-1)
 {
     m_type = PrinterEnum::PrinterType::CupsType;
     connect(m_notifier, SIGNAL(JobCompleted(const QString&, const QString&,
@@ -96,6 +100,16 @@ PrinterCupsBackend::PrinterCupsBackend(IppClient *client, QPrinterInfo info,
 
 PrinterCupsBackend::~PrinterCupsBackend()
 {
+
+    Q_FOREACH(auto dest, m_dests) {
+        if (dest)
+            cupsFreeDests(1, dest);
+    }
+    Q_FOREACH(auto ppd, m_ppds) {
+        if (ppd)
+            ppdClose(ppd);
+    }
+
     cancelSubscription();
     Q_EMIT cancelWorkers();
 }
@@ -258,9 +272,6 @@ QString PrinterCupsBackend::printerAddOption(const QString &name,
         return m_client->getLastError();
     }
 
-    // Cups will notify us (I think.)
-    // TODO: Check
-    // Q_EMIT printerModified(name, true);
     return QString();
 }
 
@@ -276,15 +287,10 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetOptions(
 {
     QMap<QString, QVariant> ret;
 
-    QString printerName = getPrinterName(name);
-    QString instance = getPrinterInstance(name);
-
-    // TODO: this will be called too often.
-    cups_dest_t *dest = m_client->getDest(printerName, instance);
-    ppd_file_t* ppd = m_client->getPpdFile(printerName, instance);
+    cups_dest_t *dest = getDest(name);
+    ppd_file_t* ppd = getPpd(name);
 
     if (!dest || !ppd) {
-        cupsFreeDests(1, dest);
         return ret;
     }
 
@@ -362,9 +368,6 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetOptions(
             }
         }
     }
-
-    ppdClose(ppd);
-    cupsFreeDests(1, dest);
     return ret;
 }
 
@@ -373,7 +376,7 @@ cups_dest_t* PrinterCupsBackend::makeDest(const QString &name,
                                           const PrinterJob *options)
 {
     // Get the cups dest
-    cups_dest_t *dest = m_client->getDest(getPrinterName(name), getPrinterInstance(name));
+    cups_dest_t *dest = getDest(name);
 
     if (options->collate()) {
         __CUPS_ADD_OPTION(dest, "Collate", "True");
@@ -452,8 +455,6 @@ QList<cups_job_t *> PrinterCupsBackend::getCupsJobs(const QString &name)
     for (int i=0; i < count; i++) {
         list.append(&jobs[i]);
     }
-
-    // FIXME: needs to run cupsFreeJobs();
 
     return list;
 }
@@ -574,6 +575,7 @@ QList<QSharedPointer<PrinterJob>> PrinterCupsBackend::printerGetJobs()
         newJob->setTitle(QString::fromLocal8Bit(job->title));
         newJob->setUser(QString::fromLocal8Bit(job->user));
 
+        cupsFreeJobs(1, job);
         list.append(newJob);
     }
 
@@ -740,16 +742,37 @@ void PrinterCupsBackend::cancelSubscription()
 
 QString PrinterCupsBackend::getPrinterInstance(const QString &name) const
 {
-    const auto parts = name.splitRef(QLatin1Char('/'));
-    QString instance;
-    if (parts.size() > 1)
-        instance = parts.at(1).toString();
-
-    return instance;
+    return name.splitRef(QLatin1Char('/')).first().toString();
 }
 
 QString PrinterCupsBackend::getPrinterName(const QString &name) const
 {
     const auto parts = name.splitRef(QLatin1Char('/'));
     return parts.at(0).toString();
+}
+
+cups_dest_t* PrinterCupsBackend::getDest(const QString &name) const
+{
+    QString printerName = getPrinterName(name);
+    QString instance = getPrinterInstance(name);
+
+    if (m_dests.contains(name)) {
+        return m_dests[name];
+    } else {
+        m_dests[name] = m_client->getDest(printerName, instance);
+        return m_dests[name];
+    }
+}
+
+ppd_file_t* PrinterCupsBackend::getPpd(const QString &name) const
+{
+    QString printerName = getPrinterName(name);
+    QString instance = getPrinterInstance(name);
+
+    if (m_ppds.contains(name)) {
+        return m_ppds[name];
+    } else {
+        m_ppds[name] = m_client->getPpdFile(printerName, instance);
+        return m_ppds[name];
+    }
 }

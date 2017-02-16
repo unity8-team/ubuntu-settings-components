@@ -22,14 +22,14 @@
 #include "printer/printerjob.h"
 #include "utils.h"
 
-PrinterJob::PrinterJob(QString dest,
+PrinterJob::PrinterJob(QString printerName,
                        PrinterBackend *backend,
                        QObject *parent)
-    : PrinterJob(dest, backend, -1, parent)
+    : PrinterJob(printerName, backend, -1, parent)
 {
 }
 
-PrinterJob::PrinterJob(QString dest, PrinterBackend *backend, int jobId,
+PrinterJob::PrinterJob(QString printerName, PrinterBackend *backend, int jobId,
                        QObject *parent)
     : QObject(parent)
     , m_collate(true)
@@ -38,7 +38,7 @@ PrinterJob::PrinterJob(QString dest, PrinterBackend *backend, int jobId,
     , m_copies(1)
     , m_creation_time(QDateTime())
     , m_backend(backend)
-    , m_dest(dest)
+    , m_printerName(printerName)
     , m_duplex_mode(0)
     , m_impressions_completed(0)
     , m_is_two_sided(false)
@@ -220,7 +220,7 @@ QSharedPointer<Printer> PrinterJob::printer() const
 
 QString PrinterJob::printerName() const
 {
-    return m_dest; // Maybe check if it's a class.
+    return m_printerName; // Maybe check if it's a class.
 }
 
 void PrinterJob::printFile(const QUrl &url)
@@ -375,8 +375,8 @@ void PrinterJob::setPrinter(QSharedPointer<Printer> printer)
    if (m_printer != printer) {
        m_printer = printer;
 
-       if (printer->name() != m_dest) {
-            m_dest = printer->name();
+       if (printer->name() != m_printerName) {
+            m_printerName = printer->name();
             Q_EMIT printerNameChanged();
        }
 

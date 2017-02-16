@@ -29,7 +29,6 @@ class PRINTERS_DECL_EXPORT PrinterCupsBackend : public PrinterBackend
 {
     Q_OBJECT
 public:
-    // explicit PrinterCupsBackend(QObject *parent = Q_NULLPTR);
     explicit PrinterCupsBackend(IppClient *client, QPrinterInfo info,
                                 OrgCupsCupsdNotifierInterface* notifier,
                                 QObject *parent = Q_NULLPTR);
@@ -139,15 +138,15 @@ private:
 
     QString getPrinterName(const QString &name) const;
     QString getPrinterInstance(const QString &name) const;
-
-    const QStringList m_knownQualityOptions = QStringList({
-        "Quality", "PrintQuality", "HPPrintQuality", "StpQuality",
-        "OutputMode",
-    });
+    cups_dest_t* getDest(const QString &name) const;
+    ppd_file_t* getPpd(const QString &name) const;
+    const QStringList m_knownQualityOptions;
     IppClient *m_client;
     QPrinterInfo m_info;
     OrgCupsCupsdNotifierInterface *m_notifier;
-    int m_cupsSubscriptionId = -1;
+    int m_cupsSubscriptionId;
+    mutable QMap<QString, cups_dest_t*> m_dests; // Printer name, dest.
+    mutable QMap<QString, ppd_file_t*> m_ppds; // Printer name, ppd.
 };
 
 #endif // USC_PRINTERS_CUPS_BACKEND_H

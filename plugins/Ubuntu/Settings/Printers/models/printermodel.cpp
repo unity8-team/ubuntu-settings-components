@@ -139,7 +139,7 @@ void PrinterModel::movePrinter(const int &from, const int &to)
                    << from << "to" << to << ". Size was" << size;
         return;
     }
-    if (!beginMoveRows(QModelIndex(), from, 1, QModelIndex(), to)) {
+    if (!beginMoveRows(QModelIndex(), from, from, QModelIndex(), to)) {
         qWarning() << Q_FUNC_INFO << "failed to move rows.";
         return;
     }
@@ -208,7 +208,7 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
             case IsPdfRole:
             case IsLoadedRole:
                 break; // All of these can be inferred from the name (lazily).
-            case DescriptionRole:
+            default:
                 m_backend->requestPrinter(printer->name());
             }
         }

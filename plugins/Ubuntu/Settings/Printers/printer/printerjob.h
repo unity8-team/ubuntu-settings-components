@@ -152,7 +152,7 @@ private:
     int m_copies;
     QDateTime m_creation_time;
     PrinterBackend *m_backend; // TODO: Maybe use the printer's backend?
-    QString m_dest; // Printer or class name that this job belongs to.
+    QString m_printerName;
     int m_duplex_mode;
     int m_impressions_completed;
     bool m_is_two_sided;

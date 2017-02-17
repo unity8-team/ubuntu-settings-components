@@ -128,6 +128,14 @@ public:
         ErrorState,
     };
     Q_ENUM(State)
+
+    enum class PrinterType
+    {
+        ProxyType = 0, // Represents a printer not yet loaded.
+        CupsType,
+        PdfType,
+    };
+    Q_ENUM(PrinterType)
 };
 
 #endif // USC_PRINTERS_ENUMS_H

@@ -16,14 +16,10 @@
 
 #include "backend/backend.h"
 
-PrinterBackend::PrinterBackend(QObject *parent)
-    : QObject(parent)
-{
-}
-
 PrinterBackend::PrinterBackend(const QString &printerName, QObject *parent)
     : QObject(parent)
     , m_printerName(printerName)
+    , m_type(PrinterEnum::PrinterType::ProxyType)
 {
 }
 
@@ -65,6 +61,12 @@ QString PrinterBackend::printerAddWithPpd(const QString &name,
 }
 
 QString PrinterBackend::printerDelete(const QString &name)
+{
+    Q_UNUSED(name);
+    return QString();
+}
+
+QString PrinterBackend::printerSetDefault(const QString &name)
 {
     Q_UNUSED(name);
     return QString();
@@ -193,8 +195,7 @@ QVariant PrinterBackend::printerGetOption(const QString &name,
 }
 
 QMap<QString, QVariant> PrinterBackend::printerGetOptions(
-    const QString &name, const QStringList &options
-)
+    const QString &name, const QStringList &options) const
 {
     Q_UNUSED(name);
     Q_UNUSED(options);
@@ -208,34 +209,6 @@ cups_dest_t* PrinterBackend::makeDest(const QString &name,
     Q_UNUSED(name);
     Q_UNUSED(options);
     return Q_NULLPTR;
-}
-
-QList<ColorModel> PrinterBackend::printerGetSupportedColorModels(
-    const QString &name) const
-{
-    Q_UNUSED(name);
-    return QList<ColorModel>();
-}
-
-ColorModel PrinterBackend::printerGetDefaultColorModel(
-    const QString &name) const
-{
-    Q_UNUSED(name);
-    return ColorModel();
-}
-
-QList<PrintQuality> PrinterBackend::printerGetSupportedQualities(
-    const QString &name) const
-{
-    Q_UNUSED(name);
-    return QList<PrintQuality>();
-}
-
-PrintQuality PrinterBackend::printerGetDefaultQuality(
-        const QString &name) const
-{
-    Q_UNUSED(name);
-    return PrintQuality();
 }
 
 void PrinterBackend::cancelJob(const QString &name, const int jobId)
@@ -254,16 +227,22 @@ int PrinterBackend::printFileToDest(const QString &filepath,
     return -1;
 }
 
-QList<QSharedPointer<PrinterJob>> PrinterBackend::printerGetJobs(const QString &name)
+QList<QSharedPointer<PrinterJob>> PrinterBackend::printerGetJobs()
+{
+    return QList<QSharedPointer<PrinterJob>>{};
+}
+
+QMap<QString, QVariant> PrinterBackend::printerGetJobAttributes(
+        const QString &name, const int jobId)
 {
     Q_UNUSED(name);
-
-    return QList<QSharedPointer<PrinterJob>>{};
+    Q_UNUSED(jobId);
+    return QMap<QString, QVariant>();
 }
 
 QString PrinterBackend::printerName() const
 {
-    return QString();
+    return m_printerName;
 }
 
 QString PrinterBackend::description() const
@@ -326,9 +305,9 @@ QList<PrinterEnum::DuplexMode> PrinterBackend::supportedDuplexModes() const
     return QList<PrinterEnum::DuplexMode>();
 }
 
-QList<Printer*> PrinterBackend::availablePrinters()
+QList<QSharedPointer<Printer>> PrinterBackend::availablePrinters()
 {
-    return QList<Printer*>();
+    return QList<QSharedPointer<Printer>>();
 }
 
 QStringList PrinterBackend::availablePrinterNames()
@@ -336,10 +315,10 @@ QStringList PrinterBackend::availablePrinterNames()
     return QStringList();
 }
 
-Printer* PrinterBackend::getPrinter(const QString &printerName)
+QSharedPointer<Printer> PrinterBackend::getPrinter(const QString &printerName)
 {
     Q_UNUSED(printerName);
-    return Q_NULLPTR;
+    return QSharedPointer<Printer>(Q_NULLPTR);
 }
 
 QString PrinterBackend::defaultPrinterName()
@@ -347,13 +326,23 @@ QString PrinterBackend::defaultPrinterName()
     return QString();
 }
 
-void PrinterBackend::requestAvailablePrinterDrivers()
+void PrinterBackend::requestPrinterDrivers()
 {
 }
 
-PrinterBackend::BackendType PrinterBackend::backendType() const
+void PrinterBackend::requestPrinter(const QString &printerName)
 {
-    return BackendType::DefaultType;
+    Q_UNUSED(printerName);
+}
+
+PrinterEnum::PrinterType PrinterBackend::type() const
+{
+    return m_type;
+}
+
+void PrinterBackend::setPrinterNameInternal(const QString &printerName)
+{
+    m_printerName = printerName;
 }
 
 void PrinterBackend::refresh()

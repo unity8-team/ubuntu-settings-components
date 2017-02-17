@@ -32,7 +32,6 @@ class PRINTERS_DECL_EXPORT DriverModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
-    explicit DriverModel(QObject *parent = Q_NULLPTR);
     explicit DriverModel(PrinterBackend *backend, QObject *parent = Q_NULLPTR);
     ~DriverModel();
 

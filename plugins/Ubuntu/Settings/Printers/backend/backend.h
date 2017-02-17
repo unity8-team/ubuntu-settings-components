@@ -40,14 +40,6 @@ public:
                             QObject *parent = Q_NULLPTR);
     virtual ~PrinterBackend();
 
-    enum class BackendType
-    {
-        DefaultType = 0,
-        CupsType,
-        PdfType,
-    };
-    Q_ENUM(BackendType)
-
     virtual bool holdsDefinition() const;
 
     // Add a printer using an already existing ppd.
@@ -64,11 +56,12 @@ public:
                                       const QString &info,
                                       const QString &location);
     virtual QString printerDelete(const QString &name);
+    virtual QString printerSetDefault(const QString &name);
     virtual QString printerSetEnabled(const QString &name,
                                       const bool enabled);
     virtual QString printerSetAcceptJobs(
         const QString &name,
-        const bool enabled,
+        const bool accept,
         const QString &reason = QString::null);
     virtual QString printerSetInfo(const QString &name,
                                    const QString &info);
@@ -97,28 +90,21 @@ public:
                                      const QString &option,
                                      const QStringList &values);
 
-    // TODO: const for both these getters (if possible)!
     virtual QVariant printerGetOption(const QString &name,
                                       const QString &option) const;
     virtual QMap<QString, QVariant> printerGetOptions(
-        const QString &name, const QStringList &options
-    );
+        const QString &name, const QStringList &options) const;
     // FIXME: maybe have a PrinterDest iface that has a CupsDest impl?
     virtual cups_dest_t* makeDest(const QString &name,
                                   const PrinterJob *options);
-
-    virtual QList<ColorModel> printerGetSupportedColorModels(
-        const QString &name) const;
-    virtual ColorModel printerGetDefaultColorModel(const QString &name) const;
-    virtual QList<PrintQuality> printerGetSupportedQualities(
-        const QString &name) const;
-    virtual PrintQuality printerGetDefaultQuality(const QString &name) const;
 
     virtual void cancelJob(const QString &name, const int jobId);
     virtual int printFileToDest(const QString &filepath,
                                 const QString &title,
                                 const cups_dest_t *dest);
-    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs(const QString &name);
+    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs();
+    virtual QMap<QString, QVariant> printerGetJobAttributes(
+        const QString &name, const int jobId);
 
     virtual QString printerName() const;
     virtual QString description() const;
@@ -136,14 +122,17 @@ public:
     virtual PrinterEnum::DuplexMode defaultDuplexMode() const;
     virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const;
 
-    virtual QList<Printer*> availablePrinters();
+    virtual QList<QSharedPointer<Printer>> availablePrinters();
     virtual QStringList availablePrinterNames();
-    virtual Printer* getPrinter(const QString &printerName);
+    virtual QSharedPointer<Printer> getPrinter(const QString &printerName);
     virtual QString defaultPrinterName();
 
-    virtual void requestAvailablePrinterDrivers();
+    virtual void requestPrinterDrivers();
+    virtual void requestPrinter(const QString &printerName);
 
-    virtual BackendType backendType() const;
+    virtual PrinterEnum::PrinterType type() const;
+
+    virtual void setPrinterNameInternal(const QString &printerName);
 
 public Q_SLOTS:
     virtual void refresh();
@@ -151,6 +140,8 @@ public Q_SLOTS:
 Q_SIGNALS:
     void printerDriversLoaded(const QList<PrinterDriver> &drivers);
     void printerDriversFailedToLoad(const QString &errorMessage);
+
+    void printerLoaded(QSharedPointer<Printer> printers);
 
     void jobCompleted(
         const QString &text,
@@ -215,9 +206,18 @@ Q_SIGNALS:
         const QString &printerStateReason,
         bool acceptingJobs
     );
+    void printerStateChanged(
+        const QString &text,
+        const QString &printerUri,
+        const QString &printerName,
+        uint printerState,
+        const QString &printerStateReason,
+        bool acceptingJobs
+    );
 
 protected:
-    const QString m_printerName;
+    QString m_printerName;
+    PrinterEnum::PrinterType m_type;
 };
 
 #endif // USC_PRINTERS_BACKEND_H

@@ -18,18 +18,18 @@
 #define USC_PRINTERS_CUPS_BACKEND_H
 
 #include "backend/backend.h"
-#include "cups/cupsfacade.h"
+#include "cups/ippclient.h"
 #include "cupsdnotifier.h" // Note: this file was generated.
+
+#include <cups/cups.h>
 
 #include <QPrinterInfo>
 
-#define CUPSD_NOTIFIER_DBUS_PATH "/org/cups/cupsd/Notifier"
-
 class PRINTERS_DECL_EXPORT PrinterCupsBackend : public PrinterBackend
 {
+    Q_OBJECT
 public:
-    explicit PrinterCupsBackend(QObject *parent = Q_NULLPTR);
-    explicit PrinterCupsBackend(CupsFacade *cups, QPrinterInfo info,
+    explicit PrinterCupsBackend(IppClient *client, QPrinterInfo info,
                                 OrgCupsCupsdNotifierInterface* notifier,
                                 QObject *parent = Q_NULLPTR);
     virtual ~PrinterCupsBackend() override;
@@ -47,11 +47,12 @@ public:
                                       const QString &info,
                                       const QString &location) override;
     virtual QString printerDelete(const QString &name) override;
+    virtual QString printerSetDefault(const QString &name) override;
     virtual QString printerSetEnabled(const QString &name,
                                       const bool enabled) override;
     virtual QString printerSetAcceptJobs(
         const QString &name,
-        const bool enabled,
+        const bool accept,
         const QString &reason = QString::null) override;
     virtual QString printerSetInfo(const QString &name,
                                    const QString &info) override;
@@ -80,28 +81,20 @@ public:
                                      const QString &option,
                                      const QStringList &values) override;
 
-    // TODO: const for both these getters (if possible)!
     virtual QVariant printerGetOption(const QString &name,
                                       const QString &option) const override;
     virtual QMap<QString, QVariant> printerGetOptions(
         const QString &name, const QStringList &options
-    ) override;
+    ) const override;
     // FIXME: maybe have a PrinterDest iface that has a CupsDest impl?
     virtual cups_dest_t* makeDest(const QString &name,
                                   const PrinterJob *options) override;
-
-    virtual QList<ColorModel> printerGetSupportedColorModels(
-        const QString &name) const override;
-    virtual ColorModel printerGetDefaultColorModel(const QString &name) const;
-    virtual QList<PrintQuality> printerGetSupportedQualities(
-        const QString &name) const override;
-    virtual PrintQuality printerGetDefaultQuality(const QString &name) const;
 
     virtual void cancelJob(const QString &name, const int jobId) override;
     virtual int printFileToDest(const QString &filepath,
                                 const QString &title,
                                 const cups_dest_t *dest) override;
-    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs(const QString &name) override;
+    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs() override;
 
     virtual QString printerName() const override;
     virtual QString description() const override;
@@ -119,24 +112,41 @@ public:
     virtual PrinterEnum::DuplexMode defaultDuplexMode() const override;
     virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const override;
 
-    virtual QList<Printer*> availablePrinters() override;
+    virtual QList<QSharedPointer<Printer>> availablePrinters() override;
     virtual QStringList availablePrinterNames() override;
-    virtual Printer* getPrinter(const QString &printerName) override;
+    virtual QSharedPointer<Printer> getPrinter(const QString &printerName) override;
     virtual QString defaultPrinterName() override;
-    virtual void requestAvailablePrinterDrivers() override;
-
-    virtual PrinterBackend::BackendType backendType() const override;
+    virtual void requestPrinterDrivers() override;
+    virtual void requestPrinter(const QString &printerName) override;
+    virtual QMap<QString, QVariant> printerGetJobAttributes(
+        const QString &name, const int jobId) override;
 
 public Q_SLOTS:
     virtual void refresh() override;
     void createSubscription();
 
+Q_SIGNALS:
+    void cancelWorkers();
+    void printerDriversLoaded(const QList<PrinterDriver> &drivers);
+    void printerDriversFailedToLoad(const QString &errorMessage);
+    void requestPrinterDriverCancel();
+
 private:
     void cancelSubscription();
-    CupsFacade *m_cups;
+    void cancelPrinterDriverRequest();
+    QList<cups_job_t *> getCupsJobs(const QString &name = QStringLiteral());
+
+    QString getPrinterName(const QString &name) const;
+    QString getPrinterInstance(const QString &name) const;
+    cups_dest_t* getDest(const QString &name) const;
+    ppd_file_t* getPpd(const QString &name) const;
+    const QStringList m_knownQualityOptions;
+    IppClient *m_client;
     QPrinterInfo m_info;
     OrgCupsCupsdNotifierInterface *m_notifier;
-    int m_cupsSubscriptionId = -1;
+    int m_cupsSubscriptionId;
+    mutable QMap<QString, cups_dest_t*> m_dests; // Printer name, dest.
+    mutable QMap<QString, ppd_file_t*> m_ppds; // Printer name, ppd.
 };
 
 #endif // USC_PRINTERS_CUPS_BACKEND_H

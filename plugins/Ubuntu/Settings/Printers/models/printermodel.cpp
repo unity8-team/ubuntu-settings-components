@@ -14,146 +14,168 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "utils.h"
-
 #include "backend/backend_cups.h"
-#include "cups/cupsfacade.h"
+#include "backend/backend_pdf.h"
+#include "i18n.h"
 #include "models/jobmodel.h"
 #include "models/printermodel.h"
+#include "utils.h"
 
 #include <QDebug>
-#include <QQmlEngine>
-
-PrinterModel::PrinterModel(QObject *parent)
-    : PrinterModel(new PrinterCupsBackend, parent)
-{
-}
 
 PrinterModel::PrinterModel(PrinterBackend *backend, QObject *parent)
     : QAbstractListModel(parent)
     , m_backend(backend)
 {
-    update();
 
     QObject::connect(m_backend, &PrinterBackend::printerAdded,
-                     this, &PrinterModel::printerSignalCatchall);
+                     this, &PrinterModel::printerAdded);
     QObject::connect(m_backend, &PrinterBackend::printerModified,
-                     this, &PrinterModel::printerSignalCatchall);
+                     this, &PrinterModel::printerModified);
+    QObject::connect(m_backend, &PrinterBackend::printerStateChanged,
+                     this, &PrinterModel::printerModified);
     QObject::connect(m_backend, &PrinterBackend::printerDeleted,
-                     this, &PrinterModel::printerSignalCatchall);
+                     this, &PrinterModel::printerDeleted);
+
+    connect(m_backend, SIGNAL(printerLoaded(QSharedPointer<Printer>)),
+            this, SLOT(printerLoaded(QSharedPointer<Printer>)));
+
+    // Create printer proxies for every printerName.
+    Q_FOREACH(auto printerName, m_backend->availablePrinterNames()) {
+        auto p = QSharedPointer<Printer>(new Printer(new PrinterBackend(printerName)));
+        addPrinter(p, CountChangeSignal::Defer);
+    }
+
+    // Add a PDF printer.
+    auto pdfPrinter = QSharedPointer<Printer>(
+        new Printer(new PrinterPdfBackend(__("Create PDF")))
+    );
+    addPrinter(pdfPrinter, CountChangeSignal::Defer);
+
+    Q_EMIT countChanged();
 }
 
 PrinterModel::~PrinterModel()
 {
 }
 
-void PrinterModel::printerSignalCatchall(
+void PrinterModel::printerLoaded(QSharedPointer<Printer> printer)
+{
+    // Find and possibly replace an old printer.
+    for (int i=0; i < m_printers.count(); i++) {
+        auto oldPrinter = m_printers.at(i);
+        if (printer->name() == oldPrinter->name()) {
+            if (!oldPrinter->deepCompare(printer)) {
+                updatePrinter(oldPrinter, printer);
+            }
+
+            // We're done.
+            return;
+        }
+    }
+
+    addPrinter(printer, CountChangeSignal::Emit);
+}
+
+void PrinterModel::printerModified(
     const QString &text, const QString &printerUri,
     const QString &printerName, uint printerState,
     const QString &printerStateReason, bool acceptingJobs)
 {
     Q_UNUSED(text);
     Q_UNUSED(printerUri);
-    Q_UNUSED(printerName);
     Q_UNUSED(printerState);
     Q_UNUSED(printerStateReason);
     Q_UNUSED(acceptingJobs);
-    update();
+
+    m_backend->requestPrinter(printerName);
 }
 
-void PrinterModel::update()
+void PrinterModel::printerAdded(
+    const QString &text, const QString &printerUri,
+    const QString &printerName, uint printerState,
+    const QString &printerStateReason, bool acceptingJobs)
 {
-    // Store the old count and get the new printers
-    int oldCount = m_printers.size();
-    QList<Printer*> newPrinters = m_backend->availablePrinters();
+    Q_UNUSED(text);
+    Q_UNUSED(printerUri);
+    Q_UNUSED(printerState);
+    Q_UNUSED(printerStateReason);
+    Q_UNUSED(acceptingJobs);
 
-    /* If any printers returned from the backend are irrelevant, we delete
-    them. This a list of indices that corresponds to printers scheduled for
-    deletion in newPrinters. */
-    QList<uint> forDeletion;
+    m_backend->requestPrinter(printerName);
+}
 
-    // Go through the old model
-    for (int i=0; i < m_printers.count(); i++) {
-        // Determine if the old printer exists in the new model
-        bool exists = false;
+void PrinterModel::printerDeleted(
+    const QString &text, const QString &printerUri,
+    const QString &printerName, uint printerState,
+    const QString &printerStateReason, bool acceptingJobs)
+{
+    Q_UNUSED(text);
+    Q_UNUSED(printerUri);
+    Q_UNUSED(printerState);
+    Q_UNUSED(printerStateReason);
+    Q_UNUSED(acceptingJobs);
 
-        Q_FOREACH(Printer *p, newPrinters) {
-            if (p->name() == m_printers.at(i)->name()) {
-                exists = true;
-
-                // Ensure the other properties of the Printer are up to date
-                if (!m_printers.at(i)->deepCompare(p)) {
-                    m_printers.at(i)->updateFrom(p);
-
-                    Q_EMIT dataChanged(index(i), index(i));
-                }
-
-                break;
-            }
-        }
-
-        // If it doesn't exist then remove it from the old model
-        if (!exists) {
-            beginRemoveRows(QModelIndex(), i, i);
-            Printer *p = m_printers.takeAt(i);
-            JobModel *jobModel = m_job_models.take(p->name());
-
-            p->deleteLater();
-            jobModel->deleteLater();
-
-            endRemoveRows();
-
-            i--;  // as we have removed an item decrement
-        }
+    auto printer = getPrinterByName(printerName);
+    if (printer) {
+        removePrinter(printer, CountChangeSignal::Emit);
     }
+}
 
-    // Go through the new model
-    for (int i=0; i < newPrinters.count(); i++) {
-        // Determine if the new printer exists in the old model
-        bool exists = false;
-        int j;
-
-        for (j=0; j < m_printers.count(); j++) {
-            if (m_printers.at(j)->name() == newPrinters.at(i)->name()) {
-                exists = true;
-                forDeletion << i;
-                break;
-            }
-        }
-
-        if (exists) {
-            if (j == i) {  // New printer exists and in correct position
-                continue;
-            } else {
-                // New printer does exist but needs to be moved in old model
-                beginMoveRows(QModelIndex(), j, 1, QModelIndex(), i);
-                m_printers.move(j, i);
-                endMoveRows();
-            }
-
-            // We can safely delete the newPrinter as it already exists.
-            forDeletion << i;
-        } else {
-            // New printer does not exist insert into model
-            beginInsertRows(QModelIndex(), i, i);
-
-            m_printers.insert(i, newPrinters.at(i));
-
-            JobModel *model = new JobModel(newPrinters.at(i)->name(), m_backend, this);
-            QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
-            m_job_models.insert(newPrinters.at(i)->name(), model);
-
-            endInsertRows();
-        }
+QSharedPointer<Printer> PrinterModel::getPrinterByName(const QString &printerName)
+{
+    Q_FOREACH(auto p, m_printers) {
+        if (p->name() == printerName)
+            return p;
     }
+    return QSharedPointer<Printer>(Q_NULLPTR);
+}
 
-    Q_FOREACH(const int &index, forDeletion) {
-        newPrinters.at(index)->deleteLater();
+void PrinterModel::movePrinter(const int &from, const int &to)
+{
+    int size = m_printers.size();
+    if (from < 0 || to < 0 || from >= size || to >= size) {
+        qWarning() << Q_FUNC_INFO << "Illegal move operation from"
+                   << from << "to" << to << ". Size was" << size;
+        return;
     }
+    if (!beginMoveRows(QModelIndex(), from, from, QModelIndex(), to)) {
+        qWarning() << Q_FUNC_INFO << "failed to move rows.";
+        return;
+    }
+    m_printers.move(from, to);
+    endMoveRows();
+}
 
-    if (oldCount != m_printers.size()) {
+void PrinterModel::removePrinter(QSharedPointer<Printer> printer, const CountChangeSignal &notify)
+{
+    int idx = m_printers.indexOf(printer);
+    beginRemoveRows(QModelIndex(), idx, idx);
+    m_printers.removeAt(idx);
+    endRemoveRows();
+
+    if (notify == CountChangeSignal::Emit)
         Q_EMIT countChanged();
-    }
+}
+
+void PrinterModel::updatePrinter(QSharedPointer<Printer> old,
+                                  QSharedPointer<Printer> newPrinter)
+{
+    int i = m_printers.indexOf(old);
+    QModelIndex idx = index(i);
+    old->updateFrom(newPrinter);
+    Q_EMIT dataChanged(idx, idx);
+}
+
+void PrinterModel::addPrinter(QSharedPointer<Printer> printer, const CountChangeSignal &notify)
+{
+    int i = m_printers.size();
+    beginInsertRows(QModelIndex(), i, i);
+    m_printers.append(printer);
+    endInsertRows();
+
+    if (notify == CountChangeSignal::Emit)
+        Q_EMIT countChanged();
 }
 
 int PrinterModel::rowCount(const QModelIndex &parent) const
@@ -175,6 +197,23 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
 
         auto printer = m_printers[index.row()];
 
+
+        /* If printer is a proxy (not loaded), determine if the requested role
+        is something async and that we need to request the data. */
+        if (printer->type() == PrinterEnum::PrinterType::ProxyType) {
+            switch (role) {
+            case Qt::DisplayRole:
+            case NameRole:
+            case DefaultPrinterRole:
+            case PrinterRole:
+            case IsPdfRole:
+            case IsLoadedRole:
+                break; // All of these can be inferred from the name (lazily).
+            default:
+                m_backend->requestPrinter(printer->name());
+            }
+        }
+
         switch (role) {
         case NameRole:
         case Qt::DisplayRole:
@@ -195,7 +234,7 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
         //     ret = printer->copies();
         //     break;
         case DefaultPrinterRole:
-            ret = printer->isDefault();
+            ret = printer->name() == m_backend->defaultPrinterName();
             break;
         case DuplexRole:
             ret = printer->supportedDuplexModes().indexOf(printer->defaultDuplexMode());
@@ -208,9 +247,6 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
         //     break;
         // case PrintRangeModeRole:
         //     ret = printer->printRangeMode();
-        //     break;
-        // case PdfModeRole:
-        //     ret = printer->pdfMode();
         //     break;
         case PrintQualityRole:
             ret = printer->supportedPrintQualities().indexOf(printer->defaultPrintQuality());
@@ -254,12 +290,24 @@ QVariant PrinterModel::data(const QModelIndex &index, int role) const
             ret = QVariant::fromValue(printer);
             break;
         case IsPdfRole:
-            ret = printer->isPdf();
+            ret = printer->type() == PrinterEnum::PrinterType::PdfType;
             break;
-        case JobRole: {
-            ret = QVariant::fromValue(m_job_models.value(printer->name()));
+        case IsLoadedRole:
+            ret = printer->type() != PrinterEnum::PrinterType::ProxyType;
             break;
-        }
+        case IsRawRole:
+            ret = !printer->holdsDefinition();
+            break;
+        case JobRole:
+            ret = QVariant::fromValue(printer->jobs());
+            break;
+        case EnabledRole:
+            ret = printer->enabled();
+            break;
+        case AcceptJobsRole:
+            ret = printer->acceptJobs();
+            break;
+
         // case LastStateMessageRole:
         //     ret = printer->lastStateMessage();
         //     break;
@@ -312,6 +360,12 @@ bool PrinterModel::setData(const QModelIndex &index,
                 }
             }
             break;
+        case EnabledRole:
+            printer->setEnabled(value.toBool());
+            break;
+        case AcceptJobsRole:
+            printer->setAcceptJobs(value.toBool());
+            break;
         }
     }
 
@@ -331,6 +385,8 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
         names[DuplexRole] = "duplexMode";
         names[SupportedDuplexModesRole] = "supportedDuplexModes";
         names[NameRole] = "name";
+        names[EnabledRole] = "printerEnabled";
+        names[AcceptJobsRole] = "acceptJobs";
         names[PrintRangeRole] = "printRange";
         names[PrintRangeModeRole] = "printRangeMode";
         names[PdfModeRole] = "pdfMode";
@@ -345,6 +401,8 @@ QHash<int, QByteArray> PrinterModel::roleNames() const
         names[StateRole] = "state";
         names[PrinterRole] = "printer";
         names[IsPdfRole] = "isPdf";
+        names[IsLoadedRole] = "isLoaded";
+        names[IsRawRole] = "isRaw";
         names[JobRole] = "jobs";
         names[LastStateMessageRole] = "lastStateMessage";
     }
@@ -364,12 +422,6 @@ QVariantMap PrinterModel::get(const int row) const
     }
 
     return result;
-}
-
-Printer* PrinterModel::getPrinterFromName(const QString &name)
-{
-    Q_UNUSED(name);
-    return Q_NULLPTR;
 }
 
 PrinterFilter::PrinterFilter(QObject *parent) : QSortFilterProxyModel(parent)
@@ -484,4 +536,3 @@ bool PrinterFilter::lessThan(const QModelIndex &left,
         return leftData < rightData;
     }
 }
-

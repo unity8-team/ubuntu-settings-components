@@ -35,13 +35,40 @@ MainView {
             visible: false
             property var printer
             header: PageHeader {
+                id: printerPageHeader
                 title: printer.name
                 flickable: printerFlickable
+            }
+
+            Component {
+                id: printerPageNotYetLoaded
+
+                Item {
+                    anchors.fill: parent
+                    ActivityIndicator {
+                        anchors.centerIn: parent
+                        running: true
+                    }
+                }
+            }
+
+            Component.onCompleted: {
+                printer.description;
             }
 
             Flickable {
                 id: printerFlickable
                 anchors.fill: parent
+
+                Loader {
+                    id: printerPageBitsLoader
+                    anchors.fill: parent
+                    sourceComponent: printer.isLoaded ? printerPageLoaded : printerPageNotYetLoaded
+                }
+            }
+
+            Component {
+                id: printerPageLoaded
 
                 Column {
                     spacing: units.gu(2)
@@ -50,6 +77,42 @@ MainView {
                         topMargin: units.gu(2)
                         left: parent.left
                         right: parent.right
+                    }
+
+                    ListItems.Standard {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Enabled"
+
+                        control: Switch {
+                            checked: printer.printerEnabled
+                            onCheckedChanged: printer.printerEnabled = checked
+                        }
+                    }
+
+                    ListItems.Standard {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Accepting jobs"
+
+                        control: Switch {
+                            checked: printer.acceptJobs
+                            onCheckedChanged: printer.acceptJobs = checked
+                        }
+                    }
+
+                    ListItems.Standard {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        text: "Jobs"
+                        progression: true
+                        onClicked: pageStack.push(jobPage, { printer: printer })
                     }
 
                     Label {
@@ -143,6 +206,73 @@ MainView {
         }
     }
 
+    Component {
+        id: jobPage
+        Page {
+            property var printer
+            header: PageHeader {
+                id: jobPageHeader
+                title: "%1 (%2 jobs)".arg(printer.name).arg(jobList.count)
+                flickable: jobList
+            }
+
+            ListView {
+                id: jobList
+                anchors.fill: parent
+                model: printer.jobs
+                delegate: ListItem {
+                    height: jobLayout.height + (divider.visible ? divider.height : 0)
+                    ListItemLayout {
+                        id: jobLayout
+                        title.text: displayName
+
+                        Icon {
+                            id: icon
+                            width: height
+                            height: units.gu(2.5)
+                            name: "stock_document"
+                            SlotsLayout.position: SlotsLayout.First
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    Component {
+        id: allJobsPage
+        Page {
+            header: PageHeader {
+                id: allJobsHeader
+                title: "Printer jobs"
+                flickable: jobsList
+            }
+
+            ListView {
+                id: jobsList
+                anchors.fill: parent
+                model: Printers.printJobs
+                delegate: ListItem {
+                    height: jobsLayout.height + (divider.visible ? divider.height : 0)
+                    ListItemLayout {
+                        id: jobsLayout
+                        title.text: displayName
+
+                        Icon {
+                            id: icon
+                            width: height
+                            height: units.gu(2.5)
+                            name: "stock_document"
+                            SlotsLayout.position: SlotsLayout.First
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     PageStack {
         id: pageStack
 
@@ -159,6 +289,11 @@ MainView {
                             iconName: "add"
                             text: "Add printer"
                             onTriggered: pageStack.push(addPrinterPageComponent)
+                        },
+                        Action {
+                            iconName: "document-print"
+                            text: "Printer jobs"
+                            onTriggered: pageStack.push(allJobsPage)
                         }
                     ]
                 }
@@ -171,11 +306,28 @@ MainView {
                 model: Printers.allPrintersWithPdf
                 delegate: ListItem {
                     height: modelLayout.height + (divider.visible ? divider.height : 0)
+                    trailingActions: ListItemActions {
+                        actions: [
+                            Action {
+                                iconName: "delete"
+                                onTriggered: {
+                                    if (!Printers.removePrinter(model.name)) {
+                                        console.error('failed to remove printer', Printers.lastMessage);
+                                    }
+                                }
+                            },
+                            Action {
+                                iconName: model.default ? "starred" : "non-starred"
+                                enabled: !model.default
+                                onTriggered: Printers.defaultPrinterName = model.name
+                            }
+
+                        ]
+                    }
                     ListItemLayout {
                         id: modelLayout
                         title.text: displayName
                         title.font.bold: model.default
-                        subtitle.text: description
 
                         Icon {
                             id: icon

@@ -51,14 +51,14 @@ private Q_SLOTS:
     }
     void testDescription()
     {
-        getBackend()->m_description = "some description";
+        m_backend->m_description = "some description";
         QCOMPARE(m_backend->description(), m_instance->description());
     }
     void testSetDescription()
     {
         QString desc("another description");
         m_instance->setDescription(desc);
-        QCOMPARE(getBackend()->infos.value(m_printerName), desc);
+        QCOMPARE(m_backend->infos.value(m_printerName), desc);
     }
     void testSupportedDuplexModes_data()
     {
@@ -79,30 +79,34 @@ private Q_SLOTS:
     {
         QFETCH(QList<PrinterEnum::DuplexMode>, modes);
         QFETCH(QStringList, strings);
-        getBackend()->m_supportedDuplexModes = modes;
+        m_backend->m_supportedDuplexModes = modes;
         QCOMPARE(m_instance->supportedDuplexModes(), modes);
         QCOMPARE(m_instance->supportedDuplexStrings(), strings);
     }
     void testDefaultDuplexMode()
     {
-        getBackend()->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexLongSide;
+        QList<PrinterEnum::DuplexMode> modes({
+            PrinterEnum::DuplexMode::DuplexNone,
+            PrinterEnum::DuplexMode::DuplexLongSide,
+            PrinterEnum::DuplexMode::DuplexShortSide});
+        m_backend->m_supportedDuplexModes = modes;
+
+        m_instance->setDefaultDuplexMode(PrinterEnum::DuplexMode::DuplexLongSide);
         QCOMPARE(m_instance->defaultDuplexMode(), PrinterEnum::DuplexMode::DuplexLongSide);
-        getBackend()->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexNone;
+        m_instance->setDefaultDuplexMode(PrinterEnum::DuplexMode::DuplexNone);
         QCOMPARE(m_instance->defaultDuplexMode(), PrinterEnum::DuplexMode::DuplexNone);
-        getBackend()->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexShortSide;
+        m_instance->setDefaultDuplexMode(PrinterEnum::DuplexMode::DuplexShortSide);
         QCOMPARE(m_instance->defaultDuplexMode(), PrinterEnum::DuplexMode::DuplexShortSide);
     }
     void testSetDefaultDuplexMode()
     {
-        getBackend()->m_defaultDuplexMode = PrinterEnum::DuplexMode::DuplexNone;
-
         // Add support
         QList<PrinterEnum::DuplexMode> modes({PrinterEnum::DuplexMode::DuplexNone, PrinterEnum::DuplexMode::DuplexLongSide});
-        getBackend()->m_supportedDuplexModes = modes;
+        m_backend->m_supportedDuplexModes = modes;
 
         m_instance->setDefaultDuplexMode(PrinterEnum::DuplexMode::DuplexLongSide);
 
-        QVariant duplexVar = getBackend()->printerOptions[m_printerName].value("Duplex");
+        QVariant duplexVar = m_backend->printerOptions[m_printerName].value("Duplex");
         QStringList duplexVals = duplexVar.toStringList();
          QCOMPARE(
             duplexVals.at(0),
@@ -134,13 +138,13 @@ private Q_SLOTS:
     void testDefaultPageSize()
     {
         auto targetSize = QPageSize(QPageSize::A4);
-        getBackend()->m_defaultPageSize = targetSize;
+        m_backend->m_defaultPageSize = targetSize;
         QCOMPARE(m_instance->defaultPageSize(), targetSize);
     }
     void testSupportedPageSizes_data()
     {
         auto supported = QList<QPageSize>({QPageSize(QPageSize::A4), QPageSize(QPageSize::Letter)});
-        getBackend()->m_supportedPageSizes = supported;
+        m_backend->m_supportedPageSizes = supported;
         QCOMPARE(m_instance->supportedPageSizes(), supported);
     }
     void testSetDefaultPageSize()
@@ -149,11 +153,11 @@ private Q_SLOTS:
         QFETCH(QPageSize, size);
         QFETCH(bool, expectCupsCommunication);
         QFETCH(QString, expectedValue);
-        getBackend()->m_supportedPageSizes = sizes;
+        m_backend->m_supportedPageSizes = sizes;
 
         m_instance->setDefaultPageSize(size);
 
-        QVariant pageSizeVar = getBackend()->printerOptions[m_printerName].value("PageSize");
+        QVariant pageSizeVar = m_backend->printerOptions[m_printerName].value("PageSize");
         QStringList pageSizeVals = pageSizeVar.toStringList();
 
         if (expectCupsCommunication) {
@@ -176,7 +180,7 @@ private Q_SLOTS:
 
         PrinterBackend *backend = new MockPrinterBackend(m_printerName);
         ((MockPrinterBackend*) backend)->printerOptions[m_printerName].insert(
-            "ColorModels", QVariant::fromValue(models));
+            "SupportedColorModels", QVariant::fromValue(models));
         Printer p(backend);
         QCOMPARE(p.supportedColorModels(), models);
     }
@@ -194,23 +198,11 @@ private Q_SLOTS:
         b.name = "Worse";
         QList<PrintQuality> qualities({a, b});
 
-        PrinterBackend *backend = new MockPrinterBackend(m_printerName);
-        ((MockPrinterBackend*) backend)->printerOptions[m_printerName].insert(
-            "PrintQualities", QVariant::fromValue(qualities));
+        MockPrinterBackend *backend = new MockPrinterBackend(m_printerName);
+        backend->printerOptions[m_printerName].insert(
+            "SupportedPrintQualities", QVariant::fromValue(qualities));
         Printer p(backend);
         QCOMPARE(p.supportedPrintQualities(), qualities);
-    }
-    void testIsDefault_data()
-    {
-        QTest::addColumn<bool>("isDefault");
-        QTest::newRow("default") << true;
-        QTest::newRow("not default") << false;
-    }
-    void testIsDefault()
-    {
-        QFETCH(bool, isDefault);
-        getBackend()->m_defaultPrinterName = isDefault ? m_printerName : "some-other";
-        QCOMPARE(m_instance->isDefault(), isDefault);
     }
     void testPdfPrinter()
     {
@@ -219,22 +211,74 @@ private Q_SLOTS:
         QCOMPARE(p.defaultColorModel().name, QString("RGB"));
         QCOMPARE(p.defaultPageSize(), QPageSize(QPageSize::A4));
         QCOMPARE(p.defaultDuplexMode(), PrinterEnum::DuplexMode::DuplexNone);
-        QCOMPARE(p.isPdf(), true);
+        QCOMPARE(p.type(), PrinterEnum::PrinterType::PdfType);
     }
     void testState()
     {
-        getBackend()->m_state = PrinterEnum::State::AbortedState;
-        QCOMPARE(m_instance->state(), getBackend()->m_state);
+        m_backend->m_state = PrinterEnum::State::AbortedState;
+        QCOMPARE(m_instance->state(), m_backend->m_state);
+    }
+    void testEnabled()
+    {
+        m_backend->m_state = PrinterEnum::State::ErrorState;
+        QCOMPARE(m_instance->enabled(), false);
+        m_backend->m_state = PrinterEnum::State::IdleState;
+        QCOMPARE(m_instance->enabled(), true);
+
+    }
+    void testSetEnabled()
+    {
+        /* This is needed to make a printer disabled. If it's not disabled,
+        the printer does not attempt to set a new value. */
+        m_backend->m_state = PrinterEnum::State::ErrorState;
+
+        m_instance->setEnabled(true);
+        QCOMPARE(m_backend->enableds[m_printerName], true);
+
+    }
+    void testAcceptJobs()
+    {
+        MockPrinterBackend *backend = new MockPrinterBackend(m_printerName);
+
+        backend->printerOptions[m_printerName].insert("AcceptJobs", false);
+        Printer p(backend);
+        QVERIFY(!p.acceptJobs());
+
+        backend->printerOptions[m_printerName].insert("AcceptJobs", true);
+        Printer p2(backend);
+        QVERIFY(p2.acceptJobs());
+
+    }
+    void testSetAcceptJobs()
+    {
+        MockPrinterBackend *backend = new MockPrinterBackend(m_printerName);
+
+        backend->printerOptions[m_printerName].insert("AcceptJobs", false);
+        Printer p(backend);
+        p.setAcceptJobs(true);
+        QVERIFY(backend->printerOptions[m_printerName]["AcceptJobs"].toBool());
+
+        backend->printerOptions[m_printerName].insert("AcceptJobs", true);
+        Printer p2(backend);
+        p2.setAcceptJobs(false);
+        QVERIFY(!backend->printerOptions[m_printerName]["AcceptJobs"].toBool());
+    }
+    void testJobs()
+    {
+        JobModel jobs;
+        jobs.setObjectName("testjobs");
+        m_instance->setJobModel(&jobs);
+
+        QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel *>(
+            m_instance->jobs()
+        );
+        QCOMPARE(proxy->sourceModel()->objectName(), jobs.objectName());
     }
 private:
     QString m_printerName = "my-printer";
-    PrinterBackend *m_backend = nullptr;
+    MockPrinterBackend *m_backend = nullptr;
     Printer *m_instance = nullptr;
-    MockPrinterBackend* getBackend() {
-        return (MockPrinterBackend*) m_backend;
-    }
 };
 
 QTEST_GUILESS_MAIN(TestPrinter)
 #include "tst_printer.moc"
-

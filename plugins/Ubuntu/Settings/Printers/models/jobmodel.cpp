@@ -17,22 +17,19 @@
 #include "utils.h"
 
 #include "backend/backend_cups.h"
-#include "cups/cupsfacade.h"
 
 #include "models/jobmodel.h"
 
 #include <QDebug>
 
-JobModel::JobModel(QObject *parent)
-    : JobModel(QStringLiteral(""), new PrinterCupsBackend, parent)
+JobModel::JobModel(QObject *parent) : QAbstractListModel(parent)
 {
 }
 
-JobModel::JobModel(const QString &printerName, PrinterBackend *backend,
+JobModel::JobModel(PrinterBackend *backend,
                    QObject *parent)
     : QAbstractListModel(parent)
     , m_backend(backend)
-    , m_printer_name(printerName)
 {
     update();
 
@@ -67,6 +64,10 @@ void JobModel::jobSignalCatchAll(
     Q_UNUSED(job_name);
     Q_UNUSED(job_impressions_completed);
 
+    auto job = getJobById(job_id);
+    if (job)
+        job->setImpressionsCompleted(job_impressions_completed);
+
     update();
 }
 
@@ -74,12 +75,7 @@ void JobModel::update()
 {
     // Store the old count and get the new printers
     int oldCount = m_jobs.size();
-    QList<QSharedPointer<PrinterJob>> newJobs = m_backend->printerGetJobs(m_printer_name);
-
-    /* If any printers returned from the backend are irrelevant, we delete
-    them. This a list of indices that corresponds to printers scheduled for
-    deletion in newPrinters. */
-    QList<uint> forDeletion;
+    QList<QSharedPointer<PrinterJob>> newJobs = m_backend->printerGetJobs();
 
     // Go through the old model
     for (int i=0; i < m_jobs.count(); i++) {
@@ -105,7 +101,6 @@ void JobModel::update()
         if (!exists) {
             beginRemoveRows(QModelIndex(), i, i);
             QSharedPointer<PrinterJob> p = m_jobs.takeAt(i);
-            p->deleteLater();
             endRemoveRows();
 
             i--;  // as we have removed an item decrement
@@ -121,7 +116,6 @@ void JobModel::update()
         for (j=0; j < m_jobs.count(); j++) {
             if (m_jobs.at(j)->jobId() == newJobs.at(i)->jobId()) {
                 exists = true;
-                forDeletion << i;
                 break;
             }
         }
@@ -135,19 +129,12 @@ void JobModel::update()
                 m_jobs.move(j, i);
                 endMoveRows();
             }
-
-            // We can safely delete the newPrinter as it already exists.
-            forDeletion << i;
         } else {
             // New printer does not exist insert into model
             beginInsertRows(QModelIndex(), i, i);
             m_jobs.insert(i, newJobs.at(i));
             endInsertRows();
         }
-    }
-
-    Q_FOREACH(const int &index, forDeletion) {
-        newJobs.at(index)->deleteLater();
     }
 
     if (oldCount != m_jobs.size()) {
@@ -208,14 +195,17 @@ QVariant JobModel::data(const QModelIndex &index, int role) const
         case IdRole:
             ret = job->jobId();
             break;
+        case ImpressionsCompletedRole:
+            ret = job->impressionsCompleted();
+            break;
         case LandscapeRole:
             ret = job->landscape();
             break;
         case MessagesRole:
             ret = job->messages();
             break;
-        case OwnerRole:
-            ret = m_printer_name;
+        case PrinterNameRole:
+            ret = job->printerName();
             break;
         case PrintRangeRole:
             ret = job->printRange();
@@ -293,9 +283,10 @@ QHash<int, QByteArray> JobModel::roleNames() const
         names[CopiesRole] = "copies";
         names[CreationTimeRole] = "creationTime";
         names[DuplexRole] = "duplexMode";
+        names[ImpressionsCompletedRole] = "impressionsCompleted";
         names[LandscapeRole] = "landscape";
         names[MessagesRole] = "messages";
-        names[OwnerRole] = "owner";
+        names[PrinterNameRole] = "printerName";
         names[PrintRangeRole] = "printRange";
         names[PrintRangeModeRole] = "printRangeMode";
         names[ProcessingTimeRole] = "processingTime";
@@ -323,4 +314,78 @@ QVariantMap JobModel::get(const int row) const
     }
 
     return result;
+}
+
+QSharedPointer<PrinterJob> JobModel::getJobById(const int &id)
+{
+    Q_FOREACH(auto job, m_jobs) {
+        if (job->jobId() == id) {
+            return job;
+        }
+    }
+    return QSharedPointer<PrinterJob>(Q_NULLPTR);
+}
+
+
+JobFilter::JobFilter(QObject *parent) : QSortFilterProxyModel(parent)
+{
+    connect(this, SIGNAL(sourceModelChanged()), SLOT(onSourceModelChanged()));
+}
+
+JobFilter::~JobFilter()
+{
+}
+
+QVariantMap JobFilter::get(const int row) const
+{
+    QHashIterator<int, QByteArray> iterator(roleNames());
+    QVariantMap result;
+    QModelIndex modelIndex = index(row, 0);
+
+    while (iterator.hasNext()) {
+        iterator.next();
+        result[iterator.value()] = modelIndex.data(iterator.key());
+    }
+
+    return result;
+}
+
+void JobFilter::onSourceModelChanged()
+{
+    connect((JobModel*) sourceModel(),
+            SIGNAL(countChanged()),
+            this,
+            SIGNAL(countChanged()));
+}
+
+void JobFilter::onSourceModelCountChanged()
+{
+    Q_EMIT countChanged();
+}
+
+int JobFilter::count() const
+{
+    return rowCount();
+}
+
+void JobFilter::filterOnPrinterName(const QString &name)
+{
+    m_printerName = name;
+    m_printerNameFilterEnabled = true;
+    invalidate();
+}
+
+bool JobFilter::filterAcceptsRow(int sourceRow,
+                                 const QModelIndex &sourceParent) const
+{
+    bool accepts = true;
+    QModelIndex childIndex = sourceModel()->index(sourceRow, 0, sourceParent);
+
+    if (accepts && m_printerNameFilterEnabled) {
+        QString printerName = childIndex.model()->data(
+            childIndex, JobModel::PrinterNameRole).toString();
+        accepts = m_printerName == printerName;
+    }
+
+    return accepts;
 }

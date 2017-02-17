@@ -14,8 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef USC_PRINTERS_CUPSPKHELPER_H
-#define USC_PRINTERS_CUPSPKHELPER_H
+#ifndef USC_PRINTERS_CUPS_IPPCLIENT_H
+#define USC_PRINTERS_CUPS_IPPCLIENT_H
 
 #include "structs.h"
 
@@ -33,29 +33,28 @@
  */
 #define CPH_STR_MAXLEN 512
 
-/* This code is only a shim for systems not running the daemon provided by
-cups-pk-helper. Once provided on all platforms, this code should be replaced
-by proper dbus bindings, and subsequently be set on fire.
-
-TODO: rename to CupsPkHelperShim to emphasize its transient nature.
-FIXME: make most of the "is..." methods const.
-*/
-class CupsPkHelper
+class IppClient
 {
 public:
-    explicit CupsPkHelper();
-    ~CupsPkHelper();
+    explicit IppClient();
+    ~IppClient();
 
+    bool printerDelete(const QString &printerName);
     bool printerAdd(const QString &printerName,
                     const QString &printerUri,
                     const QString &ppdFile,
                     const QString &info,
                     const QString &location);
+
     bool printerAddWithPpdFile(const QString &printerName,
                                const QString &printerUri,
                                const QString &ppdFileName,
                                const QString &info,
                                const QString &location);
+    bool printerSetDefault(const QString &printerName);
+    bool printerSetEnabled(const QString &printerName, const bool enabled);
+    bool printerSetAcceptJobs(const QString &printerName, const bool accept,
+                              const QString &reason);
     bool printerClassSetInfo(const QString &name, const QString &info);
     bool printerClassSetOption(const QString &name, const QString &option,
                                const QStringList &values);
@@ -66,24 +65,21 @@ public:
 
     QString getLastError() const;
 
-    // This response needs to be free by the caller.
+    // Note: This response needs to be free by the caller.
     ipp_t* createPrinterDriversRequest(
-        const QString &deviceId = "",
-        const QString &language = "",
-        const QString &makeModel = "",
-        const QString &product = "",
-        const QStringList &includeSchemes = QStringList(),
-        const QStringList &excludeSchemes = QStringList()
+        const QString &deviceId, const QString &language,
+        const QString &makeModel, const QString &product,
+        const QStringList &includeSchemes, const QStringList &excludeSchemes
     );
     int createSubscription();
     void cancelSubscription(const int &subscriptionId);
 
 private:
-    enum CphResource
+    enum CupsResource
     {
-        CphResourceRoot = 0,
-        CphResourceAdmin,
-        CphResourceJobs,
+        CupsResourceRoot = 0,
+        CupsResourceAdmin,
+        CupsResourceJobs,
     };
 
     bool sendNewPrinterClassRequest(const QString &printerName,
@@ -93,7 +89,7 @@ private:
                                     const QString &value);
     static void addPrinterUri(ipp_t *request, const QString &name);
     static void addRequestingUsername(ipp_t *request, const QString &username);
-    static const QString getResource(const CphResource &resource);
+    static const QString getResource(const CupsResource &resource);
     static bool isPrinterNameValid(const QString &name);
     static void addClassUri(ipp_t *request, const QString &name);
     static bool isStringValid(const QString &string,
@@ -107,8 +103,10 @@ private:
     bool printerIsClass(const QString &name);
     void setInternalStatus(const QString &status);
     bool postRequest(ipp_t *request, const QString &file,
-                     const CphResource &resource);
-    bool sendRequest(ipp_t *request, const CphResource &resource);
+                     const CupsResource &resource);
+    bool sendRequest(ipp_t *request, const CupsResource &resource);
+    bool sendNewSimpleRequest(ipp_op_t op, const QString &printerName,
+                              const CupsResource &resource);
     bool handleReply(ipp_t *reply);
     bool isReplyOk(ipp_t *reply, bool deleteIfReplyNotOk);
     void setErrorFromReply(ipp_t *reply);
@@ -120,4 +118,4 @@ private:
 };
 
 
-#endif // USC_PRINTERS_CUPSPKHELPER_H
+#endif // USC_PRINTERS_CUPS_IPPCLIENT_H

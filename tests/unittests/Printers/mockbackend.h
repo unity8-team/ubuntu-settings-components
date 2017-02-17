@@ -18,15 +18,24 @@
 #define USC_PRINTERS_MOCK_BACKEND_H
 
 #include "backend/backend.h"
+#include "utils.h"
 
 class MockPrinterBackend : public PrinterBackend
 {
     Q_OBJECT
 public:
-    explicit MockPrinterBackend(QObject *parent = Q_NULLPTR) : PrinterBackend(parent) {};
+    explicit MockPrinterBackend(QObject *parent = Q_NULLPTR)
+        : MockPrinterBackend(QString::null, parent)
+    {
+
+    };
+
     explicit MockPrinterBackend(const QString &printerName,
                                 QObject *parent = Q_NULLPTR)
-      : PrinterBackend(printerName, parent) {};
+      : PrinterBackend(printerName, parent)
+    {
+    };
+
     virtual ~MockPrinterBackend() {};
 
     virtual bool holdsDefinition() const override
@@ -64,6 +73,17 @@ public:
 
     virtual QString printerDelete(const QString &name) override
     {
+        Q_FOREACH(QSharedPointer<Printer> p, m_availablePrinters) {
+            if (p->name() == name) {
+                m_availablePrinters.removeOne(p);
+                break;
+            }
+        }
+        return returnValue;
+    }
+
+    virtual QString printerSetDefault(const QString &name) override
+    {
         Q_UNUSED(name);
         return returnValue;
     }
@@ -77,12 +97,11 @@ public:
 
     virtual QString printerSetAcceptJobs(
         const QString &name,
-        const bool enabled,
+        const bool accept,
         const QString &reason = QString::null) override
     {
-        Q_UNUSED(name);
-        Q_UNUSED(enabled);
         Q_UNUSED(reason);
+        printerOptions[name].insert("AcceptJobs", accept);
         return returnValue;
     }
 
@@ -182,8 +201,7 @@ public:
     }
 
     virtual QMap<QString, QVariant> printerGetOptions(
-        const QString &name, const QStringList &options
-    ) override
+        const QString &name, const QStringList &options) const override
     {
         QMap<QString, QVariant> opts;
         Q_FOREACH(const QString &option, options) {
@@ -199,19 +217,6 @@ public:
         Q_UNUSED(name);
         Q_UNUSED(options);
         return Q_NULLPTR;
-    }
-
-
-    virtual QList<ColorModel> printerGetSupportedColorModels(
-        const QString &name) const override
-    {
-        return printerOptions[name].value("ColorModels").value<QList<ColorModel>>();
-    }
-
-    virtual QList<PrintQuality> printerGetSupportedQualities(
-        const QString &name) const override
-    {
-        return printerOptions[name].value("PrintQualities").value<QList<PrintQuality>>();
     }
 
     virtual void cancelJob(const QString &name, const int jobId) override
@@ -230,10 +235,17 @@ public:
         return -1;
     }
 
-    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs(const QString &name) override
+    virtual QList<QSharedPointer<PrinterJob>> printerGetJobs() override
+    {
+        return m_jobs;
+    }
+
+    virtual QMap<QString, QVariant> printerGetJobAttributes(
+            const QString &name, const int jobId) override
     {
         Q_UNUSED(name);
-        return QList<QSharedPointer<PrinterJob>>();
+        Q_UNUSED(jobId);
+        return QMap<QString, QVariant>();
     }
 
     virtual QString printerName() const override
@@ -294,7 +306,8 @@ public:
 
     virtual PrinterEnum::DuplexMode defaultDuplexMode() const override
     {
-        return m_defaultDuplexMode;
+        auto ppdMode = printerGetOption(printerName(), "Duplex").toString();
+        return Utils::ppdChoiceToDuplexMode(ppdMode);
     }
 
     virtual QList<PrinterEnum::DuplexMode> supportedDuplexModes() const override
@@ -302,7 +315,7 @@ public:
         return m_supportedDuplexModes;
     }
 
-    virtual QList<Printer*> availablePrinters() override
+    virtual QList<QSharedPointer<Printer>> availablePrinters() override
     {
         return m_availablePrinters;
     }
@@ -312,30 +325,20 @@ public:
         return m_availablePrinterNames;
     }
 
-    virtual Printer* getPrinter(const QString &printerName) override
+    virtual QSharedPointer<Printer> getPrinter(const QString &printerName) override
     {
-        Q_FOREACH(Printer* p, m_availablePrinters) {
+        Q_FOREACH(auto p, m_availablePrinters) {
             if (p->name() == printerName) {
                 return p;
             }
         }
-        return Q_NULLPTR;
+        return QSharedPointer<Printer>(Q_NULLPTR);
     }
 
     virtual QString defaultPrinterName() override
     {
         return m_defaultPrinterName;
     }
-
-    virtual void requestAvailablePrinterDrivers() override
-    {
-    }
-
-    virtual BackendType backendType() const override
-    {
-        return m_backendType;
-    }
-
 
     void mockPrinterAdded(
         const QString &text,
@@ -373,6 +376,21 @@ public:
         Q_EMIT printerDeleted(text, printerUri, printerName, printerState, printerStateReason, acceptingJobs);
     }
 
+    void mockJobCreated(
+        const QString &text, const QString &printer_uri,
+        const QString &printer_name, uint printer_state,
+        const QString &printer_state_reasons, bool printer_is_accepting_jobs,
+        uint job_id, uint job_state, const QString &job_state_reasons,
+        const QString &job_name, uint job_impressions_completed
+    )
+    {
+        Q_EMIT jobCreated(
+            text, printer_uri, printer_name, printer_state,
+            printer_state_reasons, printer_is_accepting_jobs, job_id,
+            job_state, job_state_reasons, job_name, job_impressions_completed
+        );
+    }
+
     void mockDriversLoaded(const QList<PrinterDriver> &drivers)
     {
         Q_EMIT printerDriversLoaded(drivers);
@@ -381,6 +399,11 @@ public:
     void mockDriversLoaded(const QString &errorMessage)
     {
         Q_EMIT printerDriversFailedToLoad(errorMessage);
+    }
+
+    void mockPrinterLoaded(QSharedPointer<Printer> printer)
+    {
+        Q_EMIT printerLoaded(printer);
     }
 
     QString returnValue = QString::null;
@@ -406,11 +429,10 @@ public:
     QList<QPageSize> m_supportedPageSizes;
 
     QList<PrinterEnum::DuplexMode> m_supportedDuplexModes;
-    PrinterEnum::DuplexMode m_defaultDuplexMode;
 
     QStringList m_availablePrinterNames;
-    QList<Printer*> m_availablePrinters;
-    PrinterBackend::BackendType m_backendType;
+    QList<QSharedPointer<Printer>> m_availablePrinters;
+    QList<QSharedPointer<PrinterJob>> m_jobs;
 
 public Q_SLOTS:
     virtual void refresh() override

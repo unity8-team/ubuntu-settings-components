@@ -35,7 +35,6 @@ class PRINTERS_DECL_EXPORT PrinterModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
-    explicit PrinterModel(QObject *parent = Q_NULLPTR);
     explicit PrinterModel(PrinterBackend *backend, QObject *parent = Q_NULLPTR);
     ~PrinterModel();
 
@@ -49,6 +48,8 @@ public:
         DuplexRole,
         SupportedDuplexModesRole,
         NameRole,
+        EnabledRole,
+        AcceptJobsRole,
         PrintRangeRole,
         PrintRangeModeRole,
         PdfModeRole,
@@ -63,9 +64,19 @@ public:
         StateRole,
         PrinterRole,
         LastStateMessageRole,
+
+        /* Indicates that this printer is a pseudo printer used to create
+        PDF files. */
         IsPdfRole,
+
+        /* Indicates whether or not this printer has been fully loaded. If not
+        fully loaded, basically only its name will be accessible.  */
+        IsLoadedRole,
+
+        /* Indicates that this printers has no associated PPD. */
+        IsRawRole,
         JobRole,
-        LastRole = LastStateMessageRole,
+        LastRole = JobRole,
     };
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -75,20 +86,35 @@ public:
 
     int count() const;
 
-    Printer* getPrinterFromName(const QString &name);
-
     Q_INVOKABLE QVariantMap get(const int row) const;
+    QSharedPointer<Printer> getPrinterByName(const QString &printerName);
 private:
+    enum class CountChangeSignal
+    {
+        Defer,
+        Emit,
+    };
+
+    void addPrinter(QSharedPointer<Printer> printer,
+        const CountChangeSignal &notify = CountChangeSignal::Defer);
+    void removePrinter(QSharedPointer<Printer> printer,
+        const CountChangeSignal &notify = CountChangeSignal::Defer);
+    void movePrinter(const int &from, const int &to);
+    void updatePrinter(QSharedPointer<Printer> old,
+                       QSharedPointer<Printer> newPrinter);
     PrinterBackend *m_backend;
 
-    /* FIXME: there's currently no need to share the Printer obj with QML, so
-    this should be normal pointers that are deletedLater. */
-    QList<Printer*> m_printers;
-    QMap<QString, JobModel *> m_job_models;
+    QList<QSharedPointer<Printer>> m_printers;
 
 private Q_SLOTS:
-    void update();
-    void printerSignalCatchall(const QString &text, const QString &printerUri,
+    void printerLoaded(QSharedPointer<Printer> printer);
+    void printerModified(const QString &text, const QString &printerUri,
+        const QString &printerName, uint printerState,
+        const QString &printerStateReason, bool acceptingJobs);
+    void printerAdded(const QString &text, const QString &printerUri,
+        const QString &printerName, uint printerState,
+        const QString &printerStateReason, bool acceptingJobs);
+    void printerDeleted(const QString &text, const QString &printerUri,
         const QString &printerName, uint printerState,
         const QString &printerStateReason, bool acceptingJobs);
 

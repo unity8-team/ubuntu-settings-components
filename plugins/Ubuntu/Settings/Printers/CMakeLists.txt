@@ -20,16 +20,21 @@ add_library(UbuntuSettingsPrintersQml SHARED
     backend/backend.cpp
     backend/backend_cups.cpp
     backend/backend_pdf.cpp
-    cups/cupsfacade.cpp
-    cups/cupspkhelper.cpp
-    enums.h
-    i18n.cpp
+
+    cups/ippclient.cpp
+    cups/printerdriverloader.cpp
+    cups/printerloader.cpp
+
     models/drivermodel.cpp
     models/jobmodel.cpp
     models/printermodel.cpp
+
     printer/printer.cpp
     printer/printerjob.cpp
     printers/printers.cpp
+
+    enums.h
+    i18n.cpp
     plugin.cpp
     structs.h
     utils.h

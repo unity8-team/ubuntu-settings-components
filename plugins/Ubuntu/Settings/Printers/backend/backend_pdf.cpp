@@ -21,58 +21,55 @@ PrinterPdfBackend::PrinterPdfBackend(const QString &printerName,
                                      QObject *parent)
     : PrinterBackend(printerName, parent)
 {
+    m_type = PrinterEnum::PrinterType::PdfType;
 }
 
-QList<ColorModel> PrinterPdfBackend::printerGetSupportedColorModels(
-    const QString &name) const
+QVariant PrinterPdfBackend::printerGetOption(const QString &name,
+                                             const QString &option) const
 {
-    return QList<ColorModel>{printerGetDefaultColorModel(name)};
+    auto res = printerGetOptions(name, QStringList({option}));
+    return res[option];
 }
 
-ColorModel PrinterPdfBackend::printerGetDefaultColorModel(
-    const QString &name) const
+QMap<QString, QVariant> PrinterPdfBackend::printerGetOptions(
+    const QString &name, const QStringList &options) const
 {
     Q_UNUSED(name);
+
+    QMap<QString, QVariant> ret;
+
     ColorModel rgb;
     rgb.colorType = PrinterEnum::ColorModelType::ColorType;
     rgb.name = "RGB";
     rgb.text = __("Color");
-    return rgb;
-}
 
-QList<PrintQuality> PrinterPdfBackend::printerGetSupportedQualities(
-    const QString &name) const
-{
-    return QList<PrintQuality>({printerGetDefaultQuality(name)});
-}
-
-PrintQuality PrinterPdfBackend::printerGetDefaultQuality(
-        const QString &name) const
-{
-    Q_UNUSED(name);
     PrintQuality quality;
     quality.name = __("Normal");
-    return quality;
+
+    Q_FOREACH(const QString &option, options) {
+        if (option == QLatin1String("DefaultColorModel")) {
+            ret[option] = QVariant::fromValue(rgb);
+        } else if (option == QLatin1String("DefaultPrintQuality")) {
+            ret[option] = QVariant::fromValue(quality);
+        } else if (option == QLatin1String("SupportedPrintQualities")) {
+            auto qualities = QList<PrintQuality>({quality});
+            ret[option] = QVariant::fromValue(qualities);
+        } else if (option == QLatin1String("SupportedColorModels")) {
+            auto models = QList<ColorModel>{rgb};
+            ret[option] = QVariant::fromValue(models);
+        } else if (option == QLatin1String("AcceptJobs")) {
+            ret[option] = true;
+        } else {
+            throw std::invalid_argument("Invalid value for PDF printer: " + option.toStdString());
+        }
+    }
+
+    return ret;
 }
 
 QString PrinterPdfBackend::printerName() const
 {
     return m_printerName;
-}
-
-QString PrinterPdfBackend::description() const
-{
-    return QStringLiteral("");
-}
-
-QString PrinterPdfBackend::location() const
-{
-    return QStringLiteral("");
-}
-
-QString PrinterPdfBackend::makeAndModel() const
-{
-    return QStringLiteral("");
 }
 
 PrinterEnum::State PrinterPdfBackend::state() const
@@ -94,7 +91,6 @@ bool PrinterPdfBackend::supportsCustomPageSizes() const
 {
     return false;
 }
-
 
 QPageSize PrinterPdfBackend::minimumPhysicalPageSize() const
 {
@@ -121,7 +117,3 @@ QList<PrinterEnum::DuplexMode> PrinterPdfBackend::supportedDuplexModes() const
     return QList<PrinterEnum::DuplexMode>{PrinterEnum::DuplexMode::DuplexNone};
 }
 
-PrinterBackend::BackendType PrinterPdfBackend::backendType() const
-{
-    return PrinterBackend::BackendType::PdfType;
-}

@@ -25,6 +25,7 @@
 #include "backend/backend.h"
 #include "printer/printer.h"
 
+#include <QSharedPointer>
 #include <QtCore/QDateTime>
 #include <QtCore/QObject>
 
@@ -42,11 +43,12 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
     Q_PROPERTY(int copies READ copies WRITE setCopies NOTIFY copiesChanged)
     Q_PROPERTY(QDateTime creationTime READ creationTime NOTIFY creationTimeChanged)
     Q_PROPERTY(int duplexMode READ duplexMode WRITE setDuplexMode NOTIFY duplexModeChanged)
+    Q_PROPERTY(int impressionsCompleted READ impressionsCompleted NOTIFY impressionsCompletedChanged)
     Q_PROPERTY(bool isTwoSided READ isTwoSided NOTIFY isTwoSidedChanged)
     Q_PROPERTY(bool landscape READ landscape WRITE setLandscape NOTIFY landscapeChanged)
     Q_PROPERTY(QStringList messages READ messages NOTIFY messagesChanged)
-//    Q_PROPERTY(Printer *printer READ printer WRITE setPrinter NOTIFY printerChanged)
-    Q_PROPERTY(QString printerName READ printerName WRITE setPrinterName NOTIFY printerNameChanged)
+    Q_PROPERTY(QSharedPointer<Printer> printer READ printer WRITE setPrinter NOTIFY printerChanged)
+    Q_PROPERTY(QString printerName READ printerName NOTIFY printerNameChanged)
     Q_PROPERTY(QString printRange READ printRange WRITE setPrintRange NOTIFY printRangeChanged)
     Q_PROPERTY(PrinterEnum::PrintRange printRangeMode READ printRangeMode WRITE setPrintRangeMode NOTIFY printRangeModeChanged)
     Q_PROPERTY(QDateTime processingTime READ processingTime NOTIFY processingTimeChanged)
@@ -59,11 +61,11 @@ class PRINTERS_DECL_EXPORT PrinterJob : public QObject
 
     friend class PrinterCupsBackend;
 public:
-    explicit PrinterJob(QObject *parent=Q_NULLPTR);
-    explicit PrinterJob(Printer *printer, QObject *parent=Q_NULLPTR);
-    explicit PrinterJob(Printer *printer, PrinterBackend *backend,
+    explicit PrinterJob(QString dest,
+                        PrinterBackend *backend,
                         QObject *parent=Q_NULLPTR);
-    explicit PrinterJob(const QString &name, PrinterBackend *backend, int jobId, QObject *parent=Q_NULLPTR);
+    explicit PrinterJob(QString dest, PrinterBackend *backend, int jobId,
+                        QObject *parent=Q_NULLPTR);
     ~PrinterJob();
 
     bool collate() const;
@@ -73,11 +75,12 @@ public:
     int copies() const;
     QDateTime creationTime() const;
     int duplexMode() const;
+    int impressionsCompleted() const;
     bool isTwoSided() const;
-    int jobId() const;  // TODO: implement
+    int jobId() const;
     bool landscape() const;
     QStringList messages() const;
-    Printer* printer() const;
+    QSharedPointer<Printer> printer() const;
     QString printerName() const;
     QString printRange() const;
     PrinterEnum::PrintRange printRangeMode() const;
@@ -99,16 +102,16 @@ public Q_SLOTS:
     void setColorModel(const int colorModel);
     void setCopies(const int copies);
     void setDuplexMode(const int duplexMode);
+    void setImpressionsCompleted(const int &impressionsCompleted);
     void setLandscape(const bool landscape);
-//    void setPrinter(Printer *printer);
-    void setPrinterName(const QString &printerName);
+    void setPrinter(QSharedPointer<Printer> printer);
     void setPrintRange(const QString &printRange);
     void setPrintRangeMode(const PrinterEnum::PrintRange printRangeMode);
     void setQuality(const int quality);
     void setReverse(const bool reverse);
     void setTitle(const QString &title);
 
-    void updateFrom(QSharedPointer<PrinterJob> newPrinterJob);
+    void updateFrom(QSharedPointer<PrinterJob> other);
 private Q_SLOTS:
     void loadDefaults();
     void setCompletedTime(const QDateTime &completedTime);
@@ -127,10 +130,11 @@ Q_SIGNALS:
     void copiesChanged();
     void creationTimeChanged();
     void duplexModeChanged();
+    void impressionsCompletedChanged();
     void isTwoSidedChanged();
     void landscapeChanged();
     void messagesChanged();
-//    void printerChanged();
+    void printerChanged();
     void printerNameChanged();
     void printRangeChanged();
     void printRangeModeChanged();
@@ -148,13 +152,14 @@ private:
     int m_copies;
     QDateTime m_creation_time;
     PrinterBackend *m_backend; // TODO: Maybe use the printer's backend?
+    QString m_printerName;
     int m_duplex_mode;
+    int m_impressions_completed;
     bool m_is_two_sided;
     int m_job_id;
     bool m_landscape;
     QStringList m_messages;
-    Printer *m_printer;
-    QString m_printer_name;
+    QSharedPointer<Printer> m_printer;
     QString m_print_range;
     PrinterEnum::PrintRange m_print_range_mode;
     QDateTime m_processing_time;

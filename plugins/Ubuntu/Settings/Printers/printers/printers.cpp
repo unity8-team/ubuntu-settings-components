@@ -16,10 +16,17 @@
 
 #include "backend/backend_cups.h"
 #include "printers/printers.h"
+#include "cupsdnotifier.h" // Note: this file was generated.
 
+#include <QDBusConnection>
+#include <QPrinterInfo>
 #include <QQmlEngine>
 
-Printers::Printers(QObject *parent) : Printers(new PrinterCupsBackend, parent)
+Printers::Printers(QObject *parent)
+    : Printers(new PrinterCupsBackend(new IppClient(), QPrinterInfo(),
+        new OrgCupsCupsdNotifierInterface("", CUPSD_NOTIFIER_DBUS_PATH,
+                                          QDBusConnection::systemBus())),
+       parent)
 {
 }
 
@@ -28,6 +35,7 @@ Printers::Printers(PrinterBackend *backend, QObject *parent)
     , m_backend(backend)
     , m_drivers(backend)
     , m_model(backend)
+    , m_jobs(backend)
 {
     m_allPrinters.setSourceModel(&m_model);
     m_allPrinters.setSortRole(PrinterModel::Roles::DefaultPrinterRole);
@@ -44,9 +52,37 @@ Printers::Printers(PrinterBackend *backend, QObject *parent)
     connect(&m_drivers, SIGNAL(filterComplete()),
             this, SIGNAL(driverFilterChanged()));
 
-    if (m_backend->backendType() == PrinterBackend::BackendType::CupsType) {
+    connect(&m_jobs, &QAbstractItemModel::rowsInserted, [this](
+            const QModelIndex &parent, int first, int) {
+        int jobId = m_jobs.data(m_jobs.index(first, 0, parent),
+                                JobModel::Roles::IdRole).toInt();
+        jobAdded(m_jobs.getJobById(jobId));
+    });
+    connect(&m_model, &QAbstractItemModel::rowsInserted, [this](
+            const QModelIndex &parent, int first, int) {
+        auto printer = m_model.data(
+            m_model.index(first, 0, parent),
+            PrinterModel::Roles::PrinterRole
+        ).value<QSharedPointer<Printer>>();
+        printerAdded(printer);
+    });
+
+    // Assign jobmodels to printers right away.
+    for (int i = 0; i < m_model.rowCount(); i++) {
+        printerAdded(m_model.data(
+                m_model.index(i, 0),
+                PrinterModel::Roles::PrinterRole
+            ).value<QSharedPointer<Printer>>()
+        );
+    }
+
+    if (m_backend->type() == PrinterEnum::PrinterType::CupsType) {
         ((PrinterCupsBackend*) m_backend)->createSubscription();
     }
+
+    // Eagerly load the default printer.
+    if (!m_backend->defaultPrinterName().isEmpty()) {}
+        m_backend->requestPrinter(m_backend->defaultPrinterName());
 }
 
 Printers::~Printers()
@@ -75,8 +111,9 @@ QAbstractItemModel* Printers::recentPrinters()
 
 QAbstractItemModel* Printers::printJobs()
 {
-    // TODO: implement
-    return Q_NULLPTR;
+    auto ret = &m_jobs;
+    QQmlEngine::setObjectOwnership(ret, QQmlEngine::CppOwnership);
+    return ret;
 }
 
 QAbstractItemModel* Printers::drivers()
@@ -98,13 +135,18 @@ void Printers::setDriverFilter(const QString &filter)
 
 QString Printers::defaultPrinterName() const
 {
-    // TODO: implement
-    return QString();
+    return m_backend->defaultPrinterName();
 }
 
 QString Printers::lastMessage() const
 {
     return m_lastMessage;
+}
+
+PrinterJob* Printers::createJob(const QString &printerName)
+{
+    // Note: If called by QML, it gains ownership of this job.
+    return new PrinterJob(printerName, m_backend);
 }
 
 void Printers::cancelJob(const QString &printerName, const int jobId)
@@ -114,8 +156,11 @@ void Printers::cancelJob(const QString &printerName, const int jobId)
 
 void Printers::setDefaultPrinterName(const QString &name)
 {
-    // TODO: implement
-    Q_UNUSED(name);
+    QString reply = m_backend->printerSetDefault(name);
+
+    if (!reply.isEmpty()) {
+        m_lastMessage = reply;
+    }
 }
 
 QSharedPointer<Printer> Printers::getPrinterByName(const QString &name)
@@ -168,8 +213,39 @@ bool Printers::addPrinterWithPpdFile(const QString &name,
 
 bool Printers::removePrinter(const QString &name)
 {
-    // TODO: implement
-    Q_UNUSED(name);
+    QString reply = m_backend->printerDelete(name);
 
+    if (!reply.isEmpty()) {
+        m_lastMessage = reply;
+        return false;
+    }
     return true;
+}
+
+void Printers::jobAdded(QSharedPointer<PrinterJob> job)
+{
+    auto printer = m_model.getPrinterByName(job->printerName());
+    if (printer && job)
+        job->setPrinter(printer);
+}
+
+void Printers::printerAdded(QSharedPointer<Printer> printer)
+{
+    printer->setJobModel(&m_jobs);
+
+    // Loop through jobs and associate a printer with it.
+    for (int i = 0; i < m_jobs.rowCount(); i++) {
+        QModelIndex idx = m_jobs.index(i, 0);
+
+        QString printerName = m_jobs.data(
+            idx, JobModel::Roles::PrinterNameRole
+        ).toString();
+
+        int jobId = m_jobs.data(idx, JobModel::Roles::IdRole).toInt();
+        auto job = m_jobs.getJobById(jobId);
+        if (printerName == printer->name() && !job->printer()) {
+            job->setPrinter(printer);
+            return;
+        }
+    }
 }

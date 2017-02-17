@@ -19,12 +19,7 @@
 #include "printer.h"
 
 #include <QDebug>
-
-Printer::Printer(QObject *parent)
-    : QObject(parent)
-{
-    // TODO: remove this constructor.
-}
+#include <QQmlEngine>
 
 Printer::Printer(PrinterBackend *backend, QObject *parent)
     : QObject(parent)
@@ -32,6 +27,9 @@ Printer::Printer(PrinterBackend *backend, QObject *parent)
 {
     loadColorModel();
     loadPrintQualities();
+    loadAcceptJobs();
+
+    m_jobs.filterOnPrinterName(name());
 }
 
 Printer::~Printer()
@@ -39,10 +37,30 @@ Printer::~Printer()
     m_backend->deleteLater();
 }
 
+void Printer::setJobModel(JobModel* jobModel)
+{
+    if (!m_jobs.sourceModel()) {
+        m_jobs.setSourceModel(jobModel);
+        m_jobs.sort(JobModel::Roles::IdRole);
+    }
+}
+
+void Printer::loadAcceptJobs()
+{
+    auto opt = QStringLiteral("AcceptJobs");
+    m_acceptJobs = m_backend->printerGetOption(name(), opt).toBool();
+}
+
 void Printer::loadColorModel()
 {
-    m_supportedColorModels = m_backend->printerGetSupportedColorModels(name());
-    m_defaultColorModel = m_backend->printerGetDefaultColorModel(name());
+    auto defModel = QStringLiteral("DefaultColorModel");
+    auto models = QStringLiteral("SupportedColorModels");
+    auto result = m_backend->printerGetOptions(
+        name(), QStringList({defModel, models})
+    );
+
+    m_defaultColorModel = result.value(defModel).value<ColorModel>();
+    m_supportedColorModels = result.value(models).value<QList<ColorModel>>();
 
     if (m_supportedColorModels.size() == 0) {
         m_supportedColorModels.append(m_defaultColorModel);
@@ -51,8 +69,14 @@ void Printer::loadColorModel()
 
 void Printer::loadPrintQualities()
 {
-    m_supportedPrintQualities = m_backend->printerGetSupportedQualities(name());
-    m_defaultPrintQuality = m_backend->printerGetDefaultQuality(name());
+    auto defQuality = QStringLiteral("DefaultPrintQuality");
+    auto qualities = QStringLiteral("SupportedPrintQualities");
+    auto result = m_backend->printerGetOptions(
+        name(), QStringList({defQuality, qualities})
+    );
+
+    m_supportedPrintQualities = result.value(qualities).value<QList<PrintQuality>>();
+    m_defaultPrintQuality = result.value(defQuality).value<PrintQuality>();
 
     if (m_supportedPrintQualities.size() == 0) {
         m_supportedPrintQualities.append(m_defaultPrintQuality);
@@ -98,11 +122,6 @@ PrinterEnum::DuplexMode Printer::defaultDuplexMode() const
     return m_backend->defaultDuplexMode();
 }
 
-PrinterJob *Printer::job()
-{
-    return new PrinterJob(this);
-}
-
 int Printer::printFile(const QString &filepath, const PrinterJob *options)
 {
     auto dest = m_backend->makeDest(name(), options);  // options could be QMap<QString, QString> ?
@@ -145,8 +164,7 @@ PrinterEnum::ErrorPolicy Printer::errorPolicy() const
 
 bool Printer::enabled() const
 {
-    // TODO: implement
-    return true;
+    return state() != PrinterEnum::State::ErrorState;
 }
 
 QStringList Printer::users() const
@@ -166,14 +184,19 @@ QString Printer::lastStateMessage() const
     return QString();
 }
 
-bool Printer::isDefault()
+bool Printer::acceptJobs() const
 {
-    return name() == m_backend->defaultPrinterName();
+    return m_acceptJobs;
 }
 
-bool Printer::isPdf()
+bool Printer::holdsDefinition() const
 {
-    return m_backend->backendType() == PrinterBackend::BackendType::PdfType;
+    return m_backend->holdsDefinition();
+}
+
+PrinterEnum::PrinterType Printer::type() const
+{
+    return m_backend->type();
 }
 
 void Printer::setDefaultColorModel(const ColorModel &colorModel)
@@ -200,7 +223,9 @@ void Printer::setAccessControl(const PrinterEnum::AccessControl &accessControl)
 
 void Printer::setDescription(const QString &description)
 {
-    QString answer = m_backend->printerSetInfo(name(), description);
+    if (this->description() != description) {
+        m_backend->printerSetInfo(name(), description);
+    }
 }
 
 void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
@@ -210,7 +235,7 @@ void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
     }
 
     if (!m_backend->supportedDuplexModes().contains(duplexMode)) {
-        qWarning() << Q_FUNC_INFO << "duplex mode not supported";
+        qWarning() << Q_FUNC_INFO << "duplex mode not supported" << duplexMode;
         return;
     }
 
@@ -220,20 +245,28 @@ void Printer::setDefaultDuplexMode(const PrinterEnum::DuplexMode &duplexMode)
 
 void Printer::setEnabled(const bool enabled)
 {
-    // TODO: implement
-    Q_UNUSED(enabled);
+    if (this->enabled() != enabled) {
+        QString reply = m_backend->printerSetEnabled(name(), enabled);
+        if (!reply.isEmpty()) {
+            qWarning() << Q_FUNC_INFO << "failed to set enabled:" << reply;
+        }
+    }
+}
+
+void Printer::setAcceptJobs(const bool accepting)
+{
+    if (this->acceptJobs() != accepting) {
+        QString reply = m_backend->printerSetAcceptJobs(name(), accepting);
+        if (!reply.isEmpty()) {
+            qWarning() << Q_FUNC_INFO << "failed to set accepting:" << reply;
+        }
+    }
 }
 
 void Printer::setErrorPolicy(const PrinterEnum::ErrorPolicy &errorPolicy)
 {
     // TODO: implement
     Q_UNUSED(errorPolicy);
-}
-
-void Printer::setName(const QString &name)
-{
-    // TODO: implement
-    Q_UNUSED(name);
 }
 
 void Printer::setDefaultPrintQuality(const PrintQuality &quality)
@@ -271,7 +304,6 @@ void Printer::setDefaultPageSize(const QPageSize &pageSize)
     QString reply = m_backend->printerAddOption(name(), "PageSize", vals);
 
     m_backend->refresh();
-    Q_EMIT defaultPageSizeChanged();
 }
 
 void Printer::addUser(const QString &username)
@@ -286,13 +318,14 @@ void Printer::removeUser(const QString &username)
     Q_UNUSED(username);
 }
 
-void Printer::requestInkLevels(const QString &name)
+QAbstractItemModel* Printer::jobs()
 {
-    // TODO: implement
-    Q_UNUSED(name);
+    auto ret = &m_jobs;
+    QQmlEngine::setObjectOwnership(ret, QQmlEngine::CppOwnership);
+    return ret;
 }
 
-bool Printer::deepCompare(Printer *other) const
+bool Printer::deepCompare(QSharedPointer<Printer> other) const
 {
     bool changed = false;
 
@@ -301,33 +334,25 @@ bool Printer::deepCompare(Printer *other) const
     changed |= description() != other->description();
     changed |= defaultDuplexMode() != other->defaultDuplexMode();
     changed |= defaultPageSize() != other->defaultPageSize();
+    changed |= type() != other->type();
+    changed |= acceptJobs() != other->acceptJobs();
+    changed |= enabled() != other->enabled();
     changed |= state() != other->state();
 
     // TODO: accessControl
-    // TODO: enabled
     // TODO: errorPolicy
 
     // Return true if they are the same, so no change
     return changed == false;
 }
 
-void Printer::updateFrom(Printer* newPrinter)
+void Printer::updateFrom(QSharedPointer<Printer> other)
 {
-    Q_UNUSED(newPrinter);
-
-    m_backend->refresh();
+    PrinterBackend *tmp = m_backend;
+    m_backend = other->m_backend;
+    other->m_backend = tmp;
 
     loadColorModel();
     loadPrintQualities();
-
-    Q_EMIT descriptionChanged();
-    Q_EMIT defaultColorModelChanged();
-    Q_EMIT defaultDuplexModeChanged();
-    Q_EMIT defaultPageSizeChanged();
-    Q_EMIT defaultPrintQualityChanged();
-    Q_EMIT stateChanged();
-
-    // TODO: accessControl
-    // TODO: enabled
-    // TODO: errorPolicy
+    loadAcceptJobs();
 }

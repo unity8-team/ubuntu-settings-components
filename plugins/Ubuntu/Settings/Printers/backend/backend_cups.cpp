@@ -575,9 +575,10 @@ QList<QSharedPointer<PrinterJob>> PrinterCupsBackend::printerGetJobs()
         newJob->setTitle(QString::fromLocal8Bit(job->title));
         newJob->setUser(QString::fromLocal8Bit(job->user));
 
-        cupsFreeJobs(1, job);
         list.append(newJob);
     }
+    if (!list.isEmpty())
+        cupsFreeJobs(list.size(), jobs.first());
 
     return list;
 }

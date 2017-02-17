@@ -40,3 +40,7 @@ add_test(tst_jobmodel testPrintersJobModel)
 add_executable(testPrintersJobFilter tst_jobfilter.cpp ${MOCK_SOURCES})
 target_link_libraries(testPrintersJobFilter UbuntuSettingsPrintersQml Qt5::Test Qt5::Gui)
 add_test(tst_jobfilter testPrintersJobFilter)
+
+add_executable(testPrintersSignalHandler tst_signalhandler.cpp ${MOCK_SOURCES})
+target_link_libraries(testPrintersSignalHandler UbuntuSettingsPrintersQml Qt5::Test Qt5::Gui)
+add_test(tst_signalhandler testPrintersSignalHandler)

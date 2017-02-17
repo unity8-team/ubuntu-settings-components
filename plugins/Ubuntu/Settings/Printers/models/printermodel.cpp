@@ -31,12 +31,14 @@ PrinterModel::PrinterModel(PrinterBackend *backend, QObject *parent)
     QObject::connect(m_backend, &PrinterBackend::printerAdded,
                      this, &PrinterModel::printerAdded);
     QObject::connect(m_backend, &PrinterBackend::printerModified,
-                     this, &PrinterModel::printerModified);
+                     &m_signalHandler, &PrinterSignalHandler::onPrinterModified);
     QObject::connect(m_backend, &PrinterBackend::printerStateChanged,
-                     this, &PrinterModel::printerModified);
+                     &m_signalHandler, &PrinterSignalHandler::onPrinterModified);
     QObject::connect(m_backend, &PrinterBackend::printerDeleted,
                      this, &PrinterModel::printerDeleted);
 
+    connect(&m_signalHandler, SIGNAL(printerModified(const QString&)),
+            this, SLOT(printerModified(const QString&)));
     connect(m_backend, SIGNAL(printerLoaded(QSharedPointer<Printer>)),
             this, SLOT(printerLoaded(QSharedPointer<Printer>)));
 
@@ -77,18 +79,11 @@ void PrinterModel::printerLoaded(QSharedPointer<Printer> printer)
     addPrinter(printer, CountChangeSignal::Emit);
 }
 
-void PrinterModel::printerModified(
-    const QString &text, const QString &printerUri,
-    const QString &printerName, uint printerState,
-    const QString &printerStateReason, bool acceptingJobs)
+void PrinterModel::printerModified(const QString &printerName)
 {
-    Q_UNUSED(text);
-    Q_UNUSED(printerUri);
-    Q_UNUSED(printerState);
-    Q_UNUSED(printerStateReason);
-    Q_UNUSED(acceptingJobs);
-
-    m_backend->requestPrinter(printerName);
+    // These signals might be emitted of a now deleted printer.
+    if (getPrinterByName(printerName))
+        m_backend->requestPrinter(printerName);
 }
 
 void PrinterModel::printerAdded(

@@ -337,6 +337,7 @@ QMap<QString, QVariant> PrinterCupsBackend::printerGetOptions(
                     }
                 }
             }
+            ret[option] = QVariant::fromValue(qualities);
         } else if (option == QStringLiteral("SupportedColorModels")) {
             QList<ColorModel> models;
             ppd_option_t *colorModels = ppdFindOption(ppd, "ColorModel");
@@ -659,6 +660,10 @@ QList<PrinterEnum::DuplexMode> PrinterCupsBackend::supportedDuplexModes() const
             list.append(Utils::qDuplexModeToDuplexMode(mode));
         }
     }
+
+    if (list.isEmpty())
+        list.append(PrinterEnum::DuplexMode::DuplexNone);
+
     return list;
 }
 

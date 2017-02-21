@@ -1,9 +1,10 @@
-ubuntu-settings-components (0.13+17.04.20161201-0ubuntu2) UNRELEASED; urgency=medium
+ubuntu-settings-components (0.13+17.04.20170221-0ubuntu1) zesty; urgency=medium
 
+  [ Jonas G. Drange ]
   * packaging: suggest cups, depend on libcups2-dev
   * adds cups bindings for printer/job management
 
- -- Jonas G. Drange <jonas.drange@canonical.com>  Mon, 23 Jan 2017 14:46:41 +0100
+ -- Andrew Hayzen <ahayzen@gmail.com>  Tue, 21 Feb 2017 16:16:23 +0000
 
 ubuntu-settings-components (0.12+17.04.20170118-0ubuntu1) zesty; urgency=medium
 

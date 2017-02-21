@@ -51,3 +51,4 @@ endfunction()
 
 add_subdirectory(imports)
 add_subdirectory(qmltests)
+add_subdirectory(unittests)

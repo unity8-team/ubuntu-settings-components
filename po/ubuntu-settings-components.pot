@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ubuntu-settings-components\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-18 15:20+0000\n"
+"POT-Creation-Date: 2017-01-27 10:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -146,6 +146,30 @@ msgstr ""
 #: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:93
 #: plugins/Ubuntu/Settings/Menus/TextMessageMenu.qml:38
 msgid "Send"
+msgstr ""
+
+#: plugins/Ubuntu/Settings/Printers/backend/backend_cups.cpp:295
+msgid "Create PDF"
+msgstr ""
+
+#: plugins/Ubuntu/Settings/Printers/backend/backend_pdf.cpp:39
+msgid "Color"
+msgstr ""
+
+#: plugins/Ubuntu/Settings/Printers/backend/backend_pdf.cpp:54
+msgid "Normal"
+msgstr ""
+
+#: plugins/Ubuntu/Settings/Printers/utils.h:58
+msgid "One Sided"
+msgstr ""
+
+#: plugins/Ubuntu/Settings/Printers/utils.h:60
+msgid "Short Edge (Flip)"
+msgstr ""
+
+#: plugins/Ubuntu/Settings/Printers/utils.h:62
+msgid "Long Edge (Standard)"
 msgstr ""
 
 #: plugins/Ubuntu/Settings/Vpn/DialogFile.qml:170

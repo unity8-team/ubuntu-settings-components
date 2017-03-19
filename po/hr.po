@@ -1,0 +1,512 @@
+# Croatian translation for ubuntu-settings-components
+# Copyright (c) 2017 Rosetta Contributors and Canonical Ltd 2017
+# This file is distributed under the same license as the ubuntu-settings-components package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ubuntu-settings-components\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2017-01-18 15:20+0000\n"
+"PO-Revision-Date: 2017-03-16 14:02+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Croatian <hr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2017-03-19 06:38+0000\n"
+"X-Generator: Launchpad (build 18332)\n"
+
+#: plugins/Ubuntu/Settings/Components/Calendar.qml:232
+msgctxt "Header text: keep it short and upper case"
+msgid "WEEK"
+msgstr "SLABO"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:82
+msgid "Fingerprint Name"
+msgstr "Naziv otiska"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:109
+msgid "Delete Fingerprint"
+msgstr "Obriši otisak"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:126
+msgid "Sorry, the fingerprint could not be deleted."
+msgstr "Nažalost, otisak se ne može obristi."
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprint.qml:131
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:362
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:138
+#: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:149
+msgid "OK"
+msgstr "U redu"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:32
+msgid "Fingerprint ID"
+msgstr "ID otiska"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:93
+#, qt-format
+msgid "Finger %1"
+msgstr "Prst %1"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:212
+msgid "Passcode required"
+msgstr "Potreban je kôd"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:216
+msgid "You must set a passcode to use fingerprint ID"
+msgstr "Morate postaviti kôd za korištenje ID otiska"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:223
+msgid "Set Passcode…"
+msgstr "Postavi kôd..."
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:299
+msgid "Add fingerprint"
+msgstr "Dodaj otisak"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:312
+msgid "Remove All…"
+msgstr "Ukloni sve..."
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:327
+msgid "Are you sure you want to forget all stored fingerprints?"
+msgstr "Sigurno želite zaboraviti sve spremljene otiske?"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:336
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:355
+#: plugins/Ubuntu/Settings/Vpn/DialogFile.qml:161
+#: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:136
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:104
+msgid "Cancel"
+msgstr "Odustani"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:343
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:84
+msgid "Remove"
+msgstr "Ukloni"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Fingerprints.qml:357
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:103
+msgid "Sorry, the reader doesn’t seem to be working."
+msgstr "Nažalost, izgleda da čitač ne radi."
+
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:61
+msgid "Tap your finger repeatedly on the reader."
+msgstr "Dotičite neprekidno prstom po čitaču."
+
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:78
+msgid "Keep your finger on the reader for longer."
+msgstr "Zadržite prst dulje na čitaču."
+
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:94
+msgid "Back"
+msgstr "Natrag"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:131
+msgid "All done!"
+msgstr "Sve je završeno!"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:297
+msgid "Swipe your finger over the reader."
+msgstr "Povucite svoj prst preko čitača."
+
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:311
+#, qt-format
+msgid "%1%"
+msgstr "%1%"
+
+#: plugins/Ubuntu/Settings/Fingerprint/Setup.qml:380
+msgid "Next"
+msgstr "Sljedeće"
+
+#: plugins/Ubuntu/Settings/Menus/CalendarMenu.qml:59
+#, qt-format
+msgctxt "%1=month name, %2=4-digit year"
+msgid "%1 %2"
+msgstr "%1 %2"
+
+#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:102
+msgid "Roaming"
+msgstr "Roaming"
+
+#: plugins/Ubuntu/Settings/Menus/ModemInfoItem.qml:127
+msgid "Unlock SIM"
+msgstr "Otključaj SIM"
+
+#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:64
+msgid "Message"
+msgstr "Poruka"
+
+#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:76
+msgid "Call back"
+msgstr "Uzvrati poziv"
+
+#: plugins/Ubuntu/Settings/Menus/SnapDecisionMenu.qml:93
+#: plugins/Ubuntu/Settings/Menus/TextMessageMenu.qml:38
+msgid "Send"
+msgstr "Pošalji"
+
+#: plugins/Ubuntu/Settings/Vpn/DialogFile.qml:170
+msgid "Accept"
+msgstr "Prihvati"
+
+#: plugins/Ubuntu/Settings/Vpn/FileSelector.qml:25
+msgid "Choose…"
+msgstr "Odaberi..."
+
+#: plugins/Ubuntu/Settings/Vpn/FileSelector.qml:34
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:431
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:513
+msgid "None"
+msgstr "Nepoznato"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:29
+msgid "Authentication type:"
+msgstr "Vrsta ovjere:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:42
+msgid "Certificates (TLS)"
+msgstr "Vjerodajnice (TLS)"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:43
+msgid "Password"
+msgstr "Lozinka"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:44
+msgid "Password with certificates (TLS)"
+msgstr "Lozinka s vjerodajnicama (TLS)"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/AuthTypeField.qml:45
+msgid "Static key"
+msgstr "Nepromjenjivi ključ"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:123
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:114
+msgid "Server:"
+msgstr "Poslužitelj:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:137
+msgid "Port:"
+msgstr "Ulaz:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:187
+msgid "Use custom gateway port"
+msgstr "Koristi prilagođeni ulaz pristupnika"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:215
+msgid "Protocol:"
+msgstr "Protokol:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:304
+msgid "Username:"
+msgstr "Korisničko ime:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:319
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:165
+msgid "Password:"
+msgstr "Lozinka:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:341
+msgid "Client certificate:"
+msgstr "Vjerodajnica klijenta:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:349
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:396
+msgid "Choose Certificate…"
+msgstr "Odaberi vjerodajnicu..."
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:356
+msgid "Private key:"
+msgstr "Privatni ključ:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:364
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:417
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:497
+msgid "Choose Key…"
+msgstr "Odaberi ključ..."
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:371
+msgid "Key password:"
+msgstr "Lozinka ključa:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:388
+msgid "CA certificate:"
+msgstr "CA vjerodajnica:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:409
+msgid "Static key:"
+msgstr "Nepromjenjivi ključ:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:421
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:502
+msgid "Key direction:"
+msgstr "Smjer ključa:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:439
+msgid "Remote IP:"
+msgstr "Udaljeni IP:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:454
+msgid "Local IP:"
+msgstr "Lokalni IP:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:479
+msgid "Use additional TLS authentication:"
+msgstr "Koristi dodatnu TLS ovjeru:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:488
+msgid "TLS key:"
+msgstr "TLS ključ:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:530
+msgid "Verify peer certificate:"
+msgstr "Provjeri vjerodajnicu točke:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:539
+msgid "Peer certificate TLS type:"
+msgstr "Vrsta TLS vjerodajnice točke:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:547
+msgid "Server"
+msgstr "Poslužitelj"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:548
+msgid "Client"
+msgstr "Klijent"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:558
+msgid "Cipher:"
+msgstr "Šifrator:"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:565
+msgid "Default"
+msgstr "Zadano"
+
+#: plugins/Ubuntu/Settings/Vpn/Openvpn/Editor.qml:595
+msgid "Compress data"
+msgstr "Sažimanje podataka"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:150
+msgid "User:"
+msgstr "Korisnik:"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:180
+msgid "NT Domain:"
+msgstr "NT domena:"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:192
+msgid "Authentication methods:"
+msgstr "Način ovjere:"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:292
+msgid "Use Point-to-Point encryption"
+msgstr "Koristi točka-u-točka šifriranje"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:301
+msgid "All Available (Default)"
+msgstr "Sve dostupno (zadano)"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:302
+msgid "128-bit (most secure)"
+msgstr "128-bitno (najsigurnije)"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:303
+msgid "40-bit (less secure)"
+msgstr "40-bitno (manje sigurno)"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:319
+msgid "Allow stateful encryption"
+msgstr "Dopusti usklađeno šifriranje"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:333
+msgid "Allow BSD data compression"
+msgstr "Dopusti sažimanje BSD podataka"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:347
+msgid "Allow Deflate data compression"
+msgstr "Dopusti smanjenje sažimanja podataka"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:361
+msgid "Use TCP Header compression"
+msgstr "Koristi sažimanje TCP zaglavlja"
+
+#: plugins/Ubuntu/Settings/Vpn/Pptp/Editor.qml:375
+msgid "Send PPP echo packets"
+msgstr "Šalji PPP pakete odjeka"
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:27
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:27
+msgid "You’re using this VPN for all Internet traffic."
+msgstr "Koristite ovu VPN mrežu za sav internet promet"
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:33
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:39
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:39
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SetUpUnused.qml:40
+msgid ""
+"Your Wi-Fi/mobile provider can see when and how much you use the Internet, "
+"but not what for."
+msgstr ""
+"Vaš pružatelj mobilne usluge i bežične mreže može vidjeti kada i koliko "
+"koristite internet, ali ne i za što."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:39
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:45
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:51
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:51
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SetUpUnused.qml:47
+msgid "The VPN provider can see or modify your Internet traffic."
+msgstr "Pružatelj VPN usluge može vidjeti ili mijenjati vaš internet promet."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithDns.qml:45
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:51
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:57
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:57
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SetUpUnused.qml:54
+msgid "Web sites and other service providers can still monitor your use."
+msgstr ""
+"Web stranice i ostali pružatelji usluga još uvijek mogu nadgledati vaše "
+"korištenje interneta."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:33
+msgid ""
+"Your Wi-Fi/mobile provider can still see when and how much you use the "
+"Internet."
+msgstr ""
+"Vaš pružatelj mobilne usluge i bežične mreže može vidjeti kada i koliko "
+"koristite internet."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/AllTrafficWithoutDns.qml:39
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:45
+msgid "The DNS provider can see which Web sites and other services you use."
+msgstr ""
+"DNS pružatelj usluge može vidjeti koje web stranice posjećujete i koje "
+"ostale usluge koristite."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:30
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NoCert.qml:27
+msgid "This VPN is not safe to use."
+msgstr "Ova VPN mreža nije sigurna za korištenje."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:36
+msgid ""
+"The server certificate is not valid. The VPN provider may be being "
+"impersonated."
+msgstr ""
+"Vjerodajnica poslužitelja nije valjana. Pružatelj VPN usluge možda se lažno "
+"predstavlja."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:46
+#, qt-format
+msgid "Details: %1"
+msgstr "Pojedinosti: %1"
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:51
+msgid "The certificate was not found."
+msgstr "Vjerodajnica nije pronađena."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:54
+msgid "The certificate is empty."
+msgstr "Vjerodajnica je prazna."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:57
+msgid "The certificate is self signed."
+msgstr "Vjerodajnica je samopotpisana."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:60
+msgid "The certificate has expired."
+msgstr "Vjerodajnica je istekla."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/InvalidCert.qml:63
+msgid "The certificate is blacklisted."
+msgstr "Vjerodajnica je na popisu blokiranih."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NoCert.qml:33
+msgid ""
+"It does not provide a certificate. The VPN provider could be impersonated."
+msgstr ""
+"Ne omogućuje vjerodajnicu. Pružatelj VPN usluge možda se lažno predstavlja."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:27
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:27
+msgid "This VPN configuration is not installed."
+msgstr "Ovo VPN podešavanje nije instalirano."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:33
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithRoutes.qml:33
+msgid "If you install it:"
+msgstr "Ako ga instalirate:"
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/NotInstalledWithoutRoutes.qml:45
+msgid "The DNS provider can see which Web sites and other services you use. "
+msgstr ""
+"Pružatelj DNS usluge može vidjeti koje web stranice posjećujete i koje "
+"ostale usluge koristite. "
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SetUpUnused.qml:27
+msgid "This VPN is set up, but not in use now."
+msgstr "Ova VPN mreža je postavljena, ali se sada ne koristi."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SetUpUnused.qml:33
+msgid "When you use it:"
+msgstr "Kada ju koristite:"
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SomeTraffic.qml:27
+msgid "You’re using this VPN for specific services."
+msgstr "Koristite ovu VPN mrežu za određene usluge."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SomeTraffic.qml:33
+msgid ""
+"Your traffic to these services is private to them and the VPN provider."
+msgstr ""
+"Vaš promet do ovih usluga je privatan, do njih i pružatelja VPN usluge."
+
+#: plugins/Ubuntu/Settings/Vpn/PreviewDialog/SomeTraffic.qml:39
+msgid "Your Wi-Fi/mobile provider can track your use of any other services. "
+msgstr ""
+"Vaš pružatelj mobilne usluge i bežične mreže može pratiti vaše korištenje "
+"svih ostalih usluga. "
+
+#: plugins/Ubuntu/Settings/Vpn/VpnEditor.qml:25
+msgid "Set up VPN"
+msgstr "Postavi VPN mrežu"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnList.qml:62
+msgid "Delete configuration"
+msgstr "Obriši podešavanje"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:53
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:58
+#, qt-format
+msgid "VPN “%1”"
+msgstr "VPN “%1”"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:69
+msgid "VPN"
+msgstr "VPN mreža"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:96
+msgid "Change"
+msgstr "Promijeni"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnPreviewDialog.qml:112
+msgid "Install"
+msgstr "Instaliraj"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnRoutesField.qml:30
+msgid "Use this VPN for:"
+msgstr "Koristi ovu VPN mrežu za:"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnRoutesField.qml:60
+msgid "All network connections"
+msgstr "Sva mrežna povezivanja"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnRoutesField.qml:76
+msgid "Its own network"
+msgstr "To je vlastita mreža"
+
+#: plugins/Ubuntu/Settings/Vpn/VpnTypeField.qml:32
+msgid "Type:"
+msgstr "Vrsta:"
